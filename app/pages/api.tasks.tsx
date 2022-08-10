@@ -18,7 +18,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   const url = new URL(request.url)
   const backParam = url.searchParams.get("back")
-  const selectedTeamId = url.searchParams.get("selectedTeamId")
+  const selectedTeamId = url.searchParams.get("selectedTeamId") as string | undefined | null
   const forwardParam = url.searchParams.get("forward")
   const back = backParam ? parseInt(backParam) : DAYS_BACK
   const forward = forwardParam ? parseInt(forwardParam) : DAYS_FORWARD
