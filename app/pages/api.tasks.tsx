@@ -67,19 +67,20 @@ export const action = async ({ request }: ActionArgs) => {
         const newForm = await validateFormData(createSchema, formData)
         if (newForm.fieldErrors) return badRequest(newForm)
         const users = formData.getAll("users") as string[] | undefined
+        const isUsersIncluded = formData.has("users")
 
         const newTask = await db.task.create({
           select: taskSelectFields,
           data: {
             isComplete: isComplete === "" || isComplete === "true" || false,
-            durationHours: newForm.data.durationHours,
-            durationMinutes: newForm.data.durationMinutes,
-            startTime: newForm.data.startTime,
+            durationHours: newForm.data.durationHours || null,
+            durationMinutes: newForm.data.durationMinutes || null,
+            startTime: newForm.data.startTime || null,
             date: newForm.data.date,
             name: newForm.data.name,
-            description: newForm.data.description,
+            description: newForm.data.description || null,
             element: { connect: { id: newForm.data.elementId } },
-            users: { connect: users ? users.map((id) => ({ id })) : { id: user.id } },
+            users: { connect: isUsersIncluded && users ? users.map((id) => ({ id })) : { id: user.id } },
             creator: { connect: { id: user.id } },
           },
         })

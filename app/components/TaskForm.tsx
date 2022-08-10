@@ -212,7 +212,7 @@ export function TaskForm({ day, onClose, task }: FormProps) {
 
         <FormError error={createUpdateFetcher.data?.formError} />
         <c.Flex align="center" justify="space-between">
-          {task && (
+          {task ? (
             <c.Button
               variant="ghost"
               leftIcon={<c.Box as={BiTrash} />}
@@ -223,6 +223,8 @@ export function TaskForm({ day, onClose, task }: FormProps) {
             >
               Delete
             </c.Button>
+          ) : (
+            <c.Box />
           )}
 
           <ButtonGroup>

@@ -22,6 +22,8 @@ export const action = async ({ request, params }: ActionArgs) => {
   const taskId = params.id as string | undefined
   if (!taskId) return badRequest("Task ID is required")
 
+  const task = await db.task.findUnique({ where: { id: taskId } })
+  if (!task) return badRequest("Task not found")
   const { createFlash } = await getFlashSession(request)
   switch (action) {
     case TaskActionMethods.UpdateTask:
@@ -48,7 +50,11 @@ export const action = async ({ request, params }: ActionArgs) => {
           select: taskSelectFields,
           where: { id: taskId },
           data: {
-            ...data,
+            durationHours: data.durationHours || task.durationHours || null,
+            durationMinutes: data.durationMinutes || task.durationMinutes || null,
+            startTime: data.startTime || task.startTime || null,
+            name: data.name,
+            description: data.description || task.description || null,
             isComplete: isComplete === "" || isComplete === "true" || false,
             users: { set: users ? users.filter(Boolean).map((id) => ({ id })) : undefined },
           },
