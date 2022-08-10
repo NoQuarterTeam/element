@@ -1,4 +1,4 @@
-# Boilerplate Remix
+# Element
 
 ## Typescript + React + Remix + Prisma
 
@@ -21,11 +21,11 @@ Comes with user authentication included
 
 ## Get Started
 
-**Must have node, yarn, postgres and redis installed and setup locally**
+**Must have node and postgres installed and setup locally**
 
-1. `yarn install`
+1. `npm i`
 2. `createdb boilerplate`
-3. `yarn db:migrate`
+3. `npm run db:push`
 
 Make sure you have created a .env file in the api package with the right values, you can use .env.example as the template
 
@@ -44,7 +44,7 @@ npx husky install
 
 ## Development
 
-`yarn dev`
+`npm run dev`
 
 ## Production
 
@@ -54,8 +54,6 @@ npx husky install
 - Create templates for each email you want to send and use the templateId in the corresponding mailer class
 
 ### Deployment
-
-An example is deployed [here](https://boilerplate-remix.noquarter.co)
 
 We are using Fly.io
 
