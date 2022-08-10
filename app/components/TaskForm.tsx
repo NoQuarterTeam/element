@@ -1,10 +1,11 @@
 import * as React from "react"
-import { BiTrash } from "react-icons/bi"
+import { BiPlus, BiTrash } from "react-icons/bi"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 
 import { useSelectedTeam } from "~/lib/hooks/useSelectedTeam"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
+import { ElementsActionMethods } from "~/pages/api.elements"
 import type { TaskElement } from "~/pages/api.task-elements"
 import type { TimelineTask } from "~/pages/api.tasks"
 import { TasksActionMethods } from "~/pages/api.tasks"
@@ -13,6 +14,7 @@ import type { TeamUser } from "~/pages/api.teams.$id.users"
 
 import { ButtonGroup } from "./ButtonGroup"
 import { FormButton, FormError, InlineFormField } from "./Form"
+import { Modal } from "./Modal"
 import { Multiselect } from "./Multiselect"
 
 type FieldErrors = {
@@ -35,8 +37,8 @@ export function TaskForm({ day, onClose, task }: FormProps) {
     updateTask: state.updateTask,
     removeTask: state.removeTask,
   }))
-  const createUpdateFetcher = useFetcher<CreateUpdateRes>()
 
+  const createUpdateFetcher = useFetcher<CreateUpdateRes>()
   React.useEffect(() => {
     if (!createUpdateFetcher.data) return
     if (createUpdateFetcher.data.task) {
@@ -78,171 +80,245 @@ export function TaskForm({ day, onClose, task }: FormProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTeamId])
 
-  const elements = elementsFetcher.data?.elements || []
+  const [elements, setElements] = React.useState<TaskElement[] | undefined>()
+  React.useEffect(() => {
+    if (elementsFetcher.data?.elements) {
+      setElements(elementsFetcher.data.elements)
+    }
+  }, [elementsFetcher.data?.elements])
+
+  const [elementId, setElementId] = React.useState<string | undefined>(task?.element.id)
+  const elementModalProps = c.useDisclosure()
+
+  const createElementFetcher = useFetcher()
+  React.useEffect(() => {
+    if (createElementFetcher.type === "actionReload" && createElementFetcher.data?.element) {
+      setElements([createElementFetcher.data.element, ...(elements || [])])
+      elementModalProps.onClose()
+      setElementId(createElementFetcher.data.element.id)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createElementFetcher.data, createElementFetcher.type, elements])
+
   const users = usersFetcher.data?.users || []
 
-  if (!elementsFetcher.data?.elements) return <c.Center h="379px" />
+  if (!elements) return <c.Center h="379px" />
 
   return (
-    <createUpdateFetcher.Form replace method="post" action={task ? `/api/tasks/${task.id}` : "/api/tasks"}>
-      {day && <c.Input type="hidden" defaultValue={day} name="date" />}
-      <c.Stack spacing={3}>
-        <c.Flex w="100%" align="flex-start" justify="space-between">
-          <c.Input
-            name="name"
-            placeholder="Name"
-            w="95%"
-            isRequired
-            defaultValue={task?.name}
-            isInvalid={!!createUpdateFetcher.data?.fieldErrors?.name?.[0]}
-            autoFocus
-            size="lg"
-            fontSize="4xl"
-            minH="70px"
-            pr={2}
-            pl={4}
-            ml={-4}
-            focusBorderColor="transparent"
-            border="none!important"
-            bg="transparent"
-          />
-          <c.Box pt={2}>
-            <c.Checkbox
-              tabIndex={1}
-              type="checkbox"
+    <>
+      <createUpdateFetcher.Form replace method="post" action={task ? `/api/tasks/${task.id}` : "/api/tasks"}>
+        {day && <c.Input type="hidden" defaultValue={day} name="date" />}
+        <c.Stack spacing={3}>
+          <c.Flex w="100%" align="flex-start" justify="space-between">
+            <c.Input
+              name="name"
+              placeholder="Name"
+              w="95%"
+              isRequired
+              defaultValue={task?.name}
+              isInvalid={!!createUpdateFetcher.data?.fieldErrors?.name?.[0]}
+              autoFocus
               size="lg"
-              defaultChecked={task?.isComplete}
-              name="isComplete"
+              fontSize="4xl"
+              minH="70px"
+              pr={2}
+              pl={4}
+              ml={-4}
+              focusBorderColor="transparent"
+              border="none!important"
+              bg="transparent"
             />
-          </c.Box>
-        </c.Flex>
-
-        <InlineFormField
-          isRequired
-          name="elementId"
-          defaultValue={task?.element.id}
-          label="Element"
-          error={createUpdateFetcher.data?.fieldErrors?.elementId?.[0]}
-          input={
-            <c.Select>
-              <option value="">Select an element</option>
-              {elements.map((element) => (
-                <option key={element.id} value={element.id}>
-                  {element.name}
-                </option>
-              ))}
-            </c.Select>
-          }
-        />
-
-        {selectedTeamId && (
-          <InlineFormField
-            name="users"
-            label="Users"
-            error={createUpdateFetcher.data?.fieldErrors?.users?.[0]}
-            defaultValue={task?.users.map((a) => ({ value: a.id, label: a.firstName }))}
-            input={
-              <Multiselect
-                placeholder="Select users"
-                options={users.map((user) => ({
-                  value: user.id,
-                  label: user.firstName + " " + user.lastName,
-                }))}
+            <c.Box pt={2}>
+              <c.Checkbox
+                tabIndex={1}
+                type="checkbox"
+                size="lg"
+                defaultChecked={task?.isComplete}
+                name="isComplete"
               />
-            }
-          />
-        )}
-        <c.Box>
-          <c.Flex>
-            <c.FormLabel htmlFor="durationHours" fontSize="sm" minW="100px">
-              Duration
-            </c.FormLabel>
-            <c.HStack>
-              <c.HStack spacing={1}>
-                <c.Input
-                  textAlign="center"
-                  px={0}
-                  defaultValue={task?.durationHours ? task.durationHours.toString() : undefined}
-                  id="durationHours"
-                  min={0}
-                  max={24}
-                  boxSize="30px"
-                  name="durationHours"
-                />
-                <c.Text fontSize="xs" opacity={0.8}>
-                  Hours
-                </c.Text>
-              </c.HStack>
-              <c.HStack spacing={1}>
-                <c.Input
-                  defaultValue={task?.durationMinutes ? task.durationMinutes.toString() : undefined}
-                  max={60}
-                  textAlign="center"
-                  px={0}
-                  min={0}
-                  boxSize="30px"
-                  name="durationMinutes"
-                />
-                <c.Text fontSize="xs" opacity={0.8}>
-                  Minutes
-                </c.Text>
-              </c.HStack>
-            </c.HStack>
+            </c.Box>
           </c.Flex>
-          <c.FormErrorMessage>
-            {createUpdateFetcher.data?.fieldErrors?.durationHours?.[0] ||
-              createUpdateFetcher.data?.fieldErrors?.durationMinutes?.[0]}
-          </c.FormErrorMessage>
-        </c.Box>
-        <InlineFormField
-          pattern="^([01]\d|2[0-3]):?([0-5]\d)$"
-          type="time"
-          name="startTime"
-          defaultValue={task?.startTime}
-          label="Start time"
-          error={createUpdateFetcher.data?.fieldErrors?.startTime?.[0]}
-        />
-        <InlineFormField
-          name="description"
-          defaultValue={task?.description}
-          label="Description"
-          input={<c.Textarea rows={8} />}
-          error={createUpdateFetcher.data?.fieldErrors?.description?.[0]}
-        />
 
-        <FormError error={createUpdateFetcher.data?.formError} />
-        <c.Flex align="center" justify="space-between">
-          {task ? (
+          <c.Flex align="center">
+            <InlineFormField
+              isRequired
+              name="elementId"
+              label="Element"
+              value={elementId || ""}
+              onChange={(e) => setElementId(e.target.value)}
+              error={createUpdateFetcher.data?.fieldErrors?.elementId?.[0]}
+              input={
+                <c.Select>
+                  <option value="">Select an element</option>
+                  {elements.map((element) => (
+                    <option key={element.id} value={element.id}>
+                      {element.name}
+                    </option>
+                  ))}
+                </c.Select>
+              }
+            />
             <c.Button
-              variant="ghost"
-              leftIcon={<c.Box as={BiTrash} />}
-              colorScheme="red"
-              onClick={handleDelete}
-              isLoading={deleteSubmit.state === "submitting"}
-              isDisabled={deleteSubmit.state === "submitting"}
+              ml={2}
+              pr={4}
+              onClick={elementModalProps.onOpen}
+              size="sm"
+              variant="outline"
+              leftIcon={<c.Box as={BiPlus} boxSize="16px" mr={-2} />}
             >
-              Delete
+              Create
             </c.Button>
-          ) : (
-            <c.Box />
-          )}
+          </c.Flex>
 
-          <ButtonGroup>
-            <c.Button variant="ghost" onClick={onClose}>
-              Cancel
-            </c.Button>
-            <FormButton
-              colorScheme="orange"
-              name="_action"
-              value={task ? TaskActionMethods.UpdateTask : TasksActionMethods.AddTask}
-              isLoading={createUpdateFetcher.state === "submitting"}
-              isDisabled={createUpdateFetcher.state === "submitting"}
-            >
-              {task ? "Update" : "Create"}
-            </FormButton>
-          </ButtonGroup>
-        </c.Flex>
-      </c.Stack>
-    </createUpdateFetcher.Form>
+          {selectedTeamId && (
+            <InlineFormField
+              name="users"
+              label="Users"
+              error={createUpdateFetcher.data?.fieldErrors?.users?.[0]}
+              defaultValue={task?.users.map((a) => ({ value: a.id, label: a.firstName }))}
+              input={
+                <Multiselect
+                  placeholder="Select users"
+                  options={users.map((user) => ({
+                    value: user.id,
+                    label: user.firstName + " " + user.lastName,
+                  }))}
+                />
+              }
+            />
+          )}
+          <c.Box>
+            <c.Flex>
+              <c.FormLabel htmlFor="durationHours" fontSize="sm" minW="100px">
+                Duration
+              </c.FormLabel>
+              <c.HStack>
+                <c.HStack spacing={1}>
+                  <c.Input
+                    textAlign="center"
+                    px={0}
+                    defaultValue={task?.durationHours ? task.durationHours.toString() : undefined}
+                    id="durationHours"
+                    min={0}
+                    max={24}
+                    boxSize="30px"
+                    name="durationHours"
+                  />
+                  <c.Text fontSize="xs" opacity={0.8}>
+                    Hours
+                  </c.Text>
+                </c.HStack>
+                <c.HStack spacing={1}>
+                  <c.Input
+                    defaultValue={task?.durationMinutes ? task.durationMinutes.toString() : undefined}
+                    max={60}
+                    textAlign="center"
+                    px={0}
+                    min={0}
+                    boxSize="30px"
+                    name="durationMinutes"
+                  />
+                  <c.Text fontSize="xs" opacity={0.8}>
+                    Minutes
+                  </c.Text>
+                </c.HStack>
+              </c.HStack>
+            </c.Flex>
+            <c.FormErrorMessage>
+              {createUpdateFetcher.data?.fieldErrors?.durationHours?.[0] ||
+                createUpdateFetcher.data?.fieldErrors?.durationMinutes?.[0]}
+            </c.FormErrorMessage>
+          </c.Box>
+          <InlineFormField
+            pattern="^([01]\d|2[0-3]):?([0-5]\d)$"
+            type="time"
+            name="startTime"
+            defaultValue={task?.startTime}
+            label="Start time"
+            error={createUpdateFetcher.data?.fieldErrors?.startTime?.[0]}
+          />
+          <InlineFormField
+            name="description"
+            defaultValue={task?.description}
+            label="Description"
+            input={<c.Textarea rows={8} />}
+            error={createUpdateFetcher.data?.fieldErrors?.description?.[0]}
+          />
+
+          <FormError error={createUpdateFetcher.data?.formError} />
+          <c.Flex align="center" justify="space-between">
+            {task ? (
+              <c.Button
+                variant="ghost"
+                leftIcon={<c.Box as={BiTrash} />}
+                colorScheme="red"
+                onClick={handleDelete}
+                isLoading={deleteSubmit.state === "submitting"}
+                isDisabled={deleteSubmit.state === "submitting"}
+              >
+                Delete
+              </c.Button>
+            ) : (
+              <c.Box />
+            )}
+
+            <ButtonGroup>
+              <c.Button variant="ghost" onClick={onClose}>
+                Cancel
+              </c.Button>
+              <FormButton
+                colorScheme="orange"
+                name="_action"
+                value={task ? TaskActionMethods.UpdateTask : TasksActionMethods.AddTask}
+                isLoading={createUpdateFetcher.state === "submitting"}
+                isDisabled={createUpdateFetcher.state === "submitting"}
+              >
+                {task ? "Update" : "Create"}
+              </FormButton>
+            </ButtonGroup>
+          </c.Flex>
+        </c.Stack>
+      </createUpdateFetcher.Form>
+      <Modal title="Create an Element" {...elementModalProps}>
+        <createElementFetcher.Form replace method="post" action="/api/elements">
+          <c.Stack spacing={4}>
+            <InlineFormField
+              autoFocus
+              name="name"
+              label="Name"
+              size="sm"
+              isRequired
+              error={createElementFetcher.data?.fieldErrors?.name?.[0]}
+            />
+            {selectedTeamId && <c.Input type="hidden" name="teamId" value={selectedTeamId} />}
+            <InlineFormField
+              name="color"
+              label="Color"
+              size="sm"
+              error={createElementFetcher.data?.fieldErrors?.color?.[0]}
+            />
+            <ButtonGroup>
+              <c.Button
+                variant="ghost"
+                isDisabled={createElementFetcher.state === "submitting"}
+                onClick={elementModalProps.onClose}
+              >
+                Cancel
+              </c.Button>
+              <c.Button
+                name="_action"
+                value={ElementsActionMethods.CreateElement}
+                type="submit"
+                colorScheme="orange"
+                isLoading={createElementFetcher.state === "submitting"}
+                isDisabled={createElementFetcher.state === "submitting"}
+              >
+                Create
+              </c.Button>
+            </ButtonGroup>
+          </c.Stack>
+        </createElementFetcher.Form>
+      </Modal>
+    </>
   )
 }

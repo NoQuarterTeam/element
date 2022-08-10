@@ -54,6 +54,7 @@ export const action = async ({ request, params }: ActionArgs) => {
             durationMinutes: data.durationMinutes || task.durationMinutes || null,
             startTime: data.startTime || task.startTime || null,
             name: data.name,
+            elementId: data.elementId || task.elementId,
             description: data.description || task.description || null,
             isComplete: isComplete === "" || isComplete === "true" || false,
             users: { set: users ? users.filter(Boolean).map((id) => ({ id })) : undefined },
