@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String    @unique
+  password     String
+  firstName    String
+  lastName     String
+  avatar       String?
+  createdAt    DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+  archivedAt   DateTime? @db.Timestamptz(6)
+  tasks        Task[]
+  createdTasks Task[]    @relation(name: "CreatedTasks")
+  elements     Element[]
+  teams        Team[]
+}
+
+model Task {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String
+  description     String?
+  date            DateTime
+  isComplete      Boolean  @default(false)
+  startTime       String?
+  durationHours   Int?
+  durationMinutes Int?
+  element         Element  @relation(fields: [elementId], references: [id], onDelete: Cascade)
+  elementId       String   @db.Uuid
+  order           Int      @default(50)
+  createdAt       DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  creator         User     @relation(name: "CreatedTasks", fields: [creatorId], references: [id])
+  creatorId       String   @db.Uuid
+  users           User[]
+}
+
+model Element {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  color      String
+  archivedAt DateTime?
+  createdAt  DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+  children   Element[] @relation(name: "ChildElements")
+  parent     Element?  @relation(name: "ChildElements", fields: [parentId], references: [id])
+  parentId   String?   @db.Uuid
+  creator    User      @relation(fields: [creatorId], references: [id])
+  creatorId  String    @db.Uuid
+  teamId     String?   @db.Uuid
+  team       Team?     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  tasks      Task[]
+}
+
+model Team {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  logo      String?
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+  elements  Element[]
+  users     User[]
+}
