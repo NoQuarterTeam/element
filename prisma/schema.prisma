@@ -63,7 +63,6 @@ model Team {
   id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
   logo      String?
-  // isPublic  Boolean   @default(false)
   createdAt DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
   elements  Element[]

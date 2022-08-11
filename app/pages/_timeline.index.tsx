@@ -2,25 +2,26 @@ import * as React from "react"
 import { RiCalendarEventLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import type { ShouldReloadFunction } from "@remix-run/react"
-import { useFetcher, useLoaderData } from "@remix-run/react"
-import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
+import type { UseDataFunctionReturn} from "@remix-run/react/dist/components";
+import { useFetcher, useLoaderData } from "@remix-run/react/dist/components"
 import type { LoaderArgs } from "@remix-run/server-runtime"
 import { json } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import throttle from "lodash.throttle"
 
-import { Day, DAY_WIDTH } from "~/components/Day"
+import { Day,DAY_WIDTH } from "~/components/Day"
 import { DropContainer } from "~/components/DropContainer"
 import { Nav } from "~/components/Nav"
 import { getDays, getMonths, MONTH_NAMES } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
 import { useSelectedTeam } from "~/lib/hooks/useSelectedTeam"
-import { DAYS_BACK, DAYS_FORWARD, useTimelineDays } from "~/lib/hooks/useTimelineDays"
-import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import type { TimelineTask } from "~/pages/api.tasks"
+import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
+import { DAYS_BACK,DAYS_FORWARD, useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { requireUser } from "~/services/auth/auth.server"
 import { getSidebarElements, getSidebarTeams } from "~/services/timeline/sidebar.server"
+
+import type { TimelineTask } from "./api.tasks"
 
 export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
   if (!submission) return false
@@ -33,6 +34,8 @@ export const loader = async ({ request }: LoaderArgs) => {
   const teams = await getSidebarTeams(user.id)
   return json({ teams, elements })
 }
+
+export type TimelineLoader = typeof loader
 
 export type SidebarElement = UseDataFunctionReturn<typeof loader>["elements"][0]
 export type SidebarTeam = UseDataFunctionReturn<typeof loader>["teams"][0]
@@ -115,7 +118,7 @@ export default function Timeline() {
   const isLoading = taskFetcher.state === "loading"
 
   const bg = c.useColorModeValue("gray.100", "gray.800")
-  const { elements, teams } = useLoaderData<typeof loader>()
+  const { elements, teams } = useLoaderData<TimelineLoader>()
   return (
     <c.Box ref={timelineRef} w="100vw" h="100vh" overflowX="auto" overflowY="hidden">
       <TimelineHeader isLoading={isLoading} days={days} months={months} />
@@ -164,6 +167,7 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
     <c.Flex
       zIndex={10}
       minH={HEADER_HEIGHT}
+      pos="relative"
       w="min-content"
       bg={isDark ? "gray.800" : "white"}
       borderBottom="1px solid"
@@ -171,16 +175,16 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
       borderRight="1px solid"
       borderRightColor="tranparent"
     >
-      {/* <c.Image
-        position="sticky"
-        top="10px"
-        left={3}
+      <c.Image
+        position="fixed"
+        top="8px"
+        left={2}
         src={isDark ? "/logo-dark.png" : "/logo.png"}
         boxSize="40px"
-      /> */}
+      />
       {months.map(({ month, year }) => (
         <c.Box key={month + year}>
-          <c.Flex position="sticky" w="max-content" py={2} left={4} ml={4} align="center">
+          <c.Flex position="sticky" w="max-content" pt={2} left={14} align="center">
             <c.Heading as="h3" fontSize="2em">
               {MONTH_NAMES[month]}
             </c.Heading>
