@@ -115,28 +115,27 @@ export function Nav({ teams, elements }: Props) {
         sx={{ "&:hover .team-create-button": { display: "flex" } }}
       >
         <c.VStack spacing={1} pt={12} divider={<c.Divider />}>
-          {me && (
-            <c.Button
-              display="flex"
-              borderRadius="full"
-              variant="unstyled"
-              bg="transparent"
+          <c.Button
+            display="flex"
+            borderRadius="full"
+            variant="unstyled"
+            bg="transparent"
+            boxSize="42px"
+            onClick={() => setSelectedTeamId("")}
+          >
+            <c.Avatar
               boxSize="42px"
-              onClick={() => setSelectedTeamId("")}
-            >
-              <c.Avatar
-                boxSize="42px"
-                color={color}
-                border={`3px solid ${!selectedTeamId ? theme.colors.orange[500] : "transparent"}`}
-                _hover={{
-                  borderColor: !selectedTeamId ? theme.colors.orange[500] : theme.colors.orange[300],
-                }}
-                bg="transparent"
-                name={me.firstName + " " + me.lastName}
-                src={me.avatar ? transformImage(me.avatar, "w_100,h_100,g_faces") : undefined}
-              />
-            </c.Button>
-          )}
+              color={color}
+              border={`3px solid ${!selectedTeamId ? theme.colors.orange[500] : "transparent"}`}
+              _hover={{
+                borderColor: !selectedTeamId ? theme.colors.orange[500] : theme.colors.orange[300],
+              }}
+              bg="transparent"
+              name={me.firstName + " " + me.lastName}
+              src={me.avatar ? transformImage(me.avatar, "w_100,h_100,g_faces") : undefined}
+            />
+          </c.Button>
+
           {teams?.map((team) => (
             <TeamLogo key={team.id} team={team} />
           ))}

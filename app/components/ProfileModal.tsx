@@ -28,8 +28,6 @@ export function ProfileModal() {
   const alertProps = c.useDisclosure()
   const cancelRef = React.useRef<HTMLButtonElement>(null)
   const destroyAccountFetcher = useFetcher()
-
-  if (!me) return null
   return (
     <c.Flex minH={650} h="100%" overflow="hidden" borderRadius="md">
       <c.Box minW={140} w="min-content" h="auto" bg={bg}>

@@ -1,5 +1,5 @@
 import * as React from "react"
-import type { ShouldReloadFunction} from "@remix-run/react";
+import type { ShouldReloadFunction } from "@remix-run/react"
 import { Outlet, useLoaderData } from "@remix-run/react"
 import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
 import type { LoaderArgs } from "@remix-run/server-runtime"
@@ -22,6 +22,7 @@ type User = UseDataFunctionReturn<typeof loader>["user"]
 
 export default function TimelineLayout() {
   const { user } = useLoaderData<typeof loader>()
+  // client side render the timeline, so the react-beautiful-dnd library doesnt freak out
   const [hydrated, setHydrated] = React.useState(() => !hydrating)
   React.useEffect(() => {
     hydrating = false
@@ -37,4 +38,8 @@ export default function TimelineLayout() {
 
 const MeContext = React.createContext<User | null>(null)
 
-export const useMe = () => React.useContext(MeContext)
+export const useMe = () => {
+  const me = React.useContext(MeContext)
+  if (!me) throw new Error("User must be present")
+  return me
+}
