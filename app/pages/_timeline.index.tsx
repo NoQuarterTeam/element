@@ -163,9 +163,7 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
   const isDark = colorMode === "dark"
   return (
     <c.Flex
-      zIndex={10}
       minH={HEADER_HEIGHT}
-      pos="relative"
       w="min-content"
       bg={isDark ? "gray.800" : "white"}
       borderBottom="1px solid"
