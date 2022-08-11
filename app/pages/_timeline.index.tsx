@@ -134,7 +134,7 @@ export default function Timeline() {
         </c.Flex>
       </c.Box>
       <Nav teams={teams} elements={elements} />
-      <c.Box pos="absolute" bottom={isMobile ? 20 : 8} left={8} bg={bg} borderRadius="full">
+      <c.Box pos="absolute" bottom={isMobile ? 24 : 8} left={8} bg={bg} borderRadius="full">
         <c.Tooltip label="Jump to today" placement="auto" zIndex={50} hasArrow>
           <c.IconButton
             size="md"
