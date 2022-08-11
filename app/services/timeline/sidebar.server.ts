@@ -27,6 +27,7 @@ export async function getSidebarElements(userId: string) {
     where: {
       archivedAt: { equals: null },
       parentId: { equals: null },
+      teamId: { equals: null },
       creatorId: { equals: userId },
     },
   })

@@ -60,7 +60,7 @@ export function InlineFormField({ label, input, error, ...props }: FormFieldProp
   const clonedInput =
     input &&
     React.cloneElement(input, {
-      defaultValue: props.value ? undefined : form?.data?.[props.name] || "",
+      defaultValue: props.value || props.value === "" ? undefined : form?.data?.[props.name] || "",
       id: props.id || props.name,
       ...props,
     })

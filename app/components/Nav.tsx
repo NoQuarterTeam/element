@@ -5,6 +5,7 @@ import { RiBookLine, RiLogoutCircleRLine, RiQuestionLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { useTheme } from "@chakra-ui/react"
 import { useFetcher, useSubmit } from "@remix-run/react"
+import { useQueryClient } from "@tanstack/react-query"
 
 import { transformImage } from "~/lib/helpers/image"
 import { isMobile } from "~/lib/helpers/utils"
@@ -12,7 +13,9 @@ import { useSelectedTeam } from "~/lib/hooks/useSelectedTeam"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useMe } from "~/pages/_timeline"
 import type { SidebarElement, SidebarTeam } from "~/pages/_timeline.index"
+import type { TaskElement } from "~/pages/api.task-elements"
 import { TeamsActionMethods } from "~/pages/api.teams"
+import type { TeamUser } from "~/pages/api.teams.$id.users"
 
 import { ButtonGroup } from "./ButtonGroup"
 import { ElementsSidebar } from "./ElementsSidebar"
@@ -59,6 +62,23 @@ export function Nav({ teams, elements }: Props) {
       navProps.onToggle()
     }
   })
+
+  // When selected team changes, prefetch the data required for the form
+  const client = useQueryClient()
+  React.useEffect(() => {
+    client.prefetchQuery(["task-elements", { selectedTeamId }], async () => {
+      const response = await fetch(`/api/task-elements?selectedTeamId=${selectedTeamId || ""}`)
+      if (!response.ok) throw new Error("Network response was not ok")
+      return response.json() as Promise<{ elements: TaskElement[] }>
+    })
+    if (selectedTeamId) {
+      client.prefetchQuery(["team-users", { selectedTeamId }], async () => {
+        const response = await fetch(`/api/teams/${selectedTeamId}/users`)
+        if (!response.ok) throw new Error("Network response was not ok")
+        return response.json() as Promise<{ users: TeamUser[] }>
+      })
+    }
+  }, [client, selectedTeamId])
   const { colorMode, toggleColorMode } = c.useColorMode()
   const isDark = colorMode === "dark"
   const bg = c.useColorModeValue("white", "gray.800")

@@ -2,6 +2,7 @@ import * as React from "react"
 import { BiPlus, BiTrash } from "react-icons/bi"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import { useSelectedTeam } from "~/lib/hooks/useSelectedTeam"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
@@ -69,38 +70,40 @@ export function TaskForm({ day, onClose, task }: FormProps) {
     }
   }, [task, deleteSubmit.data, onClose, removeTask, deleteSubmit.type])
 
-  const elementsFetcher = useFetcher<{ elements: TaskElement[] }>()
-  const usersFetcher = useFetcher<{ users: TeamUser[] }>()
+  const { data } = useQuery(["task-elements", { selectedTeamId }], async () => {
+    const response = await fetch(`/api/task-elements?selectedTeamId=${selectedTeamId || ""}`)
+    if (!response.ok) throw new Error("Network response was not ok")
+    return response.json() as Promise<{ elements: TaskElement[] }>
+  })
+  const elements = data?.elements
 
-  React.useEffect(() => {
-    elementsFetcher.load(`/api/task-elements?selectedTeamId=${selectedTeamId || ""}`)
-    if (selectedTeamId) {
-      usersFetcher.load(`/api/teams/${selectedTeamId}/users`)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTeamId])
-
-  const [elements, setElements] = React.useState<TaskElement[] | undefined>()
-  React.useEffect(() => {
-    if (elementsFetcher.data?.elements) {
-      setElements(elementsFetcher.data.elements)
-    }
-  }, [elementsFetcher.data?.elements])
+  const { data: userData } = useQuery(
+    ["team-users", { selectedTeamId }],
+    async () => {
+      const response = await fetch(`/api/teams/${selectedTeamId}/users`)
+      if (!response.ok) throw new Error("Network response was not ok")
+      return response.json() as Promise<{ users: TeamUser[] }>
+    },
+    { enabled: !!selectedTeamId },
+  )
+  const users = userData?.users || []
 
   const [elementId, setElementId] = React.useState<string | undefined>(task?.element.id)
   const elementModalProps = c.useDisclosure()
 
+  const client = useQueryClient()
   const createElementFetcher = useFetcher()
   React.useEffect(() => {
     if (createElementFetcher.type === "actionReload" && createElementFetcher.data?.element) {
-      setElements([createElementFetcher.data.element, ...(elements || [])])
+      client.setQueryData(["task-elements", { selectedTeamId }], {
+        elements: [createElementFetcher.data.element, ...(elements || [])],
+      })
       elementModalProps.onClose()
       setElementId(createElementFetcher.data.element.id)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createElementFetcher.data, createElementFetcher.type, elements])
 
-  const users = usersFetcher.data?.users || []
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createElementFetcher.data, createElementFetcher.type, elements, selectedTeamId])
 
   if (!elements) return <c.Center h="379px" />
 

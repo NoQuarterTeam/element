@@ -13,6 +13,7 @@ import {
   useCatch,
   useLoaderData,
 } from "@remix-run/react"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 import { ClientStyleContext, ServerStyleContext } from "~/lib/emotion/context"
 import { theme } from "~/lib/theme"
@@ -80,6 +81,8 @@ export function CatchBoundary() {
   )
 }
 
+const queryClient = new QueryClient()
+
 interface DocumentProps {
   children: React.ReactNode
 }
@@ -125,7 +128,9 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
         ))}
       </head>
       <body>
-        <c.ChakraProvider theme={theme}>{children}</c.ChakraProvider>
+        <QueryClientProvider client={queryClient}>
+          <c.ChakraProvider theme={theme}>{children}</c.ChakraProvider>
+        </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

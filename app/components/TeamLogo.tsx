@@ -30,6 +30,7 @@ export function TeamLogo({ team }: Props) {
   const color = useColorModeValue("gray.800", "white")
   const bg = useColorModeValue("gray.100", "gray.700")
   const bgHover = useColorModeValue("gray.200", "gray.600")
+
   return (
     <Box key={team.id} pos="relative" sx={{ "&:hover .team-settings": { display: "flex" } }}>
       <Button
