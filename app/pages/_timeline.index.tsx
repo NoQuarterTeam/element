@@ -171,16 +171,16 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
       borderRight="1px solid"
       borderRightColor="tranparent"
     >
-      <c.Image
+      {/* <c.Image
         position="sticky"
         top="10px"
         left={3}
         src={isDark ? "/logo-dark.png" : "/logo.png"}
         boxSize="40px"
-      />
+      /> */}
       {months.map(({ month, year }) => (
         <c.Box key={month + year}>
-          <c.Flex position="sticky" w="max-content" py={2} left="60px" align="center">
+          <c.Flex position="sticky" w="max-content" py={2} left={4} ml={4} align="center">
             <c.Heading as="h3" fontSize="2em">
               {MONTH_NAMES[month]}
             </c.Heading>

@@ -42,13 +42,14 @@ export default function App() {
 
 export function ErrorBoundary({ error }: { error: Error }) {
   console.error("Boundary:", error)
+  const { colorMode } = c.useColorMode()
+  const isDark = colorMode === "dark"
   return (
     <Document>
       <c.VStack h="100vh" justify="center" p={20}>
-        <c.Heading>There was an error</c.Heading>
+        <c.Image src={isDark ? "/logo-dark.png" : "/logo.png"} boxSize="100px" />
+        <c.Heading>Oops, there was an error.</c.Heading>
         <c.Text>{error.message}</c.Text>
-        <hr />
-        <c.Text>Hey, developer, you should replace this with what you want your users to see.</c.Text>
       </c.VStack>
     </Document>
   )
@@ -68,10 +69,12 @@ export function CatchBoundary() {
     default:
       throw new Error(caught.data || caught.statusText)
   }
-
+  const { colorMode } = c.useColorMode()
+  const isDark = colorMode === "dark"
   return (
     <Document>
       <c.VStack h="100vh" justify="center" p={20}>
+        <c.Image src={isDark ? "/logo-dark.png" : "/logo.png"} boxSize="100px" />
         <c.Heading>
           {caught.status}: {caught.statusText}
         </c.Heading>
