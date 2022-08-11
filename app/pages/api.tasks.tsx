@@ -35,10 +35,10 @@ export const loader = async ({ request }: LoaderArgs) => {
         : { users: { some: { id: { equals: user.id } } } },
     },
   })
-  return json({ tasks })
+  return json(tasks)
 }
 
-export type TimelineTask = UseDataFunctionReturn<typeof loader>["tasks"][0]
+export type TimelineTask = UseDataFunctionReturn<typeof loader>[0]
 
 export enum TasksActionMethods {
   AddTask = "addTask",

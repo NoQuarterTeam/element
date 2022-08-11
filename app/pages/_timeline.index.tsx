@@ -1,7 +1,7 @@
 import * as React from "react"
 import { RiCalendarEventLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
-import type { ShouldReloadFunction} from "@remix-run/react";
+import type { ShouldReloadFunction } from "@remix-run/react"
 import { useFetcher, useLoaderData } from "@remix-run/react"
 import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
 import type { LoaderArgs } from "@remix-run/server-runtime"
@@ -52,7 +52,7 @@ export default function Timeline() {
   const selectedTeamId = useSelectedTeam((s) => s.selectedTeamId)
 
   // Polling
-  const taskFetcher = useFetcher<{ tasks: TimelineTask[] }>()
+  const taskFetcher = useFetcher<TimelineTask[]>()
   React.useEffect(
     function PollCurrentTasks() {
       const interval = setInterval(() => {
@@ -78,8 +78,8 @@ export default function Timeline() {
   )
 
   React.useEffect(() => {
-    if (taskFetcher.data?.tasks) {
-      setTasks(taskFetcher.data.tasks)
+    if (taskFetcher.data) {
+      setTasks(taskFetcher.data)
     }
   }, [taskFetcher.data, setTasks])
 

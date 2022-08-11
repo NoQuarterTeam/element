@@ -46,28 +46,28 @@ function _TaskItem({ task }: Props) {
 
   const deleteFetcher = useFetcher()
   React.useEffect(() => {
-    if (deleteFetcher.data?.success) {
+    if (deleteFetcher.type === "actionReload" && deleteFetcher.data?.success) {
       removeTask(task)
     }
-  }, [task, deleteFetcher.data, removeTask])
+  }, [task, deleteFetcher.type, deleteFetcher.data, removeTask])
 
   const updateFetcher = useFetcher()
   React.useEffect(() => {
-    if (updateFetcher.data?.task) {
+    if (updateFetcher.type === "actionReload" && updateFetcher.data?.task) {
       updateTask(updateFetcher.data.task)
     }
-  }, [task, updateFetcher.data, updateTask])
+  }, [task, updateFetcher.type, updateFetcher.data, updateTask])
 
   const dupeFetcher = useFetcher()
   React.useEffect(() => {
-    if (dupeFetcher.data?.task) {
+    if (dupeFetcher.type === "actionReload" && dupeFetcher.data?.task) {
       addTask(dupeFetcher.data.task)
     }
-  }, [task, dupeFetcher.data, addTask])
+  }, [task, dupeFetcher.data, dupeFetcher.type, addTask])
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.metaKey) {
-      // Delete
+      // Duplicate
       dupeFetcher.submit(
         { _action: TaskActionMethods.DuplicateTask },
         { action: `/api/tasks/${task.id}`, method: "post" },
