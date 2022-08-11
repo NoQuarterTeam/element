@@ -40,10 +40,9 @@ export type SidebarTeam = UseDataFunctionReturn<typeof loader>["teams"][0]
 dayjs.extend(advancedFormat)
 
 export default function Timeline() {
-  const { tasks, setTasks, mergeTasks } = useTimelineTasks(({ tasks, setTasks, mergeTasks }) => ({
+  const { tasks, setTasks } = useTimelineTasks(({ tasks, setTasks }) => ({
     tasks,
     setTasks,
-    mergeTasks,
   }))
 
   const timelineRef = React.useRef<HTMLDivElement>(null)
@@ -54,7 +53,8 @@ export default function Timeline() {
   // Polling
   const taskFetcher = useFetcher<TimelineTask[]>()
   React.useEffect(
-    function PollCurrentTasks() {
+    function LoadTasksAndPoll() {
+      taskFetcher.load(`/api/tasks?back=${daysBack}&forward=${daysForward}&selectedTeamId=${selectedTeamId}`)
       const interval = setInterval(() => {
         taskFetcher.load(
           `/api/tasks?back=${daysBack}&forward=${daysForward}&selectedTeamId=${selectedTeamId}`,
@@ -68,47 +68,23 @@ export default function Timeline() {
     [daysBack, daysForward, selectedTeamId],
   )
 
-  // Changing teams
-  React.useEffect(
-    function ChangingTeams() {
-      taskFetcher.load(`/api/tasks?back=${daysBack}&forward=${daysForward}&selectedTeamId=${selectedTeamId}`)
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [daysBack, daysForward, selectedTeamId],
-  )
-
   React.useEffect(() => {
     if (taskFetcher.data) {
       setTasks(taskFetcher.data)
     }
   }, [taskFetcher.data, setTasks])
 
-  // Scrolling
-  const scrollFetcher = useFetcher()
-  React.useEffect(() => {
-    if (scrollFetcher.type !== "done") return
-    if (scrollFetcher.data?.tasks) {
-      mergeTasks(scrollFetcher.data.tasks)
-    }
-  }, [scrollFetcher.data, scrollFetcher.type, mergeTasks])
   const handleForward = () => {
-    scrollFetcher.load(
-      `/api/tasks?back=${-daysForward - 1}&forward=${
-        daysForward + DAYS_FORWARD
-      }&selectedTeamId=${selectedTeamId}`,
-    )
     setDaysForward(daysForward + DAYS_FORWARD)
   }
   const handleBack = () => {
-    scrollFetcher.load(
-      `/api/tasks?back=${daysBack + DAYS_BACK}&forward=${-daysBack - 2}&selectedTeamId=${selectedTeamId}`,
-    )
     // Need to scroll a bit right otherwise it keeps running handleBack
     timelineRef.current?.scrollTo({ left: DAYS_BACK * DAY_WIDTH })
     setDaysBack(daysBack + DAYS_BACK)
   }
+
   const handleScroll = () => {
-    if (!daysRef.current || scrollFetcher.state === "loading") return
+    if (!daysRef.current || taskFetcher.state === "loading") return
     const right = daysRef.current.getBoundingClientRect().right - DAY_WIDTH <= window.innerWidth
     const left = daysRef.current.getBoundingClientRect().left + DAY_WIDTH >= 0
     if (right) return handleForward()
@@ -136,7 +112,7 @@ export default function Timeline() {
     timelineRef.current?.scrollTo(scrollTo, 0)
   }, [])
 
-  const isLoading = taskFetcher.state === "loading" || scrollFetcher.state === "loading"
+  const isLoading = taskFetcher.state === "loading"
 
   const bg = c.useColorModeValue("gray.100", "gray.800")
   const { elements, teams } = useLoaderData<typeof loader>()

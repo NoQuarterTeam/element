@@ -10,7 +10,6 @@ export const DAYS_FORWARD = 40
 type TimelineTasks = {
   tasks: TimelineTask[]
   setTasks: (tasks: TimelineTask[]) => void
-  mergeTasks: (tasks: TimelineTask[]) => void
   updateTask: (task: TimelineTask) => void
   updateOrder: (tasks: ReorderTask[]) => void
   addTask: (task: TimelineTask) => void
@@ -23,7 +22,6 @@ export const useTimelineTasks = create<TimelineTasks>()((set) => ({
   addTask: (task: TimelineTask) => set((state) => ({ ...state, tasks: [...state.tasks, task] })),
   removeTask: (task: TimelineTask) =>
     set((state) => ({ ...state, tasks: state.tasks.filter((t) => t.id !== task.id) })),
-  mergeTasks: (tasks) => set((state) => ({ tasks: [...tasks, ...state.tasks] })),
   updateTask: (task: TimelineTask) =>
     set((state) => ({ tasks: state.tasks.map((t) => (t.id === task.id ? task : t)) })),
   updateOrder: (orderedTasks) =>

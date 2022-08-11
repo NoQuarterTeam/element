@@ -45,18 +45,7 @@ function _TaskItem({ task }: Props) {
   const theme = useTheme()
 
   const deleteFetcher = useFetcher()
-  React.useEffect(() => {
-    if (deleteFetcher.type === "actionReload" && deleteFetcher.data?.success) {
-      removeTask(task)
-    }
-  }, [task, deleteFetcher.type, deleteFetcher.data, removeTask])
-
-  const updateFetcher = useFetcher()
-  React.useEffect(() => {
-    if (updateFetcher.type === "actionReload" && updateFetcher.data?.task) {
-      updateTask(updateFetcher.data.task)
-    }
-  }, [task, updateFetcher.type, updateFetcher.data, updateTask])
+  const toggleCompleteFetcher = useFetcher()
 
   const dupeFetcher = useFetcher()
   React.useEffect(() => {
@@ -74,13 +63,15 @@ function _TaskItem({ task }: Props) {
       )
     } else if (event.shiftKey) {
       // Delete
+      removeTask(task)
       deleteFetcher.submit(
         { _action: TaskActionMethods.DeleteTask },
         { action: `/api/tasks/${task.id}`, method: "post" },
       )
     } else if (event.altKey) {
       // Toggle complete
-      updateFetcher.submit(
+      updateTask({ ...task, isComplete: !task.isComplete })
+      toggleCompleteFetcher.submit(
         { _action: TaskActionMethods.UpdateTask, isComplete: String(!task.isComplete) },
         { action: `/api/tasks/${task.id}`, method: "post" },
       )
