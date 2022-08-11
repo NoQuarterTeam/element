@@ -133,9 +133,10 @@ export default function Timeline() {
         </c.Flex>
       </c.Box>
       <Nav teams={teams} elements={elements} />
-      <c.Box pos="absolute" bottom={4} left={4} p={2} bg={bg} borderRadius="full">
+      <c.Box pos="absolute" bottom={isMobile ? 8 : 8} left={8} bg={bg} borderRadius="full">
         <c.Tooltip label="Jump to today" placement="auto" zIndex={50} hasArrow>
           <c.IconButton
+            size="md"
             borderRadius="full"
             onClick={handleJumpToToday}
             aria-label="Jump to today"
@@ -170,9 +171,10 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
       borderRight="1px solid"
       borderRightColor="tranparent"
     >
+      <c.Image position="sticky" top="10px" left={3} src="/logo.png" boxSize="40px" />
       {months.map(({ month, year }) => (
         <c.Box key={month + year}>
-          <c.Flex position="sticky" w="max-content" py={2} left={4} ml={4} align="center">
+          <c.Flex position="sticky" w="max-content" py={2} left="60px" align="center">
             <c.Heading as="h3" fontSize="2em">
               {MONTH_NAMES[month]}
             </c.Heading>

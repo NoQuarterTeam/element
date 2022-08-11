@@ -68,7 +68,7 @@ export function InlineFormField({ label, input, error, ...props }: FormFieldProp
     <c.FormControl isRequired={props.isRequired} isInvalid={!!form?.fieldErrors?.[props.name] || !!error}>
       <c.Flex>
         {label && (
-          <c.FormLabel minW="100px" fontSize="sm" htmlFor={props.name}>
+          <c.FormLabel minW={{ base: "80px", md: "100px" }} fontSize="sm" htmlFor={props.name}>
             {label}
           </c.FormLabel>
         )}

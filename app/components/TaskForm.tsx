@@ -192,7 +192,7 @@ export function TaskForm({ day, onClose, task }: FormProps) {
           )}
           <c.Box>
             <c.Flex>
-              <c.FormLabel htmlFor="durationHours" fontSize="sm" minW="100px">
+              <c.FormLabel htmlFor="durationHours" fontSize="sm" minW={{ base: "80px", md: "100px" }}>
                 Duration
               </c.FormLabel>
               <c.HStack>

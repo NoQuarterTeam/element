@@ -78,7 +78,7 @@ export function MultiUserSelect({ label, subLabel, users, isRequired, ...props }
           fontWeight={500}
           fontSize={{ base: "0.8rem", md: "0.9rem" }}
           mb={0}
-          minW="100px"
+          minW={{ base: "80px", md: "100px" }}
           {...combo.getLabelProps()}
         >
           <c.Flex>
