@@ -12,10 +12,12 @@ export const loader = async ({ request }: LoaderArgs) => {
 }
 
 export default function AuthLayout() {
+  const { colorMode } = c.useColorMode()
+  const isDark = colorMode === "dark"
   return (
     <c.Center flexDir="column" pt={{ base: 10, md: 20 }}>
       <c.VStack spacing={4} p={4}>
-        <c.Image src="/logo.png" w="100px" h="100px" />
+        <c.Image src={isDark ? "/logo-dark.png" : "/logo.png"} w="100px" h="100px" />
         <c.Box w={["100%", 400]}>
           <Outlet />
         </c.Box>
