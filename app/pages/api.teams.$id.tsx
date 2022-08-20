@@ -51,6 +51,13 @@ export const action = async ({ request, params }: ActionArgs) => {
         const isPublic = formData.get("isPublic") as string | undefined
         let slug
         if (formData.has("slug") && data.slug) {
+          const foundTeam = await db.team.findFirst({
+            where: { slug: data.slug, id: { not: { equals: teamId } } },
+          })
+          if (foundTeam)
+            return badRequest("Slug already in use", {
+              headers: { "Set-Cookie": await createFlash(FlashType.Error, "Slug already in use.") },
+            })
           slug = slugify(data.slug)
         }
         const team = await db.team.update({

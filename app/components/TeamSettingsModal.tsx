@@ -179,14 +179,12 @@ export function TeamSettingsModal({ team: { name, id, logo } }: Props) {
                     <FormField
                       error={updateProfileFetcher.data?.fieldErrors?.slug?.[0]}
                       defaultValue={team.slug}
-                      isRequired
                       name="slug"
                       label="Slug"
                     />
                     <FormField
                       error={updateProfileFetcher.data?.fieldErrors?.isPublic?.[0]}
                       defaultChecked={team.isPublic}
-                      isRequired
                       name="isPublic"
                       label="Is public?"
                       input={<c.Checkbox />}
