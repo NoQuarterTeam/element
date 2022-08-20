@@ -10,6 +10,7 @@ import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { requireUser } from "~/services/auth/auth.server"
 import { getFlashSession } from "~/services/session/session.server"
+import { slugify } from "~/services/team/team.server"
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireUser(request)
@@ -40,11 +41,27 @@ export const action = async ({ request, params }: ActionArgs) => {
       try {
         const updateSchema = z.object({
           name: z.string().min(1).optional(),
+          slug: z.string().min(1).optional(),
+          isPublic: z.string().optional(),
           logo: z.string().optional(),
         })
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
-        const team = await db.team.update({ select: teamSelectFields, where: { id: teamId }, data })
+        const hasPublic = formData.has("isPublic")
+        const isPublic = formData.get("isPublic") as string | undefined
+        let slug
+        if (formData.has("slug") && data.slug) {
+          slug = slugify(data.slug)
+        }
+        const team = await db.team.update({
+          select: teamSelectFields,
+          where: { id: teamId },
+          data: {
+            ...data,
+            slug,
+            isPublic: hasPublic ? isPublic === "" || isPublic === "true" || false : undefined,
+          },
+        })
         return json({ team })
       } catch (e: any) {
         return badRequest(e.message, {

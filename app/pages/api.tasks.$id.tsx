@@ -30,6 +30,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       try {
         const updateSchema = z.object({
           name: z.string().optional(),
+          slug: z.string().optional(),
           description: z.string().optional(),
           isComplete: z.string().optional(),
           durationHours: z.preprocess(Number, z.number()).optional(),
@@ -37,6 +38,7 @@ export const action = async ({ request, params }: ActionArgs) => {
           startTime: z.string().optional(),
           elementId: z.string().uuid().optional(),
         })
+        const hasComplete = formData.has("isComplete")
         const isComplete = formData.get("isComplete") as string | undefined
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
@@ -56,7 +58,7 @@ export const action = async ({ request, params }: ActionArgs) => {
             name: data.name,
             elementId: data.elementId || task.elementId,
             description: data.description || task.description || null,
-            isComplete: isComplete === "" || isComplete === "true" || false,
+            isComplete: hasComplete ? isComplete === "" || isComplete === "true" || false : undefined,
             users: { set: users ? users.filter(Boolean).map((id) => ({ id })) : undefined },
           },
         })

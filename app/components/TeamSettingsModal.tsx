@@ -18,6 +18,8 @@ export const teamSelectFields = {
   id: true,
   name: true,
   logo: true,
+  slug: true,
+  isPublic: true,
   users: {
     select: {
       id: true,
@@ -173,6 +175,21 @@ export function TeamSettingsModal({ team: { name, id, logo } }: Props) {
                       isRequired
                       name="name"
                       label="Name"
+                    />
+                    <FormField
+                      error={updateProfileFetcher.data?.fieldErrors?.slug?.[0]}
+                      defaultValue={team.slug}
+                      isRequired
+                      name="slug"
+                      label="Slug"
+                    />
+                    <FormField
+                      error={updateProfileFetcher.data?.fieldErrors?.isPublic?.[0]}
+                      defaultChecked={team.isPublic}
+                      isRequired
+                      name="isPublic"
+                      label="Is public?"
+                      input={<c.Checkbox />}
                     />
                     <ImageField
                       name="logo"

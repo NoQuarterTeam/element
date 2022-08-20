@@ -23,6 +23,12 @@ export const loader = async ({ request }: LoaderArgs) => {
   const back = backParam ? parseInt(backParam) : DAYS_BACK
   const forward = forwardParam ? parseInt(forwardParam) : DAYS_FORWARD
 
+  if (selectedTeamId) {
+    const teamUsers = await db.team
+      .findUnique({ where: { id: selectedTeamId } })
+      .users({ where: { id: { equals: user.id } } })
+    if (teamUsers.length === 0) throw badRequest("Not authorized")
+  }
   const tasks = await db.task.findMany({
     select: taskSelectFields,
     where: {

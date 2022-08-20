@@ -8,6 +8,7 @@ const elementSelectFields = {
 }
 export async function getSidebarElements(userId: string) {
   return await db.element.findMany({
+    orderBy: { name: "asc" },
     select: {
       ...elementSelectFields,
       children: {
@@ -35,6 +36,7 @@ export async function getSidebarElements(userId: string) {
 
 export async function getSidebarTeams(userId: string) {
   return await db.user.findUniqueOrThrow({ where: { id: userId } }).teams({
+    orderBy: { createdAt: "asc" },
     select: {
       id: true,
       name: true,

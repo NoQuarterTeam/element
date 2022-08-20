@@ -5,15 +5,16 @@ import * as c from "@chakra-ui/react"
 import dayjs from "dayjs"
 import deepEqual from "deep-equal"
 
-import { HEADER_HEIGHT } from "~/pages/_timeline.index"
 import type { TimelineTask } from "~/pages/api.tasks"
 
 import { TaskForm } from "./TaskForm"
 import { TaskItem } from "./TaskItem"
+import { HEADER_HEIGHT } from "./TimelineHeader"
 
 interface Props {
   day: dayjs.Dayjs
   index: number
+  isPublic: boolean
   tasks: TimelineTask[]
   daysForward: number
   daysBack: number
@@ -68,7 +69,12 @@ function _Day(props: Props) {
               {props.tasks
                 .sort((a, b) => a.order - b.order)
                 .map((task, index) => (
-                  <Draggable key={task.id} draggableId={task.id} index={index}>
+                  <Draggable
+                    key={task.id}
+                    isDragDisabled={props.isPublic}
+                    draggableId={task.id}
+                    index={index}
+                  >
                     {(provided) => (
                       <div
                         style={{ outline: "none" }}
@@ -77,24 +83,28 @@ function _Day(props: Props) {
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >
-                        <TaskItem task={task} />
+                        <TaskItem task={task} isPublic={props.isPublic} />
                       </div>
                     )}
                   </Draggable>
                 ))}
               {provided.placeholder}
-              <c.Flex w="100%" justify="center" py={3} flex={1}>
-                <c.Text fontSize="xs">{getTotalTaskDuration(props.tasks)}</c.Text>
-              </c.Flex>
-              <c.Flex _hover={{ opacity: 1 }} opacity={0} w="100%" justify="center" pt={0} flex={1}>
-                <c.IconButton
-                  variant="ghost"
-                  onClick={modalProps.onOpen}
-                  borderRadius="full"
-                  icon={<c.Box as={IoIosAddCircleOutline} boxSize="24px" />}
-                  aria-label="new task"
-                />
-              </c.Flex>
+              {!props.isPublic && (
+                <>
+                  <c.Flex w="100%" justify="center" py={3} flex={1}>
+                    <c.Text fontSize="xs">{getTotalTaskDuration(props.tasks)}</c.Text>
+                  </c.Flex>
+                  <c.Flex _hover={{ opacity: 1 }} opacity={0} w="100%" justify="center" pt={0} flex={1}>
+                    <c.IconButton
+                      variant="ghost"
+                      onClick={modalProps.onOpen}
+                      borderRadius="full"
+                      icon={<c.Box as={IoIosAddCircleOutline} boxSize="24px" />}
+                      aria-label="new task"
+                    />
+                  </c.Flex>
+                </>
+              )}
             </c.Box>
           </div>
         )}

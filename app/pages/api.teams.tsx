@@ -8,6 +8,7 @@ import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { requireUser } from "~/services/auth/auth.server"
 import { getFlashSession } from "~/services/session/session.server"
+import { slugify } from "~/services/team/team.server"
 
 export enum TeamsActionMethods {
   CreateTeam = "createTeam",
@@ -21,13 +22,13 @@ export const action = async ({ request }: ActionArgs) => {
   switch (action) {
     case TeamsActionMethods.CreateTeam:
       try {
-        const createSchema = z.object({
-          name: z.string(),
-        })
+        const createSchema = z.object({ name: z.string() })
+
         const { data, fieldErrors } = await validateFormData(createSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
+        const slug = slugify(data.name)
         const createdTeam = await db.team.create({
-          data: { ...data, users: { connect: { id: user.id } } },
+          data: { ...data, slug, users: { connect: { id: user.id } } },
         })
         return json({ team: createdTeam })
       } catch (e: any) {

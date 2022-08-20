@@ -1,9 +1,7 @@
 import * as React from "react"
 import { RiCalendarEventLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
-import type { ShouldReloadFunction } from "@remix-run/react"
-import { useFetcher, useLoaderData } from "@remix-run/react"
-import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
+import { useCatch, useFetcher, useLoaderData } from "@remix-run/react"
 import type { LoaderArgs } from "@remix-run/server-runtime"
 import { json } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
@@ -12,36 +10,29 @@ import throttle from "lodash.throttle"
 
 import { Day, DAY_WIDTH } from "~/components/Day"
 import { DropContainer } from "~/components/DropContainer"
-import { Nav } from "~/components/Nav"
 import { HEADER_HEIGHT,TimelineHeader } from "~/components/TimelineHeader"
+import { db } from "~/lib/db.server"
 import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
-import { useSelectedTeam } from "~/lib/hooks/useSelectedTeam"
 import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
 import { DAYS_BACK, DAYS_FORWARD, useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { requireUser } from "~/services/auth/auth.server"
-import { getSidebarElements, getSidebarTeams } from "~/services/timeline/sidebar.server"
+import { notFound } from "~/lib/remix"
 
 import type { TimelineTask } from "./api.tasks"
 
-export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
-  if (!submission) return false
-  return ["/api/teams", "/api/elements"].some((path) => submission.action.includes(path))
-}
-
-export const loader = async ({ request }: LoaderArgs) => {
-  const user = await requireUser(request)
-  const elements = await getSidebarElements(user.id)
-  const teams = await getSidebarTeams(user.id)
-  return json({ teams, elements })
-}
-
-export type SidebarElement = UseDataFunctionReturn<typeof loader>["elements"][0]
-export type SidebarTeam = UseDataFunctionReturn<typeof loader>["teams"][0]
-
 dayjs.extend(advancedFormat)
 
+export const loader = async ({ params }: LoaderArgs) => {
+  const slug = params.slug as string | undefined
+  if (!slug) throw notFound("No slug provided")
+  const team = await db.team.findFirst({ where: { slug, isPublic: { equals: true } } })
+  if (!team) throw notFound("Team not found")
+  return json({ team })
+}
+
 export default function Timeline() {
+  const { team } = useLoaderData<typeof loader>()
+  const selectedTeamId = team.id
   const { tasks, setTasks } = useTimelineTasks(({ tasks, setTasks }) => ({
     tasks,
     setTasks,
@@ -50,17 +41,14 @@ export default function Timeline() {
   const timelineRef = React.useRef<HTMLDivElement>(null)
   const daysRef = React.useRef<HTMLDivElement>(null)
   const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineDays()
-  const selectedTeamId = useSelectedTeam((s) => s.selectedTeamId)
 
   // Polling
   const taskFetcher = useFetcher<TimelineTask[]>()
   React.useEffect(
     function LoadTasksAndPoll() {
-      taskFetcher.load(`/api/tasks?back=${daysBack}&forward=${daysForward}&selectedTeamId=${selectedTeamId}`)
+      taskFetcher.load(`/api/teams/${team.id}/tasks?back=${daysBack}&forward=${daysForward}`)
       const interval = setInterval(() => {
-        taskFetcher.load(
-          `/api/tasks?back=${daysBack}&forward=${daysForward}&selectedTeamId=${selectedTeamId}`,
-        )
+        taskFetcher.load(`/api/teams/${team.id}/tasks?back=${daysBack}&forward=${daysForward}`)
       }, 30_000)
       return () => {
         clearInterval(interval)
@@ -117,17 +105,16 @@ export default function Timeline() {
   const isLoading = taskFetcher.state === "loading"
 
   const bg = c.useColorModeValue("gray.100", "gray.800")
-  const { elements, teams } = useLoaderData<typeof loader>()
   return (
     <c.Box ref={timelineRef} w="100vw" h="100vh" overflowX="auto" overflowY="hidden">
-      <TimelineHeader isLoading={isLoading} days={days} months={months} />
+      <TimelineHeader isLoading={isLoading} days={days} months={months} logo={team.logo} />
       <c.Box ref={daysRef} h={`calc(100vh - ${HEADER_HEIGHT}px)`} w="min-content" overflow="scroll">
         <c.Flex>
           <DropContainer tasks={tasks.map((t) => ({ id: t.id, date: t.date, order: t.order }))}>
             {days.map((day, index) => (
               <Day
+                isPublic={true}
                 key={day.toISOString() + index}
-                isPublic={false}
                 {...{ index, day, daysForward, daysBack }}
                 tasks={tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))}
               />
@@ -135,7 +122,6 @@ export default function Timeline() {
           </DropContainer>
         </c.Flex>
       </c.Box>
-      <Nav teams={teams} elements={elements} />
       <c.Box pos="absolute" bottom={isMobile ? 24 : 8} left={8} bg={bg} borderRadius="full">
         <c.Tooltip label="Jump to today" placement="auto" zIndex={50} hasArrow>
           <c.IconButton
@@ -149,5 +135,19 @@ export default function Timeline() {
         </c.Tooltip>
       </c.Box>
     </c.Box>
+  )
+}
+
+export function CatchBoundary() {
+  let caught = useCatch()
+  let message = caught.data
+
+  const { colorMode } = c.useColorMode()
+  const isDark = colorMode === "dark"
+  return (
+    <c.VStack h="100vh" justify="center" p={20}>
+      <c.Image src={isDark ? "/logo-dark.png" : "/logo.png"} boxSize="100px" />
+      <c.Heading>{message}</c.Heading>
+    </c.VStack>
   )
 }

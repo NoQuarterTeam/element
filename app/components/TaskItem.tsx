@@ -30,9 +30,10 @@ export const taskSelectFields = {
 }
 interface Props {
   task: TimelineTask
+  isPublic: boolean
 }
 
-function _TaskItem({ task }: Props) {
+function _TaskItem({ task, isPublic }: Props) {
   const { removeTask, updateTask, addTask } = useTimelineTasks((s) => ({
     removeTask: s.removeTask,
     updateTask: s.updateTask,
@@ -55,6 +56,7 @@ function _TaskItem({ task }: Props) {
   }, [task, dupeFetcher.data, dupeFetcher.type, addTask])
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (isPublic) return
     if (event.metaKey) {
       // Duplicate
       dupeFetcher.submit(
@@ -87,7 +89,7 @@ function _TaskItem({ task }: Props) {
   return (
     <c.Box w={DAY_WIDTH} p={2} pb={0} zIndex={1}>
       <c.Box
-        onClick={handleClick}
+        onClick={isPublic ? undefined : handleClick}
         outline="none"
         overflow="hidden"
         w="100%"
