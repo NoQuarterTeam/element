@@ -26,7 +26,11 @@ export const action = async ({ request }: ActionArgs) => {
 
         const { data, fieldErrors } = await validateFormData(createSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
-        const slug = slugify(data.name)
+        let slug = slugify(data.name)
+        const foundTeam = await db.team.findFirst({ where: { slug } })
+        if (foundTeam) {
+          slug = slug + Math.floor(1000 + Math.random() * 9000)
+        }
         const createdTeam = await db.team.create({
           data: { ...data, slug, users: { connect: { id: user.id } } },
         })
