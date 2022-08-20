@@ -10,7 +10,7 @@ import throttle from "lodash.throttle"
 
 import { Day, DAY_WIDTH } from "~/components/Day"
 import { DropContainer } from "~/components/DropContainer"
-import { HEADER_HEIGHT,TimelineHeader } from "~/components/TimelineHeader"
+import { HEADER_HEIGHT, TimelineHeader } from "~/components/TimelineHeader"
 import { db } from "~/lib/db.server"
 import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
@@ -32,7 +32,6 @@ export const loader = async ({ params }: LoaderArgs) => {
 
 export default function Timeline() {
   const { team } = useLoaderData<typeof loader>()
-  const selectedTeamId = team.id
   const { tasks, setTasks } = useTimelineTasks(({ tasks, setTasks }) => ({
     tasks,
     setTasks,
@@ -45,17 +44,11 @@ export default function Timeline() {
   // Polling
   const taskFetcher = useFetcher<TimelineTask[]>()
   React.useEffect(
-    function LoadTasksAndPoll() {
+    function LoadTasks() {
       taskFetcher.load(`/api/teams/${team.id}/tasks?back=${daysBack}&forward=${daysForward}`)
-      const interval = setInterval(() => {
-        taskFetcher.load(`/api/teams/${team.id}/tasks?back=${daysBack}&forward=${daysForward}`)
-      }, 30_000)
-      return () => {
-        clearInterval(interval)
-      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [daysBack, daysForward, selectedTeamId],
+    [daysBack, daysForward, team.id],
   )
 
   React.useEffect(() => {
