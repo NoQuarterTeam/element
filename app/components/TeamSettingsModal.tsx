@@ -180,6 +180,7 @@ export function TeamSettingsModal({ team: { name, id, logo } }: Props) {
                       error={updateProfileFetcher.data?.fieldErrors?.slug?.[0]}
                       defaultValue={team.slug}
                       name="slug"
+                      isRequired
                       label="Slug"
                     />
                     <FormField
