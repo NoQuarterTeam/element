@@ -3,21 +3,26 @@ import dayjs from "dayjs"
 
 import { transformImage } from "~/lib/helpers/image"
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
+import { useUserLocation } from "~/lib/hooks/useUserLocation"
+import type { WeatherData } from "~/pages/_timeline.index"
 
 import { DAY_WIDTH } from "./Day"
 
 export const HEADER_HEIGHT = 95
 
 interface TimelineHeaderProps {
+  weatherData?: WeatherData | null
   isLoading: boolean
   days: dayjs.Dayjs[]
   logo?: string | null
   months: { month: number; year: number }[]
 }
 
-export function TimelineHeader({ days, months, logo, isLoading }: TimelineHeaderProps) {
+export function TimelineHeader({ weatherData, days, months, logo, isLoading }: TimelineHeaderProps) {
   const { colorMode } = c.useColorMode()
   const isDark = colorMode === "dark"
+  const isWeatherEnabled = useUserLocation().isEnabled
+
   return (
     <c.Flex
       minH={HEADER_HEIGHT}
@@ -30,15 +35,15 @@ export function TimelineHeader({ days, months, logo, isLoading }: TimelineHeader
     >
       <c.Image
         position="fixed"
-        top="8px"
+        top="2px"
         left={2}
         src={logo ? transformImage(logo, "w_80,h_80") : isDark ? "/logo-dark.png" : "/logo.png"}
         boxSize="40px"
       />
       {months.map(({ month, year }) => (
         <c.Box key={month + year}>
-          <c.Flex position="sticky" w="max-content" pt={2} left={14} align="center">
-            <c.Heading as="h3" fontSize="2em">
+          <c.Flex position="sticky" w="max-content" left={12} align="center">
+            <c.Heading pl={2} as="h3" pt={1} fontSize="3xl">
               {MONTH_NAMES[month]}
             </c.Heading>
             {isLoading && <c.Spinner size="sm" ml={4} mt={1} />}
@@ -46,18 +51,34 @@ export function TimelineHeader({ days, months, logo, isLoading }: TimelineHeader
           <c.Flex>
             {days
               .filter((day) => month === day.month() && year === day.year())
-              .map((day) => (
-                <c.Text
-                  key={day.unix()}
-                  minW={DAY_WIDTH}
-                  textAlign="center"
-                  p={2}
-                  fontSize="0.95rem"
-                  fontWeight={dayjs(day).isSame(dayjs(), "day") ? 700 : 400}
-                >
-                  {day.format("ddd Do")}
-                </c.Text>
-              ))}
+              .map((day) => {
+                const dayWeather = weatherData?.find((d) => d.date === day.format("DD/MM/YYYY"))
+                return (
+                  <c.VStack spacing={0} px={2} minW={DAY_WIDTH} key={day.unix()}>
+                    {isWeatherEnabled && dayWeather ? (
+                      <c.HStack spacing={0} maxH="25px" overflow="hidden">
+                        <c.Text fontSize="x-small" opacity={0.8}>
+                          {dayWeather.temp}°C
+                        </c.Text>
+                        <c.Image
+                          src={`https://openweathermap.org/img/wn/${dayWeather.icon}@2x.png`}
+                          boxSize="35px"
+                          objectFit="cover"
+                        />
+                      </c.HStack>
+                    ) : (
+                      <c.Box h="25px" />
+                    )}
+                    <c.Text
+                      textAlign="center"
+                      fontSize="sm"
+                      fontWeight={dayjs(day).isSame(dayjs(), "day") ? 700 : 400}
+                    >
+                      {day.format("ddd Do")}
+                    </c.Text>
+                  </c.VStack>
+                )
+              })}
           </c.Flex>
         </c.Box>
       ))}

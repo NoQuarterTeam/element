@@ -10,6 +10,6 @@ export const useSelectedTeam = create<{
       selectedTeamId: "",
       setSelectedTeamId: (selectedTeamId) => set(() => ({ selectedTeamId })),
     }),
-    { name: "element:selectedTeam" },
+    { name: "element.selected.team" },
   ),
 )

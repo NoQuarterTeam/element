@@ -4,6 +4,7 @@ import { Button } from "./components/Button"
 import { Checkbox } from "./components/Checkbox"
 import { Input } from "./components/Input"
 import { Select } from "./components/Select"
+import { Switch } from "./components/Switch"
 import { Textarea } from "./components/Textarea"
 
 export const theme = extendTheme({
@@ -33,6 +34,7 @@ export const theme = extendTheme({
     Button,
     Input,
     Checkbox,
+    Switch,
     FormLabel: {
       baseStyle: { mb: 0 },
     },

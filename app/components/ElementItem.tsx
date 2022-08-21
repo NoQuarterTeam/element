@@ -22,7 +22,7 @@ interface Props {
 }
 
 export function ElementItem({ element, ...props }: Props) {
-  const expandProps = useStoredDisclosure("element:sidebar:itemExpand:" + element.id)
+  const expandProps = useStoredDisclosure("element.sidebar.itemExpand." + element.id)
 
   const createModalProps = c.useDisclosure()
   const createFetcher = useFetcher()
