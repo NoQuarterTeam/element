@@ -28,21 +28,29 @@ export function EditorInput({ name, defaultValue, isRequired, isDisabled }: Prop
             color: c.useColorModeValue("black", "white"),
             borderColor: c.useColorModeValue("gray.200", "gray.600"),
             button: {
+              boxSize: "30px",
               color: c.useColorModeValue("black", "white"),
               _hover: {
                 color: c.useColorModeValue("gray.500", "gray.300"),
                 bgColor: "transparent!important",
               },
+              svg: {
+                boxSize: "13px",
+              },
             },
-          },
-          ".sun-editor-editable": {
-            bgColor: c.useColorModeValue("white", "gray.700"),
-            color: c.useColorModeValue("black", "white"),
+            p: { mb: 0 },
           },
           ".se-toolbar": {
             outlineColor: c.useColorModeValue("gray.200", "gray.600"),
             bgColor: c.useColorModeValue("white", "gray.700"),
             color: c.useColorModeValue("black", "white"),
+          },
+          ".sun-editor-editable": {
+            bgColor: c.useColorModeValue("white", "gray.700"),
+            color: c.useColorModeValue("black", "white"),
+          },
+          ".se-wrapper-inner": {
+            p: 2,
           },
         }}
       >

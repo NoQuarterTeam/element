@@ -248,11 +248,13 @@ export function TaskForm({ day, onClose, task }: FormProps) {
             defaultValue={task?.description}
             label="Description"
             input={
-              <ClientOnly>
-                <React.Suspense fallback={<c.Box h="250px" />}>
-                  <PreloadedEditorInput name="description" defaultValue={task?.description} />
-                </React.Suspense>
-              </ClientOnly>
+              <c.Box minH="250px" w="100%">
+                <ClientOnly>
+                  <React.Suspense fallback={<c.Box h="250px" />}>
+                    <PreloadedEditorInput name="description" defaultValue={task?.description} />
+                  </React.Suspense>
+                </ClientOnly>
+              </c.Box>
             }
             error={createUpdateFetcher.data?.fieldErrors?.description?.[0]}
           />

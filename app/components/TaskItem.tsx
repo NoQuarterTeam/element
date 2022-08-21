@@ -226,45 +226,50 @@ function _TaskItem({ task, isPublic }: Props) {
         <c.ModalContent borderRadius="md">
           <c.ModalCloseButton />
           <c.ModalBody minH="400px" pb={6}>
-            <c.Stack my={2} spacing={1}>
+            <c.Stack my={2} spacing={3}>
               <c.Box>
                 <c.Tag bg={task.element.color} color={readableColor(task.element.color)}>
                   {task.element.name}
                 </c.Tag>
               </c.Box>
+              <c.Heading>{task.name}</c.Heading>
 
-              <c.Heading pb={2}>{task.name}</c.Heading>
+              <c.Stack spacing={1}>
+                <c.Flex>
+                  <c.Text w="100px" fontSize="sm" fontWeight="semibold">
+                    Date
+                  </c.Text>
 
-              <c.Flex>
-                <c.Text w="100px" fontSize="sm" fontWeight="semibold">
-                  Date
-                </c.Text>
-
-                <c.Text>{dayjs(task.date).format("DD/MM/YYYY")}</c.Text>
-              </c.Flex>
-              <c.Flex>
-                <c.Text w="100px" fontSize="sm" fontWeight="semibold">
-                  Start time
-                </c.Text>
-                <c.Text>{task.startTime}</c.Text>
-              </c.Flex>
-              <c.Flex>
-                <c.Text w="100px" fontSize="sm" fontWeight="semibold">
-                  Duration
-                </c.Text>
-                <c.Text>{formatDuration(task.durationHours, task.durationMinutes)}</c.Text>
-              </c.Flex>
-              <c.Flex>
-                <c.Text w="100px" fontSize="sm" fontWeight="semibold">
-                  Description
-                </c.Text>
-                <c.Text
-                  minH="120px"
-                  maxH="400px"
-                  overflow="scroll"
-                  dangerouslySetInnerHTML={{ __html: task.description || "" }}
-                />
-              </c.Flex>
+                  <c.Text>{dayjs(task.date).format("DD/MM/YYYY")}</c.Text>
+                </c.Flex>
+                <c.Flex>
+                  <c.Text w="100px" fontSize="sm" fontWeight="semibold">
+                    Start time
+                  </c.Text>
+                  <c.Text>{task.startTime}</c.Text>
+                </c.Flex>
+                <c.Flex>
+                  <c.Text w="100px" fontSize="sm" fontWeight="semibold">
+                    Duration
+                  </c.Text>
+                  <c.Text>{formatDuration(task.durationHours, task.durationMinutes)}</c.Text>
+                </c.Flex>
+                <c.Flex>
+                  <c.Text w="100px" fontSize="sm" fontWeight="semibold">
+                    Description
+                  </c.Text>
+                  <c.Box
+                    minH="120px"
+                    maxH="400px"
+                    overflow="scroll"
+                    dangerouslySetInnerHTML={{ __html: task.description || "" }}
+                    sx={{
+                      ul: { pl: 6 },
+                      ol: { pl: 6 },
+                    }}
+                  />
+                </c.Flex>
+              </c.Stack>
             </c.Stack>
           </c.ModalBody>
         </c.ModalContent>
