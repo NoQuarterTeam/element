@@ -180,6 +180,7 @@ export function TeamSettingsModal({ team: { name, id, logo } }: Props) {
                       error={updateProfileFetcher.data?.fieldErrors?.slug?.[0]}
                       defaultValue={team.slug}
                       name="slug"
+                      isRequired
                       label="Slug"
                     />
                     <FormField
@@ -350,7 +351,7 @@ export function TeamSettingsModal({ team: { name, id, logo } }: Props) {
                         <c.Button ref={cancelRef} onClick={alertProps.onClose}>
                           Cancel
                         </c.Button>
-                        <deleteTeamFetcher.Form method="post" action="/api/profile" replace>
+                        <deleteTeamFetcher.Form method="post" action={`/api/teams/${team.id}`} replace>
                           <c.Button
                             colorScheme="red"
                             type="submit"

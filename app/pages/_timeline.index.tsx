@@ -9,11 +9,12 @@ import { json } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import throttle from "lodash.throttle"
+import styles from "suneditor/dist/css/suneditor.min.css"
 
 import { Day, DAY_WIDTH } from "~/components/Day"
 import { DropContainer } from "~/components/DropContainer"
 import { Nav } from "~/components/Nav"
-import { HEADER_HEIGHT,TimelineHeader } from "~/components/TimelineHeader"
+import { HEADER_HEIGHT, TimelineHeader } from "~/components/TimelineHeader"
 import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
 import { useSelectedTeam } from "~/lib/hooks/useSelectedTeam"
@@ -23,6 +24,10 @@ import { requireUser } from "~/services/auth/auth.server"
 import { getSidebarElements, getSidebarTeams } from "~/services/timeline/sidebar.server"
 
 import type { TimelineTask } from "./api.tasks"
+
+export function links() {
+  return [{ rel: "stylesheet", href: styles }]
+}
 
 export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
   if (!submission) return false

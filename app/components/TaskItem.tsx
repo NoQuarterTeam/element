@@ -2,6 +2,7 @@ import * as React from "react"
 import * as c from "@chakra-ui/react"
 import { useTheme } from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
+import dayjs from "dayjs"
 import { readableColor } from "polished"
 
 import { transformImage } from "~/lib/helpers/image"
@@ -11,7 +12,7 @@ import type { TimelineTask } from "~/pages/api.tasks"
 import { TaskActionMethods } from "~/pages/api.tasks.$id"
 
 import { DAY_WIDTH } from "./Day"
-import { TaskForm } from "./TaskForm"
+import { PreloadedEditorInput, TaskForm } from "./TaskForm"
 
 export const taskSelectFields = {
   id: true,
@@ -41,6 +42,7 @@ function _TaskItem({ task, isPublic }: Props) {
   }))
   const selectedTeamId = useSelectedTeam((s) => s.selectedTeamId)
   const modalProps = c.useDisclosure()
+  const showModalProps = c.useDisclosure()
   const bg = c.useColorModeValue("white", "gray.700")
   const borderColor = c.useColorModeValue("gray.100", "gray.900")
   const theme = useTheme()
@@ -56,7 +58,7 @@ function _TaskItem({ task, isPublic }: Props) {
   }, [task, dupeFetcher.data, dupeFetcher.type, addTask])
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (isPublic) return
+    if (isPublic) return showModalProps.onOpen()
     if (event.metaKey) {
       // Duplicate
       dupeFetcher.submit(
@@ -89,8 +91,10 @@ function _TaskItem({ task, isPublic }: Props) {
   return (
     <c.Box w={DAY_WIDTH} p={2} pb={0} zIndex={1}>
       <c.Box
-        onClick={isPublic ? undefined : handleClick}
+        onMouseOver={PreloadedEditorInput.preload}
+        onClick={handleClick}
         outline="none"
+        cursor="pointer!important"
         overflow="hidden"
         w="100%"
         pos="relative"
@@ -141,7 +145,7 @@ function _TaskItem({ task, isPublic }: Props) {
                 />
               )}
             </c.Flex>
-            {!task.isComplete && selectedTeamId ? (
+            {!task.isComplete && selectedTeamId && !isPublic ? (
               <c.HStack spacing={-1}>
                 {task.users.map((user) => (
                   <c.Flex
@@ -208,12 +212,65 @@ function _TaskItem({ task, isPublic }: Props) {
           </c.Text>
         </c.Flex>
       </c.Box>
-      <c.Modal {...modalProps} size="xl">
+      <c.Modal {...modalProps} size="2xl" trapFocus={false}>
         <c.ModalOverlay />
 
         <c.ModalContent borderRadius="md">
           <c.ModalBody mb={4} minH="400px">
             <TaskForm onClose={modalProps.onClose} task={task} />
+          </c.ModalBody>
+        </c.ModalContent>
+      </c.Modal>
+      <c.Modal {...showModalProps} size="xl">
+        <c.ModalOverlay />
+        <c.ModalContent borderRadius="md">
+          <c.ModalCloseButton />
+          <c.ModalBody minH="400px" pb={6}>
+            <c.Stack my={2} spacing={3}>
+              <c.Box>
+                <c.Tag bg={task.element.color} color={readableColor(task.element.color)}>
+                  {task.element.name}
+                </c.Tag>
+              </c.Box>
+              <c.Heading>{task.name}</c.Heading>
+
+              <c.Stack spacing={1}>
+                <c.Flex>
+                  <c.Text w="100px" fontSize="sm" fontWeight="semibold">
+                    Date
+                  </c.Text>
+
+                  <c.Text>{dayjs(task.date).format("DD/MM/YYYY")}</c.Text>
+                </c.Flex>
+                <c.Flex>
+                  <c.Text w="100px" fontSize="sm" fontWeight="semibold">
+                    Start time
+                  </c.Text>
+                  <c.Text>{task.startTime}</c.Text>
+                </c.Flex>
+                <c.Flex>
+                  <c.Text w="100px" fontSize="sm" fontWeight="semibold">
+                    Duration
+                  </c.Text>
+                  <c.Text>{formatDuration(task.durationHours, task.durationMinutes)}</c.Text>
+                </c.Flex>
+                <c.Flex>
+                  <c.Text w="100px" fontSize="sm" fontWeight="semibold">
+                    Description
+                  </c.Text>
+                  <c.Box
+                    minH="120px"
+                    maxH="400px"
+                    overflow="scroll"
+                    dangerouslySetInnerHTML={{ __html: task.description || "" }}
+                    sx={{
+                      ul: { pl: 6 },
+                      ol: { pl: 6 },
+                    }}
+                  />
+                </c.Flex>
+              </c.Stack>
+            </c.Stack>
           </c.ModalBody>
         </c.ModalContent>
       </c.Modal>
