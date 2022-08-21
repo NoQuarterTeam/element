@@ -32,7 +32,7 @@ export function links() {
 
 export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
   if (!submission) return false
-  return ["/api/teams", "/api/elements"].some((path) => submission.action.includes(path))
+  return ["/api/teams", "/api/elements", "/dev/null"].some((path) => submission.action.includes(path))
 }
 
 export const loader = async ({ request }: LoaderArgs) => {

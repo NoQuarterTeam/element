@@ -2,6 +2,7 @@ import * as React from "react"
 import { FiSettings } from "react-icons/fi"
 import * as c from "@chakra-ui/react"
 import { useFetcher, useSubmit } from "@remix-run/react"
+import { useDataRefresh } from "remix-utils"
 
 import { shallowEqual } from "~/lib/form"
 import { transformImage } from "~/lib/helpers/image"
@@ -28,6 +29,13 @@ export function ProfileModal() {
 
   const logoutSubmit = useSubmit()
 
+  const { refresh } = useDataRefresh()
+  const handleToggle = () => {
+    if (!weatherProps.isEnabled) {
+      refresh()
+    }
+    weatherProps.toggle()
+  }
   const formRef = React.useRef<HTMLFormElement>(null)
   const [isDirty, setIsDirty] = React.useState(false)
   const updateProfileFetcher = useFetcher()
@@ -190,7 +198,7 @@ export function ProfileModal() {
                     </c.Badge>
                   </c.HStack>
                   <c.Text fontSize="xs">Show the next weeks weather based on your current location.</c.Text>
-                  <c.Switch onChange={weatherProps.toggle} isChecked={weatherProps.isEnabled} />
+                  <c.Switch onChange={handleToggle} isChecked={weatherProps.isEnabled} />
                 </c.Stack>
                 <c.Divider />
                 <c.Stack>

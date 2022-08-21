@@ -25,7 +25,6 @@ export const useStoredLocationEnabled = create<{
 export function useUserLocation() {
   const locationEnabledProps = useStoredLocationEnabled()
   const toast = useToast()
-
   const setLocation = React.useCallback(() => {
     function handleError(error: any) {
       switch (error.code) {
