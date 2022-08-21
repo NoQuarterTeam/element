@@ -56,6 +56,8 @@ export function useUserLocation() {
   React.useEffect(() => {
     if (locationEnabledProps.isEnabled) {
       setLocation()
+    } else {
+      Cookies.remove(USER_LOCATION_COOKIE_KEY)
     }
   }, [locationEnabledProps.isEnabled, setLocation])
   return locationEnabledProps
