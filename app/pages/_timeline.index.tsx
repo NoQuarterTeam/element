@@ -22,6 +22,7 @@ import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
 import { DAYS_BACK, DAYS_FORWARD, useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { requireUser } from "~/services/auth/auth.server"
 import { getSidebarElements, getSidebarTeams } from "~/services/timeline/sidebar.server"
+import { getWeatherData } from "~/services/weather/weather.server"
 
 import type { TimelineTask } from "./api.tasks"
 
@@ -36,11 +37,16 @@ export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
-  const elements = await getSidebarElements(user.id)
-  const teams = await getSidebarTeams(user.id)
-  return json({ teams, elements })
+
+  const [teams, elements, weatherData] = await Promise.all([
+    getSidebarTeams(user.id),
+    getSidebarElements(user.id),
+    getWeatherData(request),
+  ])
+  return json({ teams, elements, weatherData })
 }
 
+export type WeatherData = UseDataFunctionReturn<typeof loader>["weatherData"]
 export type SidebarElement = UseDataFunctionReturn<typeof loader>["elements"][0]
 export type SidebarTeam = UseDataFunctionReturn<typeof loader>["teams"][0]
 
@@ -56,6 +62,11 @@ export default function Timeline() {
   const daysRef = React.useRef<HTMLDivElement>(null)
   const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineDays()
   const selectedTeamId = useSelectedTeam((s) => s.selectedTeamId)
+
+  React.useEffect(function SetInitialScroll() {
+    const scrollTo = isMobile ? DAYS_BACK * DAY_WIDTH : (DAYS_BACK - 3) * DAY_WIDTH
+    timelineRef.current?.scrollTo(scrollTo, 0)
+  }, [])
 
   // Polling
   const taskFetcher = useFetcher<TimelineTask[]>()
@@ -114,18 +125,13 @@ export default function Timeline() {
     [daysBack, daysForward],
   )
 
-  React.useEffect(function SetInitialScroll() {
-    const scrollTo = isMobile ? DAYS_BACK * DAY_WIDTH : (DAYS_BACK - 3) * DAY_WIDTH
-    timelineRef.current?.scrollTo(scrollTo, 0)
-  }, [])
-
   const isLoading = taskFetcher.state === "loading"
 
   const bg = c.useColorModeValue("gray.100", "gray.800")
-  const { elements, teams } = useLoaderData<typeof loader>()
+  const { elements, teams, weatherData } = useLoaderData<typeof loader>()
   return (
     <c.Box ref={timelineRef} w="100vw" h="100vh" overflowX="auto" overflowY="hidden">
-      <TimelineHeader isLoading={isLoading} days={days} months={months} />
+      <TimelineHeader weatherData={weatherData} isLoading={isLoading} days={days} months={months} />
       <c.Box ref={daysRef} h={`calc(100vh - ${HEADER_HEIGHT}px)`} w="min-content" overflow="scroll">
         <c.Flex>
           <DropContainer tasks={tasks.map((t) => ({ id: t.id, date: t.date, order: t.order }))}>

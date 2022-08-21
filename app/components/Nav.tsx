@@ -11,6 +11,7 @@ import { transformImage } from "~/lib/helpers/image"
 import { isMobile } from "~/lib/helpers/utils"
 import { useSelectedTeam } from "~/lib/hooks/useSelectedTeam"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
+import { NEW_UPDATES, useUpdatesSeen } from "~/lib/hooks/useUpdates"
 import { useMe } from "~/pages/_timeline"
 import type { SidebarElement, SidebarTeam } from "~/pages/_timeline.index"
 import type { TaskElement } from "~/pages/api.task-elements"
@@ -33,9 +34,11 @@ interface Props {
 export function Nav({ teams, elements }: Props) {
   const me = useMe()
   const elementSidebarProps = c.useDisclosure()
-  const navProps = useStoredDisclosure("element:nav", { defaultIsOpen: true })
+  const navProps = useStoredDisclosure("element.nav", { defaultIsOpen: true })
   const shortcutModalProps = c.useDisclosure()
   const theme = useTheme()
+
+  const updatesSeens = useUpdatesSeen((s) => s.updatesSeens)
 
   const { selectedTeamId, setSelectedTeamId } = useSelectedTeam()
   const logoutSubmit = useSubmit()
@@ -176,7 +179,14 @@ export function Nav({ teams, elements }: Props) {
               aria-label="Profile"
               variant="ghost"
               onClick={profileModalProps.onOpen}
-              icon={<c.Box as={BiUser} boxSize="18px" />}
+              icon={
+                <c.Box pos="relative">
+                  <c.Box as={BiUser} boxSize="18px" />
+                  {updatesSeens.length !== NEW_UPDATES.length && (
+                    <c.Box boxSize="5px" borderRadius="full" bg="red.500" pos="absolute" top={0} right={0} />
+                  )}
+                </c.Box>
+              }
             />
           </c.Tooltip>
 

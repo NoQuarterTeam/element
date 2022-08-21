@@ -4,10 +4,9 @@ import { Outlet, useLoaderData } from "@remix-run/react"
 import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
 import type { LoaderArgs } from "@remix-run/server-runtime"
 import { json } from "@remix-run/server-runtime"
+import { useHydrated } from "remix-utils"
 
 import { requireUser } from "~/services/auth/auth.server"
-
-let hydrating = true
 
 export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
   if (!submission) return false
@@ -22,13 +21,8 @@ type User = UseDataFunctionReturn<typeof loader>["user"]
 
 export default function TimelineLayout() {
   const { user } = useLoaderData<typeof loader>()
-  // client side render the timeline, so the react-beautiful-dnd library doesnt freak out
-  const [hydrated, setHydrated] = React.useState(() => !hydrating)
-  React.useEffect(() => {
-    hydrating = false
-    setHydrated(true)
-  }, [])
-  if (!hydrated) return null
+  const isHydrated = useHydrated()
+  if (!isHydrated) return null
   return (
     <MeContext.Provider value={user}>
       <Outlet />

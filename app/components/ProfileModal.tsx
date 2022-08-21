@@ -5,6 +5,8 @@ import { useFetcher, useSubmit } from "@remix-run/react"
 
 import { shallowEqual } from "~/lib/form"
 import { transformImage } from "~/lib/helpers/image"
+import { useUpdatesSeen } from "~/lib/hooks/useUpdates"
+import { useUserLocation } from "~/lib/hooks/useUserLocation"
 import { UPLOAD_PATHS } from "~/lib/uploadPaths"
 import { useMe } from "~/pages/_timeline"
 import { ProfileActionMethods } from "~/pages/api.profile"
@@ -13,8 +15,16 @@ import { FormError, FormField, ImageField } from "./Form"
 
 export function ProfileModal() {
   const me = useMe()
-
+  const weatherProps = useUserLocation()
   const [tab, setTab] = React.useState<"account" | "settings">("account")
+
+  const { updatesSeens, setUpdatesSeens } = useUpdatesSeen()
+  React.useEffect(() => {
+    if (tab === "settings") {
+      setUpdatesSeens(["weather"])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab])
 
   const logoutSubmit = useSubmit()
 
@@ -24,7 +34,6 @@ export function ProfileModal() {
 
   const bg = c.useColorModeValue("gray.50", "gray.800")
   const color = c.useColorModeValue("gray.400", "gray.500")
-
   const alertProps = c.useDisclosure()
   const cancelRef = React.useRef<HTMLButtonElement>(null)
   const destroyAccountFetcher = useFetcher()
@@ -60,7 +69,21 @@ export function ProfileModal() {
             variant={tab === "settings" ? "solid" : "ghost"}
             fontWeight={400}
             fontSize="0.8rem"
-            leftIcon={<c.Box as={FiSettings} boxSize="15px" />}
+            leftIcon={
+              <c.Box pos="relative">
+                <c.Box as={FiSettings} boxSize="15px" />
+                {!updatesSeens.find((u) => ["weather"].includes(u)) && (
+                  <c.Box
+                    boxSize="5px"
+                    borderRadius="full"
+                    bg="red.500"
+                    pos="absolute"
+                    top="-3px"
+                    right="-3px"
+                  />
+                )}
+              </c.Box>
+            }
             borderRadius={0}
             onClick={() => setTab("settings")}
           >
@@ -158,17 +181,30 @@ export function ProfileModal() {
                 Settings
               </c.Text>
 
-              <c.Stack>
-                <c.Text fontSize="sm">Danger zone</c.Text>
-                <c.Text fontSize="xs">
-                  Permanently delete your account and all of its contents. This action is not reversible -
-                  please continue with caution.
-                </c.Text>
-                <c.Box>
-                  <c.Button colorScheme="red" onClick={alertProps.onOpen}>
-                    Delete account
-                  </c.Button>
-                </c.Box>
+              <c.Stack spacing={4}>
+                <c.Stack>
+                  <c.HStack>
+                    <c.Text fontSize="sm">Weather</c.Text>
+                    <c.Badge size="sm" colorScheme="orange">
+                      New
+                    </c.Badge>
+                  </c.HStack>
+                  <c.Text fontSize="xs">Show the next weeks weather based on your current location.</c.Text>
+                  <c.Switch onChange={weatherProps.toggle} isChecked={weatherProps.isEnabled} />
+                </c.Stack>
+                <c.Divider />
+                <c.Stack>
+                  <c.Text fontSize="sm">Danger zone</c.Text>
+                  <c.Text fontSize="xs">
+                    Permanently delete your account and all of its contents. This action is not reversible -
+                    please continue with caution.
+                  </c.Text>
+                  <c.Box>
+                    <c.Button colorScheme="red" onClick={alertProps.onOpen}>
+                      Delete account
+                    </c.Button>
+                  </c.Box>
+                </c.Stack>
 
                 <c.AlertDialog
                   {...alertProps}
