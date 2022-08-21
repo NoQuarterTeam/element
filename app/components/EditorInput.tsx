@@ -39,6 +39,13 @@ export function EditorInput({ name, defaultValue, isRequired, isDisabled }: Prop
               },
             },
             p: { mb: 0 },
+            ".se-btn:enabled.on": {
+              bgColor: "transparent!important",
+            },
+            ".se-list-layer": {
+              borderColor: c.useColorModeValue("gray.200", "gray.600"),
+              bgColor: c.useColorModeValue("white", "gray.700"),
+            },
           },
           ".se-toolbar": {
             outlineColor: c.useColorModeValue("gray.200", "gray.600"),
