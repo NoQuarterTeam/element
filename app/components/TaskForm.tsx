@@ -1,5 +1,6 @@
 import * as React from "react"
 import { BiPlus, BiTrash } from "react-icons/bi"
+import { lazyWithPreload } from "react-lazy-with-preload"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
@@ -14,9 +15,11 @@ import { TaskActionMethods } from "~/pages/api.tasks.$id"
 import type { TeamUser } from "~/pages/api.teams.$id.users"
 
 import { ButtonGroup } from "./ButtonGroup"
+import { ClientOnly } from "./ClientOnly"
 import { FormButton, FormError, InlineFormField } from "./Form"
 import { Modal } from "./Modal"
 import { Multiselect } from "./Multiselect"
+export const PreloadedEditorInput = lazyWithPreload(() => import("./EditorInput"))
 
 type FieldErrors = {
   [Property in keyof TimelineTask]: string[]
@@ -244,7 +247,13 @@ export function TaskForm({ day, onClose, task }: FormProps) {
             name="description"
             defaultValue={task?.description}
             label="Description"
-            input={<c.Textarea rows={8} />}
+            input={
+              <ClientOnly>
+                <React.Suspense fallback={<c.Box h="250px" />}>
+                  <PreloadedEditorInput name="description" defaultValue={task?.description} />
+                </React.Suspense>
+              </ClientOnly>
+            }
             error={createUpdateFetcher.data?.fieldErrors?.description?.[0]}
           />
 

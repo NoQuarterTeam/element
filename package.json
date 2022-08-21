@@ -70,7 +70,10 @@
     "react-dom": "18.2.0",
     "react-dropzone": "14.2.2",
     "react-icons": "4.4.0",
+    "react-lazy-with-preload": "^2.2.0",
     "react-select": "5.4.0",
+    "suneditor": "^2.43.14",
+    "suneditor-react": "^3.4.1",
     "zod": "3.18.0",
     "zustand": "4.1.0"
   },

@@ -12,7 +12,7 @@ import type { TimelineTask } from "~/pages/api.tasks"
 import { TaskActionMethods } from "~/pages/api.tasks.$id"
 
 import { DAY_WIDTH } from "./Day"
-import { TaskForm } from "./TaskForm"
+import { PreloadedEditorInput, TaskForm } from "./TaskForm"
 
 export const taskSelectFields = {
   id: true,
@@ -91,6 +91,7 @@ function _TaskItem({ task, isPublic }: Props) {
   return (
     <c.Box w={DAY_WIDTH} p={2} pb={0} zIndex={1}>
       <c.Box
+        onMouseOver={PreloadedEditorInput.preload}
         onClick={handleClick}
         outline="none"
         cursor="pointer!important"
@@ -211,7 +212,7 @@ function _TaskItem({ task, isPublic }: Props) {
           </c.Text>
         </c.Flex>
       </c.Box>
-      <c.Modal {...modalProps} size="xl">
+      <c.Modal {...modalProps} size="2xl" trapFocus={false}>
         <c.ModalOverlay />
 
         <c.ModalContent borderRadius="md">
@@ -224,8 +225,8 @@ function _TaskItem({ task, isPublic }: Props) {
         <c.ModalOverlay />
         <c.ModalContent borderRadius="md">
           <c.ModalCloseButton />
-          <c.ModalBody minH="400px">
-            <c.Stack mt={2} spacing={1}>
+          <c.ModalBody minH="400px" pb={6}>
+            <c.Stack my={2} spacing={1}>
               <c.Box>
                 <c.Tag bg={task.element.color} color={readableColor(task.element.color)}>
                   {task.element.name}
@@ -257,7 +258,12 @@ function _TaskItem({ task, isPublic }: Props) {
                 <c.Text w="100px" fontSize="sm" fontWeight="semibold">
                   Description
                 </c.Text>
-                <c.Text minH="120px">{task.description}</c.Text>
+                <c.Text
+                  minH="120px"
+                  maxH="400px"
+                  overflow="scroll"
+                  dangerouslySetInnerHTML={{ __html: task.description || "" }}
+                />
               </c.Flex>
             </c.Stack>
           </c.ModalBody>
