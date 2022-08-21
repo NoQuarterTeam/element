@@ -40,17 +40,13 @@ export function useUserLocation() {
       }
     }
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        ({ coords }) => {
-          Cookies.set(
-            USER_LOCATION_COOKIE_KEY,
-            JSON.stringify({ lat: coords.latitude, lon: coords.longitude }),
-            { expires: 10000 },
-          )
-        },
-        handleError,
-        { enableHighAccuracy: true },
-      )
+      navigator.geolocation.getCurrentPosition(({ coords }) => {
+        Cookies.set(
+          USER_LOCATION_COOKIE_KEY,
+          JSON.stringify({ lat: coords.latitude, lon: coords.longitude }),
+          { expires: 10000 },
+        )
+      }, handleError)
     } else {
       return toast({ description: "Geolocation is not supported by this browser.", status: "error" })
     }

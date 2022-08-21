@@ -5,7 +5,7 @@ import { useFetcher, useSubmit } from "@remix-run/react"
 
 import { shallowEqual } from "~/lib/form"
 import { transformImage } from "~/lib/helpers/image"
-import { useUpdatesSeen } from "~/lib/hooks/useUpdates"
+import { useUpdatesSeen } from "~/lib/hooks/useUpdatesSeen"
 import { useUserLocation } from "~/lib/hooks/useUserLocation"
 import { UPLOAD_PATHS } from "~/lib/uploadPaths"
 import { useMe } from "~/pages/_timeline"
