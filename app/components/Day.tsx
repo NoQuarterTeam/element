@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Draggable, Droppable } from "react-beautiful-dnd"
-import { IoIosAddCircleOutline } from "react-icons/io"
+import { RiAddCircleLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import dayjs from "dayjs"
 import deepEqual from "deep-equal"
@@ -24,15 +24,6 @@ export const DAY_WIDTH = 98
 
 function _Day(props: Props) {
   const modalProps = c.useDisclosure()
-
-  c.useEventListener("keydown", (event) => {
-    // cmd + . to open the add task modal for current day
-    if (!dayjs(props.day).isSame(dayjs(), "day")) return
-    if (event.metaKey && event.key === ".") {
-      event.preventDefault()
-      modalProps.onOpen()
-    }
-  })
 
   const { colorMode } = c.useColorMode()
   const isDark = colorMode === "dark"
@@ -99,7 +90,7 @@ function _Day(props: Props) {
                       variant="ghost"
                       onClick={modalProps.onOpen}
                       borderRadius="full"
-                      icon={<c.Box as={IoIosAddCircleOutline} boxSize="24px" />}
+                      icon={<c.Box as={RiAddCircleLine} boxSize="20px" />}
                       aria-label="new task"
                     />
                   </c.Flex>
@@ -113,7 +104,9 @@ function _Day(props: Props) {
         <c.ModalOverlay />
         <c.ModalContent borderRadius="md" minH="400px">
           <c.ModalBody mb={4}>
-            <TaskForm day={props.day.toISOString()} onClose={modalProps.onClose} />
+            <React.Suspense>
+              <TaskForm day={props.day.format("YYYY-MM-DD")} onClose={modalProps.onClose} />
+            </React.Suspense>
           </c.ModalBody>
         </c.ModalContent>
       </c.Modal>

@@ -10,7 +10,7 @@ import type { TimelineTask } from "~/pages/api.tasks"
 import { TaskActionMethods } from "~/pages/api.tasks.$id"
 
 import { DAY_WIDTH } from "./Day"
-import { PreloadedEditorInput, TaskForm } from "./TaskForm"
+import { TaskForm } from "./TaskForm"
 
 export const taskSelectFields = {
   id: true,
@@ -85,7 +85,6 @@ function _TaskItem({ task, isPublic }: Props) {
   return (
     <c.Box w={DAY_WIDTH} p={2} pb={0} zIndex={1}>
       <c.Box
-        onMouseOver={PreloadedEditorInput.preload}
         onClick={handleClick}
         outline="none"
         cursor="pointer!important"
@@ -178,10 +177,11 @@ function _TaskItem({ task, isPublic }: Props) {
       </c.Box>
       <c.Modal {...modalProps} size="2xl" trapFocus={false}>
         <c.ModalOverlay />
-
         <c.ModalContent borderRadius="md">
           <c.ModalBody mb={4} minH="400px">
-            <TaskForm onClose={modalProps.onClose} task={task} />
+            <React.Suspense>
+              <TaskForm onClose={modalProps.onClose} task={task} />
+            </React.Suspense>
           </c.ModalBody>
         </c.ModalContent>
       </c.Modal>

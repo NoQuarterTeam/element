@@ -4,6 +4,7 @@ import { lazyWithPreload } from "react-lazy-with-preload"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
+import dayjs from "dayjs"
 import { ClientOnly } from "remix-utils"
 
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
@@ -98,7 +99,6 @@ export function TaskForm({ day, onClose, task }: FormProps) {
   return (
     <>
       <createUpdateFetcher.Form replace method="post" action={task ? `/api/tasks/${task.id}` : "/api/tasks"}>
-        {day && <c.Input type="hidden" defaultValue={day} name="date" />}
         <c.Stack spacing={3}>
           <c.Flex w="100%" align="flex-start" justify="space-between">
             <c.Input
@@ -160,6 +160,15 @@ export function TaskForm({ day, onClose, task }: FormProps) {
               Create
             </c.Button>
           </c.Flex>
+
+          <InlineFormField
+            type="date"
+            name="date"
+            isRequired
+            defaultValue={day || (task ? dayjs(task.date).format("YYYY-MM-DD") : new Date())}
+            label="Date"
+            error={createUpdateFetcher.data?.fieldErrors?.date?.[0]}
+          />
 
           <c.Box>
             <c.Flex>

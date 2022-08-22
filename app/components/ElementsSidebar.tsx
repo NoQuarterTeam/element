@@ -31,7 +31,7 @@ export function ElementsSidebar({ elements }: Props) {
 
   return (
     <c.Box overflowY="scroll" minH="100vh" pb={100} pos="relative">
-      <c.Flex p={4} pt={0} align="center" justify="space-between">
+      <c.Flex p={4} pt="2px" align="center" justify="space-between">
         <c.Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}

@@ -1,5 +1,5 @@
 import * as React from "react"
-import { RiCalendarEventLine } from "react-icons/ri"
+import { RiAddCircleLine, RiCalendarEventLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import type { ShouldReloadFunction } from "@remix-run/react"
 import { useFetcher, useLoaderData } from "@remix-run/react"
@@ -14,6 +14,7 @@ import styles from "suneditor/dist/css/suneditor.min.css"
 import { Day, DAY_WIDTH } from "~/components/Day"
 import { DropContainer } from "~/components/DropContainer"
 import { Nav } from "~/components/Nav"
+import { PreloadedEditorInput, TaskForm } from "~/components/TaskForm"
 import { HEADER_HEIGHT, TimelineHeader } from "~/components/TimelineHeader"
 import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
@@ -54,11 +55,17 @@ export default function Timeline() {
 
   const timelineRef = React.useRef<HTMLDivElement>(null)
   const daysRef = React.useRef<HTMLDivElement>(null)
+
   const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineDays()
 
   React.useEffect(function SetInitialScroll() {
     const scrollTo = isMobile ? DAYS_BACK * DAY_WIDTH : (DAYS_BACK - 3) * DAY_WIDTH
     timelineRef.current?.scrollTo(scrollTo, 0)
+  }, [])
+
+  React.useEffect(() => {
+    // Might as well load the editor input code
+    PreloadedEditorInput.preload()
   }, [])
 
   // Polling
@@ -117,7 +124,14 @@ export default function Timeline() {
   )
 
   const isLoading = taskFetcher.state === "loading"
-
+  const newTaskModalProps = c.useDisclosure()
+  c.useEventListener("keydown", (event) => {
+    // cmd + . to open the add task modal for current day
+    if (event.metaKey && event.key === ".") {
+      event.preventDefault()
+      newTaskModalProps.onOpen()
+    }
+  })
   const bg = c.useColorModeValue("gray.100", "gray.800")
   const { elements, weatherData } = useLoaderData<typeof loader>()
   return (
@@ -145,18 +159,42 @@ export default function Timeline() {
         </c.Flex>
       </c.Box>
       <Nav elements={elements} />
-      <c.Box pos="absolute" bottom={8} left={8} bg={bg} borderRadius="full">
-        <c.Tooltip label="Jump to today" placement="auto" zIndex={50} hasArrow>
-          <c.IconButton
-            size="md"
-            borderRadius="full"
-            onClick={handleJumpToToday}
-            aria-label="Jump to today"
-            variant="ghost"
-            icon={<c.Box as={RiCalendarEventLine} boxSize="18px" />}
-          />
-        </c.Tooltip>
+      <c.Box pos="absolute" bottom={{ base: 4, md: 8 }} left={{ base: 4, md: 8 }} borderRadius="full">
+        <c.VStack>
+          <c.Tooltip label="Create task" placement="auto" zIndex={50} hasArrow>
+            <c.IconButton
+              size="md"
+              bg={bg}
+              borderRadius="full"
+              onClick={newTaskModalProps.onOpen}
+              aria-label="Create task"
+              variant="ghost"
+              icon={<c.Box as={RiAddCircleLine} boxSize="20px" />}
+            />
+          </c.Tooltip>
+          <c.Tooltip label="Jump to today" placement="auto" zIndex={50} hasArrow>
+            <c.IconButton
+              size="md"
+              bg={bg}
+              borderRadius="full"
+              onClick={handleJumpToToday}
+              aria-label="Jump to today"
+              variant="ghost"
+              icon={<c.Box as={RiCalendarEventLine} boxSize="18px" />}
+            />
+          </c.Tooltip>
+        </c.VStack>
       </c.Box>
+      <c.Modal {...newTaskModalProps} size="xl">
+        <c.ModalOverlay />
+        <c.ModalContent borderRadius="md" minH="400px">
+          <c.ModalBody mb={4}>
+            <React.Suspense>
+              <TaskForm onClose={newTaskModalProps.onClose} />
+            </React.Suspense>
+          </c.ModalBody>
+        </c.ModalContent>
+      </c.Modal>
     </c.Box>
   )
 }

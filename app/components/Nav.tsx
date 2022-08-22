@@ -47,7 +47,7 @@ export function Nav({ elements }: Props) {
 
   return (
     <>
-      <c.Flex position="absolute" top={2} right={0} w="65px" justify="center">
+      <c.Flex position="absolute" top={4} right={0} w="65px" justify="center">
         <c.Fade in={!navProps.isOpen}>
           <c.IconButton
             variant="ghost"
@@ -133,11 +133,11 @@ export function Nav({ elements }: Props) {
           </c.Tooltip>
         </c.VStack>
 
-        <c.Flex position="absolute" top={2} right={0} w="65px" justify="center">
+        <c.Flex position="absolute" top={4} right={0} w="65px" justify="center">
           <c.Fade in={navProps.isOpen}>
             <c.IconButton
               icon={<c.Box as={FiChevronsRight} boxSize="18px" />}
-              aria-label="close sidebar"
+              aria-label="close nav"
               variant="ghost"
               onClick={navProps.onToggle}
             />

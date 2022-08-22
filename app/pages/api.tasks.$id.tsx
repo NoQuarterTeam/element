@@ -30,6 +30,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       try {
         const updateSchema = z.object({
           name: z.string().optional(),
+          date: z.string().optional(),
           slug: z.string().optional(),
           description: z.string().optional(),
           isComplete: z.string().optional(),
@@ -47,12 +48,13 @@ export const action = async ({ request, params }: ActionArgs) => {
           select: taskSelectFields,
           where: { id: taskId },
           data: {
-            durationHours: data.durationHours || task.durationHours || null,
-            durationMinutes: data.durationMinutes || task.durationMinutes || null,
-            startTime: data.startTime || task.startTime || null,
+            date: data.date || undefined,
+            durationHours: data.durationHours || undefined,
+            durationMinutes: data.durationMinutes || undefined,
+            startTime: data.startTime || undefined,
             name: data.name,
-            elementId: data.elementId || task.elementId,
-            description: data.description || task.description || null,
+            elementId: data.elementId || undefined,
+            description: data.description || undefined,
             isComplete: hasComplete ? isComplete === "" || isComplete === "true" || false : undefined,
           },
         })
