@@ -32,7 +32,7 @@ export function TimelineHeader({ weatherData, days, months, isLoading }: Timelin
       borderRightColor="tranparent"
     >
       <c.Image
-        position="fixed"
+        position="absolute"
         top={4}
         left={4}
         src={isDark ? "/logo-dark.png" : "/logo.png"}

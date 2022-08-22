@@ -121,7 +121,14 @@ export default function Timeline() {
   const bg = c.useColorModeValue("gray.100", "gray.800")
   const { elements, weatherData } = useLoaderData<typeof loader>()
   return (
-    <c.Box ref={timelineRef} w="100vw" h="100vh" overflowX="auto" overflowY="hidden">
+    <c.Box
+      ref={timelineRef}
+      w="100vw"
+      h="100vh"
+      maxH="-webkit-fill-available"
+      overflowX="auto"
+      overflowY="hidden"
+    >
       <TimelineHeader weatherData={weatherData} isLoading={isLoading} days={days} months={months} />
       <c.Box ref={daysRef} h={`calc(100vh - ${HEADER_HEIGHT}px)`} w="min-content" overflow="scroll">
         <c.Flex>
@@ -138,7 +145,7 @@ export default function Timeline() {
         </c.Flex>
       </c.Box>
       <Nav elements={elements} />
-      <c.Box pos="absolute" bottom={isMobile ? 24 : 8} left={8} bg={bg} borderRadius="full">
+      <c.Box pos="absolute" bottom={8} left={8} bg={bg} borderRadius="full">
         <c.Tooltip label="Jump to today" placement="auto" zIndex={50} hasArrow>
           <c.IconButton
             size="md"
