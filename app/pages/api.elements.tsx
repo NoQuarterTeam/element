@@ -25,7 +25,6 @@ export const action = async ({ request }: ActionArgs) => {
           name: z.string(),
           color: z.string().optional(),
           parentId: z.string().optional(),
-          teamId: z.string().optional(),
         })
 
         const { data, fieldErrors } = await validateFormData(createSchema, formData)

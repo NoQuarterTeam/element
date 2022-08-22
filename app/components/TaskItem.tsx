@@ -5,8 +5,6 @@ import { useFetcher } from "@remix-run/react"
 import dayjs from "dayjs"
 import { readableColor } from "polished"
 
-import { transformImage } from "~/lib/helpers/image"
-import { useSelectedTeam } from "~/lib/hooks/useSelectedTeam"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import type { TimelineTask } from "~/pages/api.tasks"
 import { TaskActionMethods } from "~/pages/api.tasks.$id"
@@ -25,7 +23,6 @@ export const taskSelectFields = {
   isComplete: true,
   order: true,
   startTime: true,
-  users: { select: { id: true, firstName: true, lastName: true, avatar: true } },
   element: { select: { id: true, color: true, name: true } },
   creator: { select: { id: true, firstName: true, avatar: true } },
 }
@@ -40,7 +37,7 @@ function _TaskItem({ task, isPublic }: Props) {
     updateTask: s.updateTask,
     addTask: s.addTask,
   }))
-  const selectedTeamId = useSelectedTeam((s) => s.selectedTeamId)
+
   const modalProps = c.useDisclosure()
   const showModalProps = c.useDisclosure()
   const bg = c.useColorModeValue("white", "gray.700")
@@ -85,9 +82,6 @@ function _TaskItem({ task, isPublic }: Props) {
     }
   }
 
-  const userBorderColor = c.useColorModeValue("gray.200", "gray.500")
-  const userBgColor = c.useColorModeValue("gray.50", "gray.800")
-
   return (
     <c.Box w={DAY_WIDTH} p={2} pb={0} zIndex={1}>
       <c.Box
@@ -129,7 +123,7 @@ function _TaskItem({ task, isPublic }: Props) {
           flexDir="column"
           h="100%"
         >
-          <c.Box mb={task.isComplete ? 4 : selectedTeamId ? 1 : 3}>
+          <c.Box mb={task.isComplete ? 4 : 3}>
             <c.Flex justify="space-between" mb={1}>
               <c.Text fontSize="0.6rem" className="task-name" noOfLines={task.isComplete ? 1 : 2}>
                 {task.name}
@@ -145,36 +139,6 @@ function _TaskItem({ task, isPublic }: Props) {
                 />
               )}
             </c.Flex>
-            {!task.isComplete && selectedTeamId && !isPublic ? (
-              <c.HStack spacing={-1}>
-                {task.users.map((user) => (
-                  <c.Flex
-                    key={user.id}
-                    align="center"
-                    justify="center"
-                    backgroundColor={userBgColor}
-                    border="1px solid"
-                    borderColor={userBorderColor}
-                    borderRadius="full"
-                    boxSize="14px"
-                    backgroundImage={
-                      user.avatar ? `url(${transformImage(user.avatar, "w_30,h_30,g_faces")})` : undefined
-                    }
-                    backgroundPosition="center"
-                    backgroundRepeat="no-repeat"
-                    backgroundSize="14px"
-                  >
-                    {!user.avatar && (
-                      <c.Text lineHeight="normal" fontSize="0.35rem">
-                        {user.firstName?.[0]}
-                      </c.Text>
-                    )}
-                  </c.Flex>
-                ))}
-              </c.HStack>
-            ) : (
-              <c.Flex mb={1} />
-            )}
           </c.Box>
           {!task.isComplete && (
             <c.Flex justify="space-between" align="flex-end">

@@ -17,11 +17,10 @@ import { Nav } from "~/components/Nav"
 import { HEADER_HEIGHT, TimelineHeader } from "~/components/TimelineHeader"
 import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
-import { useSelectedTeam } from "~/lib/hooks/useSelectedTeam"
 import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
 import { DAYS_BACK, DAYS_FORWARD, useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { requireUser } from "~/services/auth/auth.server"
-import { getSidebarElements, getSidebarTeams } from "~/services/timeline/sidebar.server"
+import { getSidebarElements } from "~/services/timeline/sidebar.server"
 import { getWeatherData } from "~/services/weather/weather.server"
 
 import type { TimelineTask } from "./api.tasks"
@@ -32,23 +31,18 @@ export function links() {
 
 export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
   if (!submission) return false
-  return ["/api/teams", "/api/elements", "/dev/null"].some((path) => submission.action.includes(path))
+  return ["/api/elements"].some((path) => submission.action.includes(path))
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
 
-  const [teams, elements, weatherData] = await Promise.all([
-    getSidebarTeams(user.id),
-    getSidebarElements(user.id),
-    getWeatherData(request),
-  ])
-  return json({ teams, elements, weatherData })
+  const [elements, weatherData] = await Promise.all([getSidebarElements(user.id), getWeatherData(request)])
+  return json({ elements, weatherData })
 }
 
 export type WeatherData = UseDataFunctionReturn<typeof loader>["weatherData"]
 export type SidebarElement = UseDataFunctionReturn<typeof loader>["elements"][0]
-export type SidebarTeam = UseDataFunctionReturn<typeof loader>["teams"][0]
 
 dayjs.extend(advancedFormat)
 
@@ -61,7 +55,6 @@ export default function Timeline() {
   const timelineRef = React.useRef<HTMLDivElement>(null)
   const daysRef = React.useRef<HTMLDivElement>(null)
   const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineDays()
-  const selectedTeamId = useSelectedTeam((s) => s.selectedTeamId)
 
   React.useEffect(function SetInitialScroll() {
     const scrollTo = isMobile ? DAYS_BACK * DAY_WIDTH : (DAYS_BACK - 3) * DAY_WIDTH
@@ -72,18 +65,16 @@ export default function Timeline() {
   const taskFetcher = useFetcher<TimelineTask[]>()
   React.useEffect(
     function LoadTasksAndPoll() {
-      taskFetcher.load(`/api/tasks?back=${daysBack}&forward=${daysForward}&selectedTeamId=${selectedTeamId}`)
+      taskFetcher.load(`/api/tasks?back=${daysBack}&forward=${daysForward}`)
       const interval = setInterval(() => {
-        taskFetcher.load(
-          `/api/tasks?back=${daysBack}&forward=${daysForward}&selectedTeamId=${selectedTeamId}`,
-        )
+        taskFetcher.load(`/api/tasks?back=${daysBack}&forward=${daysForward}`)
       }, 30_000)
       return () => {
         clearInterval(interval)
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [daysBack, daysForward, selectedTeamId],
+    [daysBack, daysForward],
   )
 
   React.useEffect(() => {
@@ -128,7 +119,7 @@ export default function Timeline() {
   const isLoading = taskFetcher.state === "loading"
 
   const bg = c.useColorModeValue("gray.100", "gray.800")
-  const { elements, teams, weatherData } = useLoaderData<typeof loader>()
+  const { elements, weatherData } = useLoaderData<typeof loader>()
   return (
     <c.Box ref={timelineRef} w="100vw" h="100vh" overflowX="auto" overflowY="hidden">
       <TimelineHeader weatherData={weatherData} isLoading={isLoading} days={days} months={months} />
@@ -146,7 +137,7 @@ export default function Timeline() {
           </DropContainer>
         </c.Flex>
       </c.Box>
-      <Nav teams={teams} elements={elements} />
+      <Nav elements={elements} />
       <c.Box pos="absolute" bottom={isMobile ? 24 : 8} left={8} bg={bg} borderRadius="full">
         <c.Tooltip label="Jump to today" placement="auto" zIndex={50} hasArrow>
           <c.IconButton

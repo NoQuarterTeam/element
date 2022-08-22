@@ -18,27 +18,18 @@ export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   const url = new URL(request.url)
   const backParam = url.searchParams.get("back")
-  const selectedTeamId = url.searchParams.get("selectedTeamId") as string | undefined | null
   const forwardParam = url.searchParams.get("forward")
   const back = backParam ? parseInt(backParam) : DAYS_BACK
   const forward = forwardParam ? parseInt(forwardParam) : DAYS_FORWARD
 
-  if (selectedTeamId) {
-    const teamUsers = await db.team
-      .findUnique({ where: { id: selectedTeamId } })
-      .users({ where: { id: { equals: user.id } } })
-    if (teamUsers.length === 0) throw badRequest("Not authorized")
-  }
   const tasks = await db.task.findMany({
     select: taskSelectFields,
     where: {
+      creatorId: { equals: user.id },
       date: {
         gte: dayjs().subtract(back, "day").toDate(),
         lte: dayjs().add(forward, "day").toDate(),
       },
-      AND: selectedTeamId
-        ? [{ element: { teamId: { equals: selectedTeamId } } }]
-        : { users: { some: { id: { equals: user.id } } } },
     },
   })
   return json(tasks)
@@ -72,9 +63,6 @@ export const action = async ({ request }: ActionArgs) => {
         const isComplete = formData.get("isComplete") as string | undefined
         const newForm = await validateFormData(createSchema, formData)
         if (newForm.fieldErrors) return badRequest(newForm)
-        const users = formData.getAll("users") as string[] | undefined
-        const isUsersIncluded = formData.has("users")
-
         const newTask = await db.task.create({
           select: taskSelectFields,
           data: {
@@ -86,7 +74,6 @@ export const action = async ({ request }: ActionArgs) => {
             name: newForm.data.name,
             description: newForm.data.description || null,
             element: { connect: { id: newForm.data.elementId } },
-            users: { connect: isUsersIncluded && users ? users.map((id) => ({ id })) : { id: user.id } },
             creator: { connect: { id: user.id } },
           },
         })
