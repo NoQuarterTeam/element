@@ -30,7 +30,7 @@ export function ElementsSidebar({ elements }: Props) {
   const matchedMyElements = matchSorter(elements, search, { keys: ["name"] })
 
   return (
-    <c.Box overflowY="scroll" minH="100vh" pb={100} pos="relative">
+    <c.Box overflowY="scroll" minH="100vh" pb={200} pos="relative">
       <c.Flex p={4} pt="2px" align="center" justify="space-between">
         <c.Input
           value={search}

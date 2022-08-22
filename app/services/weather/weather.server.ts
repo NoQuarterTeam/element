@@ -40,7 +40,6 @@ export async function getWeatherData(request: Request) {
     )
     const json = (await res.json()) as WeatherResponse
     if (!json.daily) return null
-
     return json.daily.map((day) => ({
       date: dayjs.unix(day.dt).format("DD/MM/YYYY"),
       icon: day.weather[0]?.icon,

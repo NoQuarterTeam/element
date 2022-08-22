@@ -2,12 +2,13 @@ import * as React from "react"
 import { FiSettings } from "react-icons/fi"
 import * as c from "@chakra-ui/react"
 import { useFetcher, useSubmit } from "@remix-run/react"
+import Cookies from "js-cookie"
 import { useDataRefresh } from "remix-utils"
 
 import { shallowEqual } from "~/lib/form"
 import { transformImage } from "~/lib/helpers/image"
 import { useUpdatesSeen } from "~/lib/hooks/useUpdatesSeen"
-import { useUserLocation } from "~/lib/hooks/useUserLocation"
+import { USER_LOCATION_COOKIE_KEY, useUserLocation } from "~/lib/hooks/useUserLocation"
 import { UPLOAD_PATHS } from "~/lib/uploadPaths"
 import { useMe } from "~/pages/_timeline"
 import { ProfileActionMethods } from "~/pages/api.profile"
@@ -31,7 +32,9 @@ export function ProfileModal() {
 
   const { refresh } = useDataRefresh()
   const handleToggle = () => {
-    if (!weatherProps.isEnabled) {
+    if (weatherProps.isEnabled) {
+      Cookies.remove(USER_LOCATION_COOKIE_KEY)
+    } else {
       refresh()
     }
     weatherProps.toggle()
@@ -46,7 +49,7 @@ export function ProfileModal() {
   const cancelRef = React.useRef<HTMLButtonElement>(null)
   const destroyAccountFetcher = useFetcher()
   return (
-    <c.Flex minH={650} h="100%" overflow="hidden" borderRadius="md">
+    <c.Flex minH={550} h="100%" overflow="hidden" borderRadius="md">
       <c.Box minW={140} w="min-content" h="auto" bg={bg}>
         <c.Text fontSize="0.7rem" px={4} w="min-content" color={color} py={2}>
           {me.email}
