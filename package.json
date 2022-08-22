@@ -78,7 +78,7 @@
     "suneditor-react": "3.4.1",
     "remix-utils": "3.3.0",
     "zod": "3.18.0",
-    "zustand": "4.1.0"
+    "zustand": "4.1.1"
   },
   "devDependencies": {
     "@commitlint/cli": "17.0.3",
