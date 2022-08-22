@@ -38,7 +38,7 @@ export function TimelineHeader({ weatherData, days, months, logo, isLoading }: T
         top="2px"
         left={2}
         src={logo ? transformImage(logo, "w_80,h_80") : isDark ? "/logo-dark.png" : "/logo.png"}
-        boxSize="40px"
+        boxSize="26px"
       />
       {months.map(({ month, year }) => (
         <c.Box key={month + year}>
