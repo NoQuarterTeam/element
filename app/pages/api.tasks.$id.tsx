@@ -43,11 +43,6 @@ export const action = async ({ request, params }: ActionArgs) => {
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
 
-        let users
-        if (formData.has("users")) {
-          users = formData.getAll("users") as string[] | undefined
-        }
-
         const updatedTask = await db.task.update({
           select: taskSelectFields,
           where: { id: taskId },
@@ -59,7 +54,6 @@ export const action = async ({ request, params }: ActionArgs) => {
             elementId: data.elementId || task.elementId,
             description: data.description || task.description || null,
             isComplete: hasComplete ? isComplete === "" || isComplete === "true" || false : undefined,
-            users: { set: users ? users.filter(Boolean).map((id) => ({ id })) : undefined },
           },
         })
         return json({ task: updatedTask })
@@ -70,15 +64,11 @@ export const action = async ({ request, params }: ActionArgs) => {
       }
     case TaskActionMethods.DuplicateTask:
       try {
-        const taskToDupe = await db.task.findUniqueOrThrow({
-          where: { id: taskId },
-          include: { users: true },
-        })
+        const taskToDupe = await db.task.findUniqueOrThrow({ where: { id: taskId } })
         const newTask = await db.task.create({
           select: taskSelectFields,
           data: {
             ...taskToDupe,
-            users: { connect: taskToDupe.users.map((user) => ({ id: user.id })) },
             id: undefined,
           },
         })

@@ -4,23 +4,6 @@ import dayjs from "dayjs"
 import { OPEN_WEATHER_KEY } from "~/lib/config.server"
 import { USER_LOCATION_COOKIE_KEY } from "~/lib/hooks/useUserLocation"
 
-// type List = {
-//   dt: number
-//   main: any[]
-//   weather: any[]
-//   clouds: any[]
-//   wind: any
-//   dt_txt: "2022-08-21 15:00:00"
-// }
-// type WeatherData = {
-//   cod: "200"
-//   list: List[]
-// }
-// type WeatherError = {
-//   cod: "401" | "400"
-// }
-
-// type WeatherResponse = WeatherData | WeatherError
 type WeatherResponse = {
   daily: {
     dt: number
@@ -29,7 +12,7 @@ type WeatherResponse = {
     moonrise: number
     moonset: number
     moon_phase: number
-    temp: { day: number }
+    temp: { day: number; max: number }
     feels_like: [any]
     pressure: number
     humidity: number
@@ -57,10 +40,11 @@ export async function getWeatherData(request: Request) {
     )
     const json = (await res.json()) as WeatherResponse
     if (!json.daily) return null
+
     return json.daily.map((day) => ({
       date: dayjs.unix(day.dt).format("DD/MM/YYYY"),
       icon: day.weather[0]?.icon,
-      temp: Math.round(day.temp.day),
+      temp: Math.round(day.temp.max),
     }))
   } catch (error) {
     console.log(error)

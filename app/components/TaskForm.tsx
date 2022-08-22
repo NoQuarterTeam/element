@@ -6,19 +6,17 @@ import { useFetcher } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { ClientOnly } from "remix-utils"
 
-import { useSelectedTeam } from "~/lib/hooks/useSelectedTeam"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { ElementsActionMethods } from "~/pages/api.elements"
 import type { TaskElement } from "~/pages/api.task-elements"
 import type { TimelineTask } from "~/pages/api.tasks"
 import { TasksActionMethods } from "~/pages/api.tasks"
 import { TaskActionMethods } from "~/pages/api.tasks.$id"
-import type { TeamUser } from "~/pages/api.teams.$id.users"
 
 import { ButtonGroup } from "./ButtonGroup"
 import { FormButton, FormError, InlineFormField } from "./Form"
 import { Modal } from "./Modal"
-import { Multiselect } from "./Multiselect"
+
 export const PreloadedEditorInput = lazyWithPreload(() => import("./EditorInput"))
 
 type FieldErrors = {
@@ -55,8 +53,6 @@ export function TaskForm({ day, onClose, task }: FormProps) {
     }
   }, [createUpdateFetcher.data, onClose, addTask, updateTask, task])
 
-  const selectedTeamId = useSelectedTeam((s) => s.selectedTeamId)
-
   const deleteSubmit = useFetcher()
   const handleDelete = () => {
     if (!task) return
@@ -73,23 +69,12 @@ export function TaskForm({ day, onClose, task }: FormProps) {
     }
   }, [task, deleteSubmit.data, onClose, removeTask, deleteSubmit.type])
 
-  const { data } = useQuery(["task-elements", { selectedTeamId }], async () => {
-    const response = await fetch(`/api/task-elements?selectedTeamId=${selectedTeamId || ""}`)
+  const { data } = useQuery(["task-elements"], async () => {
+    const response = await fetch(`/api/task-elements`)
     if (!response.ok) throw new Error("Network response was not ok")
     return response.json() as Promise<{ elements: TaskElement[] }>
   })
   const elements = data?.elements
-
-  const { data: userData } = useQuery(
-    ["team-users", { selectedTeamId }],
-    async () => {
-      const response = await fetch(`/api/teams/${selectedTeamId}/users`)
-      if (!response.ok) throw new Error("Network response was not ok")
-      return response.json() as Promise<{ users: TeamUser[] }>
-    },
-    { enabled: !!selectedTeamId },
-  )
-  const users = userData?.users || []
 
   const [elementId, setElementId] = React.useState<string | undefined>(task?.element.id)
   const elementModalProps = c.useDisclosure()
@@ -98,7 +83,7 @@ export function TaskForm({ day, onClose, task }: FormProps) {
   const createElementFetcher = useFetcher()
   React.useEffect(() => {
     if (createElementFetcher.type === "actionReload" && createElementFetcher.data?.element) {
-      client.setQueryData(["task-elements", { selectedTeamId }], {
+      client.setQueryData(["task-elements"], {
         elements: [createElementFetcher.data.element, ...(elements || [])],
       })
       elementModalProps.onClose()
@@ -106,7 +91,7 @@ export function TaskForm({ day, onClose, task }: FormProps) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createElementFetcher.data, createElementFetcher.type, elements, selectedTeamId])
+  }, [createElementFetcher.data, createElementFetcher.type, elements])
 
   if (!elements) return <c.Center h="379px" />
 
@@ -176,23 +161,6 @@ export function TaskForm({ day, onClose, task }: FormProps) {
             </c.Button>
           </c.Flex>
 
-          {selectedTeamId && (
-            <InlineFormField
-              name="users"
-              label="Users"
-              error={createUpdateFetcher.data?.fieldErrors?.users?.[0]}
-              defaultValue={task?.users.map((a) => ({ value: a.id, label: a.firstName }))}
-              input={
-                <Multiselect
-                  placeholder="Select users"
-                  options={users.map((user) => ({
-                    value: user.id,
-                    label: user.firstName + " " + user.lastName,
-                  }))}
-                />
-              }
-            />
-          )}
           <c.Box>
             <c.Flex>
               <c.FormLabel htmlFor="durationHours" fontSize="sm" minW={{ base: "80px", md: "100px" }}>
@@ -302,7 +270,6 @@ export function TaskForm({ day, onClose, task }: FormProps) {
               isRequired
               error={createElementFetcher.data?.fieldErrors?.name?.[0]}
             />
-            {selectedTeamId && <c.Input type="hidden" name="teamId" value={selectedTeamId} />}
             <InlineFormField
               name="color"
               label="Color"

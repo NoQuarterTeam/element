@@ -7,20 +7,8 @@ import { requireUser } from "~/services/auth/auth.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
-  const url = new URL(request.url)
-  const selectedTeamId = url.searchParams.get("selectedTeamId")
   const elements = await db.element.findMany({
-    where: {
-      archivedAt: { equals: null },
-      AND: selectedTeamId
-        ? { teamId: { equals: selectedTeamId } }
-        : {
-            OR: [
-              { team: { users: { some: { id: { equals: user.id } } } } },
-              { creatorId: { equals: user.id } },
-            ],
-          },
-    },
+    where: { archivedAt: { equals: null }, creatorId: { equals: user.id } },
   })
 
   return json({ elements })

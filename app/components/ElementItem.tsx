@@ -6,7 +6,7 @@ import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
-import type { SidebarElement, SidebarTeam } from "~/pages/_timeline.index"
+import type { SidebarElement } from "~/pages/_timeline.index"
 import { ElementsActionMethods } from "~/pages/api.elements"
 import { ElementActionMethods } from "~/pages/api.elements.$id"
 
@@ -17,7 +17,7 @@ import { Modal } from "./Modal"
 const MAX_DEPTH = 2
 
 interface Props {
-  element: SidebarElement | SidebarTeam["elements"][0]
+  element: SidebarElement
   depth: number
 }
 
@@ -110,7 +110,6 @@ export function ElementItem({ element, ...props }: Props) {
           <createFetcher.Form action="/api/elements" method="post" replace>
             <c.Stack spacing={4}>
               <c.Input type="hidden" name="parentId" value={element.id} />
-              {element.teamId && <c.Input type="hidden" name="teamId" value={element.teamId} />}
               <InlineFormField autoFocus name="name" label="Name" isRequired />
               <InlineFormField name="color" placeholder="Parent color if not set" label="Color" />
               <ButtonGroup>
