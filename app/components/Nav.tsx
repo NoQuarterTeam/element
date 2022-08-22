@@ -50,6 +50,7 @@ export function Nav({ elements }: Props) {
       <c.Flex position="absolute" top={4} right={0} w="65px" justify="center">
         <c.Fade in={!navProps.isOpen}>
           <c.IconButton
+            borderRadius="full"
             variant="ghost"
             icon={<c.Box as={FiChevronsLeft} boxSize="18px" />}
             aria-label="close sidebar"
@@ -136,6 +137,7 @@ export function Nav({ elements }: Props) {
         <c.Flex position="absolute" top={4} right={0} w="65px" justify="center">
           <c.Fade in={navProps.isOpen}>
             <c.IconButton
+              borderRadius="full"
               icon={<c.Box as={FiChevronsRight} boxSize="18px" />}
               aria-label="close nav"
               variant="ghost"
