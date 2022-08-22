@@ -70,7 +70,7 @@ export const action = async ({ request }: ActionArgs) => {
             durationHours: newForm.data.durationHours || null,
             durationMinutes: newForm.data.durationMinutes || null,
             startTime: newForm.data.startTime || null,
-            date: newForm.data.date,
+            date: dayjs(newForm.data.date).toDate(),
             name: newForm.data.name,
             description: newForm.data.description || null,
             element: { connect: { id: newForm.data.elementId } },

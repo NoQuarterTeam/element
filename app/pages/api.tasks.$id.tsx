@@ -1,5 +1,6 @@
 import type { ActionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
+import dayjs from "dayjs"
 import { z } from "zod"
 
 import { taskSelectFields } from "~/components/TaskItem"
@@ -48,7 +49,7 @@ export const action = async ({ request, params }: ActionArgs) => {
           select: taskSelectFields,
           where: { id: taskId },
           data: {
-            date: data.date || undefined,
+            date: data.date ? dayjs(data.date).toDate() : undefined,
             durationHours: data.durationHours || undefined,
             durationMinutes: data.durationMinutes || undefined,
             startTime: data.startTime || undefined,
