@@ -1,8 +1,10 @@
 import * as React from "react"
+import { HexColorPicker } from "react-colorful"
 import { HiPlus } from "react-icons/hi"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
+import { readableColor } from "polished"
 
 import type { SidebarElement } from "~/pages/_timeline.timeline"
 import { ElementsActionMethods } from "~/pages/api.elements"
@@ -18,7 +20,7 @@ interface Props {
 export function ElementsSidebar({ elements }: Props) {
   const [search, setSearch] = React.useState("")
   const [isArchivedSown, { toggle }] = c.useBoolean(false)
-
+  const [color, setColor] = React.useState("#000000")
   const createModalProps = c.useDisclosure()
   const createFetcher = useFetcher()
   React.useEffect(() => {
@@ -52,11 +54,30 @@ export function ElementsSidebar({ elements }: Props) {
         >
           Add
         </c.Button>
-        <Modal title="Create an Element" {...createModalProps}>
+        <Modal title="Create an Element" size="xl" {...createModalProps}>
           <createFetcher.Form action="/api/elements" method="post" replace>
             <c.Stack spacing={4}>
               <InlineFormField autoFocus name="name" label="Name" isRequired />
-              <InlineFormField name="color" label="Color" />
+              <c.Input type="hidden" name="color" value={color} />
+              <InlineFormField
+                name="color"
+                isRequired
+                label="Color"
+                input={
+                  <c.SimpleGrid w="100%" columns={{ base: 1, md: 2 }} spacing={1}>
+                    <c.Flex w="100%">
+                      <HexColorPicker color={color} onChange={setColor} />
+                    </c.Flex>
+                    <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
+                      <c.Center bg={color} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
+                        <c.Text textAlign="center" w="100%" color={readableColor(color)}>
+                          {color}
+                        </c.Text>
+                      </c.Center>
+                    </c.Center>
+                  </c.SimpleGrid>
+                }
+              />
               <ButtonGroup>
                 <c.Button variant="ghost" onClick={createModalProps.onClose}>
                   Cancel

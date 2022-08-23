@@ -1,9 +1,11 @@
 import React from "react"
+import { HexColorPicker } from "react-colorful"
 import { BiDownArrow, BiEdit, BiRightArrow } from "react-icons/bi"
 import { HiDotsVertical, HiPlus } from "react-icons/hi"
 import { RiDeleteBinLine, RiEye2Line } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
+import { readableColor } from "polished"
 
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import type { SidebarElement } from "~/pages/_timeline.timeline"
@@ -24,6 +26,8 @@ interface Props {
 export function ElementItem({ element, ...props }: Props) {
   const expandProps = useStoredDisclosure("element.sidebar.itemExpand." + element.id)
 
+  const [newColor, setNewColor] = React.useState(element.color)
+  const [editColor, setEditColor] = React.useState(element.color)
   const createModalProps = c.useDisclosure()
   const createFetcher = useFetcher()
   React.useEffect(() => {
@@ -122,12 +126,31 @@ export function ElementItem({ element, ...props }: Props) {
             </c.MenuList>
           </c.Menu>
         </c.Flex>
-        <Modal title="Create a child element" {...createModalProps}>
+        <Modal title="Create a child element" size="xl" {...createModalProps}>
           <createFetcher.Form action="/api/elements" method="post" replace>
             <c.Stack spacing={4}>
               <c.Input type="hidden" name="parentId" value={element.id} />
               <InlineFormField autoFocus name="name" label="Name" isRequired />
-              <InlineFormField name="color" placeholder="Parent color if not set" label="Color" />
+              <c.Input type="hidden" name="color" value={newColor} />
+              <InlineFormField
+                name="color"
+                isRequired
+                label="Color"
+                input={
+                  <c.SimpleGrid w="100%" columns={{ base: 1, md: 2 }} spacing={1}>
+                    <c.Flex w="100%">
+                      <HexColorPicker color={newColor} onChange={setNewColor} />
+                    </c.Flex>
+                    <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
+                      <c.Center bg={newColor} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
+                        <c.Text textAlign="center" w="100%" color={readableColor(newColor)}>
+                          {newColor}
+                        </c.Text>
+                      </c.Center>
+                    </c.Center>
+                  </c.SimpleGrid>
+                }
+              />
               <ButtonGroup>
                 <c.Button variant="ghost" onClick={createModalProps.onClose}>
                   Cancel
@@ -145,11 +168,30 @@ export function ElementItem({ element, ...props }: Props) {
             </c.Stack>
           </createFetcher.Form>
         </Modal>
-        <Modal title={`Edit ${element.name}`} {...updateModalProps}>
+        <Modal title={`Edit ${element.name}`} size="xl" {...updateModalProps}>
           <updateFetcher.Form action={`/api/elements/${element.id}`} method="post" replace>
             <c.Stack spacing={4}>
               <InlineFormField autoFocus defaultValue={element.name} name="name" label="Name" isRequired />
-              <InlineFormField name="color" defaultValue={element.color} label="Color" />
+              <c.Input type="hidden" name="color" value={editColor} />
+              <InlineFormField
+                name="color"
+                isRequired
+                label="Color"
+                input={
+                  <c.SimpleGrid w="100%" columns={{ base: 1, md: 2 }} spacing={1}>
+                    <c.Flex w="100%">
+                      <HexColorPicker color={editColor} onChange={setEditColor} />
+                    </c.Flex>
+                    <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
+                      <c.Center bg={editColor} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
+                        <c.Text textAlign="center" w="100%" color={readableColor(editColor)}>
+                          {editColor}
+                        </c.Text>
+                      </c.Center>
+                    </c.Center>
+                  </c.SimpleGrid>
+                }
+              />
               <ButtonGroup>
                 <c.Button variant="ghost" onClick={updateModalProps.onClose}>
                   Cancel
