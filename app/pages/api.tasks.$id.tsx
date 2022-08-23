@@ -17,13 +17,12 @@ export enum TaskActionMethods {
   DuplicateTask = "duplicateTask",
 }
 export const action = async ({ request, params }: ActionArgs) => {
-  await requireUser(request)
+  const user = await requireUser(request)
   const formData = await request.formData()
   const action = formData.get("_action") as TaskActionMethods | undefined
   const taskId = params.id as string | undefined
   if (!taskId) return badRequest("Task ID is required")
-
-  const task = await db.task.findUnique({ where: { id: taskId } })
+  const task = await db.task.findFirst({ where: { id: taskId, creatorId: { equals: user.id } } })
   if (!task) return badRequest("Task not found")
   const { createFlash } = await getFlashSession(request)
   switch (action) {

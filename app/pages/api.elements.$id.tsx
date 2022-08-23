@@ -15,12 +15,13 @@ export enum ElementActionMethods {
   UnarchiveElement = "unarchiveElement",
 }
 export const action = async ({ request, params }: ActionArgs) => {
-  await requireUser(request)
+  const user = await requireUser(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ElementActionMethods | undefined
   const elementId = params.id as string | undefined
   if (!elementId) throw badRequest("Element ID is required")
-
+  const element = await db.element.findFirst({ where: { id: elementId, creatorId: { equals: user.id } } })
+  if (!element) throw badRequest("Element not found")
   const { createFlash } = await getFlashSession(request)
   switch (action) {
     case ElementActionMethods.UpdateElement:
@@ -29,7 +30,6 @@ export const action = async ({ request, params }: ActionArgs) => {
           name: z.string().min(1).optional(),
           color: z.string().optional(),
         })
-
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
         const updatedElement = await db.element.update({ where: { id: elementId }, data })

@@ -35,9 +35,7 @@ export const action = async ({ request }: ActionArgs) => {
           color = parent.color
         }
         if (!color) color = "#000000"
-        const updatedElement = await db.element.create({
-          data: { ...data, color, creatorId: user.id },
-        })
+        const updatedElement = await db.element.create({ data: { ...data, color, creatorId: user.id } })
         return json({ element: updatedElement })
       } catch (e: any) {
         return badRequest(e.message, {
