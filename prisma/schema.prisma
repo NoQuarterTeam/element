@@ -20,7 +20,6 @@ model User {
   tasks        Task[]
   createdTasks Task[]    @relation(name: "CreatedTasks")
   elements     Element[]
-  teams        Team[]
 }
 
 model Task {
@@ -54,19 +53,5 @@ model Element {
   parentId   String?   @db.Uuid
   creator    User      @relation(fields: [creatorId], references: [id])
   creatorId  String    @db.Uuid
-  teamId     String?   @db.Uuid
-  team       Team?     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   tasks      Task[]
-}
-
-model Team {
-  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String
-  slug      String    @unique
-  logo      String?
-  isPublic  Boolean   @default(false)
-  createdAt DateTime  @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
-  elements  Element[]
-  users     User[]
 }
