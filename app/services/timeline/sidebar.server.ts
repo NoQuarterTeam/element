@@ -3,6 +3,7 @@ import { db } from "~/lib/db.server"
 const elementSelectFields = {
   id: true,
   name: true,
+  archivedAt: true,
   color: true,
 }
 export async function getSidebarElements(userId: string) {
@@ -11,21 +12,18 @@ export async function getSidebarElements(userId: string) {
     select: {
       ...elementSelectFields,
       children: {
-        where: { archivedAt: { equals: null } },
         select: {
           ...elementSelectFields,
           children: {
-            where: { archivedAt: { equals: null } },
             select: {
               ...elementSelectFields,
-              children: { select: elementSelectFields, where: { archivedAt: { equals: null } } },
+              children: { select: elementSelectFields },
             },
           },
         },
       },
     },
     where: {
-      archivedAt: { equals: null },
       parentId: { equals: null },
       creatorId: { equals: userId },
     },

@@ -40,7 +40,7 @@ export const action = async ({ request }: ActionArgs) => {
     ["Set-Cookie", await setUser(user.id)],
     ["Set-Cookie", await createFlash(FlashType.Success, "You are now logged in")],
   ])
-  return redirect("/", { headers })
+  return redirect("/timeline", { headers })
 }
 
 export default function Register() {

@@ -37,7 +37,6 @@ export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
-
   const [elements, weatherData] = await Promise.all([getSidebarElements(user.id), getWeatherData(request)])
   return json({ elements, weatherData })
 }

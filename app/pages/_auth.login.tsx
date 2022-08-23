@@ -31,7 +31,7 @@ export const action = async ({ request }: ActionArgs) => {
   if (!result.success) return badRequest({ data, formError: result.error })
   const { setUser } = await getUserSession(request)
   const headers = new Headers([["Set-Cookie", await setUser(result.user.id)]])
-  return redirect("/", { headers })
+  return redirect("/timeline", { headers })
 }
 
 export default function Login() {

@@ -1,12 +1,12 @@
 import React from "react"
 import { BiDownArrow, BiEdit, BiRightArrow } from "react-icons/bi"
 import { HiDotsVertical, HiPlus } from "react-icons/hi"
-import { RiDeleteBinLine } from "react-icons/ri"
+import { RiDeleteBinLine, RiEye2Line } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
-import type { SidebarElement } from "~/pages/_timeline.index"
+import type { SidebarElement } from "~/pages/_timeline.timeline"
 import { ElementsActionMethods } from "~/pages/api.elements"
 import { ElementActionMethods } from "~/pages/api.elements.$id"
 
@@ -47,6 +47,8 @@ export function ElementItem({ element, ...props }: Props) {
       archiveModalProps.onClose()
     }
   }, [archiveFetcher.data, archiveFetcher.type, archiveModalProps])
+
+  const unarchiveFetcher = useFetcher()
 
   return (
     <c.Box>
@@ -97,12 +99,26 @@ export function ElementItem({ element, ...props }: Props) {
               <c.MenuItem onClick={updateModalProps.onOpen} icon={<c.Box as={BiEdit} boxSize="12px" />}>
                 Edit
               </c.MenuItem>
-              <c.MenuItem
-                onClick={archiveModalProps.onOpen}
-                icon={<c.Box as={RiDeleteBinLine} boxSize="12px" />}
-              >
-                Archive
-              </c.MenuItem>
+              {element.archivedAt ? (
+                <c.MenuItem
+                  onClick={() =>
+                    unarchiveFetcher.submit(
+                      { _action: ElementActionMethods.UnarchiveElement },
+                      { method: "post", action: `/api/elements/${element.id}` },
+                    )
+                  }
+                  icon={<c.Box as={RiEye2Line} boxSize="12px" />}
+                >
+                  Unarchive
+                </c.MenuItem>
+              ) : (
+                <c.MenuItem
+                  onClick={archiveModalProps.onOpen}
+                  icon={<c.Box as={RiDeleteBinLine} boxSize="12px" />}
+                >
+                  Archive
+                </c.MenuItem>
+              )}
             </c.MenuList>
           </c.Menu>
         </c.Flex>

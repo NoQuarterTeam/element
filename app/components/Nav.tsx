@@ -6,7 +6,7 @@ import { useSubmit } from "@remix-run/react"
 
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { NEW_UPDATES, useUpdatesSeen } from "~/lib/hooks/useUpdatesSeen"
-import type { SidebarElement } from "~/pages/_timeline.index"
+import type { SidebarElement } from "~/pages/_timeline.timeline"
 
 import { ElementsSidebar } from "./ElementsSidebar"
 import { Modal } from "./Modal"
@@ -36,6 +36,10 @@ export function Nav({ elements }: Props) {
     if (event.metaKey && event.key === "/") {
       event.preventDefault()
       navProps.onToggle()
+    }
+    if (event.metaKey && event.key === "k") {
+      event.preventDefault()
+      shortcutModalProps.onToggle()
     }
   })
 

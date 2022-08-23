@@ -3,7 +3,7 @@ import dayjs from "dayjs"
 
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
 import { useUserLocation } from "~/lib/hooks/useUserLocation"
-import type { WeatherData } from "~/pages/_timeline.index"
+import type { WeatherData } from "~/pages/_timeline.timeline"
 
 import { DAY_WIDTH } from "./Day"
 

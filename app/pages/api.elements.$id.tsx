@@ -12,6 +12,7 @@ import { getFlashSession } from "~/services/session/session.server"
 export enum ElementActionMethods {
   UpdateElement = "updateElement",
   ArchiveElement = "archiveElement",
+  UnarchiveElement = "unarchiveElement",
 }
 export const action = async ({ request, params }: ActionArgs) => {
   await requireUser(request)
@@ -45,6 +46,15 @@ export const action = async ({ request, params }: ActionArgs) => {
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error archiving element") },
+        })
+      }
+    case ElementActionMethods.UnarchiveElement:
+      try {
+        await db.element.update({ where: { id: elementId }, data: { archivedAt: null } })
+        return json({ success: true })
+      } catch (e: any) {
+        return badRequest(e.message, {
+          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error unarchiving element") },
         })
       }
     default:

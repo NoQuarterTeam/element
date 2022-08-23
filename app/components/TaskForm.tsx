@@ -82,17 +82,19 @@ export function TaskForm({ day, onClose, task }: FormProps) {
 
   const client = useQueryClient()
   const createElementFetcher = useFetcher()
+
   React.useEffect(() => {
     if (createElementFetcher.type === "actionReload" && createElementFetcher.data?.element) {
+      const taskElements = client.getQueryData<{ elements: Element[] }>(["task-elements"])
       client.setQueryData(["task-elements"], {
-        elements: [createElementFetcher.data.element, ...(elements || [])],
+        elements: [createElementFetcher.data.element, ...(taskElements?.elements || [])],
       })
       elementModalProps.onClose()
       setElementId(createElementFetcher.data.element.id)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createElementFetcher.data, createElementFetcher.type, elements])
+  }, [createElementFetcher.data, createElementFetcher.type])
 
   if (!elements) return <c.Center h="379px" />
 

@@ -4,7 +4,7 @@ import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
 
-import type { SidebarElement } from "~/pages/_timeline.index"
+import type { SidebarElement } from "~/pages/_timeline.timeline"
 import { ElementsActionMethods } from "~/pages/api.elements"
 
 import { ButtonGroup } from "./ButtonGroup"
@@ -17,6 +17,7 @@ interface Props {
 }
 export function ElementsSidebar({ elements }: Props) {
   const [search, setSearch] = React.useState("")
+  const [isArchivedSown, { toggle }] = c.useBoolean(false)
 
   const createModalProps = c.useDisclosure()
   const createFetcher = useFetcher()
@@ -27,7 +28,11 @@ export function ElementsSidebar({ elements }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createFetcher.data, createFetcher.type])
 
-  const matchedMyElements = matchSorter(elements, search, { keys: ["name"] })
+  const matchedMyElements = matchSorter(
+    elements.filter((e) => (isArchivedSown ? e : !e.archivedAt)),
+    search,
+    { keys: ["name"] },
+  )
 
   return (
     <c.Box overflowY="scroll" minH="100vh" pb={200} pos="relative">
@@ -73,6 +78,11 @@ export function ElementsSidebar({ elements }: Props) {
       {matchedMyElements.map((element) => (
         <ElementItem key={element.id} {...{ element }} depth={0} />
       ))}
+      <c.Box p={4}>
+        <c.Button onClick={toggle} size="sm" variant="ghost" w="100%">
+          {isArchivedSown ? "Hide archived" : "Show archived"}
+        </c.Button>
+      </c.Box>
     </c.Box>
   )
 }

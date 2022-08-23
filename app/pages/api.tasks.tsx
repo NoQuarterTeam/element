@@ -26,6 +26,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     select: taskSelectFields,
     where: {
       creatorId: { equals: user.id },
+      element: { archivedAt: { equals: null } },
       date: {
         gte: dayjs().subtract(back, "day").toDate(),
         lte: dayjs().add(forward, "day").toDate(),
