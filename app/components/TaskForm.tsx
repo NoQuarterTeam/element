@@ -1,12 +1,15 @@
 import * as React from "react"
+import { HexColorPicker } from "react-colorful"
 import { BiPlus, BiTrash } from "react-icons/bi"
 import { lazyWithPreload } from "react-lazy-with-preload"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
+import { readableColor } from "polished"
 import { ClientOnly } from "remix-utils"
 
+import { randomHexColor } from "~/lib/color"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { ElementsActionMethods } from "~/pages/api.elements"
 import type { TaskElement } from "~/pages/api.task-elements"
@@ -40,6 +43,8 @@ export function TaskForm({ day, onClose, task }: FormProps) {
     updateTask: state.updateTask,
     removeTask: state.removeTask,
   }))
+
+  const [color, setColor] = React.useState(randomHexColor())
 
   const createUpdateFetcher = useFetcher<CreateUpdateRes>()
   React.useEffect(() => {
@@ -270,7 +275,7 @@ export function TaskForm({ day, onClose, task }: FormProps) {
           </c.Flex>
         </c.Stack>
       </createUpdateFetcher.Form>
-      <Modal title="Create an Element" {...elementModalProps}>
+      <Modal title="Create an Element" size="xl" {...elementModalProps}>
         <createElementFetcher.Form replace method="post" action="/api/elements">
           <c.Stack spacing={4}>
             <InlineFormField
@@ -281,12 +286,28 @@ export function TaskForm({ day, onClose, task }: FormProps) {
               isRequired
               error={createElementFetcher.data?.fieldErrors?.name?.[0]}
             />
+            <c.Input type="hidden" name="color" value={color} />
             <InlineFormField
               name="color"
-              label="Color"
-              size="sm"
+              isRequired
               error={createElementFetcher.data?.fieldErrors?.color?.[0]}
+              label="Color"
+              input={
+                <c.SimpleGrid w="100%" columns={{ base: 1, md: 2 }} spacing={1}>
+                  <c.Flex w="100%">
+                    <HexColorPicker color={color} onChange={setColor} />
+                  </c.Flex>
+                  <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
+                    <c.Center bg={color} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
+                      <c.Text textAlign="center" w="100%" color={readableColor(color)}>
+                        {color}
+                      </c.Text>
+                    </c.Center>
+                  </c.Center>
+                </c.SimpleGrid>
+              }
             />
+
             <ButtonGroup>
               <c.Button
                 variant="ghost"

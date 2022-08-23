@@ -6,6 +6,7 @@ import { useFetcher } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
 import { readableColor } from "polished"
 
+import { randomHexColor } from "~/lib/color"
 import type { SidebarElement } from "~/pages/_timeline.timeline"
 import { ElementsActionMethods } from "~/pages/api.elements"
 
@@ -20,7 +21,7 @@ interface Props {
 export function ElementsSidebar({ elements }: Props) {
   const [search, setSearch] = React.useState("")
   const [isArchivedSown, { toggle }] = c.useBoolean(false)
-  const [color, setColor] = React.useState("#000000")
+  const [color, setColor] = React.useState(randomHexColor())
   const createModalProps = c.useDisclosure()
   const createFetcher = useFetcher()
   React.useEffect(() => {

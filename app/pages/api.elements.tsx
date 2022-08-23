@@ -2,6 +2,7 @@ import type { ActionArgs } from "@remix-run/server-runtime"
 import { json } from "@remix-run/server-runtime"
 import { z } from "zod"
 
+import { randomHexColor } from "~/lib/color"
 import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
@@ -34,7 +35,7 @@ export const action = async ({ request }: ActionArgs) => {
           const parent = await db.element.findUniqueOrThrow({ where: { id: data.parentId } })
           color = parent.color
         }
-        if (!color) color = "#000000"
+        if (!color) color = randomHexColor()
         const updatedElement = await db.element.create({ data: { ...data, color, creatorId: user.id } })
         return json({ element: updatedElement })
       } catch (e: any) {
