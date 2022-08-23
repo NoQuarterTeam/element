@@ -39,7 +39,7 @@ type WeatherResponse = {
   }[]
 }
 
-export async function getWeatherData(request: Request) {
+async function getWeatherData(request: Request) {
   try {
     const cookies = cookie.parse(request.headers.get("cookie") || "")
     const userLocation = cookies[USER_LOCATION_COOKIE_KEY]
