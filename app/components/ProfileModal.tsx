@@ -17,7 +17,7 @@ import { FormError, FormField, ImageField } from "./Form"
 
 export function ProfileModal() {
   const me = useMe()
-  const weatherProps = useUserLocationEnabled()
+  const userLocation = useUserLocationEnabled()
   const [tab, setTab] = React.useState<"account" | "settings">("account")
 
   const { updatesSeens, setUpdatesSeens } = useUpdatesSeen()
@@ -30,9 +30,9 @@ export function ProfileModal() {
   const toast = useToast()
 
   const handleToggleWeather = () => {
-    if (weatherProps.isEnabled) {
+    if (userLocation.isEnabled) {
       Cookies.remove(USER_LOCATION_COOKIE_KEY)
-      weatherProps.toggle()
+      userLocation.toggle()
     } else {
       function handleError(error: any) {
         switch (error.code) {
@@ -54,7 +54,7 @@ export function ProfileModal() {
             { expires: 10000 },
           )
           await sleep()
-          weatherProps.toggle()
+          userLocation.toggle()
         }, handleError)
       } else {
         return toast({ description: "Geolocation is not supported by this browser.", status: "error" })
@@ -226,7 +226,7 @@ export function ProfileModal() {
                     </c.Badge>
                   </c.HStack>
                   <c.Text fontSize="xs">Show the next weeks weather based on your current location.</c.Text>
-                  <c.Switch onChange={handleToggleWeather} defaultChecked={weatherProps.isEnabled} />
+                  <c.Switch onChange={handleToggleWeather} defaultChecked={userLocation.isEnabled} />
                 </c.Stack>
                 <c.Divider />
                 <c.Stack>
