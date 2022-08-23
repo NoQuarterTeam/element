@@ -22,7 +22,6 @@ import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
 import { DAYS_BACK, DAYS_FORWARD, useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { requireUser } from "~/services/auth/auth.server"
 import { getSidebarElements } from "~/services/timeline/sidebar.server"
-import { getWeatherData } from "~/services/weather/weather.server"
 
 import type { TimelineTask } from "./api.tasks"
 
@@ -32,16 +31,15 @@ export function links() {
 
 export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
   if (!submission) return false
-  return ["/api/elements", "/dev/null"].some((path) => submission.action.includes(path))
+  return ["/api/elements"].some((path) => submission.action.includes(path))
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
-  const [elements, weatherData] = await Promise.all([getSidebarElements(user.id), getWeatherData(request)])
-  return json({ elements, weatherData })
+  const elements = await getSidebarElements(user.id)
+  return json({ elements })
 }
 
-export type WeatherData = UseDataFunctionReturn<typeof loader>["weatherData"]
 export type SidebarElement = UseDataFunctionReturn<typeof loader>["elements"][0]
 
 dayjs.extend(advancedFormat)
@@ -122,8 +120,8 @@ export default function Timeline() {
     [daysBack, daysForward],
   )
 
-  const isLoading = taskFetcher.state === "loading"
   const newTaskModalProps = c.useDisclosure()
+
   c.useEventListener("keydown", (event) => {
     // cmd + . to open the add task modal for current day
     if (event.metaKey && event.key === ".") {
@@ -132,7 +130,9 @@ export default function Timeline() {
     }
   })
   const bg = c.useColorModeValue("gray.100", "gray.800")
-  const { elements, weatherData } = useLoaderData<typeof loader>()
+  const { elements } = useLoaderData<typeof loader>()
+
+  const isLoading = taskFetcher.state === "loading"
   return (
     <c.Box
       ref={timelineRef}
@@ -142,7 +142,7 @@ export default function Timeline() {
       overflowX="auto"
       overflowY="hidden"
     >
-      <TimelineHeader weatherData={weatherData} isLoading={isLoading} days={days} months={months} />
+      <TimelineHeader isLoading={isLoading} days={days} months={months} />
       <c.Box ref={daysRef} h={`calc(100vh - ${HEADER_HEIGHT}px)`} w="min-content" overflow="scroll">
         <c.Flex>
           <DropContainer tasks={tasks.map((t) => ({ id: t.id, date: t.date, order: t.order }))}>

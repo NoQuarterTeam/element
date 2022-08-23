@@ -2,7 +2,7 @@ import cookie from "cookie"
 import dayjs from "dayjs"
 
 import { OPEN_WEATHER_KEY } from "~/lib/config.server"
-import { USER_LOCATION_COOKIE_KEY } from "~/lib/hooks/useUserLocation"
+import { USER_LOCATION_COOKIE_KEY } from "~/lib/hooks/useUserLocationEnabled"
 
 type WeatherResponse = {
   daily: {

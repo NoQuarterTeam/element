@@ -1,25 +1,35 @@
 import * as c from "@chakra-ui/react"
+import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
-import { useUserLocation } from "~/lib/hooks/useUserLocation"
-import type { WeatherData } from "~/pages/_timeline.timeline"
+import { useUserLocationEnabled } from "~/lib/hooks/useUserLocationEnabled"
+import type { WeatherData } from "~/pages/api.weather"
 
 import { DAY_WIDTH } from "./Day"
 
 export const HEADER_HEIGHT = 115
 
 interface TimelineHeaderProps {
-  weatherData?: WeatherData | null
   isLoading: boolean
   days: dayjs.Dayjs[]
   months: { month: number; year: number }[]
 }
 
-export function TimelineHeader({ weatherData, days, months, isLoading }: TimelineHeaderProps) {
+export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
   const { colorMode } = c.useColorMode()
   const isDark = colorMode === "dark"
-  const isWeatherEnabled = useUserLocation().isEnabled
+  const isWeatherEnabled = useUserLocationEnabled((s) => s.isEnabled)
+
+  const { data: weatherData } = useQuery(
+    ["/api/weather"],
+    async () => {
+      const response = await fetch(`/api/weather`)
+      if (!response.ok) throw new Error("Network response was not ok")
+      return response.json() as Promise<WeatherData>
+    },
+    { enabled: isWeatherEnabled, staleTime: 1_200_000 },
+  )
 
   return (
     <c.Flex

@@ -3,12 +3,12 @@ import { FiSettings } from "react-icons/fi"
 import * as c from "@chakra-ui/react"
 import { useFetcher, useSubmit } from "@remix-run/react"
 import Cookies from "js-cookie"
-import { useDataRefresh } from "remix-utils"
 
 import { shallowEqual } from "~/lib/form"
 import { transformImage } from "~/lib/helpers/image"
+import { useToast } from "~/lib/hooks/useToast"
 import { useUpdatesSeen } from "~/lib/hooks/useUpdatesSeen"
-import { USER_LOCATION_COOKIE_KEY, useUserLocation } from "~/lib/hooks/useUserLocation"
+import { USER_LOCATION_COOKIE_KEY, useUserLocationEnabled } from "~/lib/hooks/useUserLocationEnabled"
 import { UPLOAD_PATHS } from "~/lib/uploadPaths"
 import { useMe } from "~/pages/_timeline"
 import { ProfileActionMethods } from "~/pages/api.profile"
@@ -17,7 +17,7 @@ import { FormError, FormField, ImageField } from "./Form"
 
 export function ProfileModal() {
   const me = useMe()
-  const weatherProps = useUserLocation()
+  const weatherProps = useUserLocationEnabled()
   const [tab, setTab] = React.useState<"account" | "settings">("account")
 
   const { updatesSeens, setUpdatesSeens } = useUpdatesSeen()
@@ -27,18 +27,43 @@ export function ProfileModal() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab])
+  const toast = useToast()
+
+  const handleToggleWeather = () => {
+    if (weatherProps.isEnabled) {
+      Cookies.remove(USER_LOCATION_COOKIE_KEY)
+      weatherProps.toggle()
+    } else {
+      function handleError(error: any) {
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+          case error.POSITION_UNAVAILABLE:
+            return
+          case error.TIMEOUT:
+            return toast({ description: "The request to get user location timed out.", status: "error" })
+          case error.UNKNOWN_ERROR:
+            return toast({ description: "An unknown error occurred.", status: "error" })
+        }
+      }
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+          const sleep = (delay = 200) => new Promise((res) => setTimeout(res, delay))
+          Cookies.set(
+            USER_LOCATION_COOKIE_KEY,
+            JSON.stringify({ lat: coords.latitude, lon: coords.longitude }),
+            { expires: 10000 },
+          )
+          await sleep()
+          weatherProps.toggle()
+        }, handleError)
+      } else {
+        return toast({ description: "Geolocation is not supported by this browser.", status: "error" })
+      }
+    }
+  }
 
   const logoutSubmit = useSubmit()
 
-  const { refresh } = useDataRefresh()
-  const handleToggle = () => {
-    if (weatherProps.isEnabled) {
-      Cookies.remove(USER_LOCATION_COOKIE_KEY)
-    } else {
-      refresh()
-    }
-    weatherProps.toggle()
-  }
   const formRef = React.useRef<HTMLFormElement>(null)
   const [isDirty, setIsDirty] = React.useState(false)
   const updateProfileFetcher = useFetcher()
@@ -201,7 +226,7 @@ export function ProfileModal() {
                     </c.Badge>
                   </c.HStack>
                   <c.Text fontSize="xs">Show the next weeks weather based on your current location.</c.Text>
-                  <c.Switch onChange={handleToggle} isChecked={weatherProps.isEnabled} />
+                  <c.Switch onChange={handleToggleWeather} defaultChecked={weatherProps.isEnabled} />
                 </c.Stack>
                 <c.Divider />
                 <c.Stack>
