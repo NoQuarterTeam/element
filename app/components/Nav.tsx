@@ -32,7 +32,7 @@ export function Nav({ elements }: Props) {
 
   const logoutSubmit = useSubmit()
 
-  const profileModalProps = c.useDisclosure({ defaultIsOpen: true })
+  const profileModalProps = c.useDisclosure({ defaultIsOpen: false })
 
   c.useEventListener("keydown", (event) => {
     if (event.metaKey && event.key === "e") {

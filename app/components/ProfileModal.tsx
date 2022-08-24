@@ -19,10 +19,10 @@ import { TAX_TYPES } from "~/lib/static/taxTypes"
 import { UPLOAD_PATHS } from "~/lib/uploadPaths"
 import { useMe } from "~/pages/_timeline"
 import { ProfileActionMethods } from "~/pages/api.profile"
-import type { ProfileBilling} from "~/pages/api.profile.billing";
+import type { ProfileBilling } from "~/pages/api.profile.billing"
 import { ProfileBillingMethods } from "~/pages/api.profile.billing"
-import type { ProfilePlan} from "~/pages/api.profile.plan";
-import {ProfilePlanMethods } from "~/pages/api.profile.plan"
+import type { ProfilePlan } from "~/pages/api.profile.plan"
+import { ProfilePlanMethods } from "~/pages/api.profile.plan"
 
 import { ButtonGroup } from "./ButtonGroup"
 import { FormButton, FormError, FormField, ImageField } from "./Form"
@@ -72,30 +72,6 @@ export function ProfileModal() {
           <c.Button
             justifyContent="flex-start"
             pl={4}
-            variant={tab === "plan" ? "solid" : "ghost"}
-            fontWeight={400}
-            fontSize="0.8rem"
-            leftIcon={<c.Box as={RiMap2Line} boxSize="15px" />}
-            borderRadius={0}
-            onClick={() => setTab("plan")}
-          >
-            Plan
-          </c.Button>
-          <c.Button
-            justifyContent="flex-start"
-            pl={4}
-            variant={tab === "billing" ? "solid" : "ghost"}
-            fontWeight={400}
-            fontSize="0.8rem"
-            leftIcon={<c.Box as={RiBankCard2Line} boxSize="15px" />}
-            borderRadius={0}
-            onClick={() => setTab("billing")}
-          >
-            Billing
-          </c.Button>
-          <c.Button
-            justifyContent="flex-start"
-            pl={4}
             variant={tab === "settings" ? "solid" : "ghost"}
             fontWeight={400}
             fontSize="0.8rem"
@@ -119,17 +95,41 @@ export function ProfileModal() {
           >
             Settings
           </c.Button>
+          <c.Button
+            justifyContent="flex-start"
+            pl={4}
+            variant={tab === "plan" ? "solid" : "ghost"}
+            fontWeight={400}
+            fontSize="0.8rem"
+            leftIcon={<c.Box as={RiMap2Line} boxSize="15px" />}
+            borderRadius={0}
+            onClick={() => setTab("plan")}
+          >
+            Plan
+          </c.Button>
+          <c.Button
+            justifyContent="flex-start"
+            pl={4}
+            variant={tab === "billing" ? "solid" : "ghost"}
+            fontWeight={400}
+            fontSize="0.8rem"
+            leftIcon={<c.Box as={RiBankCard2Line} boxSize="15px" />}
+            borderRadius={0}
+            onClick={() => setTab("billing")}
+          >
+            Billing
+          </c.Button>
         </c.Stack>
       </c.Box>
       <c.Box p={4} maxH={600} w="100%" overflowY="scroll">
         {tab === "account" ? (
           <Account />
+        ) : tab === "settings" ? (
+          <Settings />
         ) : tab === "plan" ? (
           <Plan />
         ) : tab === "billing" ? (
           <Billing />
-        ) : tab === "settings" ? (
-          <Settings />
         ) : null}
       </c.Box>
     </c.Flex>
@@ -142,6 +142,10 @@ function Account() {
   const formRef = React.useRef<HTMLFormElement>(null)
   const [isDirty, setIsDirty] = React.useState(false)
   const updateProfileFetcher = useFetcher()
+
+  const alertProps = c.useDisclosure()
+  const cancelRef = React.useRef<HTMLButtonElement>(null)
+  const destroyAccountFetcher = useFetcher()
   return (
     <c.Stack spacing={4} pb={6}>
       <c.Text fontSize="lg" fontWeight={500}>
@@ -220,6 +224,48 @@ function Account() {
           Log out
         </c.Button>
       </c.Box>
+      <c.Divider />
+      <c.Stack>
+        <c.Text fontSize="sm">Danger zone</c.Text>
+        <c.Text fontSize="xs">
+          Permanently delete your account and all of its contents. This action is not reversible - please
+          continue with caution.
+        </c.Text>
+        <c.Box>
+          <c.Button colorScheme="red" onClick={alertProps.onOpen}>
+            Delete account
+          </c.Button>
+        </c.Box>
+      </c.Stack>
+
+      <c.AlertDialog {...alertProps} motionPreset="slideInBottom" isCentered leastDestructiveRef={cancelRef}>
+        <c.AlertDialogOverlay>
+          <c.AlertDialogContent>
+            <c.AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete account
+            </c.AlertDialogHeader>
+            <c.AlertDialogBody>Are you sure? You can't undo this action afterwards.</c.AlertDialogBody>
+            <c.AlertDialogFooter>
+              <c.Button ref={cancelRef} onClick={alertProps.onClose}>
+                Cancel
+              </c.Button>
+              <destroyAccountFetcher.Form method="post" action="/api/profile" replace>
+                <c.Button
+                  colorScheme="red"
+                  type="submit"
+                  ml={3}
+                  name="_action"
+                  isLoading={destroyAccountFetcher.state !== "idle"}
+                  isDisabled={destroyAccountFetcher.state !== "idle"}
+                  value={ProfileActionMethods.DeleteAcccount}
+                >
+                  Delete
+                </c.Button>
+              </destroyAccountFetcher.Form>
+            </c.AlertDialogFooter>
+          </c.AlertDialogContent>
+        </c.AlertDialogOverlay>
+      </c.AlertDialog>
     </c.Stack>
   )
 }
@@ -261,9 +307,6 @@ function Settings() {
     }
   }
 
-  const alertProps = c.useDisclosure()
-  const cancelRef = React.useRef<HTMLButtonElement>(null)
-  const destroyAccountFetcher = useFetcher()
   return (
     <c.Stack spacing={4} pb={6}>
       <c.Text fontSize="lg" fontWeight={500}>
@@ -281,53 +324,6 @@ function Settings() {
           <c.Text fontSize="xs">Show the next weeks weather based on your current location.</c.Text>
           <c.Switch onChange={handleToggleWeather} defaultChecked={userLocation.isEnabled} />
         </c.Stack>
-        <c.Divider />
-        <c.Stack>
-          <c.Text fontSize="sm">Danger zone</c.Text>
-          <c.Text fontSize="xs">
-            Permanently delete your account and all of its contents. This action is not reversible - please
-            continue with caution.
-          </c.Text>
-          <c.Box>
-            <c.Button colorScheme="red" onClick={alertProps.onOpen}>
-              Delete account
-            </c.Button>
-          </c.Box>
-        </c.Stack>
-
-        <c.AlertDialog
-          {...alertProps}
-          motionPreset="slideInBottom"
-          isCentered
-          leastDestructiveRef={cancelRef}
-        >
-          <c.AlertDialogOverlay>
-            <c.AlertDialogContent>
-              <c.AlertDialogHeader fontSize="lg" fontWeight="bold">
-                Delete account
-              </c.AlertDialogHeader>
-              <c.AlertDialogBody>Are you sure? You can't undo this action afterwards.</c.AlertDialogBody>
-              <c.AlertDialogFooter>
-                <c.Button ref={cancelRef} onClick={alertProps.onClose}>
-                  Cancel
-                </c.Button>
-                <destroyAccountFetcher.Form method="post" action="/api/profile" replace>
-                  <c.Button
-                    colorScheme="red"
-                    type="submit"
-                    ml={3}
-                    name="_action"
-                    isLoading={destroyAccountFetcher.state !== "idle"}
-                    isDisabled={destroyAccountFetcher.state !== "idle"}
-                    value={ProfileActionMethods.DeleteAcccount}
-                  >
-                    Delete
-                  </c.Button>
-                </destroyAccountFetcher.Form>
-              </c.AlertDialogFooter>
-            </c.AlertDialogContent>
-          </c.AlertDialogOverlay>
-        </c.AlertDialog>
       </c.Stack>
     </c.Stack>
   )
