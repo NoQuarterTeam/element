@@ -3,6 +3,8 @@ import { extendTheme } from "@chakra-ui/react"
 import { Button } from "./components/Button"
 import { Checkbox } from "./components/Checkbox"
 import { Input } from "./components/Input"
+import { Menu } from "./components/Menu"
+import { Modal } from "./components/Modal"
 import { Select } from "./components/Select"
 import { Switch } from "./components/Switch"
 import { Textarea } from "./components/Textarea"
@@ -42,6 +44,8 @@ export const theme = extendTheme({
       parts: ["text", "icon"],
       baseStyle: { text: { mt: 1 } },
     },
+    Modal,
+    Menu,
     Select,
     Textarea,
   },

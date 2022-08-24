@@ -1,6 +1,6 @@
 import * as React from "react"
 import { HexColorPicker } from "react-colorful"
-import { HiPlus } from "react-icons/hi"
+import { RiAddLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
@@ -12,7 +12,7 @@ import { ElementsActionMethods } from "~/pages/api.elements"
 
 import { ButtonGroup } from "./ButtonGroup"
 import { ElementItem } from "./ElementItem"
-import { InlineFormField } from "./Form"
+import { FormButton, FormError, InlineFormField } from "./Form"
 import { Modal } from "./Modal"
 
 interface Props {
@@ -50,7 +50,7 @@ export function ElementsSidebar({ elements }: Props) {
         <c.Button
           ml={2}
           colorScheme="orange"
-          rightIcon={<c.Box as={HiPlus} />}
+          rightIcon={<c.Box as={RiAddLine} />}
           onClick={createModalProps.onOpen}
         >
           Add
@@ -58,10 +58,17 @@ export function ElementsSidebar({ elements }: Props) {
         <Modal title="Create an Element" size="xl" {...createModalProps}>
           <createFetcher.Form action="/api/elements" method="post" replace>
             <c.Stack spacing={4}>
-              <InlineFormField autoFocus name="name" label="Name" isRequired />
+              <InlineFormField
+                autoFocus
+                error={createFetcher.data?.fieldErrors?.name?.[0]}
+                name="name"
+                label="Name"
+                isRequired
+              />
               <c.Input type="hidden" name="color" value={color} />
               <InlineFormField
                 name="color"
+                error={createFetcher.data?.fieldErrors?.color?.[0]}
                 isRequired
                 label="Color"
                 input={
@@ -79,18 +86,19 @@ export function ElementsSidebar({ elements }: Props) {
                   </c.SimpleGrid>
                 }
               />
+              <FormError error={createFetcher.data?.formError} />
               <ButtonGroup>
                 <c.Button variant="ghost" onClick={createModalProps.onClose}>
                   Cancel
                 </c.Button>
-                <c.Button
-                  type="submit"
-                  colorScheme="orange"
+                <FormButton
+                  isDisabled={createFetcher.state !== "idle"}
+                  isLoading={createFetcher.state !== "idle"}
                   name="_action"
                   value={ElementsActionMethods.CreateElement}
                 >
                   Create
-                </c.Button>
+                </FormButton>
               </ButtonGroup>
             </c.Stack>
           </createFetcher.Form>

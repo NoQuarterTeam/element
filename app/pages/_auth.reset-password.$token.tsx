@@ -1,10 +1,10 @@
 import * as c from "@chakra-ui/react"
 import type { ActionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
-import { Link, useParams, useTransition } from "@remix-run/react"
+import { Link, useParams } from "@remix-run/react"
 import { z } from "zod"
 
-import { Form, FormError, FormField } from "~/components/Form"
+import { Form, FormButton, FormError, FormField } from "~/components/Form"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { resetPassword } from "~/services/auth/auth.server"
@@ -23,9 +23,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function ResetPassword() {
   const { token } = useParams()
-  const { state } = useTransition()
 
-  const isSubmitting = state === "submitting"
   return (
     <Form method="post">
       <c.Stack spacing={4}>
@@ -36,15 +34,9 @@ export default function ResetPassword() {
         <input name="token" type="hidden" value={token} />
         <FormField isRequired label="Password" name="password" type="password" placeholder="********" />
         <FormError />
-        <c.Button
-          w="100%"
-          colorScheme="orange"
-          type="submit"
-          isDisabled={isSubmitting}
-          isLoading={isSubmitting}
-        >
+        <FormButton w="100%" colorScheme="orange">
           Reset
-        </c.Button>
+        </FormButton>
         <Link to="/login">Login</Link>
       </c.Stack>
     </Form>

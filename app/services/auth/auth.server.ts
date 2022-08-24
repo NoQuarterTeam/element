@@ -5,6 +5,7 @@ import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import type { Await } from "~/lib/helpers/types"
 import { createToken, decryptToken } from "~/lib/jwt.server"
+import { stripe } from "~/lib/stripe/stripe.server"
 
 import { getFlashSession, getUserSession } from "../session/session.server"
 import { sendPasswordChangedEmail, sendResetPasswordEmail } from "../user/user.mailer.server"
@@ -55,22 +56,30 @@ export async function register(data: Prisma.UserCreateInput) {
   const existing = await db.user.findFirst({ where: { email } })
   if (existing) return { error: "User with these details already exists" }
   const password = await hashPassword(data.password)
-  const user = await db.user.create({ data: { ...data, password } })
+  const stripeCustomer = await stripe.customers.create({
+    email,
+    name: data.firstName + " " + data.lastName,
+  })
+  const user = await db.user.create({ data: { ...data, password, stripeCustomerId: stripeCustomer.id } })
   return { user }
 }
 
+const userSelectFields = {
+  id: true,
+  email: true,
+  firstName: true,
+  lastName: true,
+  avatar: true,
+  stripeSubscriptionId: true,
+  stripeCustomerId: true,
+  subscriptionStatus: true,
+}
 export async function getUser(request: Request) {
   const { userId } = await getUserSession(request)
   if (!userId) return null
   return db.user.findFirst({
     where: { id: userId, archivedAt: { equals: null } },
-    select: {
-      id: true,
-      email: true,
-      firstName: true,
-      lastName: true,
-      avatar: true,
-    },
+    select: userSelectFields,
   })
 }
 export type MaybeUser = Await<typeof getUser>
@@ -81,13 +90,7 @@ export async function requireUser(request: Request) {
 
   const user = await db.user.findFirst({
     where: { id: userId, archivedAt: { equals: null } },
-    select: {
-      id: true,
-      email: true,
-      firstName: true,
-      lastName: true,
-      avatar: true,
-    },
+    select: userSelectFields,
   })
   if (!user) throw redirect(`/login`)
   return user

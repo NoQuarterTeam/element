@@ -28,7 +28,7 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
       if (!response.ok) throw new Error("Network response was not ok")
       return response.json() as Promise<WeatherData>
     },
-    { enabled: isWeatherEnabled, staleTime: 1_200_000 },
+    { enabled: isWeatherEnabled, staleTime: 1_200_000, keepPreviousData: true },
   )
 
   return (

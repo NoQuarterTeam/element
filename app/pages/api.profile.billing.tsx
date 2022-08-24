@@ -1,0 +1,104 @@
+import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
+import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime"
+import { json } from "@remix-run/server-runtime"
+import type Stripe from "stripe"
+import { z } from "zod"
+
+import { FlashType } from "~/lib/config.server"
+import { validateFormData } from "~/lib/form"
+import { badRequest } from "~/lib/remix"
+import { stripe } from "~/lib/stripe/stripe.server"
+import { requireUser } from "~/services/auth/auth.server"
+import { getFlashSession } from "~/services/session/session.server"
+
+export const loader = async ({ request }: LoaderArgs) => {
+  const user = await requireUser(request)
+  if (!user.stripeCustomerId) throw badRequest("You must have a stripe customer id")
+  const [stripeCustomer, invoices] = await Promise.all([
+    stripe.customers.retrieve(user.stripeCustomerId, { expand: ["tax_ids"] }),
+    stripe.invoices.list({ customer: user.stripeCustomerId }),
+  ])
+  if (stripeCustomer.deleted) throw badRequest("stripe customer deleted")
+  const billing = {
+    address: stripeCustomer.address,
+    name: stripeCustomer.name,
+    email: stripeCustomer.email,
+    taxId: { value: stripeCustomer.tax_ids?.data[0].value, type: stripeCustomer.tax_ids?.data[0].type },
+  }
+  return json({ billing, invoices: invoices.data })
+}
+
+export type ProfileBilling = UseDataFunctionReturn<typeof loader>
+
+export enum ProfileBillingMethods {
+  UpdateBilling = "updateBilling",
+}
+
+export const action = async ({ request }: ActionArgs) => {
+  const user = await requireUser(request)
+  const { createFlash } = await getFlashSession(request)
+  const formData = await request.formData()
+  const action = formData.get("_action") as ProfileBillingMethods | undefined
+  switch (action) {
+    case ProfileBillingMethods.UpdateBilling:
+      try {
+        const billingSchema = z.object({
+          email: z.string().min(3).email("Invalid email"),
+          name: z.string().min(2, "Must be at least 2 characters"),
+          address1: z.string().min(2, "Must be at least 1 character"),
+          address2: z.string().optional(),
+          city: z.string().min(1, "Must be at least 1 character"),
+          state: z.string().optional(),
+          postCode: z.string().min(1, "Must be at least 1 character"),
+          country: z.string().min(1, "Must be at least 1 character1"),
+          taxId: z.string().min(1, "Must be at least 1 character1"),
+          taxType: z.string().min(1, "Must be at least 1 character1"),
+        })
+        const { data, fieldErrors } = await validateFormData(billingSchema, formData)
+        if (fieldErrors) return badRequest({ fieldErrors, data })
+        if (!user.stripeCustomerId)
+          return badRequest("No stripe customer", {
+            headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating billing details") },
+          })
+        const customer = await stripe.customers.retrieve(user.stripeCustomerId, { expand: ["tax_ids"] })
+        if (customer.deleted)
+          return badRequest("No stripe customer", {
+            headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating billing details") },
+          })
+        const taxId = customer?.tax_ids?.data[0].value
+        const taxType = customer?.tax_ids?.data[0].type
+        if (taxId !== data.taxId || taxType !== data.taxType) {
+          await stripe.customers.createTaxId(user.stripeCustomerId, {
+            type: data.taxType as Stripe.TaxIdCreateParams["type"],
+            value: data.taxId,
+          })
+        }
+        await stripe.customers.update(user.stripeCustomerId, {
+          email: data.email,
+          name: data.name,
+          address: {
+            line1: data.address1,
+            line2: data.address2,
+            city: data.city,
+            state: data.state,
+            postal_code: data.postCode,
+            country: data.country,
+          },
+        })
+
+        return json(
+          { success: true },
+          { headers: { "Set-Cookie": await createFlash(FlashType.Success, "Billing details updated") } },
+        )
+      } catch (e: any) {
+        return badRequest(e.message, {
+          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating billing details") },
+        })
+      }
+
+    default:
+      return badRequest("Invalid action", {
+        headers: { "Set-Cookie": await createFlash(FlashType.Error, "Invalid action") },
+      })
+  }
+}

@@ -95,7 +95,7 @@ function _TaskItem({ task, isPublic }: Props) {
         borderColor={borderColor}
         bg={bg}
         _hover={{ boxShadow: "sm" }}
-        borderRadius="lg"
+        borderRadius="md"
         sx={{
           "&:hover .task-element": {
             transition: "200ms height",
@@ -177,7 +177,7 @@ function _TaskItem({ task, isPublic }: Props) {
       </c.Box>
       <c.Modal {...modalProps} size="2xl" trapFocus={false}>
         <c.ModalOverlay />
-        <c.ModalContent borderRadius="md">
+        <c.ModalContent>
           <c.ModalBody mb={4} minH="400px">
             <React.Suspense>
               <TaskForm onClose={modalProps.onClose} task={task} />
@@ -187,7 +187,7 @@ function _TaskItem({ task, isPublic }: Props) {
       </c.Modal>
       <c.Modal {...showModalProps} size="xl">
         <c.ModalOverlay />
-        <c.ModalContent borderRadius="md">
+        <c.ModalContent>
           <c.ModalCloseButton />
           <c.ModalBody minH="400px" pb={6}>
             <c.Stack my={2} spacing={3}>

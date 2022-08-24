@@ -1,8 +1,14 @@
 import React from "react"
 import { HexColorPicker } from "react-colorful"
-import { BiDownArrow, BiEdit, BiRightArrow } from "react-icons/bi"
-import { HiDotsVertical, HiPlus } from "react-icons/hi"
-import { RiDeleteBinLine, RiEye2Line } from "react-icons/ri"
+import {
+  RiAddLine,
+  RiArrowDownSLine,
+  RiArrowRightSLine,
+  RiDeleteBinLine,
+  RiEdit2Line,
+  RiEye2Line,
+  RiMore2Fill,
+} from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 import { readableColor } from "polished"
@@ -78,10 +84,11 @@ export function ElementItem({ element, ...props }: Props) {
               aria-label="expand"
               onClick={expandProps.onToggle}
               minW="20px"
+              borderRadius="full"
               boxSize="20px"
               left={props.depth === 0 ? "10px" : `${10 + props.depth * 15}px`}
               variant="ghost"
-              icon={<c.Box as={expandProps.isOpen ? BiDownArrow : BiRightArrow} boxSize="8px" />}
+              icon={<c.Box as={expandProps.isOpen ? RiArrowDownSLine : RiArrowRightSLine} boxSize="16px" />}
             />
           )}
         </c.Flex>
@@ -91,16 +98,16 @@ export function ElementItem({ element, ...props }: Props) {
               as={c.IconButton}
               variant="ghost"
               borderRadius="full"
-              icon={<c.Box as={HiDotsVertical} boxSize="14px" />}
+              icon={<c.Box as={RiMore2Fill} boxSize="16px" />}
             />
 
             <c.MenuList>
               {props.depth < MAX_DEPTH && (
-                <c.MenuItem onClick={createModalProps.onOpen} icon={<c.Box as={HiPlus} boxSize="12px" />}>
+                <c.MenuItem onClick={createModalProps.onOpen} icon={<c.Box as={RiAddLine} boxSize="12px" />}>
                   Create child
                 </c.MenuItem>
               )}
-              <c.MenuItem onClick={updateModalProps.onOpen} icon={<c.Box as={BiEdit} boxSize="12px" />}>
+              <c.MenuItem onClick={updateModalProps.onOpen} icon={<c.Box as={RiEdit2Line} boxSize="12px" />}>
                 Edit
               </c.MenuItem>
               {element.archivedAt ? (
@@ -130,10 +137,17 @@ export function ElementItem({ element, ...props }: Props) {
           <createFetcher.Form action="/api/elements" method="post" replace>
             <c.Stack spacing={4}>
               <c.Input type="hidden" name="parentId" value={element.id} />
-              <InlineFormField autoFocus name="name" label="Name" isRequired />
+              <InlineFormField
+                autoFocus
+                error={createFetcher.data?.fieldErrors?.name?.[0]}
+                name="name"
+                label="Name"
+                isRequired
+              />
               <c.Input type="hidden" name="color" value={newColor} />
               <InlineFormField
                 name="color"
+                error={createFetcher.data?.fieldErrors?.color?.[0]}
                 isRequired
                 label="Color"
                 input={
@@ -151,6 +165,7 @@ export function ElementItem({ element, ...props }: Props) {
                   </c.SimpleGrid>
                 }
               />
+              <FormError error={createFetcher.data?.formError} />
               <ButtonGroup>
                 <c.Button variant="ghost" onClick={createModalProps.onClose}>
                   Cancel
@@ -158,6 +173,8 @@ export function ElementItem({ element, ...props }: Props) {
                 <c.Button
                   type="submit"
                   name="_action"
+                  isDisabled={createFetcher.state !== "idle"}
+                  isLoading={createFetcher.state !== "idle"}
                   value={ElementsActionMethods.CreateElement}
                   colorScheme="orange"
                 >
@@ -171,11 +188,19 @@ export function ElementItem({ element, ...props }: Props) {
         <Modal title={`Edit ${element.name}`} size="xl" {...updateModalProps}>
           <updateFetcher.Form action={`/api/elements/${element.id}`} method="post" replace>
             <c.Stack spacing={4}>
-              <InlineFormField autoFocus defaultValue={element.name} name="name" label="Name" isRequired />
+              <InlineFormField
+                error={createFetcher.data?.fieldErrors?.name?.[0]}
+                autoFocus
+                defaultValue={element.name}
+                name="name"
+                label="Name"
+                isRequired
+              />
               <c.Input type="hidden" name="color" value={editColor} />
               <InlineFormField
                 name="color"
                 isRequired
+                error={createFetcher.data?.fieldErrors?.color?.[0]}
                 label="Color"
                 input={
                   <c.SimpleGrid w="100%" columns={{ base: 1, md: 2 }} spacing={1}>
@@ -192,6 +217,7 @@ export function ElementItem({ element, ...props }: Props) {
                   </c.SimpleGrid>
                 }
               />
+              <FormError error={updateFetcher.data?.formError} />
               <ButtonGroup>
                 <c.Button variant="ghost" onClick={updateModalProps.onClose}>
                   Cancel
@@ -199,6 +225,8 @@ export function ElementItem({ element, ...props }: Props) {
                 <c.Button
                   type="submit"
                   colorScheme="orange"
+                  isDisabled={updateFetcher.state !== "idle"}
+                  isLoading={updateFetcher.state !== "idle"}
                   name="_action"
                   value={ElementActionMethods.UpdateElement}
                 >
@@ -219,6 +247,8 @@ export function ElementItem({ element, ...props }: Props) {
               </c.Button>
               <c.Button
                 colorScheme="red"
+                isDisabled={archiveFetcher.state !== "idle"}
+                isLoading={archiveFetcher.state !== "idle"}
                 onClick={() =>
                   archiveFetcher.submit(
                     { _action: ElementActionMethods.ArchiveElement },

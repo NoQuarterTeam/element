@@ -1,6 +1,6 @@
 import * as React from "react"
 import { HexColorPicker } from "react-colorful"
-import { BiPlus, BiTrash } from "react-icons/bi"
+import { RiAddLine, RiDeleteBinLine } from "react-icons/ri"
 import { lazyWithPreload } from "react-lazy-with-preload"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
@@ -50,12 +50,12 @@ export function TaskForm({ day, onClose, task }: FormProps) {
   React.useEffect(() => {
     if (!createUpdateFetcher.data) return
     if (createUpdateFetcher.data.task) {
+      onClose()
       if (task) {
         updateTask(createUpdateFetcher.data.task)
       } else {
         addTask(createUpdateFetcher.data.task)
       }
-      onClose()
     }
   }, [createUpdateFetcher.data, onClose, addTask, updateTask, task])
 
@@ -75,11 +75,15 @@ export function TaskForm({ day, onClose, task }: FormProps) {
     }
   }, [task, deleteSubmit.data, onClose, removeTask, deleteSubmit.type])
 
-  const { data } = useQuery(["task-elements"], async () => {
-    const response = await fetch(`/api/task-elements`)
-    if (!response.ok) throw new Error("Network response was not ok")
-    return response.json() as Promise<{ elements: TaskElement[] }>
-  })
+  const { data } = useQuery(
+    ["task-elements"],
+    async () => {
+      const response = await fetch(`/api/task-elements`)
+      if (!response.ok) throw new Error("Network response was not ok")
+      return response.json() as Promise<{ elements: TaskElement[] }>
+    },
+    { keepPreviousData: true },
+  )
   const elements = data?.elements
 
   const [elementId, setElementId] = React.useState<string | undefined>(task?.element.id)
@@ -162,7 +166,7 @@ export function TaskForm({ day, onClose, task }: FormProps) {
               onClick={elementModalProps.onOpen}
               size="sm"
               variant="outline"
-              leftIcon={<c.Box as={BiPlus} boxSize="16px" mr={-2} />}
+              leftIcon={<c.Box as={RiAddLine} boxSize="16px" mr={-2} />}
             >
               Create
             </c.Button>
@@ -246,11 +250,11 @@ export function TaskForm({ day, onClose, task }: FormProps) {
             {task ? (
               <c.Button
                 variant="ghost"
-                leftIcon={<c.Box as={BiTrash} />}
+                leftIcon={<c.Box as={RiDeleteBinLine} />}
                 colorScheme="red"
                 onClick={handleDelete}
-                isLoading={deleteSubmit.state === "submitting" || deleteSubmit.state === "loading"}
-                isDisabled={deleteSubmit.state === "submitting" || deleteSubmit.state === "loading"}
+                isLoading={deleteSubmit.state !== "idle"}
+                isDisabled={deleteSubmit.state !== "idle"}
               >
                 Delete
               </c.Button>
@@ -266,12 +270,8 @@ export function TaskForm({ day, onClose, task }: FormProps) {
                 colorScheme="orange"
                 name="_action"
                 value={task ? TaskActionMethods.UpdateTask : TasksActionMethods.AddTask}
-                isLoading={
-                  createUpdateFetcher.state === "submitting" || createUpdateFetcher.state === "loading"
-                }
-                isDisabled={
-                  createUpdateFetcher.state === "submitting" || createUpdateFetcher.state === "loading"
-                }
+                isLoading={createUpdateFetcher.state !== "idle"}
+                isDisabled={createUpdateFetcher.state !== "idle"}
               >
                 {task ? "Update" : "Create"}
               </FormButton>
@@ -315,9 +315,7 @@ export function TaskForm({ day, onClose, task }: FormProps) {
             <ButtonGroup>
               <c.Button
                 variant="ghost"
-                isDisabled={
-                  createElementFetcher.state === "submitting" || createElementFetcher.state === "loading"
-                }
+                isDisabled={createElementFetcher.state !== "idle"}
                 onClick={elementModalProps.onClose}
               >
                 Cancel
@@ -327,12 +325,8 @@ export function TaskForm({ day, onClose, task }: FormProps) {
                 value={ElementsActionMethods.CreateElement}
                 type="submit"
                 colorScheme="orange"
-                isLoading={
-                  createElementFetcher.state === "submitting" || createElementFetcher.state === "loading"
-                }
-                isDisabled={
-                  createElementFetcher.state === "submitting" || createElementFetcher.state === "loading"
-                }
+                isLoading={createElementFetcher.state !== "idle"}
+                isDisabled={createElementFetcher.state !== "idle"}
               >
                 Create
               </c.Button>

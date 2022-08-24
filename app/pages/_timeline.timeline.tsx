@@ -186,7 +186,7 @@ export default function Timeline() {
       </c.Box>
       <c.Modal {...newTaskModalProps} size="xl">
         <c.ModalOverlay />
-        <c.ModalContent borderRadius="md" minH="400px">
+        <c.ModalContent minH="400px">
           <c.ModalBody mb={4}>
             <React.Suspense>
               <TaskForm onClose={newTaskModalProps.onClose} />

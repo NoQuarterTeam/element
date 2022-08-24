@@ -22,13 +22,9 @@ export function ShortcutsInfo() {
         </Text>
         <Text fontSize="sm">Toggle nav</Text>
       </Flex>
-      <Flex align="center" justify="space-between">
-        <Text>
-          <Kbd>cmd</Kbd> + <Kbd>k</Kbd>
-        </Text>
-        <Text fontSize="sm">Search tasks</Text>
-      </Flex>
+
       <Divider my={4} />
+
       <Text fontWeight={500}>On a task</Text>
       <Flex align="center" justify="space-between">
         <Text>

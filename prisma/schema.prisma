@@ -7,19 +7,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  PAST_DUE
+  UNPAID
+  TRIALING
+}
+
 model User {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email        String    @unique
-  password     String
-  firstName    String
-  lastName     String
-  avatar       String?
-  createdAt    DateTime  @default(now()) @db.Timestamptz(6)
-  updatedAt    DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
-  archivedAt   DateTime? @db.Timestamptz(6)
-  tasks        Task[]
-  createdTasks Task[]    @relation(name: "CreatedTasks")
-  elements     Element[]
+  id                   String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                String              @unique
+  password             String
+  firstName            String
+  lastName             String
+  avatar               String?
+  stripeCustomerId     String?             @unique
+  stripeSubscriptionId String?             @unique
+  subscriptionStatus   SubscriptionStatus?
+  createdAt            DateTime            @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
+  archivedAt           DateTime?           @db.Timestamptz(6)
+  tasks                Task[]
+  createdTasks         Task[]              @relation(name: "CreatedTasks")
+  elements             Element[]
 }
 
 model Task {

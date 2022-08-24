@@ -1,4 +1,4 @@
-import type { ActionArgs} from "@remix-run/server-runtime";
+import type { ActionArgs } from "@remix-run/server-runtime"
 import { redirect } from "@remix-run/server-runtime"
 import { json } from "@remix-run/server-runtime"
 import { z } from "zod"

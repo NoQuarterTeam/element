@@ -102,7 +102,7 @@ function _Day(props: Props) {
       </Droppable>
       <c.Modal {...modalProps} size="xl">
         <c.ModalOverlay />
-        <c.ModalContent borderRadius="md" minH="400px">
+        <c.ModalContent minH="400px">
           <c.ModalBody mb={4}>
             <React.Suspense>
               <TaskForm day={props.day.format("YYYY-MM-DD")} onClose={modalProps.onClose} />

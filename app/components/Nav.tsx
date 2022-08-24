@@ -1,6 +1,12 @@
-import { BiMoon, BiSun, BiUser } from "react-icons/bi"
 import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi"
-import { RiBookLine, RiLogoutCircleRLine, RiQuestionLine } from "react-icons/ri"
+import {
+  RiBookLine,
+  RiLogoutCircleRLine,
+  RiMoonLine,
+  RiQuestionLine,
+  RiSunLine,
+  RiUser3Line,
+} from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { useSubmit } from "@remix-run/react"
 
@@ -26,7 +32,7 @@ export function Nav({ elements }: Props) {
 
   const logoutSubmit = useSubmit()
 
-  const profileModalProps = c.useDisclosure()
+  const profileModalProps = c.useDisclosure({ defaultIsOpen: true })
 
   c.useEventListener("keydown", (event) => {
     if (event.metaKey && event.key === "e") {
@@ -102,7 +108,7 @@ export function Nav({ elements }: Props) {
               aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
               variant="ghost"
               onClick={toggleColorMode}
-              icon={<c.Box as={isDark ? BiSun : BiMoon} boxSize="18px" />}
+              icon={<c.Box as={isDark ? RiSunLine : RiMoonLine} boxSize="18px" />}
             />
           </c.Tooltip>
           <c.Tooltip label="Profile" placement="auto" zIndex={50} hasArrow>
@@ -113,7 +119,7 @@ export function Nav({ elements }: Props) {
               onClick={profileModalProps.onOpen}
               icon={
                 <c.Box pos="relative">
-                  <c.Box as={BiUser} boxSize="18px" />
+                  <c.Box as={RiUser3Line} boxSize="18px" />
                   {updatesSeens.length !== NEW_UPDATES.length && (
                     <c.Box boxSize="5px" borderRadius="full" bg="red.500" pos="absolute" top={0} right={0} />
                   )}
@@ -143,18 +149,6 @@ export function Nav({ elements }: Props) {
           </c.Tooltip>
         </c.VStack>
 
-        {/* <c.Flex position="absolute" top={4} right={0} w="65px" justify="center">
-          <c.Fade in={navProps.isOpen}>
-            <c.IconButton
-              borderRadius="full"
-              icon={<c.Box as={FiChevronsRight} boxSize="18px" />}
-              aria-label="close nav"
-              variant="ghost"
-              onClick={navProps.onToggle}
-            />
-          </c.Fade>
-        </c.Flex> */}
-
         <c.Drawer {...elementSidebarProps} placement="right">
           <c.DrawerOverlay>
             <c.DrawerContent>
@@ -168,10 +162,9 @@ export function Nav({ elements }: Props) {
         <Modal title="Shortcuts" {...shortcutModalProps}>
           <ShortcutsInfo />
         </Modal>
-        <c.Modal size="xl" {...profileModalProps}>
+        <c.Modal size="3xl" {...profileModalProps}>
           <c.ModalOverlay />
           <c.ModalContent>
-            <c.ModalCloseButton />
             <ProfileModal />
           </c.ModalContent>
         </c.Modal>

@@ -4,7 +4,7 @@ import type { ActionArgs } from "@remix-run/node"
 import { Link, useTransition } from "@remix-run/react"
 import { z } from "zod"
 
-import { Form, FormError, FormField } from "~/components/Form"
+import { Form, FormButton, FormError, FormField } from "~/components/Form"
 import { validateFormData } from "~/lib/form"
 import { useToast } from "~/lib/hooks/useToast"
 import { badRequest } from "~/lib/remix"
@@ -20,7 +20,7 @@ export const action = async ({ request }: ActionArgs) => {
 }
 
 export default function ForgotPassword() {
-  const { state, type } = useTransition()
+  const { type } = useTransition()
   const inputRef = React.useRef<HTMLInputElement>(null)
 
   const toast = useToast()
@@ -33,7 +33,6 @@ export default function ForgotPassword() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type])
 
-  const isSubmitting = state === "submitting"
   return (
     <Form method="post">
       <c.Stack spacing={4}>
@@ -41,15 +40,9 @@ export default function ForgotPassword() {
         <c.Text>Enter your email below to receive your password reset instructions.</c.Text>
         <FormField isRequired label="Email address" name="email" placeholder="jim@gmail.com" />
         <FormError />
-        <c.Button
-          w="100%"
-          colorScheme="orange"
-          type="submit"
-          isDisabled={isSubmitting}
-          isLoading={isSubmitting}
-        >
+        <FormButton w="100%" colorScheme="orange">
           Send instructions
-        </c.Button>
+        </FormButton>
         <Link to="/login">Login</Link>
       </c.Stack>
     </Form>

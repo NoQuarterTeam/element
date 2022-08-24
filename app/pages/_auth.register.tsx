@@ -55,7 +55,9 @@ export default function Register() {
         <FormField isRequired label="First name" name="firstName" placeholder="Jim" />
         <FormField isRequired label="Last name" name="lastName" placeholder="Bob" />
         <c.Box>
-          <FormButton w="100%">Register</FormButton>
+          <FormButton w="100%" colorScheme="orange">
+            Register
+          </FormButton>
           <FormError />
         </c.Box>
 
