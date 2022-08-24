@@ -33,13 +33,9 @@ export function Nav({ elements }: Props) {
       event.preventDefault()
       elementSidebarProps.onToggle()
     }
-    if (event.metaKey && event.key === "/") {
+    if (event.metaKey && event.key === "\\") {
       event.preventDefault()
       navProps.onToggle()
-    }
-    if (event.metaKey && event.key === "k") {
-      event.preventDefault()
-      shortcutModalProps.onToggle()
     }
   })
 
@@ -72,6 +68,7 @@ export function Nav({ elements }: Props) {
         align="center"
         position="fixed"
         top={0}
+        pt={4}
         bottom={0}
         borderLeft="1px solid"
         borderColor={borderColor}
@@ -79,7 +76,15 @@ export function Nav({ elements }: Props) {
         right={0}
         justify="space-between"
       >
-        <c.Box />
+        <c.VStack spacing={1}>
+          <c.IconButton
+            borderRadius="full"
+            icon={<c.Box as={FiChevronsRight} boxSize="18px" />}
+            aria-label="close nav"
+            variant="ghost"
+            onClick={navProps.onToggle}
+          />
+        </c.VStack>
 
         <c.VStack spacing={1}>
           <c.Tooltip label="Elements" placement="auto" zIndex={50} hasArrow>
@@ -138,7 +143,7 @@ export function Nav({ elements }: Props) {
           </c.Tooltip>
         </c.VStack>
 
-        <c.Flex position="absolute" top={4} right={0} w="65px" justify="center">
+        {/* <c.Flex position="absolute" top={4} right={0} w="65px" justify="center">
           <c.Fade in={navProps.isOpen}>
             <c.IconButton
               borderRadius="full"
@@ -148,7 +153,7 @@ export function Nav({ elements }: Props) {
               onClick={navProps.onToggle}
             />
           </c.Fade>
-        </c.Flex>
+        </c.Flex> */}
 
         <c.Drawer {...elementSidebarProps} placement="right">
           <c.DrawerOverlay>

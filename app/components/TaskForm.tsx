@@ -249,8 +249,8 @@ export function TaskForm({ day, onClose, task }: FormProps) {
                 leftIcon={<c.Box as={BiTrash} />}
                 colorScheme="red"
                 onClick={handleDelete}
-                isLoading={deleteSubmit.state === "submitting"}
-                isDisabled={deleteSubmit.state === "submitting"}
+                isLoading={deleteSubmit.state === "submitting" || deleteSubmit.state === "loading"}
+                isDisabled={deleteSubmit.state === "submitting" || deleteSubmit.state === "loading"}
               >
                 Delete
               </c.Button>
@@ -266,8 +266,12 @@ export function TaskForm({ day, onClose, task }: FormProps) {
                 colorScheme="orange"
                 name="_action"
                 value={task ? TaskActionMethods.UpdateTask : TasksActionMethods.AddTask}
-                isLoading={createUpdateFetcher.state === "submitting"}
-                isDisabled={createUpdateFetcher.state === "submitting"}
+                isLoading={
+                  createUpdateFetcher.state === "submitting" || createUpdateFetcher.state === "loading"
+                }
+                isDisabled={
+                  createUpdateFetcher.state === "submitting" || createUpdateFetcher.state === "loading"
+                }
               >
                 {task ? "Update" : "Create"}
               </FormButton>
@@ -311,7 +315,9 @@ export function TaskForm({ day, onClose, task }: FormProps) {
             <ButtonGroup>
               <c.Button
                 variant="ghost"
-                isDisabled={createElementFetcher.state === "submitting"}
+                isDisabled={
+                  createElementFetcher.state === "submitting" || createElementFetcher.state === "loading"
+                }
                 onClick={elementModalProps.onClose}
               >
                 Cancel
@@ -321,8 +327,12 @@ export function TaskForm({ day, onClose, task }: FormProps) {
                 value={ElementsActionMethods.CreateElement}
                 type="submit"
                 colorScheme="orange"
-                isLoading={createElementFetcher.state === "submitting"}
-                isDisabled={createElementFetcher.state === "submitting"}
+                isLoading={
+                  createElementFetcher.state === "submitting" || createElementFetcher.state === "loading"
+                }
+                isDisabled={
+                  createElementFetcher.state === "submitting" || createElementFetcher.state === "loading"
+                }
               >
                 Create
               </c.Button>
