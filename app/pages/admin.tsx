@@ -18,22 +18,16 @@ export const loader = async ({ request }: LoaderArgs) => {
       where: { role: Role.USER },
       select: { id: true, firstName: true, email: true, stripeSubscriptionId: true },
     }),
-    db.task.count({ where: { creator: { role: Role.USER } } }),
+    db.task.count(),
     db.task.count({
       where: {
         createdAt: {
           gte: dayjs().subtract(1, "month").startOf("month").toDate(),
           lt: dayjs().subtract(1, "month").endOf("month").toDate(),
         },
-        creator: { role: Role.USER },
       },
     }),
-    db.task.count({
-      where: {
-        createdAt: { gte: dayjs().startOf("month").toDate() },
-        creator: { role: Role.USER },
-      },
-    }),
+    db.task.count({ where: { createdAt: { gte: dayjs().startOf("month").toDate() } } }),
   ])
   return json({ users, taskCountTotal, tastCountLastMonth, taskCountThisMonth })
 }
