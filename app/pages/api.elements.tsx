@@ -27,7 +27,7 @@ export const action = async ({ request }: ActionArgs) => {
           const elementCount = await db.element.count({
             where: { archivedAt: { equals: null }, creatorId: { equals: user.id } },
           })
-          if (elementCount === 5)
+          if (elementCount >= 5)
             return badRequest({ formError: "Element limit reached, upgrade to the Pro plan to add more" })
         }
         const createSchema = z.object({
