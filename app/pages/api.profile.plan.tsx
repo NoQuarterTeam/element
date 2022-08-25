@@ -51,7 +51,7 @@ export const action = async ({ request }: ActionArgs) => {
           promoCodeId = promo?.data?.[0]?.id
         }
         const session = await stripe.checkout.sessions.create({
-          customer: user.stripeCustomerId || undefined,
+          customer: user.stripeCustomerId,
           customer_update: { address: "auto", name: "auto" },
           billing_address_collection: "required",
           tax_id_collection: { enabled: true },

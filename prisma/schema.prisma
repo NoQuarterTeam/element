@@ -24,7 +24,7 @@ model User {
   firstName            String
   lastName             String
   avatar               String?
-  stripeCustomerId     String?             @unique
+  stripeCustomerId     String              @unique
   stripeSubscriptionId String?             @unique
   subscriptionStatus   SubscriptionStatus?
   createdAt            DateTime            @default(now()) @db.Timestamptz(6)

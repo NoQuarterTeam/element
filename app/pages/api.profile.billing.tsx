@@ -13,7 +13,6 @@ import { getFlashSession } from "~/services/session/session.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
-  if (!user.stripeCustomerId) throw badRequest("You must have a stripe customer id")
   const [stripeCustomer, invoices] = await Promise.all([
     stripe.customers.retrieve(user.stripeCustomerId, { expand: ["tax_ids"] }),
     stripe.invoices.list({ customer: user.stripeCustomerId }),
@@ -56,10 +55,6 @@ export const action = async ({ request }: ActionArgs) => {
         })
         const { data, fieldErrors } = await validateFormData(billingSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
-        if (!user.stripeCustomerId)
-          return badRequest("No stripe customer", {
-            headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating billing details") },
-          })
         const customer = await stripe.customers.retrieve(user.stripeCustomerId, { expand: ["tax_ids"] })
         if (customer.deleted)
           return badRequest("No stripe customer", {
