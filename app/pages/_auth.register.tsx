@@ -10,6 +10,7 @@ import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { register } from "~/services/auth/auth.server"
 import { getFlashSession, getUserSession } from "~/services/session/session.server"
+import { createTemplates } from "~/services/timeline/templates.server"
 
 export const meta: MetaFunction = () => {
   return { title: "Register" }
@@ -34,6 +35,7 @@ export const action = async ({ request }: ActionArgs) => {
 
   const { user, error } = await register(data)
   if (error || !user) return badRequest({ data, formError: error })
+  await createTemplates(user.id)
   const { setUser } = await getUserSession(request)
   const { createFlash } = await getFlashSession(request)
   const headers = new Headers([

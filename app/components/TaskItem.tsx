@@ -1,6 +1,5 @@
 import * as React from "react"
 import * as c from "@chakra-ui/react"
-import { useTheme } from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 import dayjs from "dayjs"
 import { readableColor } from "polished"
@@ -42,7 +41,6 @@ function _TaskItem({ task, isPublic }: Props) {
   const showModalProps = c.useDisclosure()
   const bg = c.useColorModeValue("white", "gray.700")
   const borderColor = c.useColorModeValue("gray.100", "gray.900")
-  const theme = useTheme()
 
   const deleteFetcher = useFetcher()
   const toggleCompleteFetcher = useFetcher()
@@ -169,7 +167,7 @@ function _TaskItem({ task, isPublic }: Props) {
             noOfLines={1}
             opacity={0}
             fontSize="0.6rem"
-            color={readableColor(task.element.color, theme.colors.gray[800], "white")}
+            color={readableColor(task.element.color)}
           >
             {task.element.name}
           </c.Text>

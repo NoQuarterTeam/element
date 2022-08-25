@@ -108,7 +108,7 @@ export function ElementsSidebar({ elements }: Props) {
       {matchedMyElements.map((element) => (
         <ElementItem key={element.id} {...{ element }} depth={0} />
       ))}
-      {elements.length > 0 && (
+      {elements.filter((e) => !!e.archivedAt).length > 0 && (
         <c.Box p={4}>
           <c.Button onClick={toggle} size="sm" variant="ghost" w="100%">
             {isArchivedSown ? "Hide archived" : "Show archived"}
