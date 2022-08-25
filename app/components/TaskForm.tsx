@@ -1,6 +1,6 @@
 import * as React from "react"
 import { HexColorPicker } from "react-colorful"
-import { RiAddLine, RiDeleteBinLine } from "react-icons/ri"
+import { RiAddLine, RiDeleteBinLine,RiFileCopyLine } from "react-icons/ri"
 import { lazyWithPreload } from "react-lazy-with-preload"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
@@ -74,6 +74,21 @@ export function TaskForm({ day, onClose, task }: FormProps) {
       removeTask(task)
     }
   }, [task, deleteSubmit.data, onClose, removeTask, deleteSubmit.type])
+
+  const duplicateSubmit = useFetcher()
+  const handleDuplicate = () => {
+    if (!task) return
+    duplicateSubmit.submit(
+      { _action: TaskActionMethods.DuplicateTask },
+      { method: "post", action: `/api/tasks/${task.id}` },
+    )
+  }
+  React.useEffect(() => {
+    if (duplicateSubmit.type === "actionReload" && duplicateSubmit.data?.task) {
+      onClose()
+      addTask(duplicateSubmit.data.task)
+    }
+  }, [duplicateSubmit.data, onClose, addTask, duplicateSubmit.type])
 
   const { data } = useQuery(
     ["task-elements"],
@@ -248,16 +263,27 @@ export function TaskForm({ day, onClose, task }: FormProps) {
           <FormError error={createUpdateFetcher.data?.formError} />
           <c.Flex align="center" justify="space-between">
             {task ? (
-              <c.Button
-                variant="ghost"
-                leftIcon={<c.Box as={RiDeleteBinLine} />}
-                colorScheme="red"
-                onClick={handleDelete}
-                isLoading={deleteSubmit.state !== "idle"}
-                isDisabled={deleteSubmit.state !== "idle"}
-              >
-                Delete
-              </c.Button>
+              <c.HStack spacing={1}>
+                <c.Button
+                  variant="ghost"
+                  leftIcon={<c.Box as={RiDeleteBinLine} />}
+                  colorScheme="red"
+                  onClick={handleDelete}
+                  isLoading={deleteSubmit.state !== "idle"}
+                  isDisabled={deleteSubmit.state !== "idle"}
+                >
+                  Delete
+                </c.Button>
+                <c.Button
+                  variant="ghost"
+                  leftIcon={<c.Box as={RiFileCopyLine} />}
+                  onClick={handleDuplicate}
+                  isLoading={duplicateSubmit.state !== "idle"}
+                  isDisabled={duplicateSubmit.state !== "idle"}
+                >
+                  Duplicate
+                </c.Button>
+              </c.HStack>
             ) : (
               <c.Box />
             )}
