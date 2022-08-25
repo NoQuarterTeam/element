@@ -1,7 +1,7 @@
 import * as React from "react"
 import { RiAddCircleLine, RiCalendarEventLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
-import type { ShouldReloadFunction} from "@remix-run/react";
+import type { ShouldReloadFunction } from "@remix-run/react"
 import { useSearchParams } from "@remix-run/react"
 import { useFetcher, useLoaderData } from "@remix-run/react"
 import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
@@ -69,14 +69,8 @@ export default function Timeline() {
   // Polling
   const taskFetcher = useFetcher<TimelineTask[]>()
   React.useEffect(
-    function LoadTasksAndPoll() {
+    function LoadTasks() {
       taskFetcher.load(`/api/tasks?back=${daysBack}&forward=${daysForward}`)
-      const interval = setInterval(() => {
-        taskFetcher.load(`/api/tasks?back=${daysBack}&forward=${daysForward}`)
-      }, 30_000)
-      return () => {
-        clearInterval(interval)
-      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [daysBack, daysForward],
