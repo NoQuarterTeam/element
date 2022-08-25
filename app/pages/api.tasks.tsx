@@ -1,5 +1,4 @@
 import type { Task } from "@prisma/client"
-import { SubscriptionStatus } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
@@ -52,7 +51,7 @@ export const action = async ({ request }: ActionArgs) => {
   switch (action) {
     case TasksActionMethods.AddTask:
       try {
-        if (!user.stripeSubscriptionId || user.subscriptionStatus === SubscriptionStatus.CANCELLED) {
+        if (!user.stripeSubscriptionId) {
           const taskCount = await db.task.count({ where: { creatorId: { equals: user.id } } })
           if (taskCount >= 1000)
             return json("Task limit reached", {

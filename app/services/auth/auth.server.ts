@@ -72,7 +72,6 @@ const userSelectFields = {
   avatar: true,
   stripeSubscriptionId: true,
   stripeCustomerId: true,
-  subscriptionStatus: true,
 }
 export async function getUser(request: Request) {
   const { userId } = await getUserSession(request)

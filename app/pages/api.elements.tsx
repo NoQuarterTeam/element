@@ -1,4 +1,3 @@
-import { SubscriptionStatus } from "@prisma/client"
 import type { ActionArgs } from "@remix-run/server-runtime"
 import { json } from "@remix-run/server-runtime"
 import { z } from "zod"
@@ -23,7 +22,7 @@ export const action = async ({ request }: ActionArgs) => {
   switch (action) {
     case ElementsActionMethods.CreateElement:
       try {
-        if (!user.stripeSubscriptionId || user.subscriptionStatus === SubscriptionStatus.CANCELLED) {
+        if (!user.stripeSubscriptionId) {
           const elementCount = await db.element.count({
             where: { archivedAt: { equals: null }, creatorId: { equals: user.id } },
           })
