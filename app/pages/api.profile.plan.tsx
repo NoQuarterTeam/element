@@ -58,7 +58,7 @@ export const action = async ({ request }: ActionArgs) => {
           success_url: FULL_WEB_URL + "/timeline?subscribed=true",
           cancel_url: FULL_WEB_URL + "/timeline",
           automatic_tax: { enabled: true },
-          subscription_data: { coupon: promoCode ? promoCodeId : undefined },
+          discounts: promoCode ? [{ promotion_code: promoCodeId }] : undefined,
           line_items: [{ price: PRICE_ID, quantity: 1 }],
           mode: "subscription",
         })
