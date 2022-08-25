@@ -78,7 +78,7 @@
     "react-lazy-with-preload": "2.2.1",
     "react-select": "5.4.0",
     "remix-utils": "3.3.0",
-    "stripe": "10.4.0",
+    "stripe": "10.5.0",
     "suneditor": "2.43.14",
     "suneditor-react": "3.4.1",
     "zod": "3.18.0",
