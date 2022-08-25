@@ -1,6 +1,7 @@
 import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi"
 import {
   RiBookLine,
+  RiDashboard3Line,
   RiLogoutCircleRLine,
   RiMoonLine,
   RiQuestionLine,
@@ -8,10 +9,12 @@ import {
   RiUser3Line,
 } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
-import { useSubmit } from "@remix-run/react"
+import { Role } from "@prisma/client"
+import { useNavigate, useSubmit } from "@remix-run/react"
 
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { NEW_UPDATES, useUpdatesSeen } from "~/lib/hooks/useUpdatesSeen"
+import { useMe } from "~/pages/_timeline"
 import type { SidebarElement } from "~/pages/_timeline.timeline"
 
 import { ElementsSidebar } from "./ElementsSidebar"
@@ -27,11 +30,11 @@ export function Nav({ elements }: Props) {
   const elementSidebarProps = c.useDisclosure()
   const shortcutModalProps = c.useDisclosure()
   const navProps = useStoredDisclosure("element.nav", { defaultIsOpen: true })
-
+  const me = useMe()
   const updatesSeens = useUpdatesSeen((s) => s.updatesSeens)
 
   const logoutSubmit = useSubmit()
-
+  const navigate = useNavigate()
   const profileModalProps = c.useDisclosure({ defaultIsOpen: false })
 
   c.useEventListener("keydown", (event) => {
@@ -137,6 +140,17 @@ export function Nav({ elements }: Props) {
               icon={<c.Box as={RiQuestionLine} boxSize="18px" />}
             />
           </c.Tooltip>
+          {me.role === Role.ADMIN && (
+            <c.Tooltip label="Admin" placement="auto" zIndex={50} hasArrow>
+              <c.IconButton
+                borderRadius="full"
+                onClick={() => navigate("/admin")}
+                aria-label="Admin"
+                variant="ghost"
+                icon={<c.Box as={RiDashboard3Line} boxSize="18px" />}
+              />
+            </c.Tooltip>
+          )}
 
           <c.Tooltip label="Logout" placement="auto" zIndex={50} hasArrow>
             <c.IconButton

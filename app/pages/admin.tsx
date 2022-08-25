@@ -1,10 +1,12 @@
+import { RiArrowLeftLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { Role } from "@prisma/client"
 import { useLoaderData } from "@remix-run/react"
-import type { LoaderArgs} from "@remix-run/server-runtime";
+import type { LoaderArgs } from "@remix-run/server-runtime"
 import { json, redirect } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 
+import { LinkButton } from "~/components/LinkButton"
 import { db } from "~/lib/db.server"
 import { requireUser } from "~/services/auth/auth.server"
 
@@ -40,7 +42,12 @@ export default function Admin() {
   const { users, taskCountTotal, tastCountLastMonth, taskCountThisMonth } = useLoaderData<typeof loader>()
   const percentageChange = (taskCountThisMonth / (tastCountLastMonth || 1) - 1) * 100
   return (
-    <c.Stack p={10}>
+    <c.Stack p={6}>
+      <c.Box>
+        <LinkButton to="/timeline" variant="ghost" leftIcon={<c.Box as={RiArrowLeftLine} />}>
+          Back to timeline
+        </LinkButton>
+      </c.Box>
       <c.Heading>Admin</c.Heading>
       <c.SimpleGrid columns={{ base: 1, md: 2 }}>
         <c.Stack spacing={6}>
