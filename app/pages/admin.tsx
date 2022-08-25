@@ -66,7 +66,7 @@ export default function Admin() {
             <c.Heading as="h4" fontSize="lg">
               Tasks
             </c.Heading>
-            <c.Text fontSize="3xl">{taskCountTotal}</c.Text>
+            <c.Text fontSize="3xl">{taskCountTotal.toLocaleString()}</c.Text>
           </c.Box>
           <c.Stat>
             <c.StatLabel>This month</c.StatLabel>

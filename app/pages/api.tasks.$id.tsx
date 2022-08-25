@@ -45,12 +45,12 @@ export const action = async ({ request, params }: ActionArgs) => {
           where: { id: taskId },
           data: {
             date: data.date ? dayjs(data.date).toDate() : undefined,
-            durationHours: data.durationHours || undefined,
-            durationMinutes: data.durationMinutes || undefined,
-            startTime: data.startTime || undefined,
+            durationHours: data.durationHours,
+            durationMinutes: data.durationMinutes,
+            startTime: data.startTime,
             name: data.name,
-            elementId: data.elementId || undefined,
-            description: data.description || undefined,
+            elementId: data.elementId,
+            description: data.description,
             isComplete,
           },
         })
