@@ -494,7 +494,6 @@ function Plan() {
                         colorScheme="red"
                         type="submit"
                         ml={3}
-                        name="_action"
                         isDisabled={cancelFetcher.state !== "idle"}
                         isLoading={cancelFetcher.state !== "idle"}
                         onClick={() => {
@@ -503,7 +502,6 @@ function Plan() {
                             { method: "post", action: `/api/profile/plan` },
                           )
                         }}
-                        value={ProfilePlanMethods.CancelPlan}
                       >
                         Downgrade
                       </c.Button>
@@ -549,11 +547,12 @@ function Plan() {
               <Modal title="Join Pro" {...joinPlanProps}>
                 <joinPlanFetcher.Form action="/api/profile/plan" replace method="post">
                   <c.Stack>
-                    <c.Input name="_action" type="hidden" value={ProfilePlanMethods.JoinPlan} />
                     <c.Input name="promoCode" placeholder="Have a promo code?" />
                     <ButtonGroup>
                       <c.Button onClick={joinPlanProps.onClose}>Cancel</c.Button>
-                      <FormButton>Join</FormButton>
+                      <FormButton name="_action" value={ProfilePlanMethods.JoinPlan}>
+                        Join
+                      </FormButton>
                     </ButtonGroup>
                   </c.Stack>
                 </joinPlanFetcher.Form>
@@ -619,7 +618,7 @@ function Plan() {
 }
 
 function Billing() {
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     ["profileBilling"],
     async () => {
       const response = await fetch(`/api/profile/billing`)
@@ -630,6 +629,14 @@ function Billing() {
   )
 
   const billingFetcher = useFetcher()
+
+  React.useEffect(() => {
+    if (billingFetcher.type === "actionReload") {
+      refetch()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [billingFetcher.type])
+
   if (isLoading)
     return (
       <c.Center h="200px">
@@ -648,53 +655,79 @@ function Billing() {
           <c.Text w="100%" fontSize="sm" fontWeight="semibold">
             Details
           </c.Text>
-          <c.Flex pt={1} justify="space-between">
-            <c.Text w="100%" fontSize="sm">
+          <c.Flex justify="space-between">
+            <c.Text pt={1} w="100%" fontSize="sm">
               Billing name
             </c.Text>
             <c.Box>
-              <c.Input defaultValue={billing?.name || ""} name="name" />
+              <FormField
+                error={billingFetcher.data?.fieldErrors?.name?.[0]}
+                defaultValue={billing?.name || ""}
+                name="name"
+              />
             </c.Box>
           </c.Flex>
-          <c.Flex pt={1} justify="space-between">
-            <c.Text w="100%" fontSize="sm">
+          <c.Flex justify="space-between">
+            <c.Text pt={1} w="100%" fontSize="sm">
               Billing email
             </c.Text>
             <c.Box>
-              <c.Input defaultValue={billing?.email || ""} name="email" />
+              <FormField
+                error={billingFetcher.data?.fieldErrors?.email?.[0]}
+                defaultValue={billing?.email || ""}
+                name="email"
+              />
             </c.Box>
           </c.Flex>
-          <c.Flex pt={1} justify="space-between">
-            <c.Text w="100%" fontSize="sm">
+          <c.Flex align="flex-start" justify="space-between">
+            <c.Text pt={1} w="100%" fontSize="sm">
               Billing address
             </c.Text>
             <c.Stack spacing={1}>
-              <c.Input placeholder="Address 1" defaultValue={billing?.address?.line1 || ""} name="address1" />
-              <c.Input placeholder="Address 2" defaultValue={billing?.address?.line2 || ""} name="address2" />
-              <c.HStack>
-                <c.Input w="50%" placeholder="City" defaultValue={billing?.address?.city || ""} name="city" />
-                <c.Input
-                  w="50%"
+              <FormField
+                placeholder="Address 1"
+                error={billingFetcher.data?.fieldErrors?.line1?.[0]}
+                defaultValue={billing?.address?.line1 || ""}
+                name="address1"
+              />
+              <FormField
+                placeholder="Address 2"
+                error={billingFetcher.data?.fieldErrors?.line2?.[0]}
+                defaultValue={billing?.address?.line2 || ""}
+                name="address2"
+              />
+              <c.HStack align="flex-start">
+                <FormField
+                  placeholder="City"
+                  error={billingFetcher.data?.fieldErrors?.city?.[0]}
+                  defaultValue={billing?.address?.city || ""}
+                  name="city"
+                />
+                <FormField
                   placeholder="State/Province"
+                  error={billingFetcher.data?.fieldErrors?.state?.[0]}
                   defaultValue={billing?.address?.state || ""}
                   name="state"
                 />
               </c.HStack>
-              <c.HStack>
-                <c.Select
-                  w="50%"
+              <c.HStack align="flex-start">
+                <FormField
                   placeholder="Country"
                   defaultValue={billing?.address?.country || ""}
                   name="country"
-                >
-                  {COUNTRIES.map((country) => (
-                    <option key={country.code} value={country.code}>
-                      {country.name}
-                    </option>
-                  ))}
-                </c.Select>
-                <c.Input
-                  w="50%"
+                  error={billingFetcher.data?.fieldErrors?.country?.[0]}
+                  input={
+                    <c.Select>
+                      {COUNTRIES.map((country) => (
+                        <option key={country.code} value={country.code}>
+                          {country.name}
+                        </option>
+                      ))}
+                    </c.Select>
+                  }
+                />
+                <FormField
+                  error={billingFetcher.data?.fieldErrors?.postCode?.[0]}
                   placeholder="Post code/Zip code"
                   defaultValue={billing?.address?.postal_code || ""}
                   name="postCode"
@@ -702,19 +735,32 @@ function Billing() {
               </c.HStack>
             </c.Stack>
           </c.Flex>
-          <c.Flex align="center" justify="space-between">
-            <c.Text w="100%" fontSize="sm">
+          <c.Flex align="flex-start" justify="space-between">
+            <c.Text pt={1} w="100%" fontSize="sm">
               Tax ID
             </c.Text>
-            <c.HStack>
-              <c.Select name="taxType" defaultValue={billing?.taxId.type || ""}>
-                {TAX_TYPES.map(({ type, name }) => (
-                  <option key={type} value={type}>
-                    {name}
-                  </option>
-                ))}
-              </c.Select>
-              <c.Input defaultValue={billing?.taxId.value || ""} name="taxId" />
+            <c.HStack align="flex-start">
+              <FormField
+                error={billingFetcher.data?.fieldErrors?.taxType?.[0]}
+                name="taxType"
+                placeholder="Tax type"
+                defaultValue={billing?.taxId.type || ""}
+                input={
+                  <c.Select>
+                    {TAX_TYPES.map(({ type, name }) => (
+                      <option key={type} value={type}>
+                        {name}
+                      </option>
+                    ))}
+                  </c.Select>
+                }
+              />
+              <FormField
+                placeholder="Tax ID"
+                error={billingFetcher.data?.fieldErrors?.taxId?.[0]}
+                defaultValue={billing?.taxId.value || ""}
+                name="taxId"
+              />
             </c.HStack>
           </c.Flex>
           <ButtonGroup>

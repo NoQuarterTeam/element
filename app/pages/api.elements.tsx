@@ -31,9 +31,9 @@ export const action = async ({ request }: ActionArgs) => {
             return badRequest({ formError: "Element limit reached, upgrade to the Pro plan to add more" })
         }
         const createSchema = z.object({
-          name: z.string(),
-          color: z.string().optional(),
-          parentId: z.string().optional(),
+          name: z.string().min(1),
+          color: z.string().min(1),
+          parentId: z.string().nullable().optional(),
         })
 
         const { data, fieldErrors } = await validateFormData(createSchema, formData)

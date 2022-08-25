@@ -1,4 +1,4 @@
-import type { Task } from "@prisma/client";
+import type { Task } from "@prisma/client"
 import { SubscriptionStatus } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
@@ -64,19 +64,18 @@ export const action = async ({ request }: ActionArgs) => {
           name: z.string(),
           date: z.string(),
           elementId: z.string().uuid(),
-          description: z.string().optional(),
-          isComplete: z.string().optional(),
-          durationHours: z.preprocess(Number, z.number()).optional(),
-          durationMinutes: z.preprocess(Number, z.number()).optional(),
-          startTime: z.string().optional(),
+          description: z.string().nullable(),
+          durationHours: z.preprocess(Number, z.number()).nullable(),
+          durationMinutes: z.preprocess(Number, z.number()).nullable(),
+          startTime: z.string().nullable(),
         })
-        const isComplete = formData.get("isComplete") as string | undefined
+        const isComplete = formData.has("isComplete")
         const newForm = await validateFormData(createSchema, formData)
         if (newForm.fieldErrors) return badRequest(newForm)
         const newTask = await db.task.create({
           select: taskSelectFields,
           data: {
-            isComplete: isComplete === "" || isComplete === "true" || false,
+            isComplete,
             durationHours: newForm.data.durationHours || null,
             durationMinutes: newForm.data.durationMinutes || null,
             startTime: newForm.data.startTime || null,

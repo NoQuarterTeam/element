@@ -1,6 +1,6 @@
 import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
 import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime"
-import { json,redirect } from "@remix-run/server-runtime"
+import { json, redirect } from "@remix-run/server-runtime"
 
 import { FlashType, PRICE_ID } from "~/lib/config.server"
 import { FULL_WEB_URL } from "~/lib/config.server"
@@ -55,10 +55,10 @@ export const action = async ({ request }: ActionArgs) => {
           customer_update: { address: "auto", name: "auto" },
           billing_address_collection: "required",
           tax_id_collection: { enabled: true },
-          success_url: FULL_WEB_URL + "/welcome",
+          success_url: FULL_WEB_URL + "/timeline?subscribed=true",
           cancel_url: FULL_WEB_URL + "/timeline",
           automatic_tax: { enabled: true },
-          discounts: promoCode ? [{ promotion_code: promoCodeId }] : undefined,
+          subscription_data: { coupon: promoCode ? promoCodeId : undefined },
           line_items: [{ price: PRICE_ID, quantity: 1 }],
           mode: "subscription",
         })

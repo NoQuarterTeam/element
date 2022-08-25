@@ -28,7 +28,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       try {
         const updateSchema = z.object({
           name: z.string().min(1).optional(),
-          color: z.string().optional(),
+          color: z.string().min(1).optional(),
         })
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })

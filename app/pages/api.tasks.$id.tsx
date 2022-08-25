@@ -31,19 +31,15 @@ export const action = async ({ request, params }: ActionArgs) => {
         const updateSchema = z.object({
           name: z.string().optional(),
           date: z.string().optional(),
-          slug: z.string().optional(),
-          description: z.string().optional(),
-          isComplete: z.string().optional(),
-          durationHours: z.preprocess(Number, z.number()).optional(),
-          durationMinutes: z.preprocess(Number, z.number()).optional(),
-          startTime: z.string().optional(),
+          description: z.string().nullable().optional(),
+          durationHours: z.preprocess(Number, z.number()).nullable().optional(),
+          durationMinutes: z.preprocess(Number, z.number()).nullable().optional(),
+          startTime: z.string().nullable().optional(),
           elementId: z.string().uuid().optional(),
         })
-        const hasComplete = formData.has("isComplete")
-        const isComplete = formData.get("isComplete") as string | undefined
+        const isComplete = formData.has("isComplete")
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
-
         const updatedTask = await db.task.update({
           select: taskSelectFields,
           where: { id: taskId },
@@ -55,7 +51,7 @@ export const action = async ({ request, params }: ActionArgs) => {
             name: data.name,
             elementId: data.elementId || undefined,
             description: data.description || undefined,
-            isComplete: hasComplete ? isComplete === "" || isComplete === "true" || false : undefined,
+            isComplete,
           },
         })
         return json({ task: updatedTask })

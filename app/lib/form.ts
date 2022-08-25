@@ -14,7 +14,12 @@ export async function validateFormData<Schema extends z.ZodType<any>>(
   formData: FormData,
 ): Promise<ValidForm<Schema>> {
   const data = Object.fromEntries(formData)
-  const validations = schema.safeParse(data)
+
+  const filteredData = Object.keys(data).reduce((acc, key) => {
+    acc[key] = data[key] === "" ? null : data[key]
+    return acc
+  }, {} as any)
+  const validations = schema.safeParse(filteredData)
 
   if (!validations.success) {
     const fieldErrors = validations.error.flatten().fieldErrors as {

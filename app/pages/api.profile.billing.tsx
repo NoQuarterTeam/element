@@ -23,7 +23,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     address: stripeCustomer.address,
     name: stripeCustomer.name,
     email: stripeCustomer.email,
-    taxId: { value: stripeCustomer.tax_ids?.data[0].value, type: stripeCustomer.tax_ids?.data[0].type },
+    taxId: { value: stripeCustomer.tax_ids?.data?.[0]?.value, type: stripeCustomer.tax_ids?.data?.[0]?.type },
   }
   return json({ billing, invoices: invoices.data })
 }
@@ -45,14 +45,14 @@ export const action = async ({ request }: ActionArgs) => {
         const billingSchema = z.object({
           email: z.string().min(3).email("Invalid email"),
           name: z.string().min(2, "Must be at least 2 characters"),
-          address1: z.string().min(2, "Must be at least 1 character"),
-          address2: z.string().optional(),
-          city: z.string().min(1, "Must be at least 1 character"),
-          state: z.string().optional(),
-          postCode: z.string().min(1, "Must be at least 1 character"),
-          country: z.string().min(1, "Must be at least 1 character1"),
-          taxId: z.string().min(1, "Must be at least 1 character1"),
-          taxType: z.string().min(1, "Must be at least 1 character1"),
+          address1: z.string().nullable().optional(),
+          address2: z.string().nullable().optional(),
+          city: z.string().nullable().optional(),
+          state: z.string().nullable().optional(),
+          postCode: z.string().nullable().optional(),
+          country: z.string().nullable().optional(),
+          taxId: z.string().nullable().optional(),
+          taxType: z.string().nullable().optional(),
         })
         const { data, fieldErrors } = await validateFormData(billingSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
@@ -65,24 +65,36 @@ export const action = async ({ request }: ActionArgs) => {
           return badRequest("No stripe customer", {
             headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating billing details") },
           })
-        const taxId = customer?.tax_ids?.data[0].value
-        const taxType = customer?.tax_ids?.data[0].type
-        if (taxId !== data.taxId || taxType !== data.taxType) {
-          await stripe.customers.createTaxId(user.stripeCustomerId, {
-            type: data.taxType as Stripe.TaxIdCreateParams["type"],
-            value: data.taxId,
-          })
+        const oldTaxId = customer.tax_ids?.data[0]?.id
+        const oldTaxValue = customer?.tax_ids?.data?.[0]?.value
+        const oldTaxType = customer?.tax_ids?.data?.[0]?.type
+        if (data.taxId && !data.taxType) {
+          return badRequest({ fieldErrors: { taxType: ["Tax ID required"] }, data })
+        }
+        if (!data.taxId && oldTaxId) {
+          await stripe.customers.deleteTaxId(customer.id, oldTaxId)
+        }
+        if (data.taxId && data.taxType && (oldTaxValue !== data.taxId || oldTaxType !== data.taxType)) {
+          try {
+            if (oldTaxId) await stripe.customers.deleteTaxId(customer.id, oldTaxId)
+            await stripe.customers.createTaxId(user.stripeCustomerId, {
+              type: data.taxType as Stripe.TaxIdCreateParams["type"],
+              value: data.taxId,
+            })
+          } catch {
+            return badRequest({ fieldErrors: { taxId: ["Invalid tax ID"] }, data })
+          }
         }
         await stripe.customers.update(user.stripeCustomerId, {
           email: data.email,
           name: data.name,
           address: {
-            line1: data.address1,
-            line2: data.address2,
-            city: data.city,
-            state: data.state,
-            postal_code: data.postCode,
-            country: data.country,
+            line1: data.address1 || "",
+            line2: data.address2 || "",
+            city: data.city || "",
+            state: data.state || "",
+            postal_code: data.postCode || "",
+            country: data.country || "",
           },
         })
 
