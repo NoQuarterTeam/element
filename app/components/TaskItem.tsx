@@ -164,6 +164,7 @@ function _TaskItem({ task, isPublic }: Props) {
           <c.Text
             pl={2}
             lineHeight="0.6rem"
+            whiteSpace="nowrap"
             noOfLines={1}
             opacity={0}
             fontSize="0.6rem"
