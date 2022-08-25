@@ -7,14 +7,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum SubscriptionStatus {
-  ACTIVE
-  CANCELLED
-  INCOMPLETE
-  INCOMPLETE_EXPIRED
-  PAST_DUE
-  UNPAID
-  TRIALING
+enum Role {
+  ADMIN
+  USER
 }
 
 model User {
@@ -22,6 +17,7 @@ model User {
   email                String    @unique
   password             String
   firstName            String
+  role                 Role      @default(USER)
   lastName             String
   avatar               String?
   stripeCustomerId     String    @unique

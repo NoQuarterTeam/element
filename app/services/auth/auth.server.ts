@@ -70,6 +70,7 @@ const userSelectFields = {
   firstName: true,
   lastName: true,
   avatar: true,
+  role: true,
   stripeSubscriptionId: true,
   stripeCustomerId: true,
 }
