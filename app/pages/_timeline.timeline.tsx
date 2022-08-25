@@ -1,7 +1,8 @@
 import * as React from "react"
 import { RiAddCircleLine, RiCalendarEventLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
-import type { ShouldReloadFunction } from "@remix-run/react"
+import type { ShouldReloadFunction} from "@remix-run/react";
+import { useSearchParams } from "@remix-run/react"
 import { useFetcher, useLoaderData } from "@remix-run/react"
 import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
 import type { LoaderArgs } from "@remix-run/server-runtime"
@@ -132,6 +133,9 @@ export default function Timeline() {
   const bg = c.useColorModeValue("gray.100", "gray.800")
   const { elements } = useLoaderData<typeof loader>()
 
+  const [searchParams, setSearchParams] = useSearchParams()
+  const isSubscribed = searchParams.has("subscribed")
+  const subscribedModalProps = c.useDisclosure({ defaultIsOpen: isSubscribed })
   const isLoading = taskFetcher.state === "loading"
   return (
     <c.Box
@@ -191,6 +195,36 @@ export default function Timeline() {
             <React.Suspense>
               <TaskForm onClose={newTaskModalProps.onClose} />
             </React.Suspense>
+          </c.ModalBody>
+        </c.ModalContent>
+      </c.Modal>
+      <c.Modal
+        size="lg"
+        isCentered
+        {...subscribedModalProps}
+        onClose={() => {
+          subscribedModalProps.onClose()
+          setSearchParams({})
+        }}
+      >
+        <c.ModalOverlay />
+        <c.ModalContent>
+          <c.ModalBody my={4}>
+            <c.VStack spacing={6}>
+              <c.Heading w="max-content" fontSize="3xl">
+                Welcome to Element Pro!
+              </c.Heading>
+              <c.Text>You can now created unlimited tasks and elements!</c.Text>
+              <c.Button
+                colorScheme="orange"
+                onClick={() => {
+                  subscribedModalProps.onClose()
+                  setSearchParams({})
+                }}
+              >
+                Let's get started
+              </c.Button>
+            </c.VStack>
           </c.ModalBody>
         </c.ModalContent>
       </c.Modal>

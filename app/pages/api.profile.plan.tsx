@@ -55,7 +55,7 @@ export const action = async ({ request }: ActionArgs) => {
           customer_update: { address: "auto", name: "auto" },
           billing_address_collection: "required",
           tax_id_collection: { enabled: true },
-          success_url: FULL_WEB_URL + "/timeline?subscribed=true",
+          success_url: FULL_WEB_URL + "/timeline?subscribed",
           cancel_url: FULL_WEB_URL + "/timeline",
           automatic_tax: { enabled: true },
           discounts: promoCode ? [{ promotion_code: promoCodeId }] : undefined,
