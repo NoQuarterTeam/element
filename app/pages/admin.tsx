@@ -34,7 +34,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function Admin() {
   const { users, taskCountTotal, tastCountLastMonth, taskCountThisMonth } = useLoaderData<typeof loader>()
-  const percentageChange = (taskCountThisMonth / (tastCountLastMonth || 1) - 1) * 100
+  const percentageChange = Math.round((taskCountThisMonth / (tastCountLastMonth || 1) - 1) * 100)
   return (
     <c.Stack p={6}>
       <c.Box>
