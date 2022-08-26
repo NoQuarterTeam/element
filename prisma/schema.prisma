@@ -39,13 +39,13 @@ model Task {
   startTime       String?
   durationHours   Int?
   durationMinutes Int?
-  element         Element  @relation(fields: [elementId], references: [id], onDelete: Cascade)
-  elementId       String   @db.Uuid
   order           Int      @default(50)
   createdAt       DateTime @default(now()) @db.Timestamptz(6)
   updatedAt       DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  creator         User     @relation(name: "CreatedTasks", fields: [creatorId], references: [id])
   creatorId       String   @db.Uuid
+  creator         User     @relation(name: "CreatedTasks", fields: [creatorId], references: [id])
+  elementId       String   @db.Uuid
+  element         Element  @relation(fields: [elementId], references: [id], onDelete: Cascade)
   users           User[]
 }
 
