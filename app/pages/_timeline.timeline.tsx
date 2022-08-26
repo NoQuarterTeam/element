@@ -1,7 +1,7 @@
 import * as React from "react"
 import { RiAddCircleLine, RiCalendarEventLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
-import type { ShouldReloadFunction} from "@remix-run/react";
+import type { ShouldReloadFunction } from "@remix-run/react"
 import { useSearchParams } from "@remix-run/react"
 import { useFetcher, useLoaderData } from "@remix-run/react"
 import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
@@ -9,6 +9,7 @@ import type { LoaderArgs } from "@remix-run/server-runtime"
 import { json } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
+import JSConfetti from "js-confetti"
 import throttle from "lodash.throttle"
 import styles from "suneditor/dist/css/suneditor.min.css"
 
@@ -46,6 +47,16 @@ export type SidebarElement = UseDataFunctionReturn<typeof loader>["elements"][0]
 dayjs.extend(advancedFormat)
 
 export default function Timeline() {
+  const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineDays()
+  // Initial load
+  const taskFetcher = useFetcher<TimelineTask[]>()
+  React.useEffect(
+    function LoadTasks() {
+      taskFetcher.load(`/api/tasks?back=${daysBack}&forward=${daysForward}`)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [daysBack, daysForward],
+  )
   const { tasks, setTasks } = useTimelineTasks(({ tasks, setTasks }) => ({
     tasks,
     setTasks,
@@ -53,8 +64,6 @@ export default function Timeline() {
 
   const timelineRef = React.useRef<HTMLDivElement>(null)
   const daysRef = React.useRef<HTMLDivElement>(null)
-
-  const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineDays()
 
   React.useEffect(function SetInitialScroll() {
     const scrollTo = isMobile ? DAYS_BACK * DAY_WIDTH : (DAYS_BACK - 3) * DAY_WIDTH
@@ -66,31 +75,15 @@ export default function Timeline() {
     PreloadedEditorInput.preload()
   }, [])
 
-  // Polling
-  const taskFetcher = useFetcher<TimelineTask[]>()
-  React.useEffect(
-    function LoadTasksAndPoll() {
-      taskFetcher.load(`/api/tasks?back=${daysBack}&forward=${daysForward}`)
-      const interval = setInterval(() => {
-        taskFetcher.load(`/api/tasks?back=${daysBack}&forward=${daysForward}`)
-      }, 30_000)
-      return () => {
-        clearInterval(interval)
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [daysBack, daysForward],
-  )
-
+  // Keep loads in sync
   React.useEffect(() => {
     if (taskFetcher.data) {
       setTasks(taskFetcher.data)
     }
   }, [taskFetcher.data, setTasks])
 
-  const handleForward = () => {
-    setDaysForward(daysForward + DAYS_FORWARD)
-  }
+  const handleForward = () => setDaysForward(daysForward + DAYS_FORWARD)
+
   const handleBack = () => {
     // Need to scroll a bit right otherwise it keeps running handleBack
     timelineRef.current?.scrollTo({ left: DAYS_BACK * DAY_WIDTH })
@@ -210,11 +203,12 @@ export default function Timeline() {
         <c.ModalOverlay />
         <c.ModalContent>
           <c.ModalBody my={4}>
+            <ShowConfetti />
             <c.VStack spacing={6}>
               <c.Heading w="max-content" fontSize="3xl">
                 Welcome to Element Pro!
               </c.Heading>
-              <c.Text>You can now created unlimited tasks and elements!</c.Text>
+              <c.Text>You can now create unlimited tasks and elements</c.Text>
               <c.Button
                 colorScheme="orange"
                 onClick={() => {
@@ -230,4 +224,12 @@ export default function Timeline() {
       </c.Modal>
     </c.Box>
   )
+}
+
+function ShowConfetti() {
+  React.useEffect(() => {
+    const jsConfetti = new JSConfetti()
+    jsConfetti.addConfetti()
+  }, [])
+  return null
 }

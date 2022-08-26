@@ -1,6 +1,8 @@
+import * as React from "react"
 import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi"
 import {
   RiBookLine,
+  RiDashboard3Line,
   RiLogoutCircleRLine,
   RiMoonLine,
   RiQuestionLine,
@@ -8,15 +10,17 @@ import {
   RiUser3Line,
 } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
-import { useSubmit } from "@remix-run/react"
+import { Role } from "@prisma/client"
+import { useNavigate, useSearchParams, useSubmit } from "@remix-run/react"
 
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { NEW_UPDATES, useUpdatesSeen } from "~/lib/hooks/useUpdatesSeen"
+import { useMe } from "~/pages/_timeline"
 import type { SidebarElement } from "~/pages/_timeline.timeline"
 
 import { ElementsSidebar } from "./ElementsSidebar"
 import { Modal } from "./Modal"
-import { ProfileModal } from "./ProfileModal"
+import { Plan, ProfileModal } from "./ProfileModal"
 import { ShortcutsInfo } from "./ShortcutsInfo"
 
 interface Props {
@@ -26,12 +30,22 @@ interface Props {
 export function Nav({ elements }: Props) {
   const elementSidebarProps = c.useDisclosure()
   const shortcutModalProps = c.useDisclosure()
-  const navProps = useStoredDisclosure("element.nav", { defaultIsOpen: true })
+  const [searchParams, setSearchParams] = useSearchParams()
+  const isLimitReached = searchParams.has("limitReached")
+  const planLimitModalProps = c.useDisclosure()
+  React.useEffect(() => {
+    if (isLimitReached) {
+      planLimitModalProps.onOpen()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLimitReached])
 
+  const navProps = useStoredDisclosure("element.nav", { defaultIsOpen: true })
+  const me = useMe()
   const updatesSeens = useUpdatesSeen((s) => s.updatesSeens)
 
   const logoutSubmit = useSubmit()
-
+  const navigate = useNavigate()
   const profileModalProps = c.useDisclosure({ defaultIsOpen: false })
 
   c.useEventListener("keydown", (event) => {
@@ -137,6 +151,17 @@ export function Nav({ elements }: Props) {
               icon={<c.Box as={RiQuestionLine} boxSize="18px" />}
             />
           </c.Tooltip>
+          {me.role === Role.ADMIN && (
+            <c.Tooltip label="Admin" placement="auto" zIndex={50} hasArrow>
+              <c.IconButton
+                borderRadius="full"
+                onClick={() => navigate("/admin")}
+                aria-label="Admin"
+                variant="ghost"
+                icon={<c.Box as={RiDashboard3Line} boxSize="18px" />}
+              />
+            </c.Tooltip>
+          )}
 
           <c.Tooltip label="Logout" placement="auto" zIndex={50} hasArrow>
             <c.IconButton
@@ -166,6 +191,29 @@ export function Nav({ elements }: Props) {
           <c.ModalOverlay />
           <c.ModalContent>
             <ProfileModal />
+          </c.ModalContent>
+        </c.Modal>
+        <c.Modal
+          size="4xl"
+          {...planLimitModalProps}
+          onClose={() => {
+            planLimitModalProps.onClose()
+            setSearchParams({})
+          }}
+        >
+          <c.ModalOverlay />
+          <c.ModalContent>
+            <c.ModalCloseButton />
+            <c.ModalBody py={4} pb={8}>
+              <c.Stack spacing={4}>
+                <c.Heading>Plan limit reached</c.Heading>
+                <c.Text>
+                  Thank you for using Element, you've reached the limit of the Personal plan. To add more
+                  elements or tasks, please upgrade to Pro.
+                </c.Text>
+                <Plan />
+              </c.Stack>
+            </c.ModalBody>
           </c.ModalContent>
         </c.Modal>
       </c.Flex>

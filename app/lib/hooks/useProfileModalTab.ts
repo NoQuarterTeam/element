@@ -1,10 +1,10 @@
 import create from "zustand"
 import { persist } from "zustand/middleware"
 
-export type TABS = "account" | "plan" | "billing" | "settings"
+export type Tab = "account" | "plan" | "billing" | "settings"
 interface Create {
-  tab: TABS
-  setTab: (tab: TABS) => void
+  tab: Tab
+  setTab: (tab: Tab) => void
 }
 
 export const useProfileModalTab = create<Create>()(

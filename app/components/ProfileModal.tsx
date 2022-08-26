@@ -9,6 +9,7 @@ import Cookies from "js-cookie"
 
 import { shallowEqual } from "~/lib/form"
 import { transformImage } from "~/lib/helpers/image"
+import type { Tab } from "~/lib/hooks/useProfileModalTab"
 import { useProfileModalTab } from "~/lib/hooks/useProfileModalTab"
 import { useToast } from "~/lib/hooks/useToast"
 import { useUpdatesSeen } from "~/lib/hooks/useUpdatesSeen"
@@ -41,22 +42,21 @@ export function ProfileModal() {
   }, [tab])
 
   const bg = c.useColorModeValue("gray.50", "gray.800")
-  const color = c.useColorModeValue("gray.400", "gray.500")
 
   return (
     <c.Flex minH={600} h="100%" overflow="hidden" borderRadius="md">
-      <c.Box minW={140} w="min-content" h="auto" bg={bg}>
-        <c.Text fontSize="0.7rem" px={4} w="min-content" color={color} py={2}>
-          {me.email}
-        </c.Text>
+      <c.Box w={{ base: "50px", md: "200px" }} h="auto" bg={bg}>
+        <c.Box px={4} py={2}>
+          <c.Text fontSize="x-small" noOfLines={1} opacity={0.8} display={{ base: "none", md: "block" }}>
+            {me.email}
+          </c.Text>
+        </c.Box>
         <c.Stack spacing={0}>
-          <c.Button
-            justifyContent="flex-start"
-            pl={4}
-            variant={tab === "account" ? "solid" : "ghost"}
-            fontWeight={400}
-            fontSize="0.8rem"
-            leftIcon={
+          <TabLink
+            tab="account"
+            activeTab={tab}
+            onClick={setTab}
+            icon={
               <c.Avatar
                 src={me.avatar ? transformImage(me.avatar, "w_30,h_30,g_faces") : undefined}
                 name={me.firstName + " " + me.lastName}
@@ -64,18 +64,14 @@ export function ProfileModal() {
                 boxSize="15px"
               />
             }
-            borderRadius={0}
-            onClick={() => setTab("account")}
           >
             Account
-          </c.Button>
-          <c.Button
-            justifyContent="flex-start"
-            pl={4}
-            variant={tab === "settings" ? "solid" : "ghost"}
-            fontWeight={400}
-            fontSize="0.8rem"
-            leftIcon={
+          </TabLink>
+          <TabLink
+            tab="settings"
+            onClick={setTab}
+            activeTab={tab}
+            icon={
               <c.Box pos="relative">
                 <c.Box as={RiSettings2Line} boxSize="15px" />
                 {!updatesSeens.find((u) => ["weather"].includes(u)) && (
@@ -90,38 +86,31 @@ export function ProfileModal() {
                 )}
               </c.Box>
             }
-            borderRadius={0}
-            onClick={() => setTab("settings")}
           >
             Settings
-          </c.Button>
-          <c.Button
-            justifyContent="flex-start"
-            pl={4}
-            variant={tab === "plan" ? "solid" : "ghost"}
-            fontWeight={400}
-            fontSize="0.8rem"
-            leftIcon={<c.Box as={RiMap2Line} boxSize="15px" />}
-            borderRadius={0}
-            onClick={() => setTab("plan")}
+          </TabLink>
+          <TabLink
+            tab="plan"
+            activeTab={tab}
+            onClick={setTab}
+            icon={<c.Box as={RiMap2Line} boxSize="15px" />}
           >
             Plan
-          </c.Button>
-          <c.Button
-            justifyContent="flex-start"
-            pl={4}
-            variant={tab === "billing" ? "solid" : "ghost"}
-            fontWeight={400}
-            fontSize="0.8rem"
-            leftIcon={<c.Box as={RiBankCard2Line} boxSize="15px" />}
-            borderRadius={0}
-            onClick={() => setTab("billing")}
+          </TabLink>
+          <TabLink
+            tab="billing"
+            activeTab={tab}
+            onClick={setTab}
+            icon={<c.Box as={RiBankCard2Line} boxSize="15px" />}
           >
             Billing
-          </c.Button>
+          </TabLink>
         </c.Stack>
       </c.Box>
-      <c.Box p={4} maxH={600} w="100%" overflowY="scroll">
+      <c.Stack spacing={4} p={4} pb={8} maxH={600} w="100%" overflowY="scroll">
+        <c.Text fontSize="lg" fontWeight={500}>
+          {tab.charAt(0).toUpperCase() + tab.slice(1)}
+        </c.Text>
         {tab === "account" ? (
           <Account />
         ) : tab === "settings" ? (
@@ -131,8 +120,40 @@ export function ProfileModal() {
         ) : tab === "billing" ? (
           <Billing />
         ) : null}
-      </c.Box>
+      </c.Stack>
     </c.Flex>
+  )
+}
+
+function TabLink({
+  children,
+  activeTab,
+  icon,
+  tab,
+  onClick,
+}: {
+  children: string
+  tab: Tab
+  icon: React.ReactElement<any> | undefined
+  activeTab: Tab
+  onClick: (tab: Tab) => void
+}) {
+  return (
+    <c.Button
+      justifyContent="flex-start"
+      pl={4}
+      w={{ base: "min-content", md: "auto" }}
+      variant={activeTab === tab ? "solid" : "ghost"}
+      fontWeight={400}
+      fontSize="0.8rem"
+      leftIcon={icon}
+      borderRadius={0}
+      onClick={() => onClick(tab)}
+    >
+      <c.Text as="span" display={{ base: "none", md: "block" }}>
+        {children}
+      </c.Text>
+    </c.Button>
   )
 }
 
@@ -147,10 +168,7 @@ function Account() {
   const cancelRef = React.useRef<HTMLButtonElement>(null)
   const destroyAccountFetcher = useFetcher()
   return (
-    <c.Stack spacing={4} pb={6}>
-      <c.Text fontSize="lg" fontWeight={500}>
-        Account
-      </c.Text>
+    <>
       <updateProfileFetcher.Form
         ref={formRef}
         action="/api/profile"
@@ -266,7 +284,7 @@ function Account() {
           </c.AlertDialogContent>
         </c.AlertDialogOverlay>
       </c.AlertDialog>
-    </c.Stack>
+    </>
   )
 }
 
@@ -308,28 +326,22 @@ function Settings() {
   }
 
   return (
-    <c.Stack spacing={4} pb={6}>
-      <c.Text fontSize="lg" fontWeight={500}>
-        Settings
-      </c.Text>
-
-      <c.Stack spacing={4}>
-        <c.Stack>
-          <c.HStack>
-            <c.Text fontSize="sm">Weather</c.Text>
-            <c.Badge size="sm" colorScheme="orange">
-              New
-            </c.Badge>
-          </c.HStack>
-          <c.Text fontSize="xs">Show the next weeks weather based on your current location.</c.Text>
-          <c.Switch onChange={handleToggleWeather} defaultChecked={userLocation.isEnabled} />
-        </c.Stack>
+    <>
+      <c.Stack>
+        <c.HStack>
+          <c.Text fontSize="sm">Weather</c.Text>
+          <c.Badge size="sm" colorScheme="orange">
+            New
+          </c.Badge>
+        </c.HStack>
+        <c.Text fontSize="xs">Show the next weeks weather based on your current location.</c.Text>
+        <c.Switch onChange={handleToggleWeather} defaultChecked={userLocation.isEnabled} />
       </c.Stack>
-    </c.Stack>
+    </>
   )
 }
 
-function Plan() {
+export function Plan() {
   const { data, isLoading, refetch } = useQuery(
     ["profilePlan"],
     async () => {
@@ -371,7 +383,7 @@ function Plan() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reactivateFetcher.type])
 
-  const borderColor = c.useColorModeValue("gray.100", "gray.700")
+  const borderColor = c.useColorModeValue("gray.100", "gray.600")
 
   if (isLoading)
     return (
@@ -385,10 +397,7 @@ function Plan() {
     : null
 
   return (
-    <c.Stack spacing={4} pb={6}>
-      <c.Text fontSize="lg" fontWeight={500}>
-        Plan
-      </c.Text>
+    <>
       {data?.subscription ? (
         <c.Stack>
           <c.Text fontSize="lg">
@@ -424,7 +433,18 @@ function Plan() {
             <c.Stat>
               <c.StatLabel>Tasks</c.StatLabel>
               <c.StatNumber>
-                {data?.taskCount}{" "}
+                <c.Text
+                  as="span"
+                  color={
+                    (data?.taskCount || 0) >= 1000
+                      ? "red.500"
+                      : (data?.taskCount || 0) > 900
+                      ? "orange.500"
+                      : undefined
+                  }
+                >
+                  {data?.taskCount}{" "}
+                </c.Text>
                 <c.Text as="span" fontWeight="thin" opacity={0.7} fontSize="xs">
                   / 1000
                 </c.Text>
@@ -433,7 +453,18 @@ function Plan() {
             <c.Stat>
               <c.StatLabel>Elements</c.StatLabel>
               <c.StatNumber>
-                {data?.elementCount}{" "}
+                <c.Text
+                  as="span"
+                  color={
+                    (data?.elementCount || 0) >= 5
+                      ? "red.500"
+                      : (data?.elementCount || 0) > 4
+                      ? "orange.500"
+                      : undefined
+                  }
+                >
+                  {data?.elementCount}
+                </c.Text>{" "}
                 <c.Text as="span" fontWeight="thin" opacity={0.7} fontSize="xs">
                   / 5
                 </c.Text>
@@ -447,15 +478,21 @@ function Plan() {
 
       <c.Box
         w="100%"
-        fontSize="sm"
+        fontSize={{ base: "xs", md: "sm" }}
         borderRight="1px solid"
         borderBottom="1px solid"
         borderColor={borderColor}
       >
         <c.Flex>
-          <c.Flex flex={3} p={2} borderLeft="1px solid" borderColor="transparent" />
-          <c.Flex flex={2} p={2} borderLeft="1px solid" borderTop="1px solid" borderColor={borderColor}>
-            <c.Stack>
+          <c.Flex flex={3} p={{ base: 1, md: 2 }} borderLeft="1px solid" borderColor="transparent" />
+          <c.Flex
+            flex={2}
+            p={{ base: 1, md: 2 }}
+            borderLeft="1px solid"
+            borderTop="1px solid"
+            borderColor={borderColor}
+          >
+            <c.Stack spacing={{ base: 0, md: 2 }}>
               <c.Text fontWeight="bold" fontSize="md">
                 Personal
               </c.Text>
@@ -463,6 +500,7 @@ function Plan() {
                 €0
               </c.Text>
               <c.Button
+                size={{ base: "xs", md: "sm" }}
                 onClick={cancelPlanProps.onOpen}
                 colorScheme={
                   !data?.subscription || data?.subscription?.cancel_at_period_end ? "gray" : "orange"
@@ -511,24 +549,31 @@ function Plan() {
               </c.AlertDialog>
             </c.Stack>
           </c.Flex>
-          <c.Flex flex={2} p={2} borderLeft="1px solid" borderTop="1px solid" borderColor={borderColor}>
-            <c.Stack>
+          <c.Flex
+            flex={2}
+            p={{ base: 1, md: 2 }}
+            borderLeft="1px solid"
+            borderTop="1px solid"
+            borderColor={borderColor}
+          >
+            <c.Stack spacing={{ base: 0, md: 2 }}>
               <c.Text fontWeight="bold" fontSize="md">
                 Pro
               </c.Text>
-              <c.Text fontWeight="medium" fontSize="xl">
+              <c.Text fontWeight="medium" fontSize="xl" whiteSpace="nowrap">
                 €4{" "}
-                <c.Text as="span" fontWeight="thin" opacity={0.7} fontSize="xs">
+                <c.Text as="span" whiteSpace="nowrap" fontWeight="thin" opacity={0.7} fontSize="xs">
                   per month
                 </c.Text>
               </c.Text>
 
               {!data?.subscription ? (
-                <c.Button onClick={joinPlanProps.onOpen} colorScheme="orange">
+                <c.Button size={{ base: "xs", md: "sm" }} onClick={joinPlanProps.onOpen} colorScheme="orange">
                   Upgrade
                 </c.Button>
               ) : data.subscription.cancel_at_period_end ? (
                 <c.Button
+                  size={{ base: "xs", md: "sm" }}
                   onClick={() =>
                     reactivateFetcher.submit(
                       { _action: ProfilePlanMethods.ReactivatePlan },
@@ -542,7 +587,9 @@ function Plan() {
                   Reactivate
                 </c.Button>
               ) : (
-                <c.Button isDisabled={true}>Current plan</c.Button>
+                <c.Button size={{ base: "xs", md: "sm" }} isDisabled={true}>
+                  Current plan
+                </c.Button>
               )}
               <Modal title="Join Pro" {...joinPlanProps}>
                 <joinPlanFetcher.Form action="/api/profile/plan" replace method="post">
@@ -566,54 +613,72 @@ function Plan() {
           borderTop="1px solid"
           borderColor={borderColor}
         >
-          <c.Flex p={2} flex={3} fontWeight="semibold">
+          <c.Flex p={{ base: 1, md: 2 }} flex={3} fontWeight="semibold">
             Usage
           </c.Flex>
-          <c.Flex p={2} flex={2} borderLeft="1px solid" borderColor={borderColor} />
-          <c.Flex p={2} flex={2} borderLeft="1px solid" borderColor={borderColor} />
+          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor} />
+          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor} />
         </c.Flex>
         <c.Flex borderBottom="1px solid" borderColor={borderColor}>
-          <c.Flex p={2} flex={3} opacity={0.7} borderLeft="1px solid" borderColor={borderColor}>
+          <c.Flex
+            p={{ base: 1, md: 2 }}
+            flex={3}
+            opacity={0.7}
+            borderLeft="1px solid"
+            borderColor={borderColor}
+          >
             Tasks
           </c.Flex>
-          <c.Flex p={2} flex={2} borderLeft="1px solid" borderColor={borderColor}>
+          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
             1000
           </c.Flex>
-          <c.Flex p={2} flex={2} borderLeft="1px solid" borderColor={borderColor}>
+          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
             Unlimited
           </c.Flex>
         </c.Flex>
         <c.Flex borderBottom="1px solid" borderColor={borderColor}>
-          <c.Flex p={2} flex={3} opacity={0.7} borderLeft="1px solid" borderColor={borderColor}>
+          <c.Flex
+            p={{ base: 1, md: 2 }}
+            flex={3}
+            opacity={0.7}
+            borderLeft="1px solid"
+            borderColor={borderColor}
+          >
             Elements
           </c.Flex>
-          <c.Flex p={2} flex={2} borderLeft="1px solid" borderColor={borderColor}>
+          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
             5
           </c.Flex>
-          <c.Flex p={2} flex={2} borderLeft="1px solid" borderColor={borderColor}>
+          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
             Unlimited
           </c.Flex>
         </c.Flex>
         <c.Flex borderBottom="1px solid" borderLeft="1px solid" borderColor={borderColor}>
-          <c.Flex p={2} flex={3} fontWeight="semibold">
+          <c.Flex p={{ base: 1, md: 2 }} flex={3} fontWeight="semibold">
             Features
           </c.Flex>
-          <c.Flex p={2} flex={2} borderLeft="1px solid" borderColor={borderColor} />
-          <c.Flex p={2} flex={2} borderLeft="1px solid" borderColor={borderColor} />
+          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor} />
+          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor} />
         </c.Flex>
         <c.Flex>
-          <c.Flex p={2} flex={3} opacity={0.7} borderLeft="1px solid" borderColor={borderColor}>
+          <c.Flex
+            p={{ base: 1, md: 2 }}
+            flex={3}
+            opacity={0.7}
+            borderLeft="1px solid"
+            borderColor={borderColor}
+          >
             Weather forecast
           </c.Flex>
-          <c.Flex p={2} flex={2} borderLeft="1px solid" borderColor={borderColor}>
+          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
             ✓
           </c.Flex>
-          <c.Flex p={2} flex={2} borderLeft="1px solid" borderColor={borderColor}>
+          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
             ✓
           </c.Flex>
         </c.Flex>
       </c.Box>
-    </c.Stack>
+    </>
   )
 }
 
@@ -644,18 +709,15 @@ function Billing() {
       </c.Center>
     )
   const billing = data?.billing
-  const invoices = data?.invoices
+  const invoices = data?.invoices || []
   return (
-    <c.Stack spacing={4} pb={6}>
-      <c.Text fontSize="lg" fontWeight={500}>
-        Billing
-      </c.Text>
+    <>
       <billingFetcher.Form action="/api/profile/billing" replace method="post">
         <c.Stack>
           <c.Text w="100%" fontSize="sm" fontWeight="semibold">
             Details
           </c.Text>
-          <c.Flex justify="space-between">
+          <c.Flex justify="space-between" flexWrap={{ base: "wrap", md: "nowrap" }}>
             <c.Text pt={1} w="100%" fontSize="sm">
               Billing name
             </c.Text>
@@ -667,7 +729,7 @@ function Billing() {
               />
             </c.Box>
           </c.Flex>
-          <c.Flex justify="space-between">
+          <c.Flex justify="space-between" flexWrap={{ base: "wrap", md: "nowrap" }}>
             <c.Text pt={1} w="100%" fontSize="sm">
               Billing email
             </c.Text>
@@ -679,7 +741,7 @@ function Billing() {
               />
             </c.Box>
           </c.Flex>
-          <c.Flex align="flex-start" justify="space-between">
+          <c.Flex justify="space-between" flexWrap={{ base: "wrap", md: "nowrap" }}>
             <c.Text pt={1} w="100%" fontSize="sm">
               Billing address
             </c.Text>
@@ -735,7 +797,7 @@ function Billing() {
               </c.HStack>
             </c.Stack>
           </c.Flex>
-          <c.Flex align="flex-start" justify="space-between">
+          <c.Flex justify="space-between" flexWrap={{ base: "wrap", md: "nowrap" }}>
             <c.Text pt={1} w="100%" fontSize="sm">
               Tax ID
             </c.Text>
@@ -782,29 +844,35 @@ function Billing() {
         Invoices
       </c.Text>
       <c.Stack>
-        {invoices?.map((invoice) => (
-          <c.Flex key={invoice.id} pt={1} justify="space-between">
-            <c.Text fontSize="sm">{dayjs.unix(invoice.created).format("MMM DD, YYYY")}</c.Text>
-            <c.HStack spacing={4}>
-              <c.Text textAlign="right" fontSize="sm">
-                {INVOICE_STATUS[invoice.status || "draft"]}
-              </c.Text>
-              <c.Text textAlign="right" fontSize="sm">
-                €{currencyjs(invoice.total, { fromCents: true }).value}
-              </c.Text>
-              <c.Link
-                textAlign="right"
-                opacity={0.7}
-                fontSize="sm"
-                href={invoice.invoice_pdf || ""}
-                download={true}
-              >
-                Download
-              </c.Link>
-            </c.HStack>
-          </c.Flex>
-        ))}
+        {invoices.length === 0 ? (
+          <c.Center h="100px">
+            <c.Text textAlign="center">No invoices yet</c.Text>
+          </c.Center>
+        ) : (
+          invoices.map((invoice) => (
+            <c.Flex key={invoice.id} pt={1} justify="space-between">
+              <c.Text fontSize="sm">{dayjs.unix(invoice.created).format("MMM DD, YYYY")}</c.Text>
+              <c.HStack spacing={4}>
+                <c.Text textAlign="right" fontSize="sm">
+                  {INVOICE_STATUS[invoice.status || "draft"]}
+                </c.Text>
+                <c.Text textAlign="right" fontSize="sm">
+                  €{currencyjs(invoice.total, { fromCents: true }).value}
+                </c.Text>
+                <c.Link
+                  textAlign="right"
+                  opacity={0.7}
+                  fontSize="sm"
+                  href={invoice.invoice_pdf || ""}
+                  download={true}
+                >
+                  Download
+                </c.Link>
+              </c.HStack>
+            </c.Flex>
+          ))
+        )}
       </c.Stack>
-    </c.Stack>
+    </>
   )
 }
