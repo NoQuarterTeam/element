@@ -19,12 +19,12 @@ export const customSelectStyle = (
     boxShadow: hasError
       ? `inset 0px 0px 0px 2px ${theme.colors.red[500]}`
       : state.isFocused
-      ? `inset 0px 0px 0px 2px ${theme.colors.orange[500]}`
+      ? `inset 0px 0px 0px 2px ${theme.colors.primary[500]}`
       : `inset 0px 0px 0px 1px ${isDark ? theme.colors.gray[400] : theme.colors.gray[200]}`,
     backgroundColor: "transparent",
     ":hover": {
       boxShadow: state.isFocused
-        ? `inset 0px 0px 0px 2px ${theme.colors.orange[500]}`
+        ? `inset 0px 0px 0px 2px ${theme.colors.primary[500]}`
         : `inset 0px 0px 0px 1px ${isDark ? theme.colors.gray[500] : theme.colors.gray[300]}`,
     },
   }),

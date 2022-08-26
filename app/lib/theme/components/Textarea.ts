@@ -14,6 +14,6 @@ export const Textarea = {
   defaultProps: {
     size: "sm",
     variant: "outline",
-    focusBorderColor: "orange.500",
+    focusBorderColor: "primary.500",
   },
 }

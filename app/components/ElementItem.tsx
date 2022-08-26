@@ -176,7 +176,7 @@ export function ElementItem({ element, ...props }: Props) {
                   isDisabled={createFetcher.state !== "idle"}
                   isLoading={createFetcher.state !== "idle"}
                   value={ElementsActionMethods.CreateElement}
-                  colorScheme="orange"
+                  colorScheme="primary"
                 >
                   Create
                 </c.Button>
@@ -224,7 +224,7 @@ export function ElementItem({ element, ...props }: Props) {
                 </c.Button>
                 <c.Button
                   type="submit"
-                  colorScheme="orange"
+                  colorScheme="primary"
                   isDisabled={updateFetcher.state !== "idle"}
                   isLoading={updateFetcher.state !== "idle"}
                   name="_action"

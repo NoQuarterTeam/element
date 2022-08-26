@@ -214,7 +214,7 @@ function Account() {
           <c.ButtonGroup>
             <c.Button
               type="submit"
-              colorScheme="orange"
+              colorScheme="primary"
               isDisabled={!isDirty || updateProfileFetcher.state !== "idle"}
               isLoading={updateProfileFetcher.state !== "idle"}
               name="_action"
@@ -330,7 +330,7 @@ function Settings() {
       <c.Stack>
         <c.HStack>
           <c.Text fontSize="sm">Weather</c.Text>
-          <c.Badge size="sm" colorScheme="orange">
+          <c.Badge size="sm" colorScheme="primary">
             New
           </c.Badge>
         </c.HStack>
@@ -439,7 +439,7 @@ export function Plan() {
                     (data?.taskCount || 0) >= 1000
                       ? "red.500"
                       : (data?.taskCount || 0) > 900
-                      ? "orange.500"
+                      ? "primary.500"
                       : undefined
                   }
                 >
@@ -459,7 +459,7 @@ export function Plan() {
                     (data?.elementCount || 0) >= 5
                       ? "red.500"
                       : (data?.elementCount || 0) > 4
-                      ? "orange.500"
+                      ? "primary.500"
                       : undefined
                   }
                 >
@@ -503,7 +503,7 @@ export function Plan() {
                 size={{ base: "xs", md: "sm" }}
                 onClick={cancelPlanProps.onOpen}
                 colorScheme={
-                  !data?.subscription || data?.subscription?.cancel_at_period_end ? "gray" : "orange"
+                  !data?.subscription || data?.subscription?.cancel_at_period_end ? "gray" : "primary"
                 }
                 isDisabled={!data?.subscription || data?.subscription?.cancel_at_period_end}
               >
@@ -568,7 +568,11 @@ export function Plan() {
               </c.Text>
 
               {!data?.subscription ? (
-                <c.Button size={{ base: "xs", md: "sm" }} onClick={joinPlanProps.onOpen} colorScheme="orange">
+                <c.Button
+                  size={{ base: "xs", md: "sm" }}
+                  onClick={joinPlanProps.onOpen}
+                  colorScheme="primary"
+                >
                   Upgrade
                 </c.Button>
               ) : data.subscription.cancel_at_period_end ? (
@@ -580,7 +584,7 @@ export function Plan() {
                       { method: "post", action: `/api/profile/plan` },
                     )
                   }
-                  colorScheme="orange"
+                  colorScheme="primary"
                   isLoading={reactivateFetcher.state !== "idle"}
                   isDisabled={reactivateFetcher.state !== "idle"}
                 >
@@ -660,19 +664,22 @@ export function Plan() {
           <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor} />
           <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor} />
         </c.Flex>
-        <c.Flex>
-          <c.Flex
-            p={{ base: 1, md: 2 }}
-            flex={3}
-            opacity={0.7}
-            borderLeft="1px solid"
-            borderColor={borderColor}
-          >
+        <c.Flex borderBottom="1px solid" borderLeft="1px solid" borderColor={borderColor}>
+          <c.Flex p={{ base: 1, md: 2 }} flex={3} opacity={0.7}>
             Weather forecast
           </c.Flex>
           <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
             ✓
           </c.Flex>
+          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
+            ✓
+          </c.Flex>
+        </c.Flex>
+        <c.Flex borderLeft="1px solid" borderColor={borderColor}>
+          <c.Flex p={{ base: 1, md: 2 }} flex={3} opacity={0.7}>
+            Habit tracking
+          </c.Flex>
+          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}></c.Flex>
           <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
             ✓
           </c.Flex>
@@ -828,7 +835,7 @@ function Billing() {
           <ButtonGroup>
             <c.Button
               type="submit"
-              colorScheme="orange"
+              colorScheme="primary"
               name="_action"
               isLoading={billingFetcher.state !== "idle"}
               isDisabled={billingFetcher.state !== "idle"}

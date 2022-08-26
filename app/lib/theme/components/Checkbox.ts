@@ -8,6 +8,6 @@ export const Checkbox = {
   // The default `size` or `variant` values
   defaultProps: {
     variant: "outline",
-    colorScheme: "orange",
+    colorScheme: "primary",
   },
 }

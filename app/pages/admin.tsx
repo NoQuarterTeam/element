@@ -57,7 +57,7 @@ export default function Admin() {
               <c.HStack fontSize="sm" key={user.id}>
                 <c.Text>{user.firstName}</c.Text>
                 <c.Text>{user.email}</c.Text>
-                {user.stripeSubscriptionId && <c.Badge colorScheme="orange">Pro</c.Badge>}
+                {user.stripeSubscriptionId && <c.Badge colorScheme="primary">Pro</c.Badge>}
               </c.HStack>
             ))}
           </c.Box>

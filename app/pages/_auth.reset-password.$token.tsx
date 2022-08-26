@@ -34,7 +34,7 @@ export default function ResetPassword() {
         <input name="token" type="hidden" value={token} />
         <FormField isRequired label="Password" name="password" type="password" placeholder="********" />
         <FormError />
-        <FormButton w="100%" colorScheme="orange">
+        <FormButton w="100%" colorScheme="primary">
           Reset
         </FormButton>
         <Link to="/login">Login</Link>

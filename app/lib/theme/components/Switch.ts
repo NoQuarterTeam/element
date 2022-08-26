@@ -7,6 +7,6 @@ export const Switch = {
   // Styles for the size variations
   // The default `size` or `variant` values
   defaultProps: {
-    colorScheme: "orange",
+    colorScheme: "primary",
   },
 }

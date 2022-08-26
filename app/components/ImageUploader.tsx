@@ -97,7 +97,7 @@ export function ImageUploader({ children, path, onSubmit, dropzoneOptions }: Pro
             Cancel
           </c.Button>
           <c.Button
-            colorScheme="orange"
+            colorScheme="primary"
             isLoading={isLoading}
             isDisabled={isLoading}
             onClick={handleSubmitImage}

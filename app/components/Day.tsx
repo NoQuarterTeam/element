@@ -29,8 +29,8 @@ function _Day(props: Props) {
   const isDark = colorMode === "dark"
   const bg = dayjs(props.day).isSame(dayjs(), "day")
     ? isDark
-      ? "orange.900"
-      : "orange.100"
+      ? "primary.900"
+      : "primary.100"
     : dayjs(props.day).day() === 6 || dayjs(props.day).day() === 0
     ? isDark
       ? "gray.900"

@@ -155,7 +155,7 @@ export function FormButton(props: c.ButtonProps) {
   return (
     <c.Button
       type="submit"
-      colorScheme="orange"
+      colorScheme="primary"
       isLoading={transition.state !== "idle"}
       isDisabled={transition.state !== "idle"}
       {...props}

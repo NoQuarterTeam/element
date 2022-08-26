@@ -292,7 +292,7 @@ export function TaskForm({ day, onClose, task }: FormProps) {
                 Cancel
               </c.Button>
               <FormButton
-                colorScheme="orange"
+                colorScheme="primary"
                 name="_action"
                 value={task ? TaskActionMethods.UpdateTask : TasksActionMethods.AddTask}
                 isLoading={createUpdateFetcher.state !== "idle"}
@@ -349,7 +349,7 @@ export function TaskForm({ day, onClose, task }: FormProps) {
                 name="_action"
                 value={ElementsActionMethods.CreateElement}
                 type="submit"
-                colorScheme="orange"
+                colorScheme="primary"
                 isLoading={createElementFetcher.state !== "idle"}
                 isDisabled={createElementFetcher.state !== "idle"}
               >

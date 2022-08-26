@@ -1,4 +1,4 @@
-import { extendTheme } from "@chakra-ui/react"
+import { extendTheme,theme as defaultColorTheme } from "@chakra-ui/react"
 
 import { Button } from "./components/Button"
 import { Checkbox } from "./components/Checkbox"
@@ -19,6 +19,7 @@ export const theme = extendTheme({
     heading: "Poppins, serif",
   },
   colors: {
+    primary: defaultColorTheme.colors.orange,
     gray: {
       900: "#010101",
       800: "#121516",

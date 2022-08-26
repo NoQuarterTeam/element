@@ -210,7 +210,7 @@ export default function Timeline() {
               </c.Heading>
               <c.Text>You can now create unlimited tasks and elements</c.Text>
               <c.Button
-                colorScheme="orange"
+                colorScheme="primary"
                 onClick={() => {
                   subscribedModalProps.onClose()
                   setSearchParams({})

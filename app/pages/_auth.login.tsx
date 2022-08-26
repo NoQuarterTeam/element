@@ -44,7 +44,7 @@ export default function Login() {
         <FormField isRequired label="Email address" name="email" placeholder="jim@gmail.com" />
         <FormField isRequired label="Password" name="password" type="password" placeholder="********" />
         <c.Box>
-          <FormButton w="100%" colorScheme="orange">
+          <FormButton w="100%" colorScheme="primary">
             Login
           </FormButton>
           <FormError />

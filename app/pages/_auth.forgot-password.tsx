@@ -40,7 +40,7 @@ export default function ForgotPassword() {
         <c.Text>Enter your email below to receive your password reset instructions.</c.Text>
         <FormField isRequired label="Email address" name="email" placeholder="jim@gmail.com" />
         <FormError />
-        <FormButton w="100%" colorScheme="orange">
+        <FormButton w="100%" colorScheme="primary">
           Send instructions
         </FormButton>
         <Link to="/login">Login</Link>

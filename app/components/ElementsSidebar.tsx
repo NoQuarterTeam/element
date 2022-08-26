@@ -48,7 +48,7 @@ export function ElementsSidebar({ elements }: Props) {
         />
         <c.Button
           ml={2}
-          colorScheme="orange"
+          colorScheme="primary"
           rightIcon={<c.Box as={RiAddLine} />}
           onClick={createModalProps.onOpen}
         >
