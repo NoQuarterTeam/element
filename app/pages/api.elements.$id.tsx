@@ -1,5 +1,5 @@
 import type { ActionArgs } from "@remix-run/node"
-import { json } from "@remix-run/node"
+import { typedjson } from "remix-typedjson"
 import { z } from "zod"
 
 import { FlashType } from "~/lib/config.server"
@@ -33,7 +33,7 @@ export const action = async ({ request, params }: ActionArgs) => {
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
         const updatedElement = await db.element.update({ where: { id: elementId }, data })
-        return json({ element: updatedElement })
+        return typedjson({ element: updatedElement })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating element") },
@@ -42,7 +42,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     case ElementActionMethods.ArchiveElement:
       try {
         await db.element.update({ where: { id: elementId }, data: { archivedAt: new Date() } })
-        return json({ success: true })
+        return typedjson({ success: true })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error archiving element") },
@@ -51,7 +51,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     case ElementActionMethods.UnarchiveElement:
       try {
         await db.element.update({ where: { id: elementId }, data: { archivedAt: null } })
-        return json({ success: true })
+        return typedjson({ success: true })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error unarchiving element") },

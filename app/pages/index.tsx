@@ -1,7 +1,7 @@
 import * as c from "@chakra-ui/react"
 import type { LoaderArgs, MetaFunction } from "@remix-run/server-runtime"
 import { redirect } from "@remix-run/server-runtime"
-import { json } from "@remix-run/server-runtime"
+import { typedjson } from "remix-typedjson"
 
 import { LinkButton } from "~/components/LinkButton"
 import { getUser } from "~/services/auth/auth.server"
@@ -19,7 +19,7 @@ export const headers = () => {
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
   if (user) return redirect("/timeline")
-  return json(null)
+  return typedjson(null)
 }
 
 export default function HomeLayout() {

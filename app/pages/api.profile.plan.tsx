@@ -1,6 +1,7 @@
-import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
 import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime"
-import { json, redirect } from "@remix-run/server-runtime"
+import { redirect } from "@remix-run/server-runtime"
+import { typedjson } from "remix-typedjson"
+import type { UseDataFunctionReturn } from "remix-typedjson/dist/remix"
 
 import { FlashType, PRICE_ID } from "~/lib/config.server"
 import { FULL_WEB_URL } from "~/lib/config.server"
@@ -25,7 +26,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       : null,
     user.stripeSubscriptionId ? stripe.subscriptions.retrieve(user.stripeSubscriptionId) : null,
   ])
-  return json({ taskCount, elementCount, subscription })
+  return typedjson({ taskCount, elementCount, subscription })
 }
 
 export type ProfilePlan = UseDataFunctionReturn<typeof loader>
@@ -73,7 +74,7 @@ export const action = async ({ request }: ActionArgs) => {
       try {
         if (!user.stripeSubscriptionId) return badRequest("No subscription")
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: true })
-        return json({ success: true })
+        return typedjson({ success: true })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error cancelling subscription") },
@@ -83,7 +84,7 @@ export const action = async ({ request }: ActionArgs) => {
       try {
         if (!user.stripeSubscriptionId) return badRequest("No subscription")
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: false })
-        return json({ success: true })
+        return typedjson({ success: true })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error cancelling subscription") },

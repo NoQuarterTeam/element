@@ -1,8 +1,9 @@
 import type { Task } from "@prisma/client"
 import type { ActionArgs, LoaderArgs } from "@remix-run/node"
-import { json, redirect } from "@remix-run/node"
-import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
+import { redirect } from "@remix-run/node"
 import dayjs from "dayjs"
+import { typedjson } from "remix-typedjson"
+import type { UseDataFunctionReturn } from "remix-typedjson/dist/remix"
 import { z } from "zod"
 
 import { taskSelectFields } from "~/components/TaskItem"
@@ -33,9 +34,10 @@ export const loader = async ({ request }: LoaderArgs) => {
       },
     },
   })
-  return json(tasks)
+  return typedjson(tasks)
 }
 
+export type TimelineTaskLoader = UseDataFunctionReturn<typeof loader>
 export type TimelineTask = UseDataFunctionReturn<typeof loader>[0]
 
 export enum TasksActionMethods {
@@ -81,9 +83,9 @@ export const action = async ({ request }: ActionArgs) => {
             creator: { connect: { id: user.id } },
           },
         })
-        return json({ task: newTask })
+        return typedjson({ task: newTask })
       } catch (e: any) {
-        return json(e.message, {
+        return typedjson(e.message, {
           status: 400,
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error creating task") },
         })
@@ -98,9 +100,9 @@ export const action = async ({ request }: ActionArgs) => {
             db.task.update({ where: { id: task.id }, data: { order: task.order, date: task.date } }),
           ),
         )
-        return json({ success: true })
+        return typedjson({ success: true })
       } catch (e: any) {
-        return json(e.message, {
+        return typedjson(e.message, {
           status: 400,
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating order") },
         })

@@ -1,10 +1,10 @@
 import { RiArrowLeftLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { Role } from "@prisma/client"
-import { useLoaderData } from "@remix-run/react"
 import type { LoaderArgs } from "@remix-run/server-runtime"
-import { json, redirect } from "@remix-run/server-runtime"
+import { redirect } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
+import { typedjson, useTypedLoaderData } from "remix-typedjson"
 
 import { LinkButton } from "~/components/LinkButton"
 import { db } from "~/lib/db.server"
@@ -12,7 +12,7 @@ import { requireUser } from "~/services/auth/auth.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
-  if (user.role !== Role.ADMIN) return redirect("/")
+  if (user.role !== Role.ADMIN) throw redirect("/")
   const [users, taskCountTotal, tastCountLastMonth, taskCountThisMonth] = await Promise.all([
     db.user.findMany({
       where: { role: Role.USER },
@@ -29,11 +29,12 @@ export const loader = async ({ request }: LoaderArgs) => {
     }),
     db.task.count({ where: { createdAt: { gte: dayjs().startOf("month").toDate() } } }),
   ])
-  return json({ users, taskCountTotal, tastCountLastMonth, taskCountThisMonth })
+  return typedjson({ users, taskCountTotal, tastCountLastMonth, taskCountThisMonth })
 }
 
 export default function Admin() {
-  const { users, taskCountTotal, tastCountLastMonth, taskCountThisMonth } = useLoaderData<typeof loader>()
+  const { users, taskCountTotal, tastCountLastMonth, taskCountThisMonth } =
+    useTypedLoaderData<typeof loader>()
   const percentageChange = Math.round((taskCountThisMonth / (tastCountLastMonth || 1) - 1) * 100)
   return (
     <c.Stack p={6}>

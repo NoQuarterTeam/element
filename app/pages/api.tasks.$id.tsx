@@ -1,6 +1,6 @@
 import type { ActionArgs } from "@remix-run/node"
-import { json } from "@remix-run/node"
 import dayjs from "dayjs"
+import { typedjson } from "remix-typedjson"
 import { z } from "zod"
 
 import { taskSelectFields } from "~/components/TaskItem"
@@ -54,7 +54,7 @@ export const action = async ({ request, params }: ActionArgs) => {
             isComplete,
           },
         })
-        return json({ task: updatedTask })
+        return typedjson({ task: updatedTask })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating task") },
@@ -70,7 +70,7 @@ export const action = async ({ request, params }: ActionArgs) => {
             id: undefined,
           },
         })
-        return json({ task: newTask })
+        return typedjson({ task: newTask })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error deleting task") },
@@ -79,7 +79,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     case TaskActionMethods.DeleteTask:
       try {
         await db.task.delete({ where: { id: taskId } })
-        return json({ success: true })
+        return typedjson({ success: true })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error deleting task") },

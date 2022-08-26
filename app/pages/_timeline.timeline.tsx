@@ -3,14 +3,14 @@ import { RiAddCircleLine, RiCalendarEventLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import type { ShouldReloadFunction } from "@remix-run/react"
 import { useSearchParams } from "@remix-run/react"
-import { useFetcher, useLoaderData } from "@remix-run/react"
-import type { UseDataFunctionReturn } from "@remix-run/react/dist/components"
 import type { LoaderArgs } from "@remix-run/server-runtime"
-import { json } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import JSConfetti from "js-confetti"
 import throttle from "lodash.throttle"
+import { typedjson } from "remix-typedjson"
+import { useTypedFetcher, useTypedLoaderData } from "remix-typedjson"
+import type { UseDataFunctionReturn } from "remix-typedjson/dist/remix"
 import styles from "suneditor/dist/css/suneditor.min.css"
 
 import { Day, DAY_WIDTH } from "~/components/Day"
@@ -25,7 +25,7 @@ import { DAYS_BACK, DAYS_FORWARD, useTimelineTasks } from "~/lib/hooks/useTimeli
 import { requireUser } from "~/services/auth/auth.server"
 import { getSidebarElements } from "~/services/timeline/sidebar.server"
 
-import type { TimelineTask } from "./api.tasks"
+import type { TimelineTaskLoader } from "./api.tasks"
 
 export function links() {
   return [{ rel: "stylesheet", href: styles }]
@@ -39,7 +39,7 @@ export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   const elements = await getSidebarElements(user.id)
-  return json({ elements })
+  return typedjson({ elements })
 }
 
 export type SidebarElement = UseDataFunctionReturn<typeof loader>["elements"][0]
@@ -49,7 +49,7 @@ dayjs.extend(advancedFormat)
 export default function Timeline() {
   const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineDays()
   // Initial load
-  const taskFetcher = useFetcher<TimelineTask[]>()
+  const taskFetcher = useTypedFetcher<TimelineTaskLoader>()
   React.useEffect(
     function LoadTasks() {
       taskFetcher.load(`/api/tasks?back=${daysBack}&forward=${daysForward}`)
@@ -124,7 +124,7 @@ export default function Timeline() {
     }
   })
   const bg = c.useColorModeValue("gray.100", "gray.800")
-  const { elements } = useLoaderData<typeof loader>()
+  const { elements } = useTypedLoaderData<typeof loader>()
 
   const [searchParams, setSearchParams] = useSearchParams()
   const isSubscribed = searchParams.has("subscribed")
