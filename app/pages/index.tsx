@@ -105,7 +105,7 @@ export default function HomeLayout() {
               <c.Heading as="h3">Pricing</c.Heading>
               <c.Text fontSize="lg">Start for free, or as low as €4 a month.</c.Text>
             </c.VStack>
-            <c.Center>
+            <c.VStack flexDir="column" spacing={8}>
               <c.Box
                 w="100%"
                 maxW="800px"
@@ -286,7 +286,10 @@ export default function HomeLayout() {
                   </c.Flex>
                 </c.Flex>
               </c.Box>
-            </c.Center>
+              <LinkButton size="md" colorScheme="primary" to="/register">
+                Join now
+              </LinkButton>
+            </c.VStack>
           </c.Stack>
         </c.Stack>
       </Limiter>
