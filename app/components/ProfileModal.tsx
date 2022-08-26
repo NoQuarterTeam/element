@@ -9,7 +9,7 @@ import Cookies from "js-cookie"
 
 import { shallowEqual } from "~/lib/form"
 import { transformImage } from "~/lib/helpers/image"
-import type { Tab} from "~/lib/hooks/useProfileModalTab";
+import type { Tab } from "~/lib/hooks/useProfileModalTab"
 import { useProfileModalTab } from "~/lib/hooks/useProfileModalTab"
 import { useToast } from "~/lib/hooks/useToast"
 import { useUpdatesSeen } from "~/lib/hooks/useUpdatesSeen"
@@ -107,7 +107,10 @@ export function ProfileModal() {
           </TabLink>
         </c.Stack>
       </c.Box>
-      <c.Box p={4} maxH={600} w="100%" overflowY="scroll">
+      <c.Stack spacing={4} p={4} pb={8} maxH={600} w="100%" overflowY="scroll">
+        <c.Text fontSize="lg" fontWeight={500}>
+          {tab.charAt(0).toUpperCase() + tab.slice(1)}
+        </c.Text>
         {tab === "account" ? (
           <Account />
         ) : tab === "settings" ? (
@@ -117,7 +120,7 @@ export function ProfileModal() {
         ) : tab === "billing" ? (
           <Billing />
         ) : null}
-      </c.Box>
+      </c.Stack>
     </c.Flex>
   )
 }
@@ -165,10 +168,7 @@ function Account() {
   const cancelRef = React.useRef<HTMLButtonElement>(null)
   const destroyAccountFetcher = useFetcher()
   return (
-    <c.Stack spacing={4} pb={6}>
-      <c.Text fontSize="lg" fontWeight={500}>
-        Account
-      </c.Text>
+    <>
       <updateProfileFetcher.Form
         ref={formRef}
         action="/api/profile"
@@ -284,7 +284,7 @@ function Account() {
           </c.AlertDialogContent>
         </c.AlertDialogOverlay>
       </c.AlertDialog>
-    </c.Stack>
+    </>
   )
 }
 
@@ -326,28 +326,22 @@ function Settings() {
   }
 
   return (
-    <c.Stack spacing={4} pb={6}>
-      <c.Text fontSize="lg" fontWeight={500}>
-        Settings
-      </c.Text>
-
-      <c.Stack spacing={4}>
-        <c.Stack>
-          <c.HStack>
-            <c.Text fontSize="sm">Weather</c.Text>
-            <c.Badge size="sm" colorScheme="orange">
-              New
-            </c.Badge>
-          </c.HStack>
-          <c.Text fontSize="xs">Show the next weeks weather based on your current location.</c.Text>
-          <c.Switch onChange={handleToggleWeather} defaultChecked={userLocation.isEnabled} />
-        </c.Stack>
+    <>
+      <c.Stack>
+        <c.HStack>
+          <c.Text fontSize="sm">Weather</c.Text>
+          <c.Badge size="sm" colorScheme="orange">
+            New
+          </c.Badge>
+        </c.HStack>
+        <c.Text fontSize="xs">Show the next weeks weather based on your current location.</c.Text>
+        <c.Switch onChange={handleToggleWeather} defaultChecked={userLocation.isEnabled} />
       </c.Stack>
-    </c.Stack>
+    </>
   )
 }
 
-function Plan() {
+export function Plan() {
   const { data, isLoading, refetch } = useQuery(
     ["profilePlan"],
     async () => {
@@ -389,7 +383,7 @@ function Plan() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reactivateFetcher.type])
 
-  const borderColor = c.useColorModeValue("gray.100", "gray.700")
+  const borderColor = c.useColorModeValue("gray.100", "gray.600")
 
   if (isLoading)
     return (
@@ -403,10 +397,7 @@ function Plan() {
     : null
 
   return (
-    <c.Stack spacing={4} pb={6}>
-      <c.Text fontSize="lg" fontWeight={500}>
-        Plan
-      </c.Text>
+    <>
       {data?.subscription ? (
         <c.Stack>
           <c.Text fontSize="lg">
@@ -442,7 +433,18 @@ function Plan() {
             <c.Stat>
               <c.StatLabel>Tasks</c.StatLabel>
               <c.StatNumber>
-                {data?.taskCount}{" "}
+                <c.Text
+                  as="span"
+                  color={
+                    (data?.taskCount || 0) >= 1000
+                      ? "red.500"
+                      : (data?.taskCount || 0) > 900
+                      ? "orange.500"
+                      : undefined
+                  }
+                >
+                  {data?.taskCount}{" "}
+                </c.Text>
                 <c.Text as="span" fontWeight="thin" opacity={0.7} fontSize="xs">
                   / 1000
                 </c.Text>
@@ -451,7 +453,18 @@ function Plan() {
             <c.Stat>
               <c.StatLabel>Elements</c.StatLabel>
               <c.StatNumber>
-                {data?.elementCount}{" "}
+                <c.Text
+                  as="span"
+                  color={
+                    (data?.elementCount || 0) >= 5
+                      ? "red.500"
+                      : (data?.elementCount || 0) > 4
+                      ? "orange.500"
+                      : undefined
+                  }
+                >
+                  {data?.elementCount}
+                </c.Text>{" "}
                 <c.Text as="span" fontWeight="thin" opacity={0.7} fontSize="xs">
                   / 5
                 </c.Text>
@@ -665,7 +678,7 @@ function Plan() {
           </c.Flex>
         </c.Flex>
       </c.Box>
-    </c.Stack>
+    </>
   )
 }
 
@@ -696,18 +709,15 @@ function Billing() {
       </c.Center>
     )
   const billing = data?.billing
-  const invoices = data?.invoices
+  const invoices = data?.invoices || []
   return (
-    <c.Stack spacing={4} pb={6}>
-      <c.Text fontSize="lg" fontWeight={500}>
-        Billing
-      </c.Text>
+    <>
       <billingFetcher.Form action="/api/profile/billing" replace method="post">
         <c.Stack>
           <c.Text w="100%" fontSize="sm" fontWeight="semibold">
             Details
           </c.Text>
-          <c.Flex justify="space-between" flexWrap="wrap">
+          <c.Flex justify="space-between" flexWrap={{ base: "wrap", md: "nowrap" }}>
             <c.Text pt={1} w="100%" fontSize="sm">
               Billing name
             </c.Text>
@@ -719,7 +729,7 @@ function Billing() {
               />
             </c.Box>
           </c.Flex>
-          <c.Flex justify="space-between" flexWrap="wrap">
+          <c.Flex justify="space-between" flexWrap={{ base: "wrap", md: "nowrap" }}>
             <c.Text pt={1} w="100%" fontSize="sm">
               Billing email
             </c.Text>
@@ -731,7 +741,7 @@ function Billing() {
               />
             </c.Box>
           </c.Flex>
-          <c.Flex justify="space-between" flexWrap="wrap">
+          <c.Flex justify="space-between" flexWrap={{ base: "wrap", md: "nowrap" }}>
             <c.Text pt={1} w="100%" fontSize="sm">
               Billing address
             </c.Text>
@@ -787,7 +797,7 @@ function Billing() {
               </c.HStack>
             </c.Stack>
           </c.Flex>
-          <c.Flex justify="space-between" flexWrap="wrap">
+          <c.Flex justify="space-between" flexWrap={{ base: "wrap", md: "nowrap" }}>
             <c.Text pt={1} w="100%" fontSize="sm">
               Tax ID
             </c.Text>
@@ -834,29 +844,35 @@ function Billing() {
         Invoices
       </c.Text>
       <c.Stack>
-        {invoices?.map((invoice) => (
-          <c.Flex key={invoice.id} pt={1} justify="space-between">
-            <c.Text fontSize="sm">{dayjs.unix(invoice.created).format("MMM DD, YYYY")}</c.Text>
-            <c.HStack spacing={4}>
-              <c.Text textAlign="right" fontSize="sm">
-                {INVOICE_STATUS[invoice.status || "draft"]}
-              </c.Text>
-              <c.Text textAlign="right" fontSize="sm">
-                €{currencyjs(invoice.total, { fromCents: true }).value}
-              </c.Text>
-              <c.Link
-                textAlign="right"
-                opacity={0.7}
-                fontSize="sm"
-                href={invoice.invoice_pdf || ""}
-                download={true}
-              >
-                Download
-              </c.Link>
-            </c.HStack>
-          </c.Flex>
-        ))}
+        {invoices.length === 0 ? (
+          <c.Center h="100px">
+            <c.Text textAlign="center">No invoices yet</c.Text>
+          </c.Center>
+        ) : (
+          invoices.map((invoice) => (
+            <c.Flex key={invoice.id} pt={1} justify="space-between">
+              <c.Text fontSize="sm">{dayjs.unix(invoice.created).format("MMM DD, YYYY")}</c.Text>
+              <c.HStack spacing={4}>
+                <c.Text textAlign="right" fontSize="sm">
+                  {INVOICE_STATUS[invoice.status || "draft"]}
+                </c.Text>
+                <c.Text textAlign="right" fontSize="sm">
+                  €{currencyjs(invoice.total, { fromCents: true }).value}
+                </c.Text>
+                <c.Link
+                  textAlign="right"
+                  opacity={0.7}
+                  fontSize="sm"
+                  href={invoice.invoice_pdf || ""}
+                  download={true}
+                >
+                  Download
+                </c.Link>
+              </c.HStack>
+            </c.Flex>
+          ))
+        )}
       </c.Stack>
-    </c.Stack>
+    </>
   )
 }

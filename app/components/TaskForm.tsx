@@ -1,15 +1,14 @@
 import * as React from "react"
 import { HexColorPicker } from "react-colorful"
-import { RiAddLine, RiDeleteBinLine,RiFileCopyLine } from "react-icons/ri"
+import { RiAddLine, RiDeleteBinLine, RiFileCopyLine } from "react-icons/ri"
 import { lazyWithPreload } from "react-lazy-with-preload"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
-import { readableColor } from "polished"
 import { ClientOnly } from "remix-utils"
 
-import { randomHexColor } from "~/lib/color"
+import { randomHexColor, safeReadableColor } from "~/lib/color"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { ElementsActionMethods } from "~/pages/api.elements"
 import type { TaskElement } from "~/pages/api.task-elements"
@@ -329,7 +328,7 @@ export function TaskForm({ day, onClose, task }: FormProps) {
                   </c.Flex>
                   <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
                     <c.Center bg={color} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
-                      <c.Text textAlign="center" w="100%" color={readableColor(color)}>
+                      <c.Text textAlign="center" w="100%" color={safeReadableColor(color)}>
                         {color}
                       </c.Text>
                     </c.Center>

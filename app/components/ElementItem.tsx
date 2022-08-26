@@ -11,8 +11,8 @@ import {
 } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
-import { readableColor } from "polished"
 
+import { safeReadableColor } from "~/lib/color"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import type { SidebarElement } from "~/pages/_timeline.timeline"
 import { ElementsActionMethods } from "~/pages/api.elements"
@@ -157,7 +157,7 @@ export function ElementItem({ element, ...props }: Props) {
                     </c.Flex>
                     <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
                       <c.Center bg={newColor} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
-                        <c.Text textAlign="center" w="100%" color={readableColor(newColor)}>
+                        <c.Text textAlign="center" w="100%" color={safeReadableColor(newColor)}>
                           {newColor}
                         </c.Text>
                       </c.Center>
@@ -209,7 +209,7 @@ export function ElementItem({ element, ...props }: Props) {
                     </c.Flex>
                     <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
                       <c.Center bg={editColor} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
-                        <c.Text textAlign="center" w="100%" color={readableColor(editColor)}>
+                        <c.Text textAlign="center" w="100%" color={safeReadableColor(editColor)}>
                           {editColor}
                         </c.Text>
                       </c.Center>

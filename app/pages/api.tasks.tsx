@@ -53,11 +53,7 @@ export const action = async ({ request }: ActionArgs) => {
       try {
         if (!user.stripeSubscriptionId) {
           const taskCount = await db.task.count({ where: { creatorId: { equals: user.id } } })
-          if (taskCount >= 1000)
-            return json("Task limit reached", {
-              status: 400,
-              headers: { "Set-Cookie": await createFlash(FlashType.Error, "Task limit reached") },
-            })
+          if (taskCount >= 1000) return redirect("/timeline?limitReached")
         }
         const createSchema = z.object({
           name: z.string(),

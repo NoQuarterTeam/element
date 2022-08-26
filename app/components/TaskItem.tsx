@@ -2,8 +2,8 @@ import * as React from "react"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 import dayjs from "dayjs"
-import { readableColor } from "polished"
 
+import { safeReadableColor } from "~/lib/color"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import type { TimelineTask } from "~/pages/api.tasks"
 import { TaskActionMethods } from "~/pages/api.tasks.$id"
@@ -168,7 +168,7 @@ function _TaskItem({ task, isPublic }: Props) {
             noOfLines={1}
             opacity={0}
             fontSize="0.6rem"
-            color={readableColor(task.element.color)}
+            color={safeReadableColor(task.element.color)}
           >
             {task.element.name}
           </c.Text>
@@ -191,7 +191,7 @@ function _TaskItem({ task, isPublic }: Props) {
           <c.ModalBody minH="400px" pb={6}>
             <c.Stack my={2} spacing={3}>
               <c.Box>
-                <c.Tag bg={task.element.color} color={readableColor(task.element.color)}>
+                <c.Tag bg={task.element.color} color={safeReadableColor(task.element.color)}>
                   {task.element.name}
                 </c.Tag>
               </c.Box>

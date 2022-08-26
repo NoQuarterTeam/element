@@ -1,4 +1,5 @@
-import type { ActionArgs } from "@remix-run/server-runtime"
+import type { ActionArgs} from "@remix-run/server-runtime";
+import { redirect } from "@remix-run/server-runtime"
 import { json } from "@remix-run/server-runtime"
 import { z } from "zod"
 
@@ -26,8 +27,7 @@ export const action = async ({ request }: ActionArgs) => {
           const elementCount = await db.element.count({
             where: { archivedAt: { equals: null }, creatorId: { equals: user.id } },
           })
-          if (elementCount >= 5)
-            return badRequest({ formError: "Element limit reached, upgrade to the Pro plan to add more" })
+          if (elementCount >= 5) return redirect("/timeline?limitReached")
         }
         const createSchema = z.object({
           name: z.string().min(1),

@@ -4,9 +4,8 @@ import { RiAddLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
-import { readableColor } from "polished"
 
-import { randomHexColor } from "~/lib/color"
+import { randomHexColor, safeReadableColor } from "~/lib/color"
 import type { SidebarElement } from "~/pages/_timeline.timeline"
 import { ElementsActionMethods } from "~/pages/api.elements"
 
@@ -78,7 +77,7 @@ export function ElementsSidebar({ elements }: Props) {
                     </c.Flex>
                     <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
                       <c.Center bg={color} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
-                        <c.Text textAlign="center" w="100%" color={readableColor(color)}>
+                        <c.Text textAlign="center" w="100%" color={safeReadableColor(color)}>
                           {color}
                         </c.Text>
                       </c.Center>

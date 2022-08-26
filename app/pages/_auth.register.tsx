@@ -40,7 +40,7 @@ export const action = async ({ request }: ActionArgs) => {
   const { createFlash } = await getFlashSession(request)
   const headers = new Headers([
     ["Set-Cookie", await setUser(user.id)],
-    ["Set-Cookie", await createFlash(FlashType.Success, "You are now logged in")],
+    ["Set-Cookie", await createFlash(FlashType.Success, "Welcome to Element, you're all setup!")],
   ])
   return redirect("/timeline", { headers })
 }
@@ -57,9 +57,7 @@ export default function Register() {
         <FormField isRequired label="First name" name="firstName" placeholder="Jim" />
         <FormField isRequired label="Last name" name="lastName" placeholder="Bob" />
         <c.Box>
-          <FormButton w="100%" colorScheme="orange">
-            Register
-          </FormButton>
+          <FormButton w="100%">Register</FormButton>
           <FormError />
         </c.Box>
 

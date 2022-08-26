@@ -1,4 +1,4 @@
-import type { Prisma, User } from "@prisma/client"
+import type { User } from "@prisma/client"
 import { redirect } from "@remix-run/node"
 
 import { FlashType } from "~/lib/config.server"
@@ -51,7 +51,7 @@ export async function resetPassword({ token, password }: { token: string; passwo
   }
 }
 
-export async function register(data: Prisma.UserCreateInput) {
+export async function register(data: Pick<User, "firstName" | "lastName" | "email" | "password">) {
   const email = data.email.toLowerCase().trim()
   const existing = await db.user.findFirst({ where: { email } })
   if (existing) return { error: "User with these details already exists" }
