@@ -21,8 +21,7 @@
     "pre-commit": "lint-staged",
     "prettify": "prettier --write app",
     "start": "cross-env NODE_ENV=production node ./build/server.js",
-    "typecheck": "tsc --noEmit",
-    "postinstall": "npm run gen:theme-typings"
+    "typecheck": "tsc --noEmit"
   },
   "prisma": {
     "schema": "./prisma/schema.prisma"
