@@ -1,17 +1,12 @@
 import * as React from "react"
-import type { ShouldReloadFunction} from "@remix-run/react";
 import { useLoaderData } from "@remix-run/react"
 import { Outlet } from "@remix-run/react"
-import type { LoaderArgs, SerializeFrom } from "@remix-run/server-runtime";
+import type { LoaderArgs, SerializeFrom } from "@remix-run/server-runtime"
 import { json } from "@remix-run/server-runtime"
 import { useHydrated } from "remix-utils"
 
 import { requireUser } from "~/services/auth/auth.server"
 
-export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
-  if (!submission) return false
-  return ["/api/profile", "/logout"].some((path) => submission.action.includes(path))
-}
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   return json(user)
@@ -32,7 +27,7 @@ export default function TimelineLayout() {
 
 const MeContext = React.createContext<User | null>(null)
 
-export const useMe = () => {
+export function useMe() {
   const me = React.useContext(MeContext)
   if (!me) throw new Error("User must be present")
   return me

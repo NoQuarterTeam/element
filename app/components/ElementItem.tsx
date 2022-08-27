@@ -14,8 +14,8 @@ import { useFetcher } from "@remix-run/react"
 
 import { safeReadableColor } from "~/lib/color"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
-import type { SidebarElement } from "~/pages/_timeline.timeline"
-import { ElementsActionMethods } from "~/pages/api.elements"
+import type {SidebarElement } from "~/pages/_app.timeline.elements";
+import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
 import { ElementActionMethods } from "~/pages/api.elements.$id"
 
 import { ButtonGroup } from "./ButtonGroup"

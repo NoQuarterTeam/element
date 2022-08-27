@@ -1,8 +1,10 @@
-import type { ActionArgs} from "@remix-run/server-runtime";
-import { json } from "@remix-run/server-runtime"
+import { useLoaderData } from "@remix-run/react"
+import type { ActionArgs , LoaderArgs} from "@remix-run/server-runtime"
+import { json, redirect } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 import { z } from "zod"
 
+import { TaskForm } from "~/components/TaskForm"
 import { taskSelectFields } from "~/components/TaskItem"
 import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
@@ -10,6 +12,17 @@ import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { requireUser } from "~/services/auth/auth.server"
 import { getFlashSession } from "~/services/session/session.server"
+
+import type { TimelineTask } from "./api.tasks"
+
+export const loader = async ({ request, params }: LoaderArgs) => {
+  await requireUser(request)
+  const id = params.id
+  if (!id) redirect("/timeline")
+  const task = await db.task.findUnique({ where: { id }, select: taskSelectFields })
+  if (!task) redirect("/timeline")
+  return json(task)
+}
 
 export enum TaskActionMethods {
   UpdateTask = "updateTask",
@@ -90,4 +103,9 @@ export const action = async ({ request, params }: ActionArgs) => {
         headers: { "Set-Cookie": await createFlash(FlashType.Error, "Invalid action") },
       })
   }
+}
+
+export default function TaskModal() {
+  const task = useLoaderData<TimelineTask>()
+  return <TaskForm task={task} />
 }

@@ -1,5 +1,5 @@
 import type { Task } from "@prisma/client"
-import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/server-runtime";
+import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/server-runtime"
 import { json, redirect } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 import { z } from "zod"
@@ -53,7 +53,7 @@ export const action = async ({ request }: ActionArgs) => {
       try {
         if (!user.stripeSubscriptionId) {
           const taskCount = await db.task.count({ where: { creatorId: { equals: user.id } } })
-          if (taskCount >= 1000) return redirect("/timeline?limitReached")
+          if (taskCount >= 1000) return redirect("/timeline/profile/plan/limit-task")
         }
         const createSchema = z.object({
           name: z.string(),

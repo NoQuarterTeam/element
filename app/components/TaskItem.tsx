@@ -1,15 +1,13 @@
 import * as React from "react"
 import * as c from "@chakra-ui/react"
-import { useFetcher } from "@remix-run/react"
-import dayjs from "dayjs"
+import { useFetcher, useNavigate } from "@remix-run/react"
 
 import { safeReadableColor } from "~/lib/color"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
+import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import type { TimelineTask } from "~/pages/api.tasks"
-import { TaskActionMethods } from "~/pages/api.tasks.$id"
 
 import { DAY_WIDTH } from "./Day"
-import { TaskForm } from "./TaskForm"
 
 export const taskSelectFields = {
   id: true,
@@ -23,25 +21,21 @@ export const taskSelectFields = {
   order: true,
   startTime: true,
   element: { select: { id: true, color: true, name: true } },
-  creator: { select: { id: true, firstName: true, avatar: true } },
 }
 interface Props {
   task: TimelineTask
-  isPublic: boolean
 }
 
-function _TaskItem({ task, isPublic }: Props) {
+function _TaskItem({ task }: Props) {
   const { removeTask, updateTask, addTask } = useTimelineTasks((s) => ({
     removeTask: s.removeTask,
     updateTask: s.updateTask,
     addTask: s.addTask,
   }))
 
-  const modalProps = c.useDisclosure()
-  const showModalProps = c.useDisclosure()
   const bg = c.useColorModeValue("white", "gray.700")
   const borderColor = c.useColorModeValue("gray.100", "gray.900")
-
+  const navigate = useNavigate()
   const deleteFetcher = useFetcher()
   const toggleCompleteFetcher = useFetcher()
 
@@ -53,30 +47,29 @@ function _TaskItem({ task, isPublic }: Props) {
   }, [task, dupeFetcher.data, dupeFetcher.type, addTask])
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (isPublic) return showModalProps.onOpen()
     if (event.metaKey) {
       // Duplicate
       dupeFetcher.submit(
         { _action: TaskActionMethods.DuplicateTask },
-        { action: `/api/tasks/${task.id}`, method: "post" },
+        { action: `/timeline/${task.id}`, method: "post" },
       )
     } else if (event.shiftKey) {
       // Delete
       removeTask(task)
       deleteFetcher.submit(
         { _action: TaskActionMethods.DeleteTask },
-        { action: `/api/tasks/${task.id}`, method: "post" },
+        { action: `/timeline/${task.id}`, method: "post" },
       )
     } else if (event.altKey) {
       // Toggle complete
       updateTask({ ...task, isComplete: !task.isComplete })
       toggleCompleteFetcher.submit(
         { _action: TaskActionMethods.UpdateTask, isComplete: String(!task.isComplete) },
-        { action: `/api/tasks/${task.id}`, method: "post" },
+        { action: `/timeline/${task.id}`, method: "post" },
       )
     } else {
       // Open
-      modalProps.onOpen()
+      navigate(`/timeline/${task.id}`)
     }
   }
 
@@ -174,69 +167,6 @@ function _TaskItem({ task, isPublic }: Props) {
           </c.Text>
         </c.Flex>
       </c.Box>
-      <c.Modal {...modalProps} size="2xl" trapFocus={false}>
-        <c.ModalOverlay />
-        <c.ModalContent>
-          <c.ModalBody mb={4} minH="400px">
-            <React.Suspense>
-              <TaskForm onClose={modalProps.onClose} task={task} />
-            </React.Suspense>
-          </c.ModalBody>
-        </c.ModalContent>
-      </c.Modal>
-      <c.Modal {...showModalProps} size="xl">
-        <c.ModalOverlay />
-        <c.ModalContent>
-          <c.ModalCloseButton />
-          <c.ModalBody minH="400px" pb={6}>
-            <c.Stack my={2} spacing={3}>
-              <c.Box>
-                <c.Tag bg={task.element.color} color={safeReadableColor(task.element.color)}>
-                  {task.element.name}
-                </c.Tag>
-              </c.Box>
-              <c.Heading>{task.name}</c.Heading>
-
-              <c.Stack spacing={1}>
-                <c.Flex>
-                  <c.Text w="100px" fontSize="sm" fontWeight="semibold">
-                    Date
-                  </c.Text>
-
-                  <c.Text>{dayjs(task.date).format("DD/MM/YYYY")}</c.Text>
-                </c.Flex>
-                <c.Flex>
-                  <c.Text w="100px" fontSize="sm" fontWeight="semibold">
-                    Start time
-                  </c.Text>
-                  <c.Text>{task.startTime}</c.Text>
-                </c.Flex>
-                <c.Flex>
-                  <c.Text w="100px" fontSize="sm" fontWeight="semibold">
-                    Duration
-                  </c.Text>
-                  <c.Text>{formatDuration(task.durationHours, task.durationMinutes)}</c.Text>
-                </c.Flex>
-                <c.Flex>
-                  <c.Text w="100px" fontSize="sm" fontWeight="semibold">
-                    Description
-                  </c.Text>
-                  <c.Box
-                    minH="120px"
-                    maxH="400px"
-                    overflow="scroll"
-                    dangerouslySetInnerHTML={{ __html: task.description || "" }}
-                    sx={{
-                      ul: { pl: 6 },
-                      ol: { pl: 6 },
-                    }}
-                  />
-                </c.Flex>
-              </c.Stack>
-            </c.Stack>
-          </c.ModalBody>
-        </c.ModalContent>
-      </c.Modal>
     </c.Box>
   )
 }
