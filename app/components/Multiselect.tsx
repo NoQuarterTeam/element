@@ -1,6 +1,6 @@
 import Select from "react-select"
 import type { StateManagerProps } from "react-select/dist/declarations/src/stateManager"
-import type { Theme } from "@chakra-ui/react"
+import type { Theme} from "@chakra-ui/react";
 import { useColorMode } from "@chakra-ui/react"
 import { useTheme } from "@chakra-ui/react"
 

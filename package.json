@@ -14,13 +14,15 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "generate": "prisma generate",
+    "gen:theme-typings": "chakra-cli tokens /app/lib/theme/index.ts",
     "hooks": "stripe listen --forward-to localhost:3000/api/stripe/webhook --events customer.subscription.created,customer.subscription.updated,customer.subscription.deleted",
     "lint:fix": "eslint --config .eslintrc.commit.js --fix --cache --ext .ts,.tsx app",
     "lint": "eslint --config .eslintrc.commit.js --ext .ts,.tsx app",
     "pre-commit": "lint-staged",
     "prettify": "prettier --write app",
     "start": "cross-env NODE_ENV=production node ./build/server.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "postinstall": "npm run gen:theme-typings"
   },
   "prisma": {
     "schema": "./prisma/schema.prisma"
@@ -34,6 +36,7 @@
     ]
   },
   "dependencies": {
+    "@chakra-ui/cli": "^2.1.7",
     "@chakra-ui/icons": "2.0.9",
     "@chakra-ui/react": "2.2.9",
     "@emotion/cache": "11.10.3",
@@ -78,7 +81,6 @@
     "react-icons": "4.4.0",
     "react-lazy-with-preload": "2.2.1",
     "react-select": "5.4.0",
-    "remix-typedjson": "^0.1.0",
     "remix-utils": "3.3.0",
     "stripe": "10.5.0",
     "suneditor": "2.43.14",

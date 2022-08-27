@@ -1,6 +1,6 @@
-import type { ActionArgs } from "@remix-run/server-runtime"
+import type { ActionArgs} from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime"
 import { redirect } from "@remix-run/server-runtime"
-import { typedjson } from "remix-typedjson"
 import { z } from "zod"
 
 import { randomHexColor } from "~/lib/color"
@@ -44,7 +44,7 @@ export const action = async ({ request }: ActionArgs) => {
         }
         if (!color) color = randomHexColor()
         const updatedElement = await db.element.create({ data: { ...data, color, creatorId: user.id } })
-        return typedjson({ element: updatedElement })
+        return json({ element: updatedElement })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating element") },

@@ -1,6 +1,6 @@
-import type { ActionArgs } from "@remix-run/server-runtime"
+import type { ActionArgs} from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime"
 import { redirect } from "@remix-run/server-runtime"
-import { typedjson } from "remix-typedjson"
 import { z } from "zod"
 
 import { FlashType } from "~/lib/config.server"
@@ -38,7 +38,7 @@ export const action = async ({ request }: ActionArgs) => {
         if (data.avatar && data.avatar === "") updateData.avatar = null
         const { error, user: updatedUser } = await updateUser(user.id, updateData)
         if (error) return badRequest({ data, formError: error })
-        return typedjson(
+        return json(
           { user: updatedUser },
           { headers: { "Set-Cookie": await createFlash(FlashType.Success, "Profile updated") } },
         )

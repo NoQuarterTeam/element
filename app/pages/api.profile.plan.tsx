@@ -1,7 +1,6 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime"
+import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime"
 import { redirect } from "@remix-run/server-runtime"
-import { typedjson } from "remix-typedjson"
-import type { UseDataFunctionReturn } from "remix-typedjson/dist/remix"
 
 import { FlashType, PRICE_ID } from "~/lib/config.server"
 import { FULL_WEB_URL } from "~/lib/config.server"
@@ -26,10 +25,10 @@ export const loader = async ({ request }: LoaderArgs) => {
       : null,
     user.stripeSubscriptionId ? stripe.subscriptions.retrieve(user.stripeSubscriptionId) : null,
   ])
-  return typedjson({ taskCount, elementCount, subscription })
+  return json({ taskCount, elementCount, subscription })
 }
 
-export type ProfilePlan = UseDataFunctionReturn<typeof loader>
+export type ProfilePlan = SerializeFrom<typeof loader>
 
 export enum ProfilePlanMethods {
   JoinPlan = "joinPlan",
@@ -74,7 +73,7 @@ export const action = async ({ request }: ActionArgs) => {
       try {
         if (!user.stripeSubscriptionId) return badRequest("No subscription")
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: true })
-        return typedjson({ success: true })
+        return json({ success: true })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error cancelling subscription") },
@@ -84,7 +83,7 @@ export const action = async ({ request }: ActionArgs) => {
       try {
         if (!user.stripeSubscriptionId) return badRequest("No subscription")
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: false })
-        return typedjson({ success: true })
+        return json({ success: true })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error cancelling subscription") },

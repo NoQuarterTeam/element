@@ -1,6 +1,5 @@
-import type { LoaderArgs } from "@remix-run/server-runtime"
-import { typedjson } from "remix-typedjson"
-import type { UseDataFunctionReturn } from "remix-typedjson/dist/remix"
+import type { LoaderArgs, SerializeFrom } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime"
 
 import { db } from "~/lib/db.server"
 import { requireUser } from "~/services/auth/auth.server"
@@ -12,7 +11,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     where: { archivedAt: { equals: null }, creatorId: { equals: user.id } },
   })
 
-  return typedjson({ elements })
+  return json({ elements })
 }
 
-export type TaskElement = UseDataFunctionReturn<typeof loader>["elements"][0]
+export type TaskElement = SerializeFrom<typeof loader>["elements"][0]

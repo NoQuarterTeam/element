@@ -1,9 +1,9 @@
 import { RiMoonLine, RiSunLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { Link } from "@remix-run/react"
-import type { LoaderArgs, MetaFunction } from "@remix-run/server-runtime"
+import type { LoaderArgs, MetaFunction } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime"
 import { redirect } from "@remix-run/server-runtime"
-import { typedjson } from "remix-typedjson"
 
 import { LinkButton } from "~/components/LinkButton"
 import { getUser } from "~/services/auth/auth.server"
@@ -21,7 +21,7 @@ export const headers = () => {
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
   if (user) return redirect("/timeline")
-  return typedjson(null)
+  return json(null)
 }
 
 export default function HomeLayout() {

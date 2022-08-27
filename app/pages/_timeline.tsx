@@ -1,10 +1,9 @@
 import * as React from "react"
-import type { ShouldReloadFunction } from "@remix-run/react"
+import type { ShouldReloadFunction} from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react"
 import { Outlet } from "@remix-run/react"
-import type { LoaderArgs } from "@remix-run/server-runtime"
-import { typedjson } from "remix-typedjson"
-import type { UseDataFunctionReturn} from "remix-typedjson/dist/remix";
-import { useTypedLoaderData } from "remix-typedjson/dist/remix"
+import type { LoaderArgs, SerializeFrom } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime"
 import { useHydrated } from "remix-utils"
 
 import { requireUser } from "~/services/auth/auth.server"
@@ -15,13 +14,13 @@ export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
 }
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
-  return typedjson(user)
+  return json(user)
 }
 
-type User = UseDataFunctionReturn<typeof loader>
+type User = SerializeFrom<typeof loader>
 
 export default function TimelineLayout() {
-  const user = useTypedLoaderData<typeof loader>()
+  const user = useLoaderData<typeof loader>()
   const isHydrated = useHydrated()
   if (!isHydrated) return null
   return (

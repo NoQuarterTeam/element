@@ -59,7 +59,7 @@ export function moveTasks(
   destClone.splice(droppableDestination.index, 0, removed)
 
   const updatedDestinationTasksByDay = destClone.map((task, index) => {
-    const date = dayjs(droppableDestination.droppableId).toDate()
+    const date = dayjs(droppableDestination.droppableId).toISOString()
     return { ...task, order: index, date }
   })
 

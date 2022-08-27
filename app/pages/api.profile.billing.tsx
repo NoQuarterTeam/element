@@ -1,6 +1,5 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime"
-import { typedjson } from "remix-typedjson"
-import type { UseDataFunctionReturn } from "remix-typedjson/dist/remix"
+import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime"
 import type Stripe from "stripe"
 import { z } from "zod"
 
@@ -24,10 +23,10 @@ export const loader = async ({ request }: LoaderArgs) => {
     email: stripeCustomer.email,
     taxId: { value: stripeCustomer.tax_ids?.data?.[0]?.value, type: stripeCustomer.tax_ids?.data?.[0]?.type },
   }
-  return typedjson({ billing, invoices: invoices.data })
+  return json({ billing, invoices: invoices.data })
 }
 
-export type ProfileBilling = UseDataFunctionReturn<typeof loader>
+export type ProfileBilling = SerializeFrom<typeof loader>
 
 export enum ProfileBillingMethods {
   UpdateBilling = "updateBilling",
@@ -93,7 +92,7 @@ export const action = async ({ request }: ActionArgs) => {
           },
         })
 
-        return typedjson(
+        return json(
           { success: true },
           { headers: { "Set-Cookie": await createFlash(FlashType.Success, "Billing details updated") } },
         )
