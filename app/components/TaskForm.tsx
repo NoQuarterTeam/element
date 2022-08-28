@@ -100,7 +100,7 @@ export function TaskForm({ task }: FormProps) {
       if (!response.ok) throw new Error("Network response was not ok")
       return response.json() as Promise<TaskElement[]>
     },
-    { keepPreviousData: true },
+    { keepPreviousData: true, staleTime: 10_000 },
   )
 
   const [elementId, setElementId] = React.useState<string | undefined>(task?.element.id)

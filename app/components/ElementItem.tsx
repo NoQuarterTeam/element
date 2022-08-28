@@ -12,9 +12,10 @@ import {
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 
-import { safeReadableColor } from "~/lib/color"
+import { isValidHex, safeReadableColor } from "~/lib/color"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
-import type {SidebarElement } from "~/pages/_app.timeline.elements";
+import { useToast } from "~/lib/hooks/useToast"
+import type { SidebarElement } from "~/pages/_app.timeline.elements"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
 import { ElementActionMethods } from "~/pages/api.elements.$id"
 
@@ -59,7 +60,7 @@ export function ElementItem({ element, ...props }: Props) {
   }, [archiveFetcher.data, archiveFetcher.type, archiveModalProps])
 
   const unarchiveFetcher = useFetcher()
-
+  const toast = useToast()
   return (
     <c.Box>
       <c.Flex align="center" justify="space-between" pr={2}>
@@ -134,7 +135,17 @@ export function ElementItem({ element, ...props }: Props) {
           </c.Menu>
         </c.Flex>
         <Modal title="Create a child element" size="xl" {...createModalProps}>
-          <createFetcher.Form action="/api/elements" method="post" replace>
+          <createFetcher.Form
+            action="/timeline/elements"
+            method="post"
+            replace
+            onSubmit={(e) => {
+              if (!isValidHex(newColor)) {
+                e.preventDefault()
+                return toast({ description: "Invalid color", status: "error" })
+              }
+            }}
+          >
             <c.Stack spacing={4}>
               <c.Input type="hidden" name="parentId" value={element.id} />
               <InlineFormField
@@ -157,9 +168,14 @@ export function ElementItem({ element, ...props }: Props) {
                     </c.Flex>
                     <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
                       <c.Center bg={newColor} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
-                        <c.Text textAlign="center" w="100%" color={safeReadableColor(newColor)}>
-                          {newColor}
-                        </c.Text>
+                        <c.Input
+                          color={safeReadableColor(newColor)}
+                          textAlign="center"
+                          isInvalid={!isValidHex(newColor)}
+                          w="100%"
+                          value={newColor}
+                          onChange={(e) => setNewColor(e.target.value)}
+                        />
                       </c.Center>
                     </c.Center>
                   </c.SimpleGrid>
@@ -186,7 +202,17 @@ export function ElementItem({ element, ...props }: Props) {
           </createFetcher.Form>
         </Modal>
         <Modal title={`Edit ${element.name}`} size="xl" {...updateModalProps}>
-          <updateFetcher.Form action={`/api/elements/${element.id}`} method="post" replace>
+          <updateFetcher.Form
+            action={`/api/elements/${element.id}`}
+            method="post"
+            replace
+            onSubmit={(e) => {
+              if (!isValidHex(editColor)) {
+                e.preventDefault()
+                return toast({ description: "Invalid color", status: "error" })
+              }
+            }}
+          >
             <c.Stack spacing={4}>
               <InlineFormField
                 error={createFetcher.data?.fieldErrors?.name?.[0]}
@@ -209,9 +235,14 @@ export function ElementItem({ element, ...props }: Props) {
                     </c.Flex>
                     <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
                       <c.Center bg={editColor} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
-                        <c.Text textAlign="center" w="100%" color={safeReadableColor(editColor)}>
-                          {editColor}
-                        </c.Text>
+                        <c.Input
+                          color={safeReadableColor(editColor)}
+                          textAlign="center"
+                          isInvalid={!isValidHex(editColor)}
+                          w="100%"
+                          value={editColor}
+                          onChange={(e) => setEditColor(e.target.value)}
+                        />
                       </c.Center>
                     </c.Center>
                   </c.SimpleGrid>

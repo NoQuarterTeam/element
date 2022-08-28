@@ -1,5 +1,5 @@
 import { useLoaderData } from "@remix-run/react"
-import type { ActionArgs , LoaderArgs} from "@remix-run/server-runtime"
+import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime"
 import { json, redirect } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 import { z } from "zod"
@@ -15,6 +15,9 @@ import { getFlashSession } from "~/services/session/session.server"
 
 import type { TimelineTask } from "./api.tasks"
 
+export const headers = () => {
+  return { "Cache-Control": "max-age=60, s-maxage=360" }
+}
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireUser(request)
   const id = params.id

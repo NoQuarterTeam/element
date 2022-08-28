@@ -3,23 +3,32 @@ import { HexColorPicker } from "react-colorful"
 import { RiAddLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { useLoaderData, useNavigate, useTransition } from "@remix-run/react"
-import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/server-runtime";
+import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/server-runtime"
 import { json, redirect } from "@remix-run/server-runtime"
 import { matchSorter } from "match-sorter"
 import { z } from "zod"
 
 import { ButtonGroup } from "~/components/ButtonGroup"
 import { ElementItem } from "~/components/ElementItem"
-import { Form,FormButton, FormError, InlineFormField } from "~/components/Form"
+import { Form, FormButton, FormError, InlineFormField } from "~/components/Form"
 import { Modal } from "~/components/Modal"
-import { randomHexColor, safeReadableColor } from "~/lib/color"
+import { isValidHex, randomHexColor, safeReadableColor } from "~/lib/color"
 import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
+import { useToast } from "~/lib/hooks/useToast"
 import { badRequest } from "~/lib/remix"
 import { requireUser } from "~/services/auth/auth.server"
 import { getFlashSession } from "~/services/session/session.server"
 import { getSidebarElements } from "~/services/timeline/sidebar.server"
+
+export const loader = async ({ request }: LoaderArgs) => {
+  const user = await requireUser(request)
+  const elements = await getSidebarElements(user.id)
+  return json(elements)
+}
+
+export type SidebarElement = SerializeFrom<typeof loader>[0]
 
 export enum ElementsActionMethods {
   CreateElement = "createElement",
@@ -67,14 +76,6 @@ export const action = async ({ request }: ActionArgs) => {
   }
 }
 
-export const loader = async ({ request }: LoaderArgs) => {
-  const user = await requireUser(request)
-  const elements = await getSidebarElements(user.id)
-  return json(elements)
-}
-
-export type SidebarElement = SerializeFrom<typeof loader>[0]
-
 export default function Elements() {
   const elements = useLoaderData<typeof loader>()
   const [search, setSearch] = React.useState("")
@@ -95,6 +96,7 @@ export default function Elements() {
     { keys: ["name"] },
   )
   const navigate = useNavigate()
+  const toast = useToast()
   return (
     <c.Drawer isOpen={true} onClose={() => navigate("/timeline")} placement="right">
       <c.DrawerOverlay>
@@ -119,7 +121,16 @@ export default function Elements() {
                 Add
               </c.Button>
               <Modal title="Create an Element" size="xl" {...createModalProps}>
-                <Form method="post" replace>
+                <Form
+                  method="post"
+                  replace
+                  onSubmit={(e) => {
+                    if (!isValidHex(color)) {
+                      e.preventDefault()
+                      return toast({ description: "Invalid color", status: "error" })
+                    }
+                  }}
+                >
                   <c.Stack spacing={4}>
                     <InlineFormField autoFocus name="name" label="Name" isRequired />
                     <c.Input type="hidden" name="color" value={color} />
@@ -127,6 +138,7 @@ export default function Elements() {
                       name="color"
                       isRequired
                       label="Color"
+                      shouldPassProps={false}
                       input={
                         <c.SimpleGrid w="100%" columns={{ base: 1, md: 2 }} spacing={1}>
                           <c.Flex w="100%">
@@ -142,9 +154,14 @@ export default function Elements() {
                               px={6}
                               borderRadius="lg"
                             >
-                              <c.Text textAlign="center" w="100%" color={safeReadableColor(color)}>
-                                {color}
-                              </c.Text>
+                              <c.Input
+                                color={safeReadableColor(color)}
+                                textAlign="center"
+                                isInvalid={!isValidHex(color)}
+                                w="100%"
+                                value={color}
+                                onChange={(e) => setColor(e.target.value)}
+                              />
                             </c.Center>
                           </c.Center>
                         </c.SimpleGrid>

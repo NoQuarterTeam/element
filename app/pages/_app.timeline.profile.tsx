@@ -93,7 +93,7 @@ function TabLink({
     transition.location.pathname.includes(to)
   const bg = c.useColorModeValue("gray.100", "gray.700")
   return (
-    <NavLink to={to} end={to === "."} style={{ outline: "none" }}>
+    <NavLink to={to} end={to === "."} style={{ outline: "none" }} prefetch="render">
       {({ isActive }) => (
         <c.Link
           as="span"

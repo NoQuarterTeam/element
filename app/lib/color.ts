@@ -9,3 +9,7 @@ export const safeReadableColor = (color: string) => {
     return "#000000"
   }
 }
+
+const matcher = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/i
+
+export const isValidHex = (value: string): boolean => matcher.test(value)

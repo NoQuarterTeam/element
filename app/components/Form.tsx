@@ -31,18 +31,24 @@ interface FormFieldProps extends Omit<c.InputProps, "defaultValue"> {
   label?: string
   input?: React.ReactElement
   defaultValue?: any
+  shouldPassProps?: boolean
   error?: string
 }
 
-export function FormField({ label, input, error, ...props }: FormFieldProps) {
+export function FormField({ label, input, error, shouldPassProps = true, ...props }: FormFieldProps) {
   const form = useActionData<ActionData<any>>()
   const clonedInput =
     input &&
-    React.cloneElement(input, {
-      defaultValue: form?.data?.[props.name] || "",
-      id: props.id || props.name,
-      ...props,
-    })
+    React.cloneElement(
+      input,
+      shouldPassProps
+        ? {
+            defaultValue: props.value || props.value === "" ? undefined : form?.data?.[props.name] || "",
+            id: props.id || props.name,
+            ...props,
+          }
+        : undefined,
+    )
   return (
     <c.FormControl isRequired={props.isRequired} isInvalid={!!form?.fieldErrors?.[props.name] || !!error}>
       {label && (
@@ -55,15 +61,21 @@ export function FormField({ label, input, error, ...props }: FormFieldProps) {
     </c.FormControl>
   )
 }
-export function InlineFormField({ label, input, error, ...props }: FormFieldProps) {
+export function InlineFormField({ label, input, error, shouldPassProps = true, ...props }: FormFieldProps) {
   const form = useActionData<ActionData<any>>()
   const clonedInput =
     input &&
-    React.cloneElement(input, {
-      defaultValue: props.value || props.value === "" ? undefined : form?.data?.[props.name] || "",
-      id: props.id || props.name,
-      ...props,
-    })
+    React.isValidElement(input) &&
+    React.cloneElement(
+      input,
+      shouldPassProps
+        ? {
+            defaultValue: props.value || props.value === "" ? undefined : form?.data?.[props.name] || "",
+            id: props.id || props.name,
+            ...props,
+          }
+        : undefined,
+    )
   return (
     <c.FormControl isRequired={props.isRequired} isInvalid={!!form?.fieldErrors?.[props.name] || !!error}>
       <c.Flex>

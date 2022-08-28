@@ -12,11 +12,13 @@ import { Modal } from "~/components/Modal"
 import { FlashType, PRICE_ID } from "~/lib/config.server"
 import { FULL_WEB_URL } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
+import { useLoaderHeaders } from "~/lib/headers"
 import { badRequest } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { requireUser } from "~/services/auth/auth.server"
 import { getFlashSession } from "~/services/session/session.server"
 
+export const headers = useLoaderHeaders
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   const [taskCount, elementCount, subscription] = await Promise.all([
@@ -32,7 +34,19 @@ export const loader = async ({ request }: LoaderArgs) => {
       : null,
     user.stripeSubscriptionId ? stripe.subscriptions.retrieve(user.stripeSubscriptionId) : null,
   ])
-  return json({ taskCount, elementCount, subscription })
+  const filteredSubscription = subscription
+    ? {
+        id: subscription.id,
+        discountPercent: subscription.discount?.coupon.percent_off,
+        isCancelled: subscription.cancel_at_period_end,
+        endDate: subscription.current_period_end || 0,
+        status: subscription.status,
+      }
+    : null
+  return json(
+    { taskCount, elementCount, subscription: filteredSubscription },
+    { headers: { "Cache-Control": "max-age=60, s-maxage=360" } },
+  )
 }
 
 export type ProfilePlan = SerializeFrom<typeof loader>
@@ -131,8 +145,8 @@ export default function Plan() {
 
   const borderColor = c.useColorModeValue("gray.100", "gray.600")
 
-  const discountedPlanAmount = data?.subscription?.discount?.coupon.percent_off
-    ? 4 - (4 * 100) / data.subscription.discount.coupon.percent_off
+  const discountedPlanAmount = data?.subscription?.discountPercent
+    ? 4 - (4 * 100) / data.subscription.discountPercent
     : null
 
   return (
@@ -148,19 +162,18 @@ export default function Plan() {
           </c.Text>
           {discountedPlanAmount || discountedPlanAmount === 0 ? (
             <c.Text fontSize="sm">
-              A {data?.subscription.discount?.coupon.percent_off}% discount is applied to your subscription,
-              you pay €{discountedPlanAmount} per month
+              A {data?.subscription.discountPercent}% discount is applied to your subscription, you pay €
+              {discountedPlanAmount} per month
             </c.Text>
           ) : null}
-          {data.subscription.cancel_at_period_end ? (
+          {data.subscription.isCancelled ? (
             <c.Text fontSize="sm">
               You have cancelled but still have access to Pro features until{" "}
-              <b>{dayjs.unix(data.subscription.current_period_end).format("DD/MM/YYYY")}</b>
+              <b>{dayjs.unix(data.subscription.endDate).format("DD/MM/YYYY")}</b>
             </c.Text>
-          ) : data.subscription.status === "active" && data.subscription.current_period_end ? (
+          ) : data.subscription.status === "active" && data.subscription.endDate ? (
             <c.Text fontSize="sm">
-              Your plan will renew on{" "}
-              <b>{dayjs.unix(data.subscription.current_period_end).format("DD/MM/YYYY")}</b>
+              Your plan will renew on <b>{dayjs.unix(data.subscription.endDate).format("DD/MM/YYYY")}</b>
             </c.Text>
           ) : data.subscription.status === "past_due" || data.subscription.status === "unpaid" ? (
             <c.Text fontSize="sm">Your plan requires payment</c.Text>
@@ -245,10 +258,8 @@ export default function Plan() {
               <c.Button
                 size={{ base: "xs", md: "sm" }}
                 onClick={cancelPlanProps.onOpen}
-                colorScheme={
-                  !data?.subscription || data?.subscription?.cancel_at_period_end ? "gray" : "primary"
-                }
-                isDisabled={!data?.subscription || data?.subscription?.cancel_at_period_end}
+                colorScheme={!data?.subscription || data?.subscription?.isCancelled ? "gray" : "primary"}
+                isDisabled={!data?.subscription || data?.subscription?.isCancelled}
               >
                 {data?.subscription ? "Downgrade" : "Current plan"}
               </c.Button>
@@ -264,7 +275,7 @@ export default function Plan() {
                     </c.AlertDialogHeader>
                     <c.AlertDialogBody>
                       Are you sure? You will remain on the Pro plan until{" "}
-                      {dayjs.unix(data?.subscription?.current_period_end || 0).format("DD/MM/YYYY")}
+                      {dayjs.unix(data?.subscription?.endDate || 0).format("DD/MM/YYYY")}
                     </c.AlertDialogBody>
                     <c.AlertDialogFooter>
                       <c.Button ref={cancelRef} onClick={cancelPlanProps.onClose}>
@@ -318,7 +329,7 @@ export default function Plan() {
                 >
                   Upgrade
                 </c.Button>
-              ) : data.subscription.cancel_at_period_end ? (
+              ) : data.subscription.isCancelled ? (
                 <c.Button
                   size={{ base: "xs", md: "sm" }}
                   onClick={() =>

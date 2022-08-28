@@ -20,7 +20,6 @@ import { Modal } from "./Modal"
 import { ShortcutsInfo } from "./ShortcutsInfo"
 
 export function Nav() {
-  const elementSidebarProps = c.useDisclosure()
   const shortcutModalProps = c.useDisclosure()
 
   const navProps = useStoredDisclosure("element.nav", { defaultIsOpen: true })
@@ -33,7 +32,7 @@ export function Nav() {
   c.useEventListener("keydown", (event) => {
     if (event.metaKey && event.key === "e") {
       event.preventDefault()
-      elementSidebarProps.onToggle()
+      navigate("/timeline/elements")
     }
     if (event.metaKey && event.key === "\\") {
       event.preventDefault()
