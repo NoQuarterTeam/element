@@ -12,13 +12,11 @@ import { Modal } from "~/components/Modal"
 import { FlashType, PRICE_ID } from "~/lib/config.server"
 import { FULL_WEB_URL } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
-import { useLoaderHeaders } from "~/lib/headers"
 import { badRequest } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { requireUser } from "~/services/auth/auth.server"
 import { getFlashSession } from "~/services/session/session.server"
 
-export const headers = useLoaderHeaders
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   const [taskCount, elementCount, subscription] = await Promise.all([

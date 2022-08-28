@@ -11,7 +11,6 @@ import { ButtonGroup } from "~/components/ButtonGroup"
 import { Form, FormButton, FormField } from "~/components/Form"
 import { FlashType } from "~/lib/config.server"
 import { validateFormData } from "~/lib/form"
-import { useLoaderHeaders } from "~/lib/headers"
 import { badRequest } from "~/lib/remix"
 import { COUNTRIES } from "~/lib/static/countries"
 import { INVOICE_STATUS } from "~/lib/static/invoiceStatus"
@@ -20,7 +19,6 @@ import { stripe } from "~/lib/stripe/stripe.server"
 import { requireUser } from "~/services/auth/auth.server"
 import { getFlashSession } from "~/services/session/session.server"
 
-export const headers = useLoaderHeaders
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   const [stripeCustomer, invoices] = await Promise.all([
