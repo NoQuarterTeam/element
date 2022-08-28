@@ -1,5 +1,5 @@
-import type { ActionArgs } from "@remix-run/node"
-import { typedjson } from "remix-typedjson"
+import type { ActionArgs } from "@remix-run/server-runtime"
+import { json } from "@remix-run/server-runtime"
 import { z } from "zod"
 
 import { validateFormData } from "~/lib/form"
@@ -11,5 +11,5 @@ export const action = async ({ request }: ActionArgs) => {
   const creatSignedUrlSchema = z.object({ key: z.string().min(1), contentType: z.string().min(1) })
   const { data, fieldErrors } = await validateFormData(creatSignedUrlSchema, formData)
   if (fieldErrors) return badRequest({ fieldErrors, data })
-  return typedjson(createSignedUrl(data))
+  return json(createSignedUrl(data))
 }

@@ -1,4 +1,4 @@
-import { extendTheme,theme as defaultColorTheme } from "@chakra-ui/react"
+import { extendTheme, theme as defaultColorTheme } from "@chakra-ui/react"
 
 import { Button } from "./components/Button"
 import { Checkbox } from "./components/Checkbox"

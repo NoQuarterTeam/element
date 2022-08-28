@@ -2,6 +2,7 @@ import * as React from "react"
 import * as c from "@chakra-ui/react"
 import { withEmotionCache } from "@emotion/react"
 import type { LoaderArgs, MetaFunction } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import {
   Links,
   LiveReload,
@@ -13,7 +14,6 @@ import {
   useLoaderData,
 } from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { typedjson } from "remix-typedjson"
 
 import { ClientStyleContext, ServerStyleContext } from "~/lib/emotion/context"
 import { theme } from "~/lib/theme"
@@ -27,7 +27,7 @@ export const meta: MetaFunction = () => {
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { flash, commit } = await getFlashSession(request)
-  return typedjson({ flash }, { headers: { "Set-Cookie": await commit() } })
+  return json({ flash }, { headers: { "Set-Cookie": await commit() } })
 }
 
 export default function App() {

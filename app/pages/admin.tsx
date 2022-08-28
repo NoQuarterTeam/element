@@ -1,10 +1,11 @@
 import { RiArrowLeftLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { Role } from "@prisma/client"
+import { useLoaderData } from "@remix-run/react"
 import type { LoaderArgs } from "@remix-run/server-runtime"
+import { json } from "@remix-run/server-runtime"
 import { redirect } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
-import { typedjson, useTypedLoaderData } from "remix-typedjson"
 
 import { LinkButton } from "~/components/LinkButton"
 import { db } from "~/lib/db.server"
@@ -29,12 +30,11 @@ export const loader = async ({ request }: LoaderArgs) => {
     }),
     db.task.count({ where: { createdAt: { gte: dayjs().startOf("month").toDate() } } }),
   ])
-  return typedjson({ users, taskCountTotal, tastCountLastMonth, taskCountThisMonth })
+  return json({ users, taskCountTotal, tastCountLastMonth, taskCountThisMonth })
 }
 
 export default function Admin() {
-  const { users, taskCountTotal, tastCountLastMonth, taskCountThisMonth } =
-    useTypedLoaderData<typeof loader>()
+  const { users, taskCountTotal, tastCountLastMonth, taskCountThisMonth } = useLoaderData<typeof loader>()
   const percentageChange = Math.round((taskCountThisMonth / (tastCountLastMonth || 1) - 1) * 100)
   return (
     <c.Stack p={6}>

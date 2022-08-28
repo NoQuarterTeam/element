@@ -1,9 +1,9 @@
-import { RiMoonLine, RiSunLine } from "react-icons/ri"
+import { RiMenuLine, RiMoonLine, RiSunLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { Link } from "@remix-run/react"
 import type { LoaderArgs, MetaFunction } from "@remix-run/server-runtime"
+import { json } from "@remix-run/server-runtime"
 import { redirect } from "@remix-run/server-runtime"
-import { typedjson } from "remix-typedjson"
 
 import { LinkButton } from "~/components/LinkButton"
 import { getUser } from "~/services/auth/auth.server"
@@ -21,7 +21,7 @@ export const headers = () => {
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
   if (user) return redirect("/timeline")
-  return typedjson(null)
+  return json(null)
 }
 
 export default function HomeLayout() {
@@ -45,19 +45,19 @@ export default function HomeLayout() {
                   </c.Text>
                 </c.HStack>
               </Link>
-              <c.HStack spacing={6}>
-                <c.Link as={Link} to="/#features">
+              <c.HStack spacing={6} display={{ base: "none", md: "flex" }}>
+                {/* <c.Link as={Link} to="/#features">
                   Features
                 </c.Link>
                 <c.Link as={Link} to="/#why">
                   Why
-                </c.Link>
+                </c.Link> */}
                 <c.Link as={Link} to="/#pricing">
                   Pricing
                 </c.Link>
               </c.HStack>
             </c.HStack>
-            <c.HStack>
+            <c.HStack display={{ base: "none", md: "flex" }}>
               <c.IconButton
                 borderRadius="full"
                 aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
@@ -72,6 +72,34 @@ export default function HomeLayout() {
                 Join now
               </LinkButton>
             </c.HStack>
+            <c.Menu>
+              <c.MenuButton
+                display={{ base: "flex", md: "none" }}
+                as={c.IconButton}
+                size="md"
+                borderRadius="full"
+                icon={<c.Box as={RiMenuLine} boxSize="22px" />}
+                variant="ghost"
+              />
+              <c.MenuList>
+                {/* <c.MenuItem as={Link} to="#features">
+                  Features
+                </c.MenuItem>
+                <c.MenuItem as={Link} to="#why">
+                  Why
+                </c.MenuItem> */}
+                <c.MenuItem as={Link} to="#pricing">
+                  Pricing
+                </c.MenuItem>
+                <c.MenuDivider />
+                <c.MenuItem as={Link} to="/register">
+                  Register
+                </c.MenuItem>
+                <c.MenuItem as={Link} to="/register">
+                  Login
+                </c.MenuItem>
+              </c.MenuList>
+            </c.Menu>
           </c.Flex>
         </Limiter>
       </c.Box>
@@ -100,12 +128,12 @@ export default function HomeLayout() {
             </c.Box>
           </c.Center>
 
-          <c.Stack spacing={6}>
-            <c.VStack id="pricing">
+          <c.Stack spacing={6} pt={10} id="pricing">
+            <c.VStack>
               <c.Heading as="h3">Pricing</c.Heading>
               <c.Text fontSize="lg">Start for free, or as low as €4 a month.</c.Text>
             </c.VStack>
-            <c.Center>
+            <c.VStack flexDir="column" spacing={8}>
               <c.Box
                 w="100%"
                 maxW="800px"
@@ -286,7 +314,10 @@ export default function HomeLayout() {
                   </c.Flex>
                 </c.Flex>
               </c.Box>
-            </c.Center>
+              <LinkButton size="md" colorScheme="primary" to="/register">
+                Join now
+              </LinkButton>
+            </c.VStack>
           </c.Stack>
         </c.Stack>
       </Limiter>

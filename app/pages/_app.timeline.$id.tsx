@@ -1,8 +1,10 @@
-import type { ActionArgs } from "@remix-run/node"
+import { useLoaderData } from "@remix-run/react"
+import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime"
+import { json, redirect } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
-import { typedjson } from "remix-typedjson"
 import { z } from "zod"
 
+import { TaskForm } from "~/components/TaskForm"
 import { taskSelectFields } from "~/components/TaskItem"
 import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
@@ -10,6 +12,20 @@ import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { requireUser } from "~/services/auth/auth.server"
 import { getFlashSession } from "~/services/session/session.server"
+
+import type { TimelineTask } from "./api.tasks"
+
+export const headers = () => {
+  return { "Cache-Control": "max-age=60, s-maxage=360" }
+}
+export const loader = async ({ request, params }: LoaderArgs) => {
+  await requireUser(request)
+  const id = params.id
+  if (!id) redirect("/timeline")
+  const task = await db.task.findUnique({ where: { id }, select: taskSelectFields })
+  if (!task) redirect("/timeline")
+  return json(task)
+}
 
 export enum TaskActionMethods {
   UpdateTask = "updateTask",
@@ -54,7 +70,7 @@ export const action = async ({ request, params }: ActionArgs) => {
             isComplete,
           },
         })
-        return typedjson({ task: updatedTask })
+        return json({ task: updatedTask })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating task") },
@@ -70,7 +86,7 @@ export const action = async ({ request, params }: ActionArgs) => {
             id: undefined,
           },
         })
-        return typedjson({ task: newTask })
+        return json({ task: newTask })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error deleting task") },
@@ -79,7 +95,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     case TaskActionMethods.DeleteTask:
       try {
         await db.task.delete({ where: { id: taskId } })
-        return typedjson({ success: true })
+        return json({ success: true })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error deleting task") },
@@ -90,4 +106,9 @@ export const action = async ({ request, params }: ActionArgs) => {
         headers: { "Set-Cookie": await createFlash(FlashType.Error, "Invalid action") },
       })
   }
+}
+
+export default function TaskModal() {
+  const task = useLoaderData<TimelineTask>()
+  return <TaskForm task={task} />
 }
