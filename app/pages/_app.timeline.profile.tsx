@@ -106,7 +106,6 @@ function TabLink({
           pl={4}
           h="40px"
           py={1}
-          // w={{ base: "min-content", md: "auto" }}
           fontWeight={400}
         >
           <c.Center display={{ base: isLoading ? "none" : "flex", md: "flex" }}>{icon}</c.Center>
