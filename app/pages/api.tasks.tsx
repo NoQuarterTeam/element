@@ -27,8 +27,8 @@ export const loader = async ({ request }: LoaderArgs) => {
       creatorId: { equals: user.id },
       element: { archivedAt: { equals: null } },
       date: {
-        gte: dayjs().subtract(back, "day").toDate(),
-        lte: dayjs().add(forward, "day").toDate(),
+        gte: dayjs().subtract(back, "day").startOf("d").toDate(),
+        lte: dayjs().add(forward, "day").endOf("d").toDate(),
       },
     },
   })
@@ -74,7 +74,7 @@ export const action = async ({ request }: ActionArgs) => {
             durationHours: newForm.data.durationHours || null,
             durationMinutes: newForm.data.durationMinutes || null,
             startTime: newForm.data.startTime || null,
-            date: dayjs(newForm.data.date).toDate(),
+            date: dayjs(newForm.data.date).add(12, "h").toDate(),
             name: newForm.data.name,
             description: newForm.data.description || null,
             element: { connect: { id: newForm.data.elementId } },
@@ -95,7 +95,10 @@ export const action = async ({ request }: ActionArgs) => {
         const tasks = JSON.parse(jsonTasks) as Task[]
         await Promise.all(
           tasks.map((task) =>
-            db.task.update({ where: { id: task.id }, data: { order: task.order, date: task.date } }),
+            db.task.update({
+              where: { id: task.id },
+              data: { order: task.order, date: dayjs(task.date).startOf("d").add(12, "h").toDate() },
+            }),
           ),
         )
         return json({ success: true })

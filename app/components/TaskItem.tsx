@@ -172,7 +172,7 @@ function _TaskItem({ task }: Props) {
 }
 export const TaskItem = React.memo(_TaskItem)
 
-function formatDuration(hours?: number | null, minutes?: number | null) {
+export function formatDuration(hours?: number | null, minutes?: number | null) {
   const hoursDisplay = hours ? `${hours}h` : ""
   const minutesDisplay = minutes ? `${minutes}m` : ""
   return hoursDisplay + minutesDisplay

@@ -20,11 +20,11 @@ import { DAYS_BACK, DAYS_FORWARD, useTimelineTasks } from "~/lib/hooks/useTimeli
 
 import type { TimelineTaskLoader } from "./api.tasks"
 
+dayjs.extend(advancedFormat)
+
 export function links() {
   return [{ rel: "stylesheet", href: styles }]
 }
-
-dayjs.extend(advancedFormat)
 
 export default function Timeline() {
   const navigate = useNavigate()

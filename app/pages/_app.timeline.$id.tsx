@@ -53,14 +53,14 @@ export const action = async ({ request, params }: ActionArgs) => {
           startTime: z.string().nullable().optional(),
           elementId: z.string().uuid().optional(),
         })
-        const isComplete = formData.has("isComplete")
+        const isComplete = formData.has("isComplete") && formData.get("isComplete") !== "false"
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
         const updatedTask = await db.task.update({
           select: taskSelectFields,
           where: { id: taskId },
           data: {
-            date: data.date ? dayjs(data.date).toDate() : undefined,
+            date: data.date ? dayjs(data.date).startOf("d").add(12, "h").toDate() : undefined,
             durationHours: data.durationHours,
             durationMinutes: data.durationMinutes,
             startTime: data.startTime,

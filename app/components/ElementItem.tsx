@@ -160,6 +160,7 @@ export function ElementItem({ element, ...props }: Props) {
                 name="color"
                 error={createFetcher.data?.fieldErrors?.color?.[0]}
                 isRequired
+                shouldPassProps={false}
                 label="Color"
                 input={
                   <c.SimpleGrid w="100%" columns={{ base: 1, md: 2 }} spacing={1}>
@@ -228,6 +229,7 @@ export function ElementItem({ element, ...props }: Props) {
                 isRequired
                 error={createFetcher.data?.fieldErrors?.color?.[0]}
                 label="Color"
+                shouldPassProps={false}
                 input={
                   <c.SimpleGrid w="100%" columns={{ base: 1, md: 2 }} spacing={1}>
                     <c.Flex w="100%">
