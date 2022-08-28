@@ -104,15 +104,16 @@ function TabLink({
           justifyContent="flex-start"
           alignItems="center"
           pl={4}
+          h="40px"
           py={1}
-          w={{ base: "min-content", md: "auto" }}
+          // w={{ base: "min-content", md: "auto" }}
           fontWeight={400}
         >
-          {icon}
+          <c.Center display={{ base: isLoading ? "none" : "flex", md: "flex" }}>{icon}</c.Center>
           <c.Text ml={2} fontSize="sm" as="span" display={{ base: "none", md: "block" }}>
             {children}
           </c.Text>
-          {isLoading && <c.Spinner ml={2} size="xs" />}
+          {isLoading && <c.Spinner ml={{ base: 0, md: 2 }} size="xs" />}
         </c.Link>
       )}
     </NavLink>
