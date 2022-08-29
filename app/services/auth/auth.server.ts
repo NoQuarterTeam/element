@@ -102,7 +102,7 @@ export async function logout(request: Request) {
   const { createFlash } = await getFlashSession(request)
   const headers = new Headers([
     ["Set-Cookie", await destroy()],
-    ["Set-Cookie", await createFlash(FlashType.Success, "Successfully logged out!")],
+    ["Set-Cookie", await createFlash(FlashType.Success, "Logged out!")],
   ])
   return redirect("/", { headers })
 }

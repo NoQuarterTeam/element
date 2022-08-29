@@ -1,5 +1,6 @@
 import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi"
 import {
+  RiBarChartLine,
   RiBookLine,
   RiDashboard3Line,
   RiFocus3Line,
@@ -102,22 +103,22 @@ export function Nav() {
               icon={<c.Box as={RiBookLine} boxSize="18px" />}
             />
           </c.Tooltip>
-          <c.Tooltip label="Focus" placement="auto" zIndex={50} hasArrow>
+          <c.Tooltip label="Dashboard" placement="auto" zIndex={50} hasArrow>
+            <c.IconButton
+              borderRadius="full"
+              variant="ghost"
+              aria-label="open dashboard"
+              onClick={() => navigate("/dashboard")}
+              icon={<c.Box as={RiBarChartLine} boxSize="18px" />}
+            />
+          </c.Tooltip>
+          <c.Tooltip label="Focus mode" placement="auto" zIndex={50} hasArrow>
             <c.IconButton
               borderRadius="full"
               variant="ghost"
               aria-label="open focus mode"
               onClick={() => navigate("focus")}
               icon={<c.Box as={RiFocus3Line} boxSize="18px" />}
-            />
-          </c.Tooltip>
-          <c.Tooltip label="Color mode" placement="auto" zIndex={50} hasArrow>
-            <c.IconButton
-              borderRadius="full"
-              aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-              variant="ghost"
-              onClick={toggleColorMode}
-              icon={<c.Box as={isDark ? RiSunLine : RiMoonLine} boxSize="18px" />}
             />
           </c.Tooltip>
           <c.Tooltip label="Profile" placement="auto" zIndex={50} hasArrow>
@@ -134,6 +135,15 @@ export function Nav() {
                   )}
                 </c.Box>
               }
+            />
+          </c.Tooltip>
+          <c.Tooltip label="Color mode" placement="auto" zIndex={50} hasArrow>
+            <c.IconButton
+              borderRadius="full"
+              aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+              variant="ghost"
+              onClick={toggleColorMode}
+              icon={<c.Box as={isDark ? RiSunLine : RiMoonLine} boxSize="18px" />}
             />
           </c.Tooltip>
 
