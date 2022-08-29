@@ -32,8 +32,9 @@ export type SidebarElement = SerializeFrom<typeof loader>[0]
 
 export enum ElementsActionMethods {
   CreateElement = "createElement",
+  UpdateElement = "updateElement",
 }
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const user = await requireUser(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ElementsActionMethods | undefined
@@ -69,6 +70,27 @@ export const action = async ({ request }: ActionArgs) => {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating element") },
         })
       }
+    case ElementsActionMethods.UpdateElement:
+      try {
+        const elementId = params.id as string | undefined
+        if (!elementId) throw badRequest("Element ID is required")
+        const element = await db.element.findFirst({
+          where: { id: elementId, creatorId: { equals: user.id } },
+        })
+        if (!element) throw badRequest("Element not found")
+        const updateSchema = z.object({
+          name: z.string().min(1).optional(),
+          color: z.string().min(1).optional(),
+        })
+        const { data, fieldErrors } = await validateFormData(updateSchema, formData)
+        if (fieldErrors) return badRequest({ fieldErrors, data })
+        const updatedElement = await db.element.update({ where: { id: elementId }, data })
+        return json({ element: updatedElement })
+      } catch (e: any) {
+        return badRequest(e.message, {
+          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating element") },
+        })
+      }
     default:
       return badRequest("Invalid action", {
         headers: { "Set-Cookie": await createFlash(FlashType.Error, "Invalid action") },
@@ -79,7 +101,7 @@ export const action = async ({ request }: ActionArgs) => {
 export default function Elements() {
   const elements = useLoaderData<typeof loader>()
   const [search, setSearch] = React.useState("")
-  const [isArchivedSown, { toggle }] = c.useBoolean(false)
+  const [isArchivedShown, { toggle }] = c.useBoolean(false)
   const [color, setColor] = React.useState(randomHexColor())
   const createModalProps = c.useDisclosure()
   const createFetcher = useTransition()
@@ -91,9 +113,11 @@ export default function Elements() {
   }, [createFetcher.type])
 
   const matchedMyElements = matchSorter(
-    elements.filter((e) => (isArchivedSown ? e : !e.archivedAt)),
+    elements.filter((e) => (isArchivedShown ? e : !e.archivedAt)),
     search,
-    { keys: ["name"] },
+    {
+      keys: ["name", "children.*.name", "children.*.children.*.name"],
+    },
   )
   const navigate = useNavigate()
   const toast = useToast()
@@ -182,12 +206,18 @@ export default function Elements() {
             </c.Flex>
 
             {matchedMyElements.map((element) => (
-              <ElementItem key={element.id} {...{ element }} depth={0} />
+              <ElementItem
+                key={element.id}
+                {...{ element }}
+                search={search}
+                depth={0}
+                isArchivedShown={isArchivedShown}
+              />
             ))}
             {elements.filter((e) => !!e.archivedAt).length > 0 && (
               <c.Box p={4}>
                 <c.Button onClick={toggle} size="sm" variant="ghost" w="100%">
-                  {isArchivedSown ? "Hide archived" : "Show archived"}
+                  {isArchivedShown ? "Hide archived" : "Show archived"}
                 </c.Button>
               </c.Box>
             )}

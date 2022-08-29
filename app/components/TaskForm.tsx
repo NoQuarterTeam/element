@@ -38,11 +38,7 @@ export function TaskForm({ task }: FormProps) {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const day = searchParams.get("day") || undefined
-  const { addTask, updateTask, removeTask } = useTimelineTasks((state) => ({
-    addTask: state.addTask,
-    updateTask: state.updateTask,
-    removeTask: state.removeTask,
-  }))
+  const { addTask, updateTask, removeTask } = useTimelineTasks()
 
   const [color, setColor] = React.useState(randomHexColor())
 

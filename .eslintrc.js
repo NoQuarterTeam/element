@@ -1,6 +1,5 @@
 const OFF = "off"
 const ERROR = "error"
-const WARN = "warn"
 
 /**
  * @type {import('@types/eslint').Linter.BaseConfig}
@@ -44,7 +43,7 @@ module.exports = {
     "jsx-a11y/anchor-is-valid": OFF,
     "no-extend-native": OFF,
     "prefer-const": OFF,
-    "react-hooks/exhaustive-deps": WARN,
+    "react-hooks/exhaustive-deps": OFF,
     "react/display-name": OFF,
     "react/no-unescaped-entities": OFF,
     "react/prop-types": OFF,

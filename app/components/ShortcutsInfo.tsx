@@ -12,9 +12,15 @@ export function ShortcutsInfo() {
       </Flex>
       <Flex align="center" justify="space-between">
         <Text>
+          <Kbd>cmd</Kbd> + <Kbd>k</Kbd>
+        </Text>
+        <Text fontSize="sm">Enter focus mode</Text>
+      </Flex>
+      <Flex align="center" justify="space-between">
+        <Text>
           <Kbd>cmd</Kbd> + <Kbd>e</Kbd>
         </Text>
-        <Text fontSize="sm">Toggle element sidebar</Text>
+        <Text fontSize="sm">Open element sidebar</Text>
       </Flex>
       <Flex align="center" justify="space-between">
         <Text>

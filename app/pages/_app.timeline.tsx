@@ -2,7 +2,7 @@ import * as React from "react"
 import { RiAddCircleLine, RiCalendarEventLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { Outlet, useNavigate } from "@remix-run/react"
-import { useFetcher } from "@remix-run/react"
+import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import throttle from "lodash.throttle"
@@ -16,32 +16,33 @@ import { HEADER_HEIGHT, TimelineHeader } from "~/components/TimelineHeader"
 import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
 import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
-import { DAYS_BACK, DAYS_FORWARD, useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
+import { DAYS_BACK, DAYS_FORWARD } from "~/lib/hooks/useTimelineTasks"
 
-import type { TimelineTaskLoader } from "./api.tasks"
+import type { TimelineTask } from "./api.tasks"
+
+dayjs.extend(advancedFormat)
 
 export function links() {
   return [{ rel: "stylesheet", href: styles }]
 }
 
-dayjs.extend(advancedFormat)
-
 export default function Timeline() {
   const navigate = useNavigate()
   const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineDays()
-  // Initial load
-  const taskFetcher = useFetcher<TimelineTaskLoader>()
-  React.useEffect(
-    function LoadTasks() {
-      taskFetcher.load(`/api/tasks?back=${daysBack}&forward=${daysForward}`)
+
+  const {
+    data: tasks = [],
+    isLoading,
+    isFetching,
+  } = useQuery(
+    ["tasks", { daysForward, daysBack }],
+    async () => {
+      const response = await fetch(`/api/tasks?back=${daysBack}&forward=${daysForward}`)
+      if (!response.ok) throw new Error("Failed to load tasks")
+      return response.json() as Promise<TimelineTask[]>
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [daysBack, daysForward],
+    { refetchOnWindowFocus: false },
   )
-  const { tasks, setTasks } = useTimelineTasks(({ tasks, setTasks }) => ({
-    tasks,
-    setTasks,
-  }))
 
   const timelineRef = React.useRef<HTMLDivElement>(null)
   const daysRef = React.useRef<HTMLDivElement>(null)
@@ -56,13 +57,6 @@ export default function Timeline() {
     PreloadedEditorInput.preload()
   }, [])
 
-  // Keep loads in sync
-  React.useEffect(() => {
-    if (taskFetcher.data) {
-      setTasks(taskFetcher.data)
-    }
-  }, [taskFetcher.data, setTasks])
-
   const handleForward = () => setDaysForward(daysForward + DAYS_FORWARD)
 
   const handleBack = () => {
@@ -72,7 +66,7 @@ export default function Timeline() {
   }
 
   const handleScroll = () => {
-    if (!daysRef.current || taskFetcher.state === "loading") return
+    if (!daysRef.current || isLoading) return
     const right = daysRef.current.getBoundingClientRect().right - DAY_WIDTH <= window.innerWidth
     const left = daysRef.current.getBoundingClientRect().left + DAY_WIDTH >= 0
     if (right) return handleForward()
@@ -104,7 +98,6 @@ export default function Timeline() {
   })
   const bg = c.useColorModeValue("gray.100", "gray.800")
 
-  const isLoading = taskFetcher.state === "loading"
   return (
     <>
       <c.Box
@@ -115,7 +108,7 @@ export default function Timeline() {
         overflowX="auto"
         overflowY="hidden"
       >
-        <TimelineHeader isLoading={isLoading} days={days} months={months} />
+        <TimelineHeader isLoading={isLoading || isFetching} days={days} months={months} />
         <c.Box ref={daysRef} h={`calc(100vh - ${HEADER_HEIGHT}px)`} w="min-content" overflow="scroll">
           <c.Flex>
             <DropContainer tasks={tasks.map((t) => ({ id: t.id, date: t.date, order: t.order }))}>
