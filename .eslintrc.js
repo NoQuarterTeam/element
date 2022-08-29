@@ -1,6 +1,5 @@
 const OFF = "off"
 const ERROR = "error"
-const WARN = "warn"
 
 /**
  * @type {import('@types/eslint').Linter.BaseConfig}
