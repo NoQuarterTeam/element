@@ -10,57 +10,79 @@ import {
   RiMore2Fill,
 } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
-import { useFetcher } from "@remix-run/react"
+import { useFetcher, useTransition } from "@remix-run/react"
+import { matchSorter } from "match-sorter"
 
 import { isValidHex, safeReadableColor } from "~/lib/color"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
+import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { useToast } from "~/lib/hooks/useToast"
 import type { SidebarElement } from "~/pages/_app.timeline.elements"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
 import { ElementActionMethods } from "~/pages/api.elements.$id"
 
 import { ButtonGroup } from "./ButtonGroup"
-import { FormError, InlineFormField } from "./Form"
+import { Form, FormButton, FormError, InlineFormField } from "./Form"
 import { Modal } from "./Modal"
 
 const MAX_DEPTH = 2
 
 interface Props {
+  isArchivedShown: boolean
   element: SidebarElement
   depth: number
+  search: string
 }
 
-export function ElementItem({ element, ...props }: Props) {
+export function ElementItem({ element, search, isArchivedShown, ...props }: Props) {
   const expandProps = useStoredDisclosure("element.sidebar.itemExpand." + element.id)
+  const { refetch } = useTimelineTasks()
 
   const [newColor, setNewColor] = React.useState(element.color)
   const [editColor, setEditColor] = React.useState(element.color)
   const createModalProps = c.useDisclosure()
-  const createFetcher = useFetcher()
+  const transition = useTransition()
   React.useEffect(() => {
-    if (createFetcher.type === "actionReload" && createFetcher.data?.element) {
+    if (transition.type === "actionReload") {
       createModalProps.onClose()
     }
-  }, [createFetcher.data, createFetcher.type, createModalProps])
+  }, [transition.type, createModalProps])
 
   const updateModalProps = c.useDisclosure()
   const updateFetcher = useFetcher()
   React.useEffect(() => {
     if (updateFetcher.type === "actionReload" && updateFetcher.data?.element) {
+      refetch()
       updateModalProps.onClose()
     }
-  }, [updateFetcher.data, updateFetcher.type, updateModalProps])
+  }, [updateFetcher.data, updateFetcher.type, refetch])
 
   const archiveModalProps = c.useDisclosure()
   const archiveFetcher = useFetcher()
   React.useEffect(() => {
     if (archiveFetcher.type === "actionReload" && archiveFetcher.data?.success) {
+      refetch()
       archiveModalProps.onClose()
     }
-  }, [archiveFetcher.data, archiveFetcher.type, archiveModalProps])
+  }, [archiveFetcher.data, archiveFetcher.type, refetch])
 
   const unarchiveFetcher = useFetcher()
+  React.useEffect(() => {
+    if (unarchiveFetcher.type === "actionReload" && unarchiveFetcher.data?.success) {
+      refetch()
+      archiveModalProps.onClose()
+    }
+  }, [unarchiveFetcher.data, unarchiveFetcher.type, refetch])
   const toast = useToast()
+
+  const matchedChildren = matchSorter(
+    element.children.filter((e) => (isArchivedShown ? e : !e.archivedAt)),
+    search,
+    {
+      keys: ["name", "children.*.name"],
+    },
+  )
+
   return (
     <c.Box>
       <c.Flex align="center" justify="space-between" pr={2}>
@@ -71,6 +93,7 @@ export function ElementItem({ element, ...props }: Props) {
             borderRightRadius="full"
             py={2}
             fontSize="sm"
+            opacity={element.archivedAt ? 0.5 : 1}
             pl={props.depth === 0 ? "35px" : `${35 + props.depth * 15}px`}
             pr={14}
             fontWeight={400}
@@ -135,8 +158,7 @@ export function ElementItem({ element, ...props }: Props) {
           </c.Menu>
         </c.Flex>
         <Modal title="Create a child element" size="xl" {...createModalProps}>
-          <createFetcher.Form
-            action="/timeline/elements"
+          <Form
             method="post"
             replace
             onSubmit={(e) => {
@@ -148,17 +170,10 @@ export function ElementItem({ element, ...props }: Props) {
           >
             <c.Stack spacing={4}>
               <c.Input type="hidden" name="parentId" value={element.id} />
-              <InlineFormField
-                autoFocus
-                error={createFetcher.data?.fieldErrors?.name?.[0]}
-                name="name"
-                label="Name"
-                isRequired
-              />
+              <InlineFormField autoFocus name="name" label="Name" isRequired />
               <c.Input type="hidden" name="color" value={newColor} />
               <InlineFormField
                 name="color"
-                error={createFetcher.data?.fieldErrors?.color?.[0]}
                 isRequired
                 shouldPassProps={false}
                 label="Color"
@@ -182,25 +197,18 @@ export function ElementItem({ element, ...props }: Props) {
                   </c.SimpleGrid>
                 }
               />
-              <FormError error={createFetcher.data?.formError} />
+              <FormError />
               <ButtonGroup>
                 <c.Button variant="ghost" onClick={createModalProps.onClose}>
                   Cancel
                 </c.Button>
-                <c.Button
-                  type="submit"
-                  name="_action"
-                  isDisabled={createFetcher.state !== "idle"}
-                  isLoading={createFetcher.state !== "idle"}
-                  value={ElementsActionMethods.CreateElement}
-                  colorScheme="primary"
-                >
+                <FormButton name="_action" value={ElementsActionMethods.CreateElement}>
                   Create
-                </c.Button>
+                </FormButton>
               </ButtonGroup>
               <FormError />
             </c.Stack>
-          </createFetcher.Form>
+          </Form>
         </Modal>
         <Modal title={`Edit ${element.name}`} size="xl" {...updateModalProps}>
           <updateFetcher.Form
@@ -216,7 +224,7 @@ export function ElementItem({ element, ...props }: Props) {
           >
             <c.Stack spacing={4}>
               <InlineFormField
-                error={createFetcher.data?.fieldErrors?.name?.[0]}
+                error={updateFetcher.data?.fieldErrors?.name?.[0]}
                 autoFocus
                 defaultValue={element.name}
                 name="name"
@@ -227,7 +235,7 @@ export function ElementItem({ element, ...props }: Props) {
               <InlineFormField
                 name="color"
                 isRequired
-                error={createFetcher.data?.fieldErrors?.color?.[0]}
+                error={updateFetcher.data?.fieldErrors?.color?.[0]}
                 label="Color"
                 shouldPassProps={false}
                 input={
@@ -295,10 +303,16 @@ export function ElementItem({ element, ...props }: Props) {
           </c.Stack>
         </Modal>
       </c.Flex>
-      {element.children.length > 0 && expandProps.isOpen ? (
+      {matchedChildren.length > 0 && expandProps.isOpen ? (
         <c.Stack mt={0} spacing={0}>
-          {element.children.map((child) => (
-            <ElementItem key={child.id} depth={props.depth + 1} element={child as SidebarElement} />
+          {matchedChildren.map((child) => (
+            <ElementItem
+              search={search}
+              key={child.id}
+              depth={props.depth + 1}
+              element={child as SidebarElement}
+              isArchivedShown={isArchivedShown}
+            />
           ))}
         </c.Stack>
       ) : null}

@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function DropContainer({ children, tasks }: Props) {
-  const updateOrder = useTimelineTasks((state) => state.updateOrder)
+  const { updateOrder } = useTimelineTasks()
 
   // Ordering
   const updateOrderFetcher = useFetcher()

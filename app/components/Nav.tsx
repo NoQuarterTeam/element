@@ -2,6 +2,7 @@ import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi"
 import {
   RiBookLine,
   RiDashboard3Line,
+  RiFocus3Line,
   RiLogoutCircleRLine,
   RiMoonLine,
   RiQuestionLine,
@@ -30,6 +31,10 @@ export function Nav() {
   const navigate = useNavigate()
 
   c.useEventListener("keydown", (event) => {
+    if (event.metaKey && event.key === "k") {
+      event.preventDefault()
+      navigate("/timeline/focus")
+    }
     if (event.metaKey && event.key === "e") {
       event.preventDefault()
       navigate("/timeline/elements")
@@ -95,6 +100,15 @@ export function Nav() {
               aria-label="open element sidebar"
               onClick={() => navigate("elements")}
               icon={<c.Box as={RiBookLine} boxSize="18px" />}
+            />
+          </c.Tooltip>
+          <c.Tooltip label="Focus" placement="auto" zIndex={50} hasArrow>
+            <c.IconButton
+              borderRadius="full"
+              variant="ghost"
+              aria-label="open focus mode"
+              onClick={() => navigate("focus")}
+              icon={<c.Box as={RiFocus3Line} boxSize="18px" />}
             />
           </c.Tooltip>
           <c.Tooltip label="Color mode" placement="auto" zIndex={50} hasArrow>
