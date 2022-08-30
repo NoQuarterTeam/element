@@ -153,9 +153,9 @@ export default function Dashboard() {
               <ElementStat key={element.id} element={element} depth={1} />
             ))}
           </c.Stack>
-          <c.Center>
+          <c.VStack>
             <PieChart data={pie} />
-          </c.Center>
+          </c.VStack>
         </c.SimpleGrid>
       </c.Stack>
     </c.Stack>
