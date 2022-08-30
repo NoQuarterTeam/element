@@ -1,7 +1,7 @@
 import * as c from "@chakra-ui/react"
+import type { LoaderArgs } from "@remix-run/node"
+import { redirect } from "@remix-run/node"
 import { Outlet } from "@remix-run/react"
-import type { LoaderArgs } from "@remix-run/server-runtime"
-import { redirect } from "@remix-run/server-runtime"
 
 import { getUser } from "~/services/auth/auth.server"
 

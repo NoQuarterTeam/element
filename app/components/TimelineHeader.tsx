@@ -1,14 +1,30 @@
+import * as React from "react"
 import * as c from "@chakra-ui/react"
-import { useQuery } from "@tanstack/react-query"
+import { useFetcher } from "@remix-run/react"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
-import { useUserLocationEnabled } from "~/lib/hooks/useUserLocationEnabled"
+import { useFeatures } from "~/lib/hooks/useFeatures"
+import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
+import { useMe } from "~/pages/_app"
+import type {
+  TimelineHabit,
+  TimelineHabitEntry,
+  TimelineHabitResponse} from "~/pages/api.habits";
+import {
+  HabitsActionMethods
+} from "~/pages/api.habits"
+import { HabitActionMethods } from "~/pages/api.habits.$id"
 import type { WeatherData } from "~/pages/api.weather"
 
+import { ButtonGroup } from "./ButtonGroup"
 import { DAY_WIDTH } from "./Day"
+import { FormButton, FormError, FormField } from "./Form"
 
 export const HEADER_HEIGHT = 115
+
+export const HEADER_HABIT_HEIGHT = 138
 
 interface TimelineHeaderProps {
   isLoading: boolean
@@ -17,10 +33,26 @@ interface TimelineHeaderProps {
 }
 
 export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
+  const me = useMe()
   const { colorMode } = c.useColorMode()
   const isDark = colorMode === "dark"
-  const isWeatherEnabled = useUserLocationEnabled((s) => s.isEnabled)
+  const features = useFeatures((s) => s.features)
+  const daysBack = useTimelineDays((s) => s.daysBack)
 
+  const isHabitsEnabled = features.includes("habits")
+  const { data } = useQuery(
+    ["habits", { daysBack }],
+    async () => {
+      const response = await fetch(`/api/habits?back=${daysBack}`)
+      if (!response.ok) throw new Error("Failed to load tasks")
+      return response.json() as Promise<TimelineHabitResponse>
+    },
+    { refetchOnWindowFocus: false, enabled: !!me.stripeSubscriptionId && isHabitsEnabled },
+  )
+  const habits = data?.habits || []
+  const habitEntries = data?.habitEntries || []
+
+  const isWeatherEnabled = features.includes("weather")
   const { data: weatherData } = useQuery(
     ["/api/weather"],
     async () => {
@@ -33,7 +65,7 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
 
   return (
     <c.Flex
-      minH={HEADER_HEIGHT}
+      minH={isHabitsEnabled ? HEADER_HABIT_HEIGHT : HEADER_HEIGHT}
       w="min-content"
       bg={isDark ? "gray.800" : "white"}
       borderBottom="1px solid"
@@ -84,6 +116,20 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
                     >
                       {day.format("ddd Do")}
                     </c.Text>
+                    {isHabitsEnabled &&
+                      !!me.stripeSubscriptionId &&
+                      !dayjs(day).startOf("d").isAfter(dayjs()) && (
+                        <Habits
+                          day={day.format("YYYY-MM-DD")}
+                          habits={habits}
+                          habitEntries={habitEntries.filter((e) =>
+                            dayjs(day.format("YYYY-MM-DD")).isSame(
+                              dayjs(e.createdAt).format("YYYY-MM-DD"),
+                              "date",
+                            ),
+                          )}
+                        />
+                      )}
                   </c.VStack>
                 )
               })}
@@ -91,5 +137,133 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
         </c.Box>
       ))}
     </c.Flex>
+  )
+}
+
+interface HabitProps {
+  habits: TimelineHabit[]
+  day: string
+  habitEntries: TimelineHabitEntry[]
+}
+function Habits({ habits, day, habitEntries }: HabitProps) {
+  const habitBgRed = c.useColorModeValue("red.300", "red.700")
+  const habitBgGreen = c.useColorModeValue("green.400", "green.600")
+  const habitsModalProps = c.useDisclosure()
+  const habitEntryFetcher = useFetcher()
+  const client = useQueryClient()
+  const daysBack = useTimelineDays((s) => s.daysBack)
+  const initialFocusRef = React.useRef(null)
+  const initialNewFocusRef = React.useRef(null)
+  const filteredHabits = habits.filter((h) => dayjs(h.startDate).isBefore(dayjs(day).endOf("d")))
+  const createFetcher = useFetcher()
+  const createFormProps = c.useDisclosure()
+  React.useEffect(() => {
+    if (createFetcher.type === "actionReload" && createFetcher.data?.habit) {
+      const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
+      if (!res) return
+      client.setQueryData<TimelineHabitResponse>(["habits", { daysBack }], {
+        habits: [...res.habits, createFetcher.data.habit],
+        habitEntries: res.habitEntries || [],
+      })
+      createFormProps.onClose()
+    }
+  }, [createFetcher.type, createFetcher.data])
+
+  return (
+    <c.Popover initialFocusRef={initialFocusRef}>
+      <c.PopoverTrigger>
+        <c.Button size="xs" w="100%" tabIndex={-1} variant="ghost" onClick={habitsModalProps.onOpen}>
+          <c.HStack spacing="3px">
+            {filteredHabits.map((habit) => (
+              <c.Box
+                key={habit.id}
+                boxSize="10px"
+                borderRadius="full"
+                bg={habitEntries.find((e) => e.habitId === habit.id) ? habitBgGreen : habitBgRed}
+              />
+            ))}
+          </c.HStack>
+        </c.Button>
+      </c.PopoverTrigger>
+
+      <c.PopoverContent>
+        <c.PopoverHeader>Habits</c.PopoverHeader>
+        <c.PopoverArrow />
+        <c.PopoverCloseButton ref={initialFocusRef} />
+        <c.PopoverBody>
+          <c.Stack>
+            {filteredHabits.map((habit) => {
+              const entry = habitEntries.find((e) => e.habitId === habit.id)
+              return (
+                <c.Flex key={habit.id} align="center" justify="space-between">
+                  <c.Text fontSize="md">{habit.name}</c.Text>
+                  <c.Checkbox
+                    defaultChecked={!!entry}
+                    onChange={() => {
+                      habitEntryFetcher.submit(
+                        { _action: HabitActionMethods.ToggleComplete, date: dayjs(day).format() },
+                        { action: `/api/habits/${habit.id}`, method: "post" },
+                      )
+                      const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
+                      if (!res) return
+                      client.setQueryData<TimelineHabitResponse>(["habits", { daysBack }], {
+                        habits: res.habits || [],
+                        habitEntries: entry
+                          ? res.habitEntries.filter((e) => e.id !== entry.id)
+                          : [
+                              ...res.habitEntries,
+                              {
+                                id: new Date().getMilliseconds().toString(),
+                                habitId: habit.id,
+                                createdAt: dayjs(day).startOf("d").add(12, "h").format(),
+                              },
+                            ],
+                      })
+                    }}
+                  />
+                </c.Flex>
+              )
+            })}
+          </c.Stack>
+        </c.PopoverBody>
+        <c.PopoverFooter>
+          <c.Popover isLazy placement="right-start" initialFocusRef={initialNewFocusRef} {...createFormProps}>
+            <ButtonGroup>
+              <c.PopoverTrigger>
+                <c.Button isDisabled={habits.length >= 5} onClick={createFormProps.onOpen}>
+                  New habbit
+                </c.Button>
+              </c.PopoverTrigger>
+            </ButtonGroup>
+            {habits.length < 5 && (
+              <c.PopoverContent>
+                <c.PopoverHeader>New habbit</c.PopoverHeader>
+                <c.PopoverArrow />
+                <c.PopoverCloseButton onClick={createFormProps.onClose} />
+                <c.PopoverBody>
+                  <createFetcher.Form action="/api/habits" replace method="post">
+                    <c.Stack>
+                      <FormField ref={initialNewFocusRef} autoFocus name="name" label="Name" />
+                      <input type="hidden" value={day} name="date" />
+                      <FormError />
+                      <ButtonGroup>
+                        <FormButton
+                          isLoading={createFetcher.state !== "idle"}
+                          isDisabled={createFetcher.state !== "idle"}
+                          name="_action"
+                          value={HabitsActionMethods.CreateHabit}
+                        >
+                          Save
+                        </FormButton>
+                      </ButtonGroup>
+                    </c.Stack>
+                  </createFetcher.Form>
+                </c.PopoverBody>
+              </c.PopoverContent>
+            )}
+          </c.Popover>
+        </c.PopoverFooter>
+      </c.PopoverContent>
+    </c.Popover>
   )
 }

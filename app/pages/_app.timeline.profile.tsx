@@ -4,13 +4,13 @@ import * as c from "@chakra-ui/react"
 import { NavLink, Outlet, useNavigate, useTransition } from "@remix-run/react"
 
 import { transformImage } from "~/lib/helpers/image"
-import { useUpdatesSeen } from "~/lib/hooks/useUpdatesSeen"
+import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useMe } from "~/pages/_app"
 
 export default function Profile() {
   const me = useMe()
   const navigate = useNavigate()
-  const { updatesSeens } = useUpdatesSeen()
+  const { featuresSeen } = useFeaturesSeen()
 
   const bg = c.useColorModeValue("gray.50", "gray.800")
 
@@ -44,7 +44,7 @@ export default function Profile() {
                 icon={
                   <c.Box pos="relative">
                     <c.Box as={RiSettings2Line} boxSize="15px" />
-                    {!updatesSeens.find((u) => ["weather"].includes(u)) && (
+                    {!featuresSeen.find((u) => ["weather", "habits"].includes(u)) && (
                       <c.Box
                         boxSize="5px"
                         borderRadius="full"

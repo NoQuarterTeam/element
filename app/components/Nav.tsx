@@ -14,8 +14,8 @@ import * as c from "@chakra-ui/react"
 import { Role } from "@prisma/client"
 import { useNavigate, useSubmit } from "@remix-run/react"
 
+import { NEW_UPDATES, useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
-import { NEW_UPDATES, useUpdatesSeen } from "~/lib/hooks/useUpdatesSeen"
 import { useMe } from "~/pages/_app"
 
 import { Modal } from "./Modal"
@@ -26,7 +26,7 @@ export function Nav() {
 
   const navProps = useStoredDisclosure("element.nav", { defaultIsOpen: true })
   const me = useMe()
-  const updatesSeens = useUpdatesSeen((s) => s.updatesSeens)
+  const featuresSeen = useFeaturesSeen((s) => s.featuresSeen)
 
   const logoutSubmit = useSubmit()
   const navigate = useNavigate()
@@ -117,8 +117,17 @@ export function Nav() {
               borderRadius="full"
               variant="ghost"
               aria-label="open focus mode"
-              onClick={() => navigate("focus")}
-              icon={<c.Box as={RiFocus3Line} boxSize="18px" />}
+              onClick={() => {
+                navigate("focus")
+              }}
+              icon={
+                <c.Box pos="relative">
+                  <c.Box as={RiFocus3Line} boxSize="18px" />
+                  {!featuresSeen.includes("focus") && (
+                    <c.Box boxSize="5px" borderRadius="full" bg="red.500" pos="absolute" top={0} right={0} />
+                  )}
+                </c.Box>
+              }
             />
           </c.Tooltip>
           <c.Tooltip label="Profile" placement="auto" zIndex={50} hasArrow>
@@ -130,7 +139,7 @@ export function Nav() {
               icon={
                 <c.Box pos="relative">
                   <c.Box as={RiUser3Line} boxSize="18px" />
-                  {updatesSeens.length !== NEW_UPDATES.length && (
+                  {featuresSeen.length !== NEW_UPDATES.length && (
                     <c.Box boxSize="5px" borderRadius="full" bg="red.500" pos="absolute" top={0} right={0} />
                   )}
                 </c.Box>

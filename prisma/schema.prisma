@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["filteredRelationCount"]
 }
 
 datasource db {
@@ -13,20 +14,22 @@ enum Role {
 }
 
 model User {
-  id                   String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email                String    @unique
+  id                   String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                String       @unique
   password             String
   firstName            String
-  role                 Role      @default(USER)
+  role                 Role         @default(USER)
   lastName             String
   avatar               String?
-  stripeCustomerId     String    @unique
-  stripeSubscriptionId String?   @unique
-  createdAt            DateTime  @default(now()) @db.Timestamptz(6)
-  updatedAt            DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
-  archivedAt           DateTime? @db.Timestamptz(6)
+  stripeCustomerId     String       @unique
+  stripeSubscriptionId String?      @unique
+  createdAt            DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
+  archivedAt           DateTime?    @db.Timestamptz(6)
   tasks                Task[]
   elements             Element[]
+  habits               Habit[]
+  habitEntries         HabitEntry[]
 }
 
 model Task {
@@ -60,4 +63,26 @@ model Element {
   creator    User      @relation(fields: [creatorId], references: [id])
   creatorId  String    @db.Uuid
   tasks      Task[]
+}
+
+model Habit {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String?
+  startDate   DateTime
+  createdAt   DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
+  creatorId   String       @db.Uuid
+  creator     User         @relation(fields: [creatorId], references: [id])
+  entries     HabitEntry[]
+}
+
+model HabitEntry {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  habitId   String   @db.Uuid
+  habit     Habit    @relation(fields: [habitId], references: [id])
+  creatorId String   @db.Uuid
+  creator   User     @relation(fields: [creatorId], references: [id])
 }

@@ -1,9 +1,9 @@
 import * as React from "react"
 import { RiArrowLeftLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
+import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import { useLoaderData, useSearchParams } from "@remix-run/react"
-import type { LoaderArgs, SerializeFrom } from "@remix-run/server-runtime"
-import { json } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 
 import { Form } from "~/components/Form"

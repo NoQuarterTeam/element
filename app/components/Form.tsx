@@ -35,7 +35,10 @@ interface FormFieldProps extends Omit<c.InputProps, "defaultValue"> {
   error?: string
 }
 
-export function FormField({ label, input, error, shouldPassProps = true, ...props }: FormFieldProps) {
+export const FormField = React.forwardRef(function FormField(
+  { label, input, error, shouldPassProps = true, ...props }: FormFieldProps,
+  ref: React.ForwardedRef<HTMLInputElement> | null,
+) {
   const form = useActionData<ActionData<any>>()
   const clonedInput =
     input &&
@@ -56,12 +59,17 @@ export function FormField({ label, input, error, shouldPassProps = true, ...prop
           {label}
         </c.FormLabel>
       )}
-      {clonedInput || <c.Input defaultValue={form?.data?.[props.name] || ""} id={props.name} {...props} />}
+      {clonedInput || (
+        <c.Input ref={ref} defaultValue={form?.data?.[props.name] || ""} id={props.name} {...props} />
+      )}
       <c.FormErrorMessage>{form?.fieldErrors?.[props.name]?.[0] || error}</c.FormErrorMessage>
     </c.FormControl>
   )
-}
-export function InlineFormField({ label, input, error, shouldPassProps = true, ...props }: FormFieldProps) {
+})
+export const InlineFormField = React.forwardRef(function _InlineFormField(
+  { label, input, error, shouldPassProps = true, ...props }: FormFieldProps,
+  ref: React.ForwardedRef<HTMLInputElement> | null,
+) {
   const form = useActionData<ActionData<any>>()
   const clonedInput =
     input &&
@@ -84,12 +92,14 @@ export function InlineFormField({ label, input, error, shouldPassProps = true, .
             {label}
           </c.FormLabel>
         )}
-        {clonedInput || <c.Input defaultValue={form?.data?.[props.name] || ""} id={props.name} {...props} />}
+        {clonedInput || (
+          <c.Input ref={ref} defaultValue={form?.data?.[props.name] || ""} id={props.name} {...props} />
+        )}
       </c.Flex>
       <c.FormErrorMessage>{form?.fieldErrors?.[props.name]?.[0] || error}</c.FormErrorMessage>
     </c.FormControl>
   )
-}
+})
 
 interface ImageFieldProps extends Omit<c.FlexProps, "defaultValue"> {
   path: string

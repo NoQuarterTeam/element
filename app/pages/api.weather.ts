@@ -1,11 +1,12 @@
-import type { LoaderArgs, SerializeFrom } from "@remix-run/server-runtime"
-import { json } from "@remix-run/server-runtime"
+import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import cookie from "cookie"
 import dayjs from "dayjs"
 
 import { OPEN_WEATHER_KEY } from "~/lib/config.server"
-import { USER_LOCATION_COOKIE_KEY } from "~/lib/hooks/useUserLocationEnabled"
 import { requireUser } from "~/services/auth/auth.server"
+
+import { USER_LOCATION_COOKIE_KEY } from "./_app.timeline.profile.settings"
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireUser(request)

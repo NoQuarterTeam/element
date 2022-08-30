@@ -1,5 +1,5 @@
-import type { LoaderArgs, SerializeFrom } from "@remix-run/server-runtime"
-import { json } from "@remix-run/server-runtime"
+import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
+import { json } from "@remix-run/node"
 
 import { db } from "~/lib/db.server"
 import { requireUser } from "~/services/auth/auth.server"

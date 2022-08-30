@@ -7,10 +7,11 @@ import dayjs from "dayjs"
 import deepEqual from "deep-equal"
 
 import { getTotalTaskDuration } from "~/lib/helpers/duration"
+import { useFeatures } from "~/lib/hooks/useFeatures"
 import type { TimelineTask } from "~/pages/api.tasks"
 
 import { TaskItem } from "./TaskItem"
-import { HEADER_HEIGHT } from "./TimelineHeader"
+import { HEADER_HABIT_HEIGHT, HEADER_HEIGHT } from "./TimelineHeader"
 
 interface Props {
   day: dayjs.Dayjs
@@ -24,7 +25,7 @@ export const DAY_WIDTH = 98
 
 function _Day(props: Props) {
   const navigate = useNavigate()
-
+  const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HEIGHT : HEADER_HABIT_HEIGHT
   const { colorMode } = c.useColorMode()
   const isDark = colorMode === "dark"
   const bg = dayjs(props.day).isSame(dayjs(), "day")
@@ -50,9 +51,12 @@ function _Day(props: Props) {
           <c.Box
             borderRight="1px solid"
             borderColor={isDark ? "gray.700" : "gray.100"}
-            minH={`calc(100vh - ${HEADER_HEIGHT}px)`}
+            minH={`calc(100vh - ${headerHeight}px)`}
             h="100%"
             w={DAY_WIDTH}
+            _hover={{
+              ".add-task-day": { opacity: 1 },
+            }}
             bg={bg}
             pb={2}
           >
@@ -78,9 +82,14 @@ function _Day(props: Props) {
             <c.Flex w="100%" justify="center" py={3} flex={1}>
               <c.Text fontSize="xs">{getTotalTaskDuration(props.tasks)}</c.Text>
             </c.Flex>
-            <c.Flex _hover={{ opacity: 1 }} opacity={0} w="100%" justify="center" pt={0} flex={1}>
+            <c.Flex w="100%" justify="center" pt={0} flex={1}>
               <c.IconButton
+                className="add-task-day"
                 variant="ghost"
+                opacity={0}
+                _focus={{ opacity: 1 }}
+                tabIndex={props.day.isSame(dayjs(), "day") ? 1 : -1}
+                size="md"
                 onClick={() => navigate(`new?day=${props.day.format("YYYY-MM-DD")}`)}
                 borderRadius="full"
                 icon={<c.Box as={RiAddCircleLine} boxSize="20px" />}

@@ -1,14 +1,15 @@
 import * as React from "react"
 import * as c from "@chakra-ui/react"
+import type { LoaderArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
-import type { LoaderArgs } from "@remix-run/server-runtime"
-import { json } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 import { motion } from "framer-motion"
 
 import { safeReadableColor } from "~/lib/color"
 import { db } from "~/lib/db.server"
 import { formatDuration } from "~/lib/helpers/duration"
+import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { requireUser } from "~/services/auth/auth.server"
 
@@ -47,7 +48,10 @@ export default function Focus() {
   const tasks = useLoaderData<typeof loader>()
   const borderColor = c.useColorModeValue("gray.200", "gray.600")
   const updateFetcher = useFetcher()
-
+  const setFeaturesSeen = useFeaturesSeen((s) => s.setFeaturesSeen)
+  React.useEffect(() => {
+    setFeaturesSeen(["focus"])
+  }, [])
   React.useEffect(() => {
     if (!updateFetcher.data) return
     if (updateFetcher.type === "actionReload" && updateFetcher.data.task) {

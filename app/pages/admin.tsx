@@ -1,10 +1,10 @@
 import { RiArrowLeftLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { Role } from "@prisma/client"
+import type { LoaderArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
-import type { LoaderArgs } from "@remix-run/server-runtime"
-import { json } from "@remix-run/server-runtime"
-import { redirect } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 
 import { LinkButton } from "~/components/LinkButton"

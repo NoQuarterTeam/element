@@ -12,9 +12,10 @@ import { Day, DAY_WIDTH } from "~/components/Day"
 import { DropContainer } from "~/components/DropContainer"
 import { Nav } from "~/components/Nav"
 import { PreloadedEditorInput } from "~/components/TaskForm"
-import { HEADER_HEIGHT, TimelineHeader } from "~/components/TimelineHeader"
+import { HEADER_HABIT_HEIGHT, HEADER_HEIGHT, TimelineHeader } from "~/components/TimelineHeader"
 import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
+import { useFeatures } from "~/lib/hooks/useFeatures"
 import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
 import { DAYS_BACK, DAYS_FORWARD } from "~/lib/hooks/useTimelineTasks"
 
@@ -97,7 +98,7 @@ export default function Timeline() {
     }
   })
   const bg = c.useColorModeValue("gray.100", "gray.800")
-
+  const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HEIGHT : HEADER_HABIT_HEIGHT
   return (
     <>
       <c.Box
@@ -109,7 +110,7 @@ export default function Timeline() {
         overflowY="hidden"
       >
         <TimelineHeader isLoading={isLoading || isFetching} days={days} months={months} />
-        <c.Box ref={daysRef} h={`calc(100vh - ${HEADER_HEIGHT}px)`} w="min-content" overflow="scroll">
+        <c.Box ref={daysRef} h={`calc(100vh - ${headerHeight}px)`} w="min-content" overflow="scroll">
           <c.Flex>
             <DropContainer tasks={tasks.map((t) => ({ id: t.id, date: t.date, order: t.order }))}>
               {days.map((day, index) => (

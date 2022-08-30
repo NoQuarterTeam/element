@@ -3,21 +3,25 @@ import { useToast } from "@chakra-ui/react"
 import * as c from "@chakra-ui/react"
 import Cookies from "js-cookie"
 
-import { useUpdatesSeen } from "~/lib/hooks/useUpdatesSeen"
-import { USER_LOCATION_COOKIE_KEY, useUserLocationEnabled } from "~/lib/hooks/useUserLocationEnabled"
+import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
+import { useFeatures } from "~/lib/hooks/useFeatures"
+
+import { useMe } from "./_app"
+export const USER_LOCATION_COOKIE_KEY = "element.user.location"
 
 export default function Settings() {
-  const userLocation = useUserLocationEnabled()
+  const { features, toggle } = useFeatures()
   const toast = useToast()
-  const { setUpdatesSeens } = useUpdatesSeen()
+  const me = useMe()
+  const { setFeaturesSeen } = useFeaturesSeen()
   React.useEffect(() => {
-    setUpdatesSeens(["weather"])
+    setFeaturesSeen(["weather", "habits"])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const handleToggleWeather = () => {
-    if (userLocation.isEnabled) {
+    if (features.includes("weather")) {
       Cookies.remove(USER_LOCATION_COOKIE_KEY)
-      userLocation.toggle()
+      toggle("weather")
     } else {
       function handleError(error: any) {
         switch (error.code) {
@@ -39,7 +43,7 @@ export default function Settings() {
             { expires: 10000 },
           )
           await sleep()
-          userLocation.toggle()
+          toggle("weather")
         }, handleError)
       } else {
         return toast({ description: "Geolocation is not supported by this browser.", status: "error" })
@@ -60,7 +64,25 @@ export default function Settings() {
           </c.Badge>
         </c.HStack>
         <c.Text fontSize="xs">Show the next weeks weather based on your current location.</c.Text>
-        <c.Switch onChange={handleToggleWeather} defaultChecked={userLocation.isEnabled} />
+        <c.Switch onChange={handleToggleWeather} defaultChecked={features.includes("weather")} />
+      </c.Stack>
+      <c.Divider />
+      <c.Stack>
+        <c.HStack>
+          <c.Text fontSize="sm">Habits</c.Text>
+          <c.Badge size="sm" colorScheme="primary">
+            New
+          </c.Badge>
+          <c.Badge size="sm" colorScheme="red">
+            Pro
+          </c.Badge>
+        </c.HStack>
+        <c.Text fontSize="xs">Create and track habits.</c.Text>
+        <c.Switch
+          isDisabled={!me.stripeSubscriptionId}
+          onChange={() => toggle("habits")}
+          defaultChecked={!!me.stripeSubscriptionId && features.includes("habits")}
+        />
       </c.Stack>
     </c.Stack>
   )

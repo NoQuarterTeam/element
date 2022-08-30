@@ -5,6 +5,7 @@ import { Checkbox } from "./components/Checkbox"
 import { Input } from "./components/Input"
 import { Menu } from "./components/Menu"
 import { Modal } from "./components/Modal"
+import { Popover } from "./components/Popover"
 import { Select } from "./components/Select"
 import { Switch } from "./components/Switch"
 import { Textarea } from "./components/Textarea"
@@ -46,6 +47,7 @@ export const theme = extendTheme({
       baseStyle: { text: { mt: 1 } },
     },
     Modal,
+    Popover,
     Menu,
     Select,
     Textarea,

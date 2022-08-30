@@ -1,6 +1,6 @@
+import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
-import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime"
-import { json, redirect } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 import { z } from "zod"
 

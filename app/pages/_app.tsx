@@ -1,8 +1,8 @@
 import * as React from "react"
+import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { Outlet } from "@remix-run/react"
-import type { LoaderArgs, SerializeFrom } from "@remix-run/server-runtime"
-import { json } from "@remix-run/server-runtime"
 import { useHydrated } from "remix-utils"
 
 import { requireUser } from "~/services/auth/auth.server"

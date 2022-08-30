@@ -71,9 +71,10 @@ function _TaskItem({ task }: Props) {
   }
 
   return (
-    <c.Box w={DAY_WIDTH} p={2} pb={0} zIndex={1}>
-      <Link to={task.id} onClick={handleClick} prefetch="intent">
+    <c.Box w={DAY_WIDTH} p={2} pb={0} zIndex={1} tabIndex={-1}>
+      <Link to={task.id} onClick={handleClick} prefetch="intent" tabIndex={-1}>
         <c.Box
+          tabIndex={-1}
           outline="none"
           cursor="pointer!important"
           overflow="hidden"

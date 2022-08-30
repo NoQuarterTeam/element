@@ -1,5 +1,5 @@
-import type { ActionArgs } from "@remix-run/server-runtime"
-import { json } from "@remix-run/server-runtime"
+import type { ActionArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import { z } from "zod"
 
 import { FlashType } from "~/lib/config.server"
