@@ -6,6 +6,7 @@ import { useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
 import deepEqual from "deep-equal"
 
+import { getTotalTaskDuration } from "~/lib/helpers/duration"
 import type { TimelineTask } from "~/pages/api.tasks"
 
 import { TaskItem } from "./TaskItem"
@@ -97,20 +98,4 @@ export const Day = React.memo(_Day, dayIsEqual)
 
 function dayIsEqual(prevDay: Props, nextDay: Props) {
   return deepEqual(prevDay.tasks, nextDay.tasks)
-}
-
-function formatTotalDuration(duration: number) {
-  const hours = (duration / 60) | 0
-  const minutes = duration % 60 | 0
-  const hoursDisplay = hours ? `${hours}h` : ""
-  const minutesDisplay = minutes ? `${minutes}m` : ""
-  return hoursDisplay + minutesDisplay
-}
-
-function getTotalTaskDuration(tasks: TimelineTask[]) {
-  const totalMinutes = tasks.reduce(
-    (total, task) => total + (task.durationHours || 0) * 60 + (task.durationMinutes || 0),
-    0,
-  )
-  return formatTotalDuration(totalMinutes)
 }

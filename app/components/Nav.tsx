@@ -1,6 +1,6 @@
 import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi"
 import {
-  RiBarChartLine,
+  // RiBarChartLine,
   RiBookLine,
   RiDashboard3Line,
   RiFocus3Line,
@@ -103,7 +103,7 @@ export function Nav() {
               icon={<c.Box as={RiBookLine} boxSize="18px" />}
             />
           </c.Tooltip>
-          <c.Tooltip label="Dashboard" placement="auto" zIndex={50} hasArrow>
+          {/* <c.Tooltip label="Dashboard" placement="auto" zIndex={50} hasArrow>
             <c.IconButton
               borderRadius="full"
               variant="ghost"
@@ -111,7 +111,7 @@ export function Nav() {
               onClick={() => navigate("/dashboard")}
               icon={<c.Box as={RiBarChartLine} boxSize="18px" />}
             />
-          </c.Tooltip>
+          </c.Tooltip> */}
           <c.Tooltip label="Focus mode" placement="auto" zIndex={50} hasArrow>
             <c.IconButton
               borderRadius="full"

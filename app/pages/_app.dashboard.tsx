@@ -2,21 +2,24 @@ import * as React from "react"
 import { RiArrowLeftLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { useLoaderData, useSearchParams } from "@remix-run/react"
-import type { LoaderArgs, SerializeFrom } from "@remix-run/server-runtime";
+import type { LoaderArgs, SerializeFrom } from "@remix-run/server-runtime"
 import { json } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 
 import { Form } from "~/components/Form"
 import { LinkButton } from "~/components/LinkButton"
 import { db } from "~/lib/db.server"
+import { getMinutesFromTasks, getTotalTaskDuration } from "~/lib/helpers/duration"
 import { requireUser } from "~/services/auth/auth.server"
+
+const PieChart = React.lazy(() => import("../components/ElementsChart"))
 
 export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url)
   const search = new URLSearchParams(url.search)
   const from = search.get("from")
     ? dayjs(search.get("from")).startOf("d").toDate()
-    : dayjs().subtract(1, "month").startOf("d").toDate()
+    : dayjs().subtract(6, "month").startOf("d").toDate()
   const to = search.get("to") ? dayjs(search.get("to")).endOf("d").toDate() : dayjs().endOf("d").toDate()
   const user = await requireUser(request)
   const elements = await db.element.findMany({
@@ -29,25 +32,37 @@ export const loader = async ({ request }: LoaderArgs) => {
       id: true,
       name: true,
       color: true,
-      tasks: { select: { id: true }, where: { date: { gt: from, lte: to } } },
+      tasks: {
+        select: { id: true, durationHours: true, durationMinutes: true },
+        where: { date: { gt: from, lte: to } },
+      },
       children: {
         select: {
           id: true,
           name: true,
           color: true,
-          tasks: { select: { id: true }, where: { date: { gt: from, lte: to } } },
+          tasks: {
+            select: { id: true, durationHours: true, durationMinutes: true },
+            where: { date: { gt: from, lte: to } },
+          },
           children: {
             select: {
               id: true,
               name: true,
               color: true,
-              tasks: { select: { id: true }, where: { date: { gt: from, lte: to } } },
+              tasks: {
+                select: { id: true, durationHours: true, durationMinutes: true },
+                where: { date: { gt: from, lte: to } },
+              },
               children: {
                 select: {
                   id: true,
                   name: true,
                   color: true,
-                  tasks: { select: { id: true }, where: { date: { gt: from, lte: to } } },
+                  tasks: {
+                    select: { id: true, durationHours: true, durationMinutes: true },
+                    where: { date: { gt: from, lte: to } },
+                  },
                 },
               },
             },
@@ -56,29 +71,46 @@ export const loader = async ({ request }: LoaderArgs) => {
       },
     },
   })
-  return json(
-    elements.map(({ tasks, ...e }) => ({
+
+  return json({
+    pie: elements
+      .map((e) => [e, ...e.children.map((c1) => [c1, ...c1.children.map((c2) => [c2, ...c2.children])])])
+      .flat(3)
+      .map((e) => ({
+        name: e.name,
+        value: e.tasks.length,
+        totalMinutes: getMinutesFromTasks(e.tasks),
+        color: e.color,
+      })),
+    table: elements.map(({ tasks, ...e }) => ({
       ...e,
       taskCount: tasks.length,
+      taskDuration: getTotalTaskDuration(tasks),
       children: e.children.map(({ tasks: tasks1, ...c1 }) => ({
         ...c1,
         taskCount: tasks1.length,
+        taskDuration: getTotalTaskDuration(tasks),
         children: c1.children.map(({ tasks: tasks2, ...c2 }) => ({
           ...c2,
           taskCount: tasks2.length,
-          children: c2.children.map(({ tasks: tasks3, ...c3 }) => ({ ...c3, taskCount: tasks3.length })),
+          taskDuration: getTotalTaskDuration(tasks),
+          children: c2.children.map(({ tasks: tasks3, ...c3 }) => ({
+            ...c3,
+            taskCount: tasks3.length,
+            taskDuration: getTotalTaskDuration(tasks),
+          })),
         })),
       })),
     })),
-  )
+  })
 }
 
-type Element = SerializeFrom<typeof loader>[0]
+type Element = SerializeFrom<typeof loader>["table"][0]
 
 export default function Dashboard() {
-  const elements = useLoaderData<typeof loader>()
+  const { table, pie } = useLoaderData<typeof loader>()
   const [search] = useSearchParams()
-  const from = search.get("from") || dayjs().subtract(1, "month").startOf("d").format("YYYY-MM-DD")
+  const from = search.get("from") || dayjs().subtract(6, "month").startOf("d").format("YYYY-MM-DD")
   const to = search.get("to") || dayjs().endOf("d").format("YYYY-MM-DD")
   return (
     <c.Stack p={4} spacing={4}>
@@ -108,12 +140,22 @@ export default function Dashboard() {
           <c.Stack>
             <c.Flex justify="space-between">
               <c.Text fontWeight="medium">Element</c.Text>
-              <c.Text fontWeight="medium">Tasks</c.Text>
+              <c.HStack>
+                <c.Text fontWeight="medium" w="100px" textAlign="center">
+                  Count
+                </c.Text>
+                <c.Text fontWeight="medium" w="100px" textAlign="center">
+                  Duration
+                </c.Text>
+              </c.HStack>
             </c.Flex>
-            {elements.map((element) => (
+            {table.map((element) => (
               <ElementStat key={element.id} element={element} depth={1} />
             ))}
           </c.Stack>
+          <c.Center>
+            <PieChart data={pie} />
+          </c.Center>
         </c.SimpleGrid>
       </c.Stack>
     </c.Stack>
@@ -133,7 +175,14 @@ function ElementStat({ element, depth }: Props) {
           <c.Box boxSize="20px" bg={element.color} borderRadius="full" />
           <c.Text>{element.name}</c.Text>
         </c.HStack>
-        <c.Text fontSize="lg">{element.taskCount}</c.Text>
+        <c.HStack>
+          <c.Text fontSize="lg" w="100px" textAlign="center">
+            {element.taskCount}
+          </c.Text>
+          <c.Text fontSize="md" w="100px" textAlign="center">
+            {element.taskDuration}
+          </c.Text>
+        </c.HStack>
       </c.Flex>
       {element.children && element.children.length > 0 && (
         <c.Stack pl={4 * depth}>
