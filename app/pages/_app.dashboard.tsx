@@ -78,7 +78,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       .flat(3)
       .map((e) => ({
         name: e.name,
-        value: e.tasks.length,
+        taskCount: e.tasks.length,
         totalMinutes: getMinutesFromTasks(e.tasks),
         color: e.color,
       })),
@@ -154,7 +154,20 @@ export default function Dashboard() {
             ))}
           </c.Stack>
           <c.VStack>
-            <PieChart data={pie} />
+            <c.Stack>
+              <c.Text>Tast count</c.Text>
+              <PieChart data={pie.map((e) => ({ value: e.taskCount, name: e.name, color: e.color }))} />
+            </c.Stack>
+            <c.Stack>
+              <c.Text>Tast duration</c.Text>
+              <PieChart
+                data={pie.map((e) => ({
+                  value: Math.round(e.totalMinutes / 60),
+                  name: e.name,
+                  color: e.color,
+                }))}
+              />
+            </c.Stack>
           </c.VStack>
         </c.SimpleGrid>
       </c.Stack>
