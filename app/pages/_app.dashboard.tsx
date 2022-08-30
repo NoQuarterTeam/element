@@ -89,15 +89,15 @@ export const loader = async ({ request }: LoaderArgs) => {
       children: e.children.map(({ tasks: tasks1, ...c1 }) => ({
         ...c1,
         taskCount: tasks1.length,
-        taskDuration: getTotalTaskDuration(tasks),
+        taskDuration: getTotalTaskDuration(tasks1),
         children: c1.children.map(({ tasks: tasks2, ...c2 }) => ({
           ...c2,
           taskCount: tasks2.length,
-          taskDuration: getTotalTaskDuration(tasks),
+          taskDuration: getTotalTaskDuration(tasks2),
           children: c2.children.map(({ tasks: tasks3, ...c3 }) => ({
             ...c3,
             taskCount: tasks3.length,
-            taskDuration: getTotalTaskDuration(tasks),
+            taskDuration: getTotalTaskDuration(tasks3),
           })),
         })),
       })),
