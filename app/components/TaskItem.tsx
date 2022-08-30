@@ -3,6 +3,7 @@ import * as c from "@chakra-ui/react"
 import { Link, useFetcher } from "@remix-run/react"
 
 import { safeReadableColor } from "~/lib/color"
+import { formatDuration } from "~/lib/helpers/duration"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import type { TimelineTask } from "~/pages/api.tasks"
@@ -170,9 +171,3 @@ function _TaskItem({ task }: Props) {
   )
 }
 export const TaskItem = React.memo(_TaskItem)
-
-export function formatDuration(hours?: number | null, minutes?: number | null) {
-  const hoursDisplay = hours ? `${hours}h` : ""
-  const minutesDisplay = minutes ? `${minutes}m` : ""
-  return hoursDisplay + minutesDisplay
-}

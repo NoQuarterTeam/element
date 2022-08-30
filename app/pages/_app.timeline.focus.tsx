@@ -1,22 +1,19 @@
 import * as React from "react"
 import * as c from "@chakra-ui/react"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
-import type { LoaderArgs } from "@remix-run/server-runtime";
+import type { LoaderArgs } from "@remix-run/server-runtime"
 import { json } from "@remix-run/server-runtime"
 import dayjs from "dayjs"
 import { motion } from "framer-motion"
 
-import { formatDuration } from "~/components/TaskItem"
 import { safeReadableColor } from "~/lib/color"
 import { db } from "~/lib/db.server"
+import { formatDuration } from "~/lib/helpers/duration"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { requireUser } from "~/services/auth/auth.server"
 
 import { TaskActionMethods } from "./_app.timeline.$id"
 
-export const headers = () => {
-  return { "Cache-Control": "max-age=600, s-maxage=3600" }
-}
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
 

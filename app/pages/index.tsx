@@ -12,12 +12,6 @@ export const meta: MetaFunction = () => {
   return { title: "Element" }
 }
 
-export const headers = () => {
-  return {
-    "Cache-Control": "max-age=3600, s-maxage=86400",
-  }
-}
-
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
   if (user) return redirect("/timeline")
@@ -128,6 +122,17 @@ export default function HomeLayout() {
             </c.Box>
           </c.Center>
 
+          <c.VStack spacing={6} pt={10} id="why">
+            <c.VStack>
+              <c.Heading as="h3">Why</c.Heading>
+              <c.Text fontSize="lg">Just another task planner?</c.Text>
+            </c.VStack>
+
+            <c.Text textAlign="center" w="100%" maxW="800px">
+              Task planners don't give a good enough overview of your day/week. Most aren't built to handle
+              your calendar events. TBC.
+            </c.Text>
+          </c.VStack>
           <c.Stack spacing={6} pt={10} id="pricing">
             <c.VStack>
               <c.Heading as="h3">Pricing</c.Heading>
@@ -155,7 +160,7 @@ export default function HomeLayout() {
                       <c.Text fontWeight="bold" fontSize="md">
                         Personal
                       </c.Text>
-                      <c.Text fontWeight="medium" fontSize="xl">
+                      <c.Text fontWeight="bold" fontSize="5xl">
                         €0
                       </c.Text>
                     </c.Stack>
@@ -171,9 +176,9 @@ export default function HomeLayout() {
                       <c.Text fontWeight="bold" fontSize="md">
                         Pro
                       </c.Text>
-                      <c.Text fontWeight="medium" fontSize="xl" whiteSpace="nowrap">
+                      <c.Text fontWeight="bold" fontSize="5xl" whiteSpace="nowrap">
                         €4{" "}
-                        <c.Text as="span" whiteSpace="nowrap" fontWeight="thin" opacity={0.7} fontSize="xs">
+                        <c.Text as="span" whiteSpace="nowrap" fontWeight="thin" fontSize="sm">
                           per month
                         </c.Text>
                       </c.Text>
