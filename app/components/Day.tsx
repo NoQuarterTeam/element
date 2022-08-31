@@ -25,7 +25,7 @@ export const DAY_WIDTH = 98
 
 function _Day(props: Props) {
   const navigate = useNavigate()
-  const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HEIGHT : HEADER_HABIT_HEIGHT
+  const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HABIT_HEIGHT : HEADER_HEIGHT
   const { colorMode } = c.useColorMode()
   const isDark = colorMode === "dark"
   const bg = dayjs(props.day).isSame(dayjs(), "day")

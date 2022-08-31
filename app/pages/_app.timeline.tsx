@@ -127,7 +127,7 @@ export default function Timeline() {
     }
   })
   const bg = c.useColorModeValue("gray.100", "gray.800")
-  const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HEIGHT : HEADER_HABIT_HEIGHT
+  const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HABIT_HEIGHT : HEADER_HEIGHT
   return (
     <>
       <c.Box
