@@ -6,17 +6,12 @@ import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
 import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
-import type {
-  TimelineHabit,
-  TimelineHabitEntry,
-  TimelineHabitResponse} from "~/pages/api.habits";
-import {
-  HabitsActionMethods
-} from "~/pages/api.habits"
+import type { TimelineHabit, TimelineHabitEntry, TimelineHabitResponse } from "~/pages/api.habits"
+import { HabitsActionMethods } from "~/pages/api.habits"
 import { HabitActionMethods } from "~/pages/api.habits.$id"
 
 import { ButtonGroup } from "./ButtonGroup"
-import { FormButton,FormError, FormField } from "./Form"
+import { FormButton, FormError, FormField } from "./Form"
 
 interface Props {
   habits: TimelineHabit[]
@@ -50,19 +45,21 @@ export function Habits({ habits, day, habitEntries }: Props) {
   return (
     <c.Popover initialFocusRef={initialFocusRef}>
       <c.PopoverTrigger>
-        <c.Button size="xs" w="100%" tabIndex={-1} variant="ghost" onClick={habitsModalProps.onOpen}>
+        <c.Button size="xs" w="100%" px={0} tabIndex={-1} variant="ghost" onClick={habitsModalProps.onOpen}>
           <c.HStack spacing="3px">
             {habits.length === 0 ? (
               <c.Box as={RiAddCircleLine} boxSize="12px" />
             ) : (
-              habits.map((habit) => (
-                <c.Box
-                  key={habit.id}
-                  boxSize="10px"
-                  borderRadius="full"
-                  bg={habitEntries.find((e) => e.habitId === habit.id) ? habitBgGreen : habitBgRed}
-                />
-              ))
+              habits
+                .map((habit) => (
+                  <c.Box
+                    key={habit.id}
+                    boxSize={habits.length > 8 ? "5px" : habits.length > 5 ? "7px" : "10px"}
+                    borderRadius="full"
+                    bg={habitEntries.find((e) => e.habitId === habit.id) ? habitBgGreen : habitBgRed}
+                  />
+                ))
+                .slice(0, 10)
             )}
           </c.HStack>
         </c.Button>
@@ -87,43 +84,36 @@ export function Habits({ habits, day, habitEntries }: Props) {
         </c.PopoverBody>
         <c.PopoverFooter>
           <c.Popover isLazy placement="right-start" initialFocusRef={initialNewFocusRef} {...createFormProps}>
-            <c.Tooltip label="Maximum of 5 active habits" isDisabled={habits.length < 5}>
-              <c.Box>
-                <ButtonGroup>
-                  <c.PopoverTrigger>
-                    <c.Button isDisabled={habits.length >= 5} onClick={createFormProps.onOpen}>
-                      New habbit
-                    </c.Button>
-                  </c.PopoverTrigger>
-                </ButtonGroup>
-              </c.Box>
-            </c.Tooltip>
-            {habits.length < 5 && (
-              <c.PopoverContent>
-                <c.PopoverHeader>New habbit</c.PopoverHeader>
-                <c.PopoverArrow />
-                <c.PopoverCloseButton onClick={createFormProps.onClose} />
-                <c.PopoverBody>
-                  <createFetcher.Form action="/api/habits" replace method="post">
-                    <c.Stack>
-                      <FormField ref={initialNewFocusRef} autoFocus name="name" label="Name" />
-                      <input type="hidden" value={day} name="date" />
-                      <FormError />
-                      <ButtonGroup>
-                        <FormButton
-                          isLoading={createFetcher.state !== "idle"}
-                          isDisabled={createFetcher.state !== "idle"}
-                          name="_action"
-                          value={HabitsActionMethods.CreateHabit}
-                        >
-                          Save
-                        </FormButton>
-                      </ButtonGroup>
-                    </c.Stack>
-                  </createFetcher.Form>
-                </c.PopoverBody>
-              </c.PopoverContent>
-            )}
+            <ButtonGroup>
+              <c.PopoverTrigger>
+                <c.Button onClick={createFormProps.onOpen}>New habbit</c.Button>
+              </c.PopoverTrigger>
+            </ButtonGroup>
+
+            <c.PopoverContent>
+              <c.PopoverHeader>New habbit</c.PopoverHeader>
+              <c.PopoverArrow />
+              <c.PopoverCloseButton onClick={createFormProps.onClose} />
+              <c.PopoverBody>
+                <createFetcher.Form action="/api/habits" replace method="post">
+                  <c.Stack>
+                    <FormField ref={initialNewFocusRef} autoFocus name="name" label="Name" />
+                    <input type="hidden" value={day} name="date" />
+                    <FormError />
+                    <ButtonGroup>
+                      <FormButton
+                        isLoading={createFetcher.state !== "idle"}
+                        isDisabled={createFetcher.state !== "idle"}
+                        name="_action"
+                        value={HabitsActionMethods.CreateHabit}
+                      >
+                        Save
+                      </FormButton>
+                    </ButtonGroup>
+                  </c.Stack>
+                </createFetcher.Form>
+              </c.PopoverBody>
+            </c.PopoverContent>
           </c.Popover>
         </c.PopoverFooter>
       </c.PopoverContent>
