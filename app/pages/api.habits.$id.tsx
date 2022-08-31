@@ -1,5 +1,5 @@
-import type { ActionArgs} from "@remix-run/node";
-import { json,redirect } from "@remix-run/node"
+import type { ActionArgs } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import dayjs from "dayjs"
 import { z } from "zod"
 
@@ -12,23 +12,39 @@ import { getFlashSession } from "~/services/session/session.server"
 
 export enum HabitActionMethods {
   ToggleComplete = "toggleComplete",
+  Archive = "archive",
+  Edit = "edit",
 }
 export const action = async ({ request, params }: ActionArgs) => {
   const user = await requireUser(request)
+  if (!user.stripeSubscriptionId) {
+    return redirect("/timeline/profile/plan")
+  }
   const formData = await request.formData()
   const { createFlash } = await getFlashSession(request)
   const action = formData.get("_action") as HabitActionMethods | undefined
   const id = params.id
   if (!id) throw badRequest("ID required")
+  const habit = await db.habit.findUnique({ where: { id } })
+  if (!habit) return badRequest("Habit not found")
 
   switch (action) {
+    case HabitActionMethods.Edit:
+      try {
+        const editSchema = z.object({ name: z.string() })
+        const editForm = await validateFormData(editSchema, formData)
+        if (editForm.fieldErrors) return badRequest(editForm)
+        const editHabit = await db.habit.update({ where: { id }, data: { name: editForm.data.name } })
+        return json({ habit: editHabit })
+      } catch (e: any) {
+        return json(e.message, {
+          status: 400,
+          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error creating habit entry") },
+        })
+      }
     case HabitActionMethods.ToggleComplete:
       try {
-        if (!user.stripeSubscriptionId) {
-          return redirect("/timeline/profile/plan")
-        }
         const toggleSchema = z.object({ date: z.string() })
-
         const toggleForm = await validateFormData(toggleSchema, formData)
         if (toggleForm.fieldErrors) return badRequest(toggleForm)
         const date = toggleForm.data.date
@@ -56,7 +72,18 @@ export const action = async ({ request, params }: ActionArgs) => {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error creating habit entry") },
         })
       }
+    case HabitActionMethods.Archive:
+      try {
+        console.log("whyyyy??")
 
+        await db.habit.update({ where: { id }, data: { archivedAt: new Date() } })
+        return json({ success: true })
+      } catch (e: any) {
+        return json(e.message, {
+          status: 400,
+          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error archiving habit") },
+        })
+      }
     default:
       return redirect("/")
   }

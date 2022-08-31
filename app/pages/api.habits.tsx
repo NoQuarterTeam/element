@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import dayjs from "dayjs"
@@ -19,8 +19,10 @@ export const loader = async ({ request }: LoaderArgs) => {
   const back = backParam ? parseInt(backParam) : DAYS_BACK
   const [habits, habitEntries] = await Promise.all([
     db.habit.findMany({
+      orderBy: { createdAt: "desc" },
       select: { id: true, name: true, startDate: true },
       where: {
+        archivedAt: { equals: null },
         creatorId: { equals: user.id },
         startDate: {
           gte: dayjs().subtract(back, "day").startOf("d").toDate(),
@@ -31,6 +33,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       select: { id: true, habitId: true, createdAt: true },
       where: {
         creatorId: { equals: user.id },
+        habit: { archivedAt: { equals: null } },
         createdAt: {
           gte: dayjs().subtract(back, "day").startOf("d").toDate(),
           lte: dayjs().endOf("d").toDate(),

@@ -1,12 +1,17 @@
 import * as React from "react"
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
+import type { ShouldReloadFunction} from "@remix-run/react";
 import { useLoaderData } from "@remix-run/react"
 import { Outlet } from "@remix-run/react"
 import { useHydrated } from "remix-utils"
 
 import { requireUser } from "~/services/auth/auth.server"
 
+export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
+  if (!submission) return false
+  return ["/api/profile"].some((path) => submission.action.includes(path))
+}
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   return json(user)

@@ -58,7 +58,7 @@ model Element {
   createdAt  DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt  DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
   children   Element[] @relation(name: "ChildElements")
-  parent     Element?  @relation(name: "ChildElements", fields: [parentId], references: [id])
+  parent     Element?  @relation(name: "ChildElements", fields: [parentId], references: [id], onDelete: SetNull)
   parentId   String?   @db.Uuid
   creator    User      @relation(fields: [creatorId], references: [id])
   creatorId  String    @db.Uuid
@@ -69,11 +69,12 @@ model Habit {
   id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String
   description String?
+  archivedAt  DateTime?
   startDate   DateTime
   createdAt   DateTime     @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
   creatorId   String       @db.Uuid
-  creator     User         @relation(fields: [creatorId], references: [id])
+  creator     User         @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   entries     HabitEntry[]
 }
 
@@ -82,7 +83,7 @@ model HabitEntry {
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
   habitId   String   @db.Uuid
-  habit     Habit    @relation(fields: [habitId], references: [id])
+  habit     Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
   creatorId String   @db.Uuid
-  creator   User     @relation(fields: [creatorId], references: [id])
+  creator   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 }

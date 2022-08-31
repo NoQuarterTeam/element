@@ -1,26 +1,16 @@
-import * as React from "react"
 import * as c from "@chakra-ui/react"
-import { useFetcher } from "@remix-run/react"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
 import { useMe } from "~/pages/_app"
-import type {
-  TimelineHabit,
-  TimelineHabitEntry,
-  TimelineHabitResponse} from "~/pages/api.habits";
-import {
-  HabitsActionMethods
-} from "~/pages/api.habits"
-import { HabitActionMethods } from "~/pages/api.habits.$id"
+import type { TimelineHabitResponse } from "~/pages/api.habits"
 import type { WeatherData } from "~/pages/api.weather"
 
-import { ButtonGroup } from "./ButtonGroup"
 import { DAY_WIDTH } from "./Day"
-import { FormButton, FormError, FormField } from "./Form"
+import { Habits } from "./Habits"
 
 export const HEADER_HEIGHT = 115
 
@@ -37,9 +27,10 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
   const { colorMode } = c.useColorMode()
   const isDark = colorMode === "dark"
   const features = useFeatures((s) => s.features)
+  const isHabitsEnabled = features.includes("habits")
+
   const daysBack = useTimelineDays((s) => s.daysBack)
 
-  const isHabitsEnabled = features.includes("habits")
   const { data } = useQuery(
     ["habits", { daysBack }],
     async () => {
@@ -137,133 +128,5 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
         </c.Box>
       ))}
     </c.Flex>
-  )
-}
-
-interface HabitProps {
-  habits: TimelineHabit[]
-  day: string
-  habitEntries: TimelineHabitEntry[]
-}
-function Habits({ habits, day, habitEntries }: HabitProps) {
-  const habitBgRed = c.useColorModeValue("red.300", "red.700")
-  const habitBgGreen = c.useColorModeValue("green.400", "green.600")
-  const habitsModalProps = c.useDisclosure()
-  const habitEntryFetcher = useFetcher()
-  const client = useQueryClient()
-  const daysBack = useTimelineDays((s) => s.daysBack)
-  const initialFocusRef = React.useRef(null)
-  const initialNewFocusRef = React.useRef(null)
-  const filteredHabits = habits.filter((h) => dayjs(h.startDate).isBefore(dayjs(day).endOf("d")))
-  const createFetcher = useFetcher()
-  const createFormProps = c.useDisclosure()
-  React.useEffect(() => {
-    if (createFetcher.type === "actionReload" && createFetcher.data?.habit) {
-      const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
-      if (!res) return
-      client.setQueryData<TimelineHabitResponse>(["habits", { daysBack }], {
-        habits: [...res.habits, createFetcher.data.habit],
-        habitEntries: res.habitEntries || [],
-      })
-      createFormProps.onClose()
-    }
-  }, [createFetcher.type, createFetcher.data])
-
-  return (
-    <c.Popover initialFocusRef={initialFocusRef}>
-      <c.PopoverTrigger>
-        <c.Button size="xs" w="100%" tabIndex={-1} variant="ghost" onClick={habitsModalProps.onOpen}>
-          <c.HStack spacing="3px">
-            {filteredHabits.map((habit) => (
-              <c.Box
-                key={habit.id}
-                boxSize="10px"
-                borderRadius="full"
-                bg={habitEntries.find((e) => e.habitId === habit.id) ? habitBgGreen : habitBgRed}
-              />
-            ))}
-          </c.HStack>
-        </c.Button>
-      </c.PopoverTrigger>
-
-      <c.PopoverContent>
-        <c.PopoverHeader>Habits</c.PopoverHeader>
-        <c.PopoverArrow />
-        <c.PopoverCloseButton ref={initialFocusRef} />
-        <c.PopoverBody>
-          <c.Stack>
-            {filteredHabits.map((habit) => {
-              const entry = habitEntries.find((e) => e.habitId === habit.id)
-              return (
-                <c.Flex key={habit.id} align="center" justify="space-between">
-                  <c.Text fontSize="md">{habit.name}</c.Text>
-                  <c.Checkbox
-                    defaultChecked={!!entry}
-                    onChange={() => {
-                      habitEntryFetcher.submit(
-                        { _action: HabitActionMethods.ToggleComplete, date: dayjs(day).format() },
-                        { action: `/api/habits/${habit.id}`, method: "post" },
-                      )
-                      const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
-                      if (!res) return
-                      client.setQueryData<TimelineHabitResponse>(["habits", { daysBack }], {
-                        habits: res.habits || [],
-                        habitEntries: entry
-                          ? res.habitEntries.filter((e) => e.id !== entry.id)
-                          : [
-                              ...res.habitEntries,
-                              {
-                                id: new Date().getMilliseconds().toString(),
-                                habitId: habit.id,
-                                createdAt: dayjs(day).startOf("d").add(12, "h").format(),
-                              },
-                            ],
-                      })
-                    }}
-                  />
-                </c.Flex>
-              )
-            })}
-          </c.Stack>
-        </c.PopoverBody>
-        <c.PopoverFooter>
-          <c.Popover isLazy placement="right-start" initialFocusRef={initialNewFocusRef} {...createFormProps}>
-            <ButtonGroup>
-              <c.PopoverTrigger>
-                <c.Button isDisabled={habits.length >= 5} onClick={createFormProps.onOpen}>
-                  New habbit
-                </c.Button>
-              </c.PopoverTrigger>
-            </ButtonGroup>
-            {habits.length < 5 && (
-              <c.PopoverContent>
-                <c.PopoverHeader>New habbit</c.PopoverHeader>
-                <c.PopoverArrow />
-                <c.PopoverCloseButton onClick={createFormProps.onClose} />
-                <c.PopoverBody>
-                  <createFetcher.Form action="/api/habits" replace method="post">
-                    <c.Stack>
-                      <FormField ref={initialNewFocusRef} autoFocus name="name" label="Name" />
-                      <input type="hidden" value={day} name="date" />
-                      <FormError />
-                      <ButtonGroup>
-                        <FormButton
-                          isLoading={createFetcher.state !== "idle"}
-                          isDisabled={createFetcher.state !== "idle"}
-                          name="_action"
-                          value={HabitsActionMethods.CreateHabit}
-                        >
-                          Save
-                        </FormButton>
-                      </ButtonGroup>
-                    </c.Stack>
-                  </createFetcher.Form>
-                </c.PopoverBody>
-              </c.PopoverContent>
-            )}
-          </c.Popover>
-        </c.PopoverFooter>
-      </c.PopoverContent>
-    </c.Popover>
   )
 }

@@ -2,7 +2,7 @@ import * as React from "react"
 import { RiAddCircleLine, RiCalendarEventLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { Outlet, useNavigate } from "@remix-run/react"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import throttle from "lodash.throttle"
@@ -36,13 +36,13 @@ export default function Timeline() {
     isLoading,
     isFetching,
   } = useQuery(
-    ["tasks", { daysForward, daysBack }],
+    ["tasks"],
     async () => {
-      const response = await fetch(`/api/tasks?back=${daysBack}&forward=${daysForward}`)
+      const response = await fetch(`/api/tasks`)
       if (!response.ok) throw new Error("Failed to load tasks")
       return response.json() as Promise<TimelineTask[]>
     },
-    { refetchOnWindowFocus: false },
+    { refetchOnWindowFocus: false, staleTime: Infinity },
   )
 
   const timelineRef = React.useRef<HTMLDivElement>(null)
@@ -58,12 +58,41 @@ export default function Timeline() {
     PreloadedEditorInput.preload()
   }, [])
 
-  const handleForward = () => setDaysForward(daysForward + DAYS_FORWARD)
+  const handleForward = async () => {
+    setDaysForward(daysForward + DAYS_FORWARD)
+    try {
+      const back = -daysForward - 1
+      const forward = daysForward + DAYS_FORWARD
+      const res = await client.fetchQuery<TimelineTask[]>(["tasks", { back, forward }], async () => {
+        const response = await fetch(`/api/tasks?back=${back}&forward=${forward}`)
+        if (!response.ok) throw new Error("Failed to load tasks")
+        return response.json() as Promise<TimelineTask[]>
+      })
+      const oldTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
+      client.setQueryData(["tasks"], [...oldTasks, ...res])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const client = useQueryClient()
 
-  const handleBack = () => {
+  const handleBack = async () => {
     // Need to scroll a bit right otherwise it keeps running handleBack
     timelineRef.current?.scrollTo({ left: DAYS_BACK * DAY_WIDTH })
     setDaysBack(daysBack + DAYS_BACK)
+    try {
+      const back = daysBack + DAYS_BACK
+      const forward = -daysBack - 2
+      const res = await client.fetchQuery<TimelineTask[]>(["tasks", { back, forward }], async () => {
+        const response = await fetch(`/api/tasks?back=${back}&forward=${forward}`)
+        if (!response.ok) throw new Error("Failed to load tasks")
+        return response.json() as Promise<TimelineTask[]>
+      })
+      const oldTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
+      client.setQueryData(["tasks"], [...oldTasks, ...res])
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleScroll = () => {
