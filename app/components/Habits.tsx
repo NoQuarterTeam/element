@@ -26,10 +26,10 @@ export function Habits({ habits, day, habitEntries }: Props) {
   const daysBack = useTimelineDays((s) => s.daysBack)
   const initialFocusRef = React.useRef(null)
   const initialNewFocusRef = React.useRef(null)
-  // const filteredArchived = habits.filter((h) => dayjs(h.startDate).isBefore(dayjs(day).endOf("d")))
   const createFetcher = useFetcher()
   const createFormProps = c.useDisclosure()
 
+  const dayHabits = habits.filter((h) => dayjs(h.startDate).isBefore(dayjs(day).endOf("d")))
   React.useEffect(() => {
     if (createFetcher.type === "actionReload" && createFetcher.data?.habit) {
       const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
@@ -47,10 +47,10 @@ export function Habits({ habits, day, habitEntries }: Props) {
       <c.PopoverTrigger>
         <c.Button size="xs" w="100%" px={0} tabIndex={-1} variant="ghost" onClick={habitsModalProps.onOpen}>
           <c.HStack spacing="3px">
-            {habits.length === 0 ? (
+            {dayHabits.length === 0 ? (
               <c.Box as={RiAddCircleLine} boxSize="12px" />
             ) : (
-              habits
+              dayHabits
                 .map((habit) => (
                   <c.Box
                     key={habit.id}
