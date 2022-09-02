@@ -17,6 +17,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const [users, taskCountTotal, tastCountLastMonth, taskCountThisMonth] = await Promise.all([
     db.user.findMany({
       where: { role: Role.USER },
+      orderBy: { createdAt: "desc" },
       select: { id: true, firstName: true, email: true, stripeSubscriptionId: true },
     }),
     db.task.count(),
