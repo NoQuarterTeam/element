@@ -29,7 +29,12 @@ export function Habits({ habits, day, habitEntries }: Props) {
   const createFetcher = useFetcher()
   const createFormProps = c.useDisclosure()
 
-  const dayHabits = habits.filter((h) => dayjs(h.startDate).isBefore(dayjs(day).endOf("d")))
+  const dayHabits = habits.filter(
+    (h) =>
+      dayjs(h.startDate).isBefore(dayjs(day).endOf("d")) &&
+      (h.archivedAt ? dayjs(h.archivedAt).isAfter(dayjs(day).endOf("d")) : true),
+  )
+
   React.useEffect(() => {
     if (createFetcher.type === "actionReload" && createFetcher.data?.habit) {
       const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
@@ -71,12 +76,12 @@ export function Habits({ habits, day, habitEntries }: Props) {
         <c.PopoverCloseButton ref={initialFocusRef} />
         <c.PopoverBody>
           <c.Stack>
-            {habits.length === 0 ? (
+            {dayHabits.length === 0 ? (
               <c.Text py={2} fontSize="sm">
                 No habits yet!
               </c.Text>
             ) : (
-              habits.map((habit) => (
+              dayHabits.map((habit) => (
                 <HabitItem key={habit.id} habit={habit} habitEntries={habitEntries} day={day} />
               ))
             )}
@@ -149,11 +154,12 @@ function HabitItem({ habit, day, habitEntries }: ItemProps) {
   const handleArchiveHabit = () => {
     const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
     client.setQueryData(["habits", { daysBack }], {
-      habits: res?.habits.filter((h) => h.id !== habit.id) || [],
+      habits:
+        res?.habits.map((h) => (h.id === habit.id ? { ...h, archivedAt: dayjs(day).toDate() } : h)) || [],
       habitEntries: res?.habitEntries || [],
     })
     archiveHabitFetcher.submit(
-      { _action: HabitActionMethods.Archive },
+      { _action: HabitActionMethods.Archive, archivedAt: dayjs(day).toISOString() },
       { action: `/api/habits/${habit.id}`, method: "post" },
     )
   }

@@ -74,9 +74,11 @@ export const action = async ({ request, params }: ActionArgs) => {
       }
     case HabitActionMethods.Archive:
       try {
-        console.log("whyyyy??")
-
-        await db.habit.update({ where: { id }, data: { archivedAt: new Date() } })
+        const archiveSchema = z.object({ archivedAt: z.string() })
+        const archiveForm = await validateFormData(archiveSchema, formData)
+        if (archiveForm.fieldErrors) return badRequest(archiveForm)
+        const archivedAt = archiveForm.data.archivedAt
+        await db.habit.update({ where: { id }, data: { archivedAt: dayjs(archivedAt).toDate() } })
         return json({ success: true })
       } catch (e: any) {
         return json(e.message, {
