@@ -1,5 +1,5 @@
 import * as React from "react"
-import { RiAddCircleLine, RiFolder2Line } from "react-icons/ri"
+import { RiAddCircleLine, RiDeleteBin4Line, RiFolder2Line } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
@@ -132,14 +132,12 @@ interface ItemProps {
   habitEntries: TimelineHabitEntry[]
 }
 function HabitItem({ habit, day, habitEntries }: ItemProps) {
-  const archiveProps = c.useDisclosure()
   const daysBack = useTimelineDays((s) => s.daysBack)
   const habitEntryFetcher = useFetcher()
-  const updateHabitFetcher = useFetcher()
-  const archiveHabitFetcher = useFetcher()
   const entry = habitEntries.find((e) => e.habitId === habit.id)
   const client = useQueryClient()
 
+  const updateHabitFetcher = useFetcher()
   const handleUpdateHabit = (name: string) => {
     const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
     client.setQueryData(["habits", { daysBack }], {
@@ -151,6 +149,10 @@ function HabitItem({ habit, day, habitEntries }: ItemProps) {
       { action: `/api/habits/${habit.id}`, method: "post" },
     )
   }
+
+  const cancelArchiveRef = React.useRef(null)
+  const archiveProps = c.useDisclosure()
+  const archiveHabitFetcher = useFetcher()
   const handleArchiveHabit = () => {
     const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
     client.setQueryData(["habits", { daysBack }], {
@@ -163,7 +165,21 @@ function HabitItem({ habit, day, habitEntries }: ItemProps) {
       { action: `/api/habits/${habit.id}`, method: "post" },
     )
   }
-  const cancelRef = React.useRef(null)
+
+  const deleteHabitFetcher = useFetcher()
+  const deleteProps = c.useDisclosure()
+  const cancelDeleteRef = React.useRef(null)
+  const handleDeleteHabit = () => {
+    const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
+    client.setQueryData(["habits", { daysBack }], {
+      habits: res?.habits.filter((h) => h.id !== habit.id) || [],
+      habitEntries: res?.habitEntries || [],
+    })
+    deleteHabitFetcher.submit(
+      { _action: HabitActionMethods.Delete },
+      { action: `/api/habits/${habit.id}`, method: "post" },
+    )
+  }
   return (
     <c.Flex
       _hover={{ ".habit-actions": { display: "flex" } }}
@@ -173,11 +189,11 @@ function HabitItem({ habit, day, habitEntries }: ItemProps) {
       align="center"
       justify="space-between"
     >
-      <c.Editable w="80%" defaultValue={habit.name}>
+      <c.Editable w="75%" defaultValue={habit.name}>
         <c.EditablePreview _hover={{ textDecor: "underline" }} />
         <c.EditableInput onBlur={(e) => handleUpdateHabit(e.target.value)} />
       </c.Editable>
-      <c.HStack spacing={1}>
+      <c.HStack spacing={0}>
         <c.Tooltip label="Archive" placement="bottom" zIndex={50} hasArrow>
           <c.IconButton
             className="habit-actions"
@@ -190,18 +206,34 @@ function HabitItem({ habit, day, habitEntries }: ItemProps) {
             icon={<c.Box as={RiFolder2Line} boxSize="14px" />}
           />
         </c.Tooltip>
-        <c.AlertDialog {...archiveProps} leastDestructiveRef={cancelRef}>
+        <c.Tooltip label="Delete" placement="bottom" zIndex={50} hasArrow>
+          <c.Box pr={1}>
+            <c.IconButton
+              className="habit-actions"
+              borderRadius="full"
+              variant="ghost"
+              display="none"
+              aria-label="delete habit"
+              size="xs"
+              onClick={deleteProps.onOpen}
+              icon={<c.Box as={RiDeleteBin4Line} boxSize="14px" />}
+            />
+          </c.Box>
+        </c.Tooltip>
+        <c.AlertDialog {...archiveProps} leastDestructiveRef={cancelArchiveRef}>
           <c.AlertDialogOverlay>
             <c.AlertDialogContent>
               <c.AlertDialogHeader fontSize="lg" fontWeight="bold">
                 Archive habit
               </c.AlertDialogHeader>
 
-              <c.AlertDialogBody py={0}>Are you sure?</c.AlertDialogBody>
+              <c.AlertDialogBody py={0}>
+                Are you sure? This will stop showing this habit from this date.
+              </c.AlertDialogBody>
 
               <c.AlertDialogFooter>
                 <ButtonGroup>
-                  <c.Button ref={cancelRef} onClick={archiveProps.onClose}>
+                  <c.Button ref={cancelArchiveRef} onClick={archiveProps.onClose}>
                     Cancel
                   </c.Button>
                   <c.Button
@@ -211,6 +243,35 @@ function HabitItem({ habit, day, habitEntries }: ItemProps) {
                     isDisabled={archiveHabitFetcher.state !== "idle"}
                   >
                     Archive
+                  </c.Button>
+                </ButtonGroup>
+              </c.AlertDialogFooter>
+            </c.AlertDialogContent>
+          </c.AlertDialogOverlay>
+        </c.AlertDialog>
+        <c.AlertDialog {...deleteProps} leastDestructiveRef={cancelDeleteRef}>
+          <c.AlertDialogOverlay>
+            <c.AlertDialogContent>
+              <c.AlertDialogHeader fontSize="lg" fontWeight="bold">
+                Delete habit
+              </c.AlertDialogHeader>
+
+              <c.AlertDialogBody py={0}>
+                Are you sure? This will delete the habit and all entries. This action cannot be undone.
+              </c.AlertDialogBody>
+
+              <c.AlertDialogFooter>
+                <ButtonGroup>
+                  <c.Button ref={cancelDeleteRef} onClick={deleteProps.onClose}>
+                    Cancel
+                  </c.Button>
+                  <c.Button
+                    colorScheme="red"
+                    onClick={handleDeleteHabit}
+                    isLoading={archiveHabitFetcher.state !== "idle"}
+                    isDisabled={archiveHabitFetcher.state !== "idle"}
+                  >
+                    Delete
                   </c.Button>
                 </ButtonGroup>
               </c.AlertDialogFooter>
