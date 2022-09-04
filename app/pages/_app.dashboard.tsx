@@ -72,7 +72,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     },
   })
 
-  return json({
+  const data = {
     habits,
     pie: elements
       .map((e) => [e, ...e.children.map((c1) => [c1, ...c1.children.map((c2) => [c2, ...c2.children])])])
@@ -103,7 +103,8 @@ export const loader = async ({ request }: LoaderArgs) => {
         })),
       })),
     })),
-  })
+  }
+  return json(data)
 }
 
 type Element = SerializeFrom<typeof loader>["table"][0]
@@ -172,22 +173,20 @@ export default function Dashboard() {
               <c.Text>Name</c.Text>
               <c.Text>% Complete</c.Text>
             </c.Flex>
-            {habits.map((habit) => (
-              <c.Flex align="center" justify="space-between" key={habit.id} py={2}>
-                <c.Box>
-                  <c.Text fontWeight="medium">{habit.name}</c.Text>
-                  <c.Text>{habit._count.entries} entries</c.Text>
-                </c.Box>
-                <c.Text>
-                  {Math.round(
-                    (habit._count.entries /
-                      dayjs(habit.archivedAt || undefined).diff(dayjs(habit.startDate), "days")) *
-                      100,
-                  )}
-                  %
-                </c.Text>
-              </c.Flex>
-            ))}
+            {habits.map((habit) => {
+              const totalDays = dayjs(habit.archivedAt || undefined).diff(dayjs(habit.startDate), "days")
+              return (
+                <c.Flex align="center" justify="space-between" key={habit.id} py={2}>
+                  <c.Box>
+                    <c.Text fontWeight="medium">{habit.name}</c.Text>
+                    <c.Text>
+                      {habit._count.entries} entries / {totalDays} days
+                    </c.Text>
+                  </c.Box>
+                  <c.Text fontSize="2xl">{Math.round((habit._count.entries / totalDays) * 100)}%</c.Text>
+                </c.Flex>
+              )
+            })}
           </c.Stack>
         </c.SimpleGrid>
       </c.Stack>
