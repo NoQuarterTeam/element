@@ -25,7 +25,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       where: {
         createdAt: {
           gte: dayjs().subtract(1, "month").startOf("month").toDate(),
-          lt: dayjs().subtract(1, "month").endOf("month").toDate(),
+          lt: dayjs().subtract(1, "month").toDate(),
         },
       },
     }),
