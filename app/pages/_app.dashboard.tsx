@@ -62,6 +62,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   })
 
   const habits = await db.habit.findMany({
+    where: { creatorId: user.id },
     select: {
       id: true,
       name: true,
