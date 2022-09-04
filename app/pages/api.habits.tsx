@@ -20,9 +20,8 @@ export const loader = async ({ request }: LoaderArgs) => {
   const [habits, habitEntries] = await Promise.all([
     db.habit.findMany({
       orderBy: { createdAt: "desc" },
-      select: { id: true, name: true, startDate: true },
+      select: { id: true, name: true, startDate: true, archivedAt: true },
       where: {
-        archivedAt: { equals: null },
         creatorId: { equals: user.id },
         startDate: {
           gte: dayjs().subtract(back, "day").startOf("d").toDate(),
@@ -33,7 +32,6 @@ export const loader = async ({ request }: LoaderArgs) => {
       select: { id: true, habitId: true, createdAt: true },
       where: {
         creatorId: { equals: user.id },
-        habit: { archivedAt: { equals: null } },
         createdAt: {
           gte: dayjs().subtract(back, "day").startOf("d").toDate(),
           lte: dayjs().endOf("d").toDate(),

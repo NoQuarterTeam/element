@@ -13,6 +13,7 @@ import { getFlashSession } from "~/services/session/session.server"
 export enum HabitActionMethods {
   ToggleComplete = "toggleComplete",
   Archive = "archive",
+  Delete = "delete",
   Edit = "edit",
 }
 export const action = async ({ request, params }: ActionArgs) => {
@@ -74,9 +75,21 @@ export const action = async ({ request, params }: ActionArgs) => {
       }
     case HabitActionMethods.Archive:
       try {
-        console.log("whyyyy??")
-
-        await db.habit.update({ where: { id }, data: { archivedAt: new Date() } })
+        const archiveSchema = z.object({ archivedAt: z.string() })
+        const archiveForm = await validateFormData(archiveSchema, formData)
+        if (archiveForm.fieldErrors) return badRequest(archiveForm)
+        const archivedAt = archiveForm.data.archivedAt
+        await db.habit.update({ where: { id }, data: { archivedAt: dayjs(archivedAt).toDate() } })
+        return json({ success: true })
+      } catch (e: any) {
+        return json(e.message, {
+          status: 400,
+          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error archiving habit") },
+        })
+      }
+    case HabitActionMethods.Delete:
+      try {
+        await db.habit.delete({ where: { id } })
         return json({ success: true })
       } catch (e: any) {
         return json(e.message, {

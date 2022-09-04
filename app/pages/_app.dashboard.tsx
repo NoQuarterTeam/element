@@ -3,10 +3,9 @@ import { RiArrowLeftLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { useLoaderData, useSearchParams } from "@remix-run/react"
+import { useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
 
-import { Form } from "~/components/Form"
 import { LinkButton } from "~/components/LinkButton"
 import { db } from "~/lib/db.server"
 import { getMinutesFromTasks, getTotalTaskDuration } from "~/lib/helpers/duration"
@@ -15,12 +14,6 @@ import { requireUser } from "~/services/auth/auth.server"
 const PieChart = React.lazy(() => import("../components/ElementsChart"))
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const url = new URL(request.url)
-  const search = new URLSearchParams(url.search)
-  const from = search.get("from")
-    ? dayjs(search.get("from")).startOf("d").toDate()
-    : dayjs().subtract(6, "month").startOf("d").toDate()
-  const to = search.get("to") ? dayjs(search.get("to")).endOf("d").toDate() : dayjs().endOf("d").toDate()
   const user = await requireUser(request)
   const elements = await db.element.findMany({
     where: {
@@ -34,7 +27,6 @@ export const loader = async ({ request }: LoaderArgs) => {
       color: true,
       tasks: {
         select: { id: true, durationHours: true, durationMinutes: true },
-        where: { date: { gt: from, lte: to } },
       },
       children: {
         select: {
@@ -43,7 +35,6 @@ export const loader = async ({ request }: LoaderArgs) => {
           color: true,
           tasks: {
             select: { id: true, durationHours: true, durationMinutes: true },
-            where: { date: { gt: from, lte: to } },
           },
           children: {
             select: {
@@ -52,7 +43,6 @@ export const loader = async ({ request }: LoaderArgs) => {
               color: true,
               tasks: {
                 select: { id: true, durationHours: true, durationMinutes: true },
-                where: { date: { gt: from, lte: to } },
               },
               children: {
                 select: {
@@ -61,7 +51,6 @@ export const loader = async ({ request }: LoaderArgs) => {
                   color: true,
                   tasks: {
                     select: { id: true, durationHours: true, durationMinutes: true },
-                    where: { date: { gt: from, lte: to } },
                   },
                 },
               },
@@ -72,7 +61,18 @@ export const loader = async ({ request }: LoaderArgs) => {
     },
   })
 
+  const habits = await db.habit.findMany({
+    select: {
+      id: true,
+      name: true,
+      startDate: true,
+      archivedAt: true,
+      _count: { select: { entries: true } },
+    },
+  })
+
   return json({
+    habits,
     pie: elements
       .map((e) => [e, ...e.children.map((c1) => [c1, ...c1.children.map((c2) => [c2, ...c2.children])])])
       .flat(3)
@@ -108,57 +108,50 @@ export const loader = async ({ request }: LoaderArgs) => {
 type Element = SerializeFrom<typeof loader>["table"][0]
 
 export default function Dashboard() {
-  const { table, pie } = useLoaderData<typeof loader>()
-  const [search] = useSearchParams()
-  const from = search.get("from") || dayjs().subtract(6, "month").startOf("d").format("YYYY-MM-DD")
-  const to = search.get("to") || dayjs().endOf("d").format("YYYY-MM-DD")
+  const { table, pie, habits } = useLoaderData<typeof loader>()
+
   return (
-    <c.Stack p={4} spacing={4}>
+    <c.Stack p={{ base: 4, md: 6 }} spacing={4}>
       <c.Box>
         <LinkButton to="/timeline" variant="ghost" leftIcon={<c.Box as={RiArrowLeftLine} />}>
           Back to timeline
         </LinkButton>
       </c.Box>
       <c.Heading>Dashboard</c.Heading>
-      <c.Stack px={{ base: 0, md: 6 }}>
-        <Form method="get" replace action="/dashboard">
-          <c.HStack align="flex-end" flexWrap="wrap" gap={1} spacing={1}>
-            <c.Box>
-              <c.Text>From</c.Text>
-              <c.Input name="from" defaultValue={from} type="date" />
-            </c.Box>
-            <c.Box>
-              <c.Text>To</c.Text>
-              <c.Input name="to" type="date" defaultValue={to} />
-            </c.Box>
-            <c.Box>
-              <c.Button type="submit">Update</c.Button>
-            </c.Box>
-          </c.HStack>
-        </Form>
+      <c.Stack>
         <c.SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-          <c.Stack>
-            <c.Flex justify="space-between">
-              <c.Text fontWeight="medium">Element</c.Text>
-              <c.HStack>
-                <c.Text fontWeight="medium" w="100px" textAlign="center">
-                  Count
-                </c.Text>
-                <c.Text fontWeight="medium" w="100px" textAlign="center">
-                  Duration
-                </c.Text>
-              </c.HStack>
-            </c.Flex>
-            {table.map((element) => (
-              <ElementStat key={element.id} element={element} depth={1} />
-            ))}
-          </c.Stack>
-          <c.VStack>
+          <c.Stack spacing={8}>
             <c.Stack>
-              <c.Text>Tast count</c.Text>
-              <PieChart data={pie.map((e) => ({ value: e.taskCount, name: e.name, color: e.color }))} />
+              <c.Text fontSize="xl" fontWeight="medium">
+                Elements
+              </c.Text>
+              <c.Divider />
+              <c.Flex justify="space-between">
+                <c.Text>Name</c.Text>
+                <c.HStack>
+                  <c.Text w="100px" textAlign="center">
+                    Count
+                  </c.Text>
+                  <c.Text w="100px" textAlign="center">
+                    Duration
+                  </c.Text>
+                </c.HStack>
+              </c.Flex>
+              <c.Box>
+                {table.map((element) => (
+                  <ElementStat key={element.id} element={element} depth={1} />
+                ))}
+              </c.Box>
             </c.Stack>
+
             <c.Stack>
+              <c.Text fontSize="xl" fontWeight="medium">
+                Tasks
+              </c.Text>
+              <c.Divider />
+              <c.Text>Count</c.Text>
+              <PieChart data={pie.map((e) => ({ value: e.taskCount, name: e.name, color: e.color }))} />
+
               <c.Text>Tast duration</c.Text>
               <PieChart
                 data={pie.map((e) => ({
@@ -168,7 +161,33 @@ export default function Dashboard() {
                 }))}
               />
             </c.Stack>
-          </c.VStack>
+          </c.Stack>
+          <c.Stack>
+            <c.Text fontSize="xl" fontWeight="medium">
+              Habits
+            </c.Text>
+            <c.Divider />
+            <c.Flex align="center" justify="space-between">
+              <c.Text>Name</c.Text>
+              <c.Text>% Complete</c.Text>
+            </c.Flex>
+            {habits.map((habit) => (
+              <c.Flex align="center" justify="space-between" key={habit.id} py={2}>
+                <c.Box>
+                  <c.Text fontWeight="medium">{habit.name}</c.Text>
+                  <c.Text>{habit._count.entries} entries</c.Text>
+                </c.Box>
+                <c.Text>
+                  {Math.round(
+                    (habit._count.entries /
+                      dayjs(habit.archivedAt || undefined).diff(dayjs(habit.startDate), "days")) *
+                      100,
+                  )}
+                  %
+                </c.Text>
+              </c.Flex>
+            ))}
+          </c.Stack>
         </c.SimpleGrid>
       </c.Stack>
     </c.Stack>
