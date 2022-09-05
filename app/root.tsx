@@ -32,9 +32,11 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function App() {
   const { flash } = useLoaderData<typeof loader>()
+
   return (
     <Document>
       <FlashMessage flash={flash} />
+      <SyncReactNative />
       <Outlet />
     </Document>
   )
@@ -161,3 +163,12 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
     </html>
   )
 })
+
+function SyncReactNative() {
+  const { colorMode } = c.useColorMode()
+  React.useEffect(() => {
+    ;(window as any)?.ReactNativeWebView?.postMessage(colorMode)
+  }, [colorMode])
+
+  return null
+}

@@ -88,7 +88,7 @@ export function Habits({ habits, day, habitEntries }: Props) {
           </c.Stack>
         </c.PopoverBody>
         <c.PopoverFooter>
-          <c.Popover isLazy placement="right-start" initialFocusRef={initialNewFocusRef} {...createFormProps}>
+          <c.Popover isLazy placement="auto" initialFocusRef={initialNewFocusRef} {...createFormProps}>
             <ButtonGroup>
               <c.PopoverTrigger>
                 <c.Button onClick={createFormProps.onOpen}>New habbit</c.Button>

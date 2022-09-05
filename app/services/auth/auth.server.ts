@@ -104,5 +104,5 @@ export async function logout(request: Request) {
     ["Set-Cookie", await destroy()],
     ["Set-Cookie", await createFlash(FlashType.Success, "Logged out!")],
   ])
-  return redirect("/", { headers })
+  return redirect("/login", { headers })
 }

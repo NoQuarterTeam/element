@@ -16,9 +16,9 @@ export default function AuthLayout() {
   const isDark = colorMode === "dark"
   return (
     <c.Center flexDir="column" pt={{ base: 10, md: 20 }}>
-      <c.VStack spacing={4} p={4}>
+      <c.VStack spacing={4} p={4} w="100%">
         <c.Image src={isDark ? "/logo-dark.png" : "/logo.png"} boxSize="100px" />
-        <c.Box w={["100%", 400]}>
+        <c.Box w={{ base: "100%", sm: 400 }}>
           <Outlet />
         </c.Box>
       </c.VStack>

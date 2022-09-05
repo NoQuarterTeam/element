@@ -18,6 +18,7 @@ export default function Profile() {
     <c.Modal size="3xl" isOpen={true} onClose={() => navigate("/timeline")}>
       <c.ModalOverlay />
       <c.ModalContent>
+        <c.ModalCloseButton />
         <c.Flex minH={600} h="100%" overflow="hidden" borderRadius="md">
           <c.Box w={{ base: "50px", md: "200px" }} h="auto" bg={bg}>
             <c.Box px={4} py={2}>
