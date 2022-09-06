@@ -84,7 +84,7 @@
     "stripe": "10.7.0",
     "suneditor": "2.43.14",
     "suneditor-react": "3.4.1",
-    "zod": "3.18.0",
+    "zod": "3.19.0",
     "zustand": "4.1.1"
   },
   "devDependencies": {
