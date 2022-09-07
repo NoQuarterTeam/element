@@ -93,8 +93,9 @@ export default function Account() {
           <FormField defaultValue={me.firstName} name="firstName" label="First name" />
           <FormField defaultValue={me.lastName} name="lastName" label="Last name" />
           <ImageField
-            height="100px"
             defaultValue={me.avatar}
+            display={{ base: "none", md: "true" }}
+            height="100px"
             width="100px"
             label="Avatar"
             name="avatar"
