@@ -102,7 +102,7 @@ export default function HomeLayout() {
           <c.Center flexDir="column">
             <c.VStack pb={12} maxW="500px" textAlign="center" spacing={6}>
               <c.Heading as="h1" fontSize="5xl">
-                A better way to organize your life
+                A better way to plan your life
               </c.Heading>
               <c.Heading as="h2" fontSize="lg" fontWeight="normal">
                 Plan your day responsibly and stay in your element.
@@ -130,7 +130,8 @@ export default function HomeLayout() {
 
             <c.Text textAlign="center" w="100%" maxW="800px">
               Task planners don't give a good enough overview of your day/week. Most aren't built to handle
-              your calendar events. TBC.
+              your calendar events. With a built in habit tracker, Element helps you stay on track with your
+              goals and aids you in creating a healthier work-life balance.
             </c.Text>
           </c.VStack>
           <c.Stack spacing={6} pt={10} id="pricing">
