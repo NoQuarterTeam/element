@@ -30,23 +30,20 @@ export default function HomeLayout() {
       <c.Box borderBottom="1px solid" borderColor={navBorderColor}>
         <Limiter>
           <c.Flex align="center" justify="space-between" py={5}>
-            <c.HStack spacing={8}>
+            <c.HStack spacing={6}>
               <Link to="/">
                 <c.HStack>
-                  <c.Image src="/logo.png" boxSize="50px" />
-                  <c.Text pr={2} fontWeight="bold" fontSize="xl">
+                  <c.Image src="/logo.png" boxSize="30px" />
+                  <c.Text fontWeight="bold" fontSize="xl">
                     Element
                   </c.Text>
                 </c.HStack>
               </Link>
               <c.HStack spacing={6} display={{ base: "none", md: "flex" }}>
-                {/* <c.Link as={Link} to="/#features">
-                  Features
-                </c.Link>
-                <c.Link as={Link} to="/#why">
+                <c.Link as={Link} to="#why">
                   Why
-                </c.Link> */}
-                <c.Link as={Link} to="/#pricing">
+                </c.Link>
+                <c.Link as={Link} to="#pricing">
                   Pricing
                 </c.Link>
               </c.HStack>
@@ -76,12 +73,9 @@ export default function HomeLayout() {
                 variant="ghost"
               />
               <c.MenuList>
-                {/* <c.MenuItem as={Link} to="#features">
-                  Features
-                </c.MenuItem>
                 <c.MenuItem as={Link} to="#why">
                   Why
-                </c.MenuItem> */}
+                </c.MenuItem>
                 <c.MenuItem as={Link} to="#pricing">
                   Pricing
                 </c.MenuItem>
@@ -105,7 +99,7 @@ export default function HomeLayout() {
                 A better way to plan your life
               </c.Heading>
               <c.Heading as="h2" fontSize="lg" fontWeight="normal">
-                Plan your day responsibly and stay in your element.
+                Plan your day consciously and stay in your element.
               </c.Heading>
               <LinkButton to="/register" size="lg" colorScheme="primary">
                 Join now for free
