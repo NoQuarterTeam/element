@@ -122,7 +122,7 @@ export function TaskForm({ task }: FormProps) {
     <>
       <c.Modal isOpen onClose={() => navigate("/timeline")} size="xl" trapFocus={false}>
         <c.ModalOverlay />
-        <c.ModalContent minH="400px">
+        <c.ModalContent minH="400px" overflowY="scroll">
           <c.ModalBody mb={4}>
             <React.Suspense>
               <createUpdateFetcher.Form

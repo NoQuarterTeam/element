@@ -64,13 +64,7 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
       borderRight="1px solid"
       borderRightColor="tranparent"
     >
-      <c.Image
-        position="absolute"
-        top={4}
-        left={4}
-        src={isDark ? "/logo-dark.png" : "/logo.png"}
-        boxSize="40px"
-      />
+      <c.Image position="absolute" top={5} left={5} src="/logo.png" boxSize="32px" />
       {months.map(({ month, year }) => (
         <c.Box key={month + year}>
           <c.Flex pt={4} pl={4} position="sticky" w="max-content" left={12} align="center">

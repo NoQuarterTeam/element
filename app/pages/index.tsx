@@ -33,7 +33,7 @@ export default function HomeLayout() {
             <c.HStack spacing={8}>
               <Link to="/">
                 <c.HStack>
-                  <c.Image src={isDark ? "logo-dark.png" : "logo.png"} boxSize="50px" />
+                  <c.Image src="/logo.png" boxSize="50px" />
                   <c.Text pr={2} fontWeight="bold" fontSize="xl">
                     Element
                   </c.Text>

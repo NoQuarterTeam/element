@@ -5,4 +5,4 @@ import { logout } from "~/services/auth/auth.server"
 
 export const action = ({ request }: ActionArgs) => logout(request)
 
-export const loader = () => redirect("/loging")
+export const loader = () => redirect("/login")

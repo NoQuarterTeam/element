@@ -43,8 +43,6 @@ export const loader = async ({ request }: LoaderArgs) => {
 export default function Focus() {
   const navigate = useNavigate()
   const { updateTask } = useTimelineTasks()
-  const { colorMode } = c.useColorMode()
-  const isDark = colorMode === "dark"
   const tasks = useLoaderData<typeof loader>()
   const borderColor = c.useColorModeValue("gray.200", "gray.600")
   const updateFetcher = useFetcher()
@@ -71,7 +69,7 @@ export default function Focus() {
             {tasks.length === 0 ? (
               <motion.div initial={{ paddingTop: 30 }} animate={{ paddingTop: 0 }} exit={{ paddingTop: 30 }}>
                 <c.VStack spacing={4}>
-                  <c.Image src={isDark ? "/logo-dark.png" : "/logo.png"} boxSize="200px" />
+                  <c.Image src="/logo.png" boxSize="200px" />
                   <c.Text fontSize="3xl">Looks like your're done for the day!</c.Text>
                 </c.VStack>
               </motion.div>
