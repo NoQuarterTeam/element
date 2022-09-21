@@ -21,12 +21,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     db.habit.findMany({
       orderBy: { createdAt: "desc" },
       select: { id: true, name: true, startDate: true, archivedAt: true },
-      where: {
-        creatorId: { equals: user.id },
-        startDate: {
-          gte: dayjs().subtract(back, "day").startOf("d").toDate(),
-        },
-      },
+      where: { creatorId: { equals: user.id } },
     }),
     db.habitEntry.findMany({
       select: { id: true, habitId: true, createdAt: true },
