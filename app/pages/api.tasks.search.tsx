@@ -15,7 +15,9 @@ export const loader = async ({ request }: LoaderArgs) => {
     select: { id: true, name: true, date: true, element: { select: { id: true, color: true, name: true } } },
     where: { creatorId: { equals: user.id }, name: { contains: query, mode: "insensitive" } },
   })
-  const count = await db.task.count({ where: { name: { contains: query, mode: "insensitive" } } })
+  const count = await db.task.count({
+    where: { creatorId: { equals: user.id }, name: { contains: query, mode: "insensitive" } },
+  })
   return json({ tasks, count })
 }
 
