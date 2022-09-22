@@ -145,7 +145,11 @@ export default function Search() {
                     <c.Stack spacing="1px">
                       <c.Text fontSize="sm">{task.name}</c.Text>
                       <c.Box bg={task.element.color} px={1} borderRadius="sm" w="min-content">
-                        <c.Text fontSize="xx-small" color={safeReadableColor(task.element.color)}>
+                        <c.Text
+                          fontSize="xx-small"
+                          whiteSpace="nowrap"
+                          color={safeReadableColor(task.element.color)}
+                        >
                           {task.element.name}
                         </c.Text>
                       </c.Box>
