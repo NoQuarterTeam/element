@@ -1,4 +1,3 @@
-import * as React from "react"
 import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi"
 import {
   // RiBarChartLine,
@@ -8,6 +7,7 @@ import {
   RiLogoutCircleRLine,
   RiMoonLine,
   RiQuestionLine,
+  RiSearchLine,
   RiSunLine,
   RiUser3Line,
 } from "react-icons/ri"
@@ -33,17 +33,27 @@ export function Nav() {
   const navigate = useNavigate()
 
   c.useEventListener("keydown", (event) => {
-    if (event.metaKey && event.key === "k") {
-      event.preventDefault()
-      navigate("/timeline/focus")
-    }
-    if (event.metaKey && event.key === "e") {
-      event.preventDefault()
-      navigate("/timeline/elements")
-    }
-    if (event.metaKey && event.key === "\\") {
-      event.preventDefault()
-      navProps.onToggle()
+    if (event.metaKey) {
+      switch (event.key) {
+        case "k":
+          event.preventDefault()
+          navigate("/timeline/focus")
+          break
+        case "e":
+          event.preventDefault()
+          navigate("/timeline/elements")
+          break
+        case "\\":
+          event.preventDefault()
+          navProps.onToggle()
+          break
+        case "p":
+          event.preventDefault()
+          navigate("/timeline/search")
+          break
+        default:
+          break
+      }
     }
   })
 
@@ -113,6 +123,15 @@ export function Nav() {
               icon={<c.Box as={RiBarChartLine} boxSize="18px" />}
             />
           </c.Tooltip> */}
+          <c.Tooltip label="Search" placement="auto" zIndex={50} hasArrow>
+            <c.IconButton
+              borderRadius="full"
+              variant="ghost"
+              aria-label="open dashboard"
+              onClick={() => navigate("search")}
+              icon={<c.Box as={RiSearchLine} boxSize="18px" />}
+            />
+          </c.Tooltip>
           <c.Tooltip label="Focus mode" placement="auto" zIndex={50} hasArrow>
             <c.IconButton
               borderRadius="full"

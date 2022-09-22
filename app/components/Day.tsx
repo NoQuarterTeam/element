@@ -54,9 +54,7 @@ function _Day(props: Props) {
             minH={`calc(100vh - ${headerHeight}px)`}
             h="100%"
             w={DAY_WIDTH}
-            _hover={{
-              ".add-task-day": { opacity: 1 },
-            }}
+            _hover={{ ".add-task-day": { opacity: 1 } }}
             bg={bg}
             pb={2}
           >
