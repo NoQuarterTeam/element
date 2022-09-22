@@ -18,6 +18,12 @@ export function ShortcutsInfo() {
       </Flex>
       <Flex align="center" justify="space-between">
         <Text>
+          <Kbd>cmd</Kbd> + <Kbd>p</Kbd>
+        </Text>
+        <Text fontSize="sm">Search for tasks</Text>
+      </Flex>
+      <Flex align="center" justify="space-between">
+        <Text>
           <Kbd>cmd</Kbd> + <Kbd>e</Kbd>
         </Text>
         <Text fontSize="sm">Open element sidebar</Text>

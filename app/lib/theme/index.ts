@@ -1,5 +1,6 @@
-import { extendTheme, theme as defaultColorTheme } from "@chakra-ui/react"
+import { extendTheme } from "@chakra-ui/react"
 
+import { colors } from "./colors"
 import { Button } from "./components/Button"
 import { Checkbox } from "./components/Checkbox"
 import { Input } from "./components/Input"
@@ -19,21 +20,7 @@ export const theme = extendTheme({
     body: "Poppins, sans-serif",
     heading: "Poppins, serif",
   },
-  colors: {
-    primary: defaultColorTheme.colors.orange,
-    gray: {
-      900: "#010101",
-      800: "#121516",
-      700: "#24282A",
-      600: "#373C3F",
-      400: "#4A4F52",
-      500: "#6D7275",
-      300: "#919598",
-      200: "#B5B7BA",
-      100: "#D9DADC",
-      50: "#FAFAFA",
-    },
-  },
+  colors,
   components: {
     Button,
     Input,
