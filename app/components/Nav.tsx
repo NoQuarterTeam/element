@@ -13,10 +13,11 @@ import {
 } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { Role } from "@prisma/client"
-import { useNavigate, useSubmit } from "@remix-run/react"
+import { useSubmit } from "@remix-run/react"
 
 import { NEW_UPDATES, useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
+import { useTimelineNavigate } from "~/lib/hooks/useTimelineNavigate"
 import { useMe } from "~/pages/_app"
 
 import { Modal } from "./Modal"
@@ -30,7 +31,7 @@ export function Nav() {
   const featuresSeen = useFeaturesSeen((s) => s.featuresSeen)
 
   const logoutSubmit = useSubmit()
-  const navigate = useNavigate()
+  const navigate = useTimelineNavigate()
 
   c.useEventListener("keydown", (event) => {
     if (event.metaKey) {

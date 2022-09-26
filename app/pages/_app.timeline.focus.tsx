@@ -2,7 +2,7 @@ import * as React from "react"
 import * as c from "@chakra-ui/react"
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
+import { useFetcher, useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
 import { motion } from "framer-motion"
 
@@ -10,6 +10,7 @@ import { safeReadableColor } from "~/lib/color"
 import { db } from "~/lib/db.server"
 import { formatDuration } from "~/lib/helpers/duration"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
+import { useTimelineNavigate } from "~/lib/hooks/useTimelineNavigate"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { requireUser } from "~/services/auth/auth.server"
 
@@ -41,7 +42,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json(tasks)
 }
 export default function Focus() {
-  const navigate = useNavigate()
+  const navigate = useTimelineNavigate()
   const { updateTask } = useTimelineTasks()
   const tasks = useLoaderData<typeof loader>()
   const borderColor = c.useColorModeValue("gray.200", "gray.600")
@@ -70,7 +71,9 @@ export default function Focus() {
               <motion.div initial={{ paddingTop: 30 }} animate={{ paddingTop: 0 }} exit={{ paddingTop: 30 }}>
                 <c.VStack spacing={4}>
                   <c.Image src="/logo.png" boxSize="200px" />
-                  <c.Text fontSize="3xl" textAlign="center">Looks like you're done for the day!</c.Text>
+                  <c.Text fontSize="3xl" textAlign="center">
+                    Looks like you're done for the day!
+                  </c.Text>
                 </c.VStack>
               </motion.div>
             ) : (

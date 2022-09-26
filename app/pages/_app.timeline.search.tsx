@@ -7,6 +7,7 @@ import dayjs from "dayjs"
 import { useCombobox } from "downshift"
 
 import { safeReadableColor } from "~/lib/color"
+import { useTimelineNavigate } from "~/lib/hooks/useTimelineNavigate"
 
 import type { TasksSearch } from "./api.tasks.search"
 
@@ -29,7 +30,7 @@ export default function Search() {
 
   const count = data?.count || 0
   const bg = c.useColorModeValue("gray.75", "gray.800")
-
+  const navigateToTimeline = useTimelineNavigate()
   const {
     inputValue,
     getLabelProps,
@@ -46,7 +47,7 @@ export default function Search() {
       const { changes, type } = actionAndChanges
       switch (type) {
         case useCombobox.stateChangeTypes.InputKeyDownEscape:
-          navigate("/timeline")
+          navigateToTimeline("/timeline")
           return changes
         default:
           return changes
@@ -58,7 +59,7 @@ export default function Search() {
     itemToString: (item) => item?.name + "~~~" || "~~~",
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
-        navigate(`/timeline/${selectedItem.id}`)
+        navigate(`/timeline/${selectedItem.id}?d=${dayjs(selectedItem.date).format("YYYY-MM-DD")}`)
       }
     },
     onInputValueChange: ({ inputValue }) => {
@@ -79,7 +80,7 @@ export default function Search() {
   const isRedirecting = useTransition().state === "loading"
 
   return (
-    <c.Modal isOpen onClose={() => navigate("/timeline")} size="xl" trapFocus={false}>
+    <c.Modal isOpen onClose={() => navigateToTimeline("/timeline")} size="xl" trapFocus={false}>
       <c.ModalOverlay />
       <c.ModalContent>
         <c.ModalBody m={0} p={0}>

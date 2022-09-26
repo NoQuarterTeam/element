@@ -3,12 +3,13 @@ import { HexColorPicker } from "react-colorful"
 import { RiAddLine, RiDeleteBinLine, RiFileCopyLine } from "react-icons/ri"
 import { lazyWithPreload } from "react-lazy-with-preload"
 import * as c from "@chakra-ui/react"
-import { useFetcher, useNavigate, useSearchParams } from "@remix-run/react"
+import { useFetcher, useSearchParams } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import { ClientOnly } from "remix-utils"
 
 import { randomHexColor, safeReadableColor } from "~/lib/color"
+import { useTimelineNavigate } from "~/lib/hooks/useTimelineNavigate"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
@@ -36,7 +37,8 @@ type CreateUpdateRes = {
 }
 export function TaskForm({ task }: FormProps) {
   const [searchParams] = useSearchParams()
-  const navigate = useNavigate()
+
+  const navigate = useTimelineNavigate()
   const day = searchParams.get("day") || undefined
   const { addTask, updateTask, removeTask } = useTimelineTasks()
 

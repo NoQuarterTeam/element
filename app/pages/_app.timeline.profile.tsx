@@ -1,19 +1,20 @@
 import type * as React from "react"
 import { RiBankCard2Line, RiMap2Line, RiSettings2Line } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
-import { NavLink, Outlet, useNavigate, useTransition } from "@remix-run/react"
+import { NavLink, Outlet, useTransition } from "@remix-run/react"
 
 import { transformImage } from "~/lib/helpers/image"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
+import { useTimelineNavigate } from "~/lib/hooks/useTimelineNavigate"
 import { useMe } from "~/pages/_app"
 
 export default function Profile() {
   const me = useMe()
-  const navigate = useNavigate()
+
   const { featuresSeen } = useFeaturesSeen()
 
   const bg = c.useColorModeValue("gray.50", "gray.800")
-
+  const navigate = useTimelineNavigate()
   return (
     <c.Modal size="3xl" isOpen={true} onClose={() => navigate("/timeline")}>
       <c.ModalOverlay />

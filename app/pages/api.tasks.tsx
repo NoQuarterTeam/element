@@ -16,8 +16,14 @@ import { getFlashSession } from "~/services/session/session.server"
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   const url = new URL(request.url)
+  const initialDateParam = url.searchParams.get("d")
+
+  const initialDate =
+    initialDateParam && dayjs(initialDateParam).isValid() ? dayjs(initialDateParam) : dayjs()
+
   const backParam = url.searchParams.get("back")
   const forwardParam = url.searchParams.get("forward")
+
   const back = backParam ? parseInt(backParam) : DAYS_BACK
   const forward = forwardParam ? parseInt(forwardParam) : DAYS_FORWARD
 
@@ -27,8 +33,8 @@ export const loader = async ({ request }: LoaderArgs) => {
       creatorId: { equals: user.id },
       element: { archivedAt: { equals: null } },
       date: {
-        gte: dayjs().subtract(back, "day").startOf("d").toDate(),
-        lte: dayjs().add(forward, "day").endOf("d").toDate(),
+        gte: initialDate.subtract(back, "day").startOf("d").toDate(),
+        lte: initialDate.add(forward, "day").endOf("d").toDate(),
       },
     },
   })

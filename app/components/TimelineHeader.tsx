@@ -1,4 +1,5 @@
 import * as c from "@chakra-ui/react"
+import { useSearchParams } from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
@@ -28,7 +29,8 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
   const isDark = colorMode === "dark"
   const features = useFeatures((s) => s.features)
   const isHabitsEnabled = features.includes("habits")
-
+  const [searchParams] = useSearchParams()
+  const initialDay = searchParams.get("d")
   const daysBack = useTimelineDays((s) => s.daysBack)
 
   const { data } = useQuery(
@@ -97,7 +99,12 @@ export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps)
                     <c.Text
                       textAlign="center"
                       fontSize="sm"
-                      fontWeight={dayjs(day).isSame(dayjs(), "day") ? 700 : 400}
+                      fontWeight={
+                        dayjs(day).isSame(dayjs(), "day") ||
+                        (initialDay && dayjs(initialDay).isValid() && dayjs(initialDay).isSame(day))
+                          ? 700
+                          : 400
+                      }
                     >
                       {day.format("ddd Do")}
                     </c.Text>

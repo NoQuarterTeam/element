@@ -13,7 +13,11 @@ export const loader = async ({ request }: LoaderArgs) => {
     take: 20,
     orderBy: { date: "desc" },
     select: { id: true, name: true, date: true, element: { select: { id: true, color: true, name: true } } },
-    where: { creatorId: { equals: user.id }, name: { contains: query, mode: "insensitive" } },
+    where: {
+      creatorId: { equals: user.id },
+      element: { archivedAt: { equals: null } },
+      name: { contains: query, mode: "insensitive" },
+    },
   })
   const count = await db.task.count({
     where: { creatorId: { equals: user.id }, name: { contains: query, mode: "insensitive" } },

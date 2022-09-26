@@ -4,7 +4,7 @@ import { RiAddLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
-import { useLoaderData, useNavigate, useTransition } from "@remix-run/react"
+import { useLoaderData, useTransition } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
 import { z } from "zod"
 
@@ -16,6 +16,7 @@ import { isValidHex, randomHexColor, safeReadableColor } from "~/lib/color"
 import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
+import { useTimelineNavigate } from "~/lib/hooks/useTimelineNavigate"
 import { useToast } from "~/lib/hooks/useToast"
 import { badRequest } from "~/lib/remix"
 import { requireUser } from "~/services/auth/auth.server"
@@ -119,7 +120,7 @@ export default function Elements() {
       keys: ["name", "children.*.name", "children.*.children.*.name"],
     },
   )
-  const navigate = useNavigate()
+  const navigate = useTimelineNavigate()
   const toast = useToast()
   return (
     <c.Drawer isOpen={true} onClose={() => navigate("/timeline")} placement="right">

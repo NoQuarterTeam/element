@@ -1,7 +1,7 @@
 import * as React from "react"
 import { RiAddCircleLine, RiCalendarEventLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
-import { Outlet, useNavigate } from "@remix-run/react"
+import { Outlet, useNavigate, useSearchParams } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
@@ -30,15 +30,18 @@ export function links() {
 export default function Timeline() {
   const navigate = useNavigate()
   const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineDays()
-
+  const [searchParams, setSearchParams] = useSearchParams()
+  const d = searchParams.get("d")
+  const initialDay = d && dayjs(d).isValid() ? dayjs(d) : dayjs()
+  const initialDate = initialDay.format("YYYY-MM-DD")
   const {
     data: tasks = [],
     isLoading,
     isFetching,
   } = useQuery(
-    ["tasks"],
+    ["tasks", { initialDate }],
     async () => {
-      const response = await fetch(`/api/tasks`)
+      const response = await fetch(`/api/tasks?d=${initialDate}`)
       if (!response.ok) throw new Error("Failed to load tasks")
       return response.json() as Promise<TimelineTask[]>
     },
@@ -63,11 +66,14 @@ export default function Timeline() {
     try {
       const back = -daysForward - 1
       const forward = daysForward + DAYS_FORWARD
-      const res = await client.fetchQuery<TimelineTask[]>(["tasks", { back, forward }], async () => {
-        const response = await fetch(`/api/tasks?back=${back}&forward=${forward}`)
-        if (!response.ok) throw new Error("Failed to load tasks")
-        return response.json() as Promise<TimelineTask[]>
-      })
+      const res = await client.fetchQuery<TimelineTask[]>(
+        ["tasks", { back, forward, initialDate }],
+        async () => {
+          const response = await fetch(`/api/tasks?back=${back}&forward=${forward}&d=${initialDate}`)
+          if (!response.ok) throw new Error("Failed to load tasks")
+          return response.json() as Promise<TimelineTask[]>
+        },
+      )
       const oldTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
       client.setQueryData(["tasks"], [...oldTasks, ...res])
     } catch (error) {
@@ -83,11 +89,14 @@ export default function Timeline() {
     try {
       const back = daysBack + DAYS_BACK
       const forward = -daysBack - 2
-      const res = await client.fetchQuery<TimelineTask[]>(["tasks", { back, forward }], async () => {
-        const response = await fetch(`/api/tasks?back=${back}&forward=${forward}`)
-        if (!response.ok) throw new Error("Failed to load tasks")
-        return response.json() as Promise<TimelineTask[]>
-      })
+      const res = await client.fetchQuery<TimelineTask[]>(
+        ["tasks", { back, forward, initialDate }],
+        async () => {
+          const response = await fetch(`/api/tasks?back=${back}&forward=${forward}&d=${initialDate}`)
+          if (!response.ok) throw new Error("Failed to load tasks")
+          return response.json() as Promise<TimelineTask[]>
+        },
+      )
       const oldTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
       client.setQueryData(["tasks"], [...oldTasks, ...res])
     } catch (error) {
@@ -106,17 +115,18 @@ export default function Timeline() {
   c.useEventListener("touchmove", throttle(handleScroll, 200, { leading: true, trailing: true }))
 
   const handleJumpToToday = () => {
+    setSearchParams({})
     const scrollTo = isMobile ? daysBack * DAY_WIDTH : (daysBack - 3) * DAY_WIDTH
     timelineRef.current?.scrollTo(scrollTo, 0)
   }
 
   const days = React.useMemo(
-    () => getDays(dayjs().subtract(daysBack, "day"), daysBack + daysForward),
-    [daysBack, daysForward],
+    () => getDays(initialDay.subtract(daysBack, "day"), daysBack + daysForward),
+    [daysBack, daysForward, initialDay],
   )
   const months = React.useMemo(
-    () => getMonths(dayjs().subtract(daysBack, "day"), daysBack + daysForward),
-    [daysBack, daysForward],
+    () => getMonths(initialDay.subtract(daysBack, "day"), daysBack + daysForward),
+    [daysBack, daysForward, initialDay],
   )
 
   c.useEventListener("keydown", (event) => {
