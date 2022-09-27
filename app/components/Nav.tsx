@@ -21,10 +21,12 @@ import { useTimelineNavigate } from "~/lib/hooks/useTimelineNavigate"
 import { useMe } from "~/pages/_app"
 
 import { Modal } from "./Modal"
+import { SearchModal } from "./SearchModal"
 import { ShortcutsInfo } from "./ShortcutsInfo"
 
 export function Nav() {
   const shortcutModalProps = c.useDisclosure()
+  const searchModalProps = c.useDisclosure()
 
   const navProps = useStoredDisclosure("element.nav", { defaultIsOpen: true })
   const me = useMe()
@@ -50,7 +52,7 @@ export function Nav() {
           break
         case "p":
           event.preventDefault()
-          navigate("/timeline/search")
+          searchModalProps.onOpen()
           break
         default:
           break
@@ -212,6 +214,8 @@ export function Nav() {
         <Modal title="Shortcuts" {...shortcutModalProps}>
           <ShortcutsInfo />
         </Modal>
+
+        <SearchModal {...searchModalProps} />
       </c.Flex>
     </>
   )
