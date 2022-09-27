@@ -75,7 +75,7 @@ export default function Timeline() {
         },
       )
       const oldTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
-      client.setQueryData(["tasks"], [...oldTasks, ...res])
+      client.setQueryData(["tasks", { initialDate }], [...oldTasks, ...res])
     } catch (error) {
       console.log(error)
     }
@@ -98,7 +98,7 @@ export default function Timeline() {
         },
       )
       const oldTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
-      client.setQueryData(["tasks"], [...oldTasks, ...res])
+      client.setQueryData(["tasks", { initialDate }], [...oldTasks, ...res])
     } catch (error) {
       console.log(error)
     }
