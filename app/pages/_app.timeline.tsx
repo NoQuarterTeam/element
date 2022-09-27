@@ -74,7 +74,7 @@ export default function Timeline() {
           return response.json() as Promise<TimelineTask[]>
         },
       )
-      const oldTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
+      const oldTasks = client.getQueryData<TimelineTask[]>(["tasks", { initialDate }]) || []
       client.setQueryData(["tasks", { initialDate }], [...oldTasks, ...res])
     } catch (error) {
       console.log(error)
@@ -97,7 +97,7 @@ export default function Timeline() {
           return response.json() as Promise<TimelineTask[]>
         },
       )
-      const oldTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
+      const oldTasks = client.getQueryData<TimelineTask[]>(["tasks", { initialDate }]) || []
       client.setQueryData(["tasks", { initialDate }], [...oldTasks, ...res])
     } catch (error) {
       console.log(error)
