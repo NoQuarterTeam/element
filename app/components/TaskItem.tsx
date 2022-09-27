@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as c from "@chakra-ui/react"
-import { Link, useFetcher } from "@remix-run/react"
+import { Link, useFetcher, useLocation } from "@remix-run/react"
 
 import { safeReadableColor } from "~/lib/color"
 import { formatDuration } from "~/lib/helpers/duration"
@@ -69,10 +69,11 @@ function _TaskItem({ task }: Props) {
       )
     }
   }
+  const location = useLocation()
 
   return (
     <c.Box w={DAY_WIDTH} p={2} pb={0} zIndex={1} tabIndex={-1}>
-      <Link to={task.id} onClick={handleClick} prefetch="intent" tabIndex={-1}>
+      <Link to={`${task.id}${location.search}`} onClick={handleClick} prefetch="intent" tabIndex={-1}>
         <c.Box
           tabIndex={-1}
           outline="none"
