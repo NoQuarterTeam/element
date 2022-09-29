@@ -8,13 +8,16 @@ export const customSelectStyle = (
 ): StylesConfig<any, any> => ({
   container: (styles) => ({
     ...styles,
+    paddingTop: 0,
+    paddingBottom: 0,
     width: "100%",
   }),
   control: (styles, state) => ({
     ...styles,
-    paddingTop: 2,
-    paddingBottom: 2,
+    minHeight: "32px",
     borderRadius: 2,
+    paddingTop: 0,
+    paddingBottom: 0,
     borderWidth: 0,
     boxShadow: hasError
       ? `inset 0px 0px 0px 2px ${theme.colors.red[500]}`
@@ -30,27 +33,34 @@ export const customSelectStyle = (
   }),
   menu: (styles) => ({
     ...styles,
+    paddingTop: 0,
+    zIndex: 100,
+    paddingBottom: 0,
     backgroundColor: isDark ? theme.colors.gray[900] : theme.colors.gray[50],
   }),
   input: (styles) => ({
     ...styles,
+    paddingTop: 0,
+    fontSize: theme.fontSizes.sm,
+    paddingBottom: 0,
     paddingLeft: 3,
     color: isDark ? "white" : "black",
   }),
-  singleValue: (styles) => ({ ...styles, color: isDark ? "white" : "black" }),
+  singleValue: (styles) => ({ ...styles, fontSize: theme.fontSizes.sm, color: isDark ? "white" : "black" }),
   placeholder: (styles) => ({
     ...styles,
     overflow: "hidden",
     whiteSpace: "nowrap",
     paddingVertical: 0,
     paddingLeft: 3,
-    fontSize: 14,
+    fontSize: theme.fontSizes.sm,
     color: isDark ? "white" : "black",
   }),
   option: (styles, state) => ({
     ...styles,
     paddingVertical: 0,
     textAlign: "left",
+    fontSize: theme.fontSizes.sm,
     backgroundColor: state.isFocused
       ? isDark
         ? theme.colors.gray[800]

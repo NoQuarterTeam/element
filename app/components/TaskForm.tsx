@@ -2,6 +2,8 @@ import * as React from "react"
 import { HexColorPicker } from "react-colorful"
 import { RiAddLine, RiDeleteBinLine, RiFileCopyLine } from "react-icons/ri"
 import { lazyWithPreload } from "react-lazy-with-preload"
+import Select from "react-select"
+import type { Theme } from "@chakra-ui/react"
 import * as c from "@chakra-ui/react"
 import { useFetcher, useNavigate, useSearchParams } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
@@ -10,6 +12,7 @@ import { ClientOnly } from "remix-utils"
 
 import { randomHexColor, safeReadableColor } from "~/lib/color"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
+import { customSelectStyle } from "~/lib/styles/react-select"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
 import type { TaskElement } from "~/pages/api.elements"
@@ -39,7 +42,9 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
   const navigate = useNavigate()
   const day = searchParams.get("day") || undefined
   const { addTask, updateTask, removeTask } = useTimelineTasks()
-
+  const theme: Theme = c.useTheme()
+  const { colorMode } = c.useColorMode()
+  const isDark = colorMode === "dark"
   const [color, setColor] = React.useState(randomHexColor())
 
   const createUpdateFetcher = useFetcher<CreateUpdateRes>()
@@ -99,7 +104,9 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
     { keepPreviousData: true, staleTime: 10_000 },
   )
 
-  const [elementId, setElementId] = React.useState<string | undefined>(task?.element.id)
+  const [element, setElement] = React.useState(
+    task?.element ? { value: task.element.id, label: task.element.name } : undefined,
+  )
   const elementModalProps = c.useDisclosure()
 
   const client = useQueryClient()
@@ -110,7 +117,10 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
       const taskElements = client.getQueryData<Element[]>(["task-elements"])
       client.setQueryData(["task-elements"], [createElementFetcher.data.element, ...(taskElements || [])])
       elementModalProps.onClose()
-      setElementId(createElementFetcher.data.element.id)
+      setElement({
+        label: createElementFetcher.data.element.name,
+        value: createElementFetcher.data.element.id,
+      })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -160,24 +170,24 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                       />
                     </c.Box>
                   </c.Flex>
-
-                  <c.Flex align="center">
+                  <input type="hidden" name="elementId" value={element?.value} />
+                  <c.Flex align="flex-start">
                     <InlineFormField
                       isRequired
-                      name="elementId"
                       label="Element"
-                      value={elementId || ""}
-                      onChange={(e) => setElementId(e.target.value)}
+                      name="element"
                       error={createUpdateFetcher.data?.fieldErrors?.elementId?.[0]}
                       input={
-                        <c.Select>
-                          <option value="">Select an element</option>
-                          {elements.map((element) => (
-                            <option key={element.id} value={element.id}>
-                              {element.name}
-                            </option>
-                          ))}
-                        </c.Select>
+                        <Select
+                          value={element || ""}
+                          onChange={setElement}
+                          styles={customSelectStyle(
+                            theme,
+                            !!createUpdateFetcher.data?.fieldErrors?.elementId?.[0],
+                            isDark,
+                          )}
+                          options={elements.map((e) => ({ label: e.name, value: e.id }))}
+                        />
                       }
                     />
                     <c.Button

@@ -92,11 +92,13 @@ export const InlineFormField = React.forwardRef(function _InlineFormField(
             {label}
           </c.FormLabel>
         )}
-        {clonedInput || (
-          <c.Input ref={ref} defaultValue={form?.data?.[props.name] || ""} id={props.name} {...props} />
-        )}
+        <c.Box w="100%">
+          {clonedInput || (
+            <c.Input ref={ref} defaultValue={form?.data?.[props.name] || ""} id={props.name} {...props} />
+          )}
+          <c.FormErrorMessage>{form?.fieldErrors?.[props.name]?.[0] || error}</c.FormErrorMessage>
+        </c.Box>
       </c.Flex>
-      <c.FormErrorMessage>{form?.fieldErrors?.[props.name]?.[0] || error}</c.FormErrorMessage>
     </c.FormControl>
   )
 })
