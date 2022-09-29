@@ -105,7 +105,9 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
   )
 
   const [element, setElement] = React.useState(
-    task?.element ? { value: task.element.id, label: task.element.name } : undefined,
+    task?.element
+      ? { value: task.element.id, label: task.element.name, color: task.element.color }
+      : undefined,
   )
   const elementModalProps = c.useDisclosure()
 
@@ -120,6 +122,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
       setElement({
         label: createElementFetcher.data.element.name,
         value: createElementFetcher.data.element.id,
+        color: createElementFetcher.data.element.color,
       })
     }
 
@@ -181,12 +184,18 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                         <Select
                           value={element || ""}
                           onChange={setElement}
+                          formatOptionLabel={(option) => (
+                            <c.HStack>
+                              <c.Box borderRadius="full" boxSize="16px" bg={option.color} />
+                              <c.Text>{option.label}</c.Text>
+                            </c.HStack>
+                          )}
                           styles={customSelectStyle(
                             theme,
                             !!createUpdateFetcher.data?.fieldErrors?.elementId?.[0],
                             isDark,
                           )}
-                          options={elements.map((e) => ({ label: e.name, value: e.id }))}
+                          options={elements.map((e) => ({ label: e.name, value: e.id, color: e.color }))}
                         />
                       }
                     />

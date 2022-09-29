@@ -60,11 +60,19 @@ export const customSelectStyle = (
     ...styles,
     paddingVertical: 0,
     textAlign: "left",
+    fontWeight: state.isSelected ? theme.fontWeights.medium : "normal",
     fontSize: theme.fontSizes.sm,
+    color: isDark ? theme.colors.gray[100] : theme.colors.gray[900],
     backgroundColor: state.isFocused
       ? isDark
-        ? theme.colors.gray[800]
+        ? theme.colors.gray[700]
         : theme.colors.gray[100]
+      : state.isSelected
+      ? isDark
+        ? theme.colors.gray[800]
+        : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          theme.colors.gray[75]
       : "transparent",
     ":hover": {
       backgroundColor: isDark ? theme.colors.gray[800] : theme.colors.gray[100],
