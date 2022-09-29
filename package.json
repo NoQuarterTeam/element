@@ -83,7 +83,7 @@
     "react-select": "5.4.0",
     "recharts": "2.1.14",
     "remix-utils": "3.3.0",
-    "stripe": "10.11.0",
+    "stripe": "10.12.0",
     "suneditor": "2.44.2",
     "suneditor-react": "3.4.1",
     "zod": "3.19.1",
