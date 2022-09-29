@@ -34,7 +34,7 @@ type CreateUpdateRes = {
   formError?: string
   fieldErrors?: FieldErrors
 }
-export function TaskForm({ task }: FormProps) {
+export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const day = searchParams.get("day") || undefined
@@ -377,4 +377,4 @@ export function TaskForm({ task }: FormProps) {
       </Modal>
     </>
   )
-}
+})
