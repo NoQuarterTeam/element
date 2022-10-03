@@ -35,11 +35,11 @@
     ]
   },
   "dependencies": {
-    "@chakra-ui/anatomy": "2.0.6",
+    "@chakra-ui/anatomy": "2.0.7",
     "@chakra-ui/cli": "2.1.8",
-    "@chakra-ui/icons": "2.0.10",
-    "@chakra-ui/react": "2.3.4",
-    "@chakra-ui/theme-tools": "2.0.11",
+    "@chakra-ui/icons": "2.0.11",
+    "@chakra-ui/react": "2.3.5",
+    "@chakra-ui/theme-tools": "2.0.12",
     "@emotion/cache": "11.10.3",
     "@emotion/react": "11.10.4",
     "@emotion/server": "11.10.0",
