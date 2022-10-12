@@ -92,7 +92,7 @@ export const action = async ({ request }: ActionArgs) => {
       try {
         if (!user.stripeSubscriptionId) return badRequest("No subscription")
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: true })
-        return redirect("/timeline/profile/plan")
+        return json({ success: true })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error cancelling subscription") },
@@ -102,7 +102,7 @@ export const action = async ({ request }: ActionArgs) => {
       try {
         if (!user.stripeSubscriptionId) return badRequest("No subscription")
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: false })
-        return redirect("/timeline/profile/plan")
+        return json({ success: true })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error cancelling subscription") },
@@ -287,10 +287,7 @@ export default function Plan() {
                         isDisabled={cancelFetcher.state !== "idle"}
                         isLoading={cancelFetcher.state !== "idle"}
                         onClick={() => {
-                          cancelFetcher.submit(
-                            { _action: ProfilePlanMethods.CancelPlan },
-                            { method: "post", action: `/api/profile/plan` },
-                          )
+                          cancelFetcher.submit({ _action: ProfilePlanMethods.CancelPlan }, { method: "post" })
                         }}
                       >
                         Downgrade
@@ -333,7 +330,7 @@ export default function Plan() {
                   onClick={() =>
                     reactivateFetcher.submit(
                       { _action: ProfilePlanMethods.ReactivatePlan },
-                      { method: "post", action: `/api/profile/plan` },
+                      { method: "post" },
                     )
                   }
                   colorScheme="primary"
@@ -348,7 +345,7 @@ export default function Plan() {
                 </c.Button>
               )}
               <Modal title="Join Pro" {...joinPlanProps}>
-                <joinPlanFetcher.Form action="/api/profile/plan" replace method="post">
+                <joinPlanFetcher.Form replace method="post">
                   <c.Stack>
                     <c.Input name="promoCode" placeholder="Have a promo code?" />
                     <ButtonGroup>
