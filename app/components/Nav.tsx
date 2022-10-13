@@ -9,6 +9,7 @@ import {
   RiMoonLine,
   RiQuestionLine,
   RiSunLine,
+  RiTimeLine,
   RiUser3Line,
 } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
@@ -92,9 +93,15 @@ export function Nav() {
             variant="ghost"
             onClick={navProps.onToggle}
           />
-        </c.VStack>
-
-        <c.VStack spacing={1}>
+          <c.Tooltip label="Backlog" placement="auto" zIndex={50} hasArrow>
+            <c.IconButton
+              borderRadius="full"
+              variant="ghost"
+              aria-label="open backlog"
+              onClick={() => navigate("backlog")}
+              icon={<c.Box as={RiTimeLine} boxSize="18px" />}
+            />
+          </c.Tooltip>
           <c.Tooltip label="Elements" placement="auto" zIndex={50} hasArrow>
             <c.IconButton
               borderRadius="full"
@@ -104,15 +111,6 @@ export function Nav() {
               icon={<c.Box as={RiBookLine} boxSize="18px" />}
             />
           </c.Tooltip>
-          {/* <c.Tooltip label="Dashboard" placement="auto" zIndex={50} hasArrow>
-            <c.IconButton
-              borderRadius="full"
-              variant="ghost"
-              aria-label="open dashboard"
-              onClick={() => navigate("/dashboard")}
-              icon={<c.Box as={RiBarChartLine} boxSize="18px" />}
-            />
-          </c.Tooltip> */}
           <c.Tooltip label="Focus mode" placement="auto" zIndex={50} hasArrow>
             <c.IconButton
               borderRadius="full"
@@ -131,6 +129,18 @@ export function Nav() {
               }
             />
           </c.Tooltip>
+        </c.VStack>
+
+        <c.VStack spacing={1}>
+          {/* <c.Tooltip label="Dashboard" placement="auto" zIndex={50} hasArrow>
+            <c.IconButton
+              borderRadius="full"
+              variant="ghost"
+              aria-label="open dashboard"
+              onClick={() => navigate("/dashboard")}
+              icon={<c.Box as={RiBarChartLine} boxSize="18px" />}
+            />
+          </c.Tooltip> */}
           <c.Tooltip label="Profile" placement="auto" zIndex={50} hasArrow>
             <c.IconButton
               borderRadius="full"

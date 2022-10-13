@@ -27,6 +27,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       creatorId: { equals: user.id },
       element: { archivedAt: { equals: null } },
       date: {
+        not: { equals: null },
         gte: dayjs().subtract(back, "day").startOf("d").toDate(),
         lte: dayjs().add(forward, "day").endOf("d").toDate(),
       },

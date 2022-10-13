@@ -1,3 +1,4 @@
+import * as React from "react"
 import * as c from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
@@ -21,14 +22,13 @@ interface TimelineHeaderProps {
   days: dayjs.Dayjs[]
   months: { month: number; year: number }[]
 }
-
-export function TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
+export const TimelineHeader = React.memo(_TimelineHeader)
+function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
   const me = useMe()
   const { colorMode } = c.useColorMode()
   const isDark = colorMode === "dark"
   const features = useFeatures((s) => s.features)
   const isHabitsEnabled = features.includes("habits")
-
   const daysBack = useTimelineDays((s) => s.daysBack)
 
   const { data } = useQuery(

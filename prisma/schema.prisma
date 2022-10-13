@@ -33,21 +33,21 @@ model User {
 }
 
 model Task {
-  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name            String
   description     String?
-  date            DateTime
-  isComplete      Boolean  @default(false)
+  date            DateTime?
+  isComplete      Boolean   @default(false)
   startTime       String?
   durationHours   Int?
   durationMinutes Int?
-  order           Int      @default(50)
-  createdAt       DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt       DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  creatorId       String   @db.Uuid
-  creator         User     @relation(fields: [creatorId], references: [id])
-  elementId       String   @db.Uuid
-  element         Element  @relation(fields: [elementId], references: [id], onDelete: Cascade)
+  order           Int       @default(50)
+  createdAt       DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+  creatorId       String    @db.Uuid
+  creator         User      @relation(fields: [creatorId], references: [id])
+  elementId       String    @db.Uuid
+  element         Element   @relation(fields: [elementId], references: [id], onDelete: Cascade)
 }
 
 model Element {

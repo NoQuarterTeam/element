@@ -1,6 +1,6 @@
 import * as React from "react"
 import { HexColorPicker } from "react-colorful"
-import { RiAddLine, RiDeleteBinLine, RiFileCopyLine } from "react-icons/ri"
+import { RiAddLine, RiDeleteBinLine, RiFileCopyLine, RiTimeLine } from "react-icons/ri"
 import { lazyWithPreload } from "react-lazy-with-preload"
 import Select from "react-select"
 import type { Theme } from "@chakra-ui/react"
@@ -86,6 +86,23 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
       { method: "post", action: `/timeline/${task.id}` },
     )
   }
+  const addToBacklogSubmit = useFetcher()
+  const handleToBacklog = () => {
+    if (!task) return
+    addToBacklogSubmit.submit(
+      { _action: TaskActionMethods.AddToBacklog },
+      { method: "post", action: `/timeline/${task.id}` },
+    )
+  }
+  React.useEffect(() => {
+    if (!task) return
+    if (addToBacklogSubmit.type === "actionReload" && addToBacklogSubmit.data?.task) {
+      navigate("/timeline")
+      removeTask(task)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [task, addToBacklogSubmit.data, addToBacklogSubmit.type])
+
   React.useEffect(() => {
     if (duplicateSubmit.type === "actionReload" && duplicateSubmit.data?.task) {
       navigate("/timeline")
@@ -136,7 +153,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
       <c.Modal isOpen onClose={() => navigate("/timeline")} size="xl" trapFocus={false}>
         <c.ModalOverlay />
         <c.ModalContent minH="400px" overflowY="scroll">
-          <c.ModalBody mb={4}>
+          <c.ModalBody mb={2}>
             <React.Suspense>
               <createUpdateFetcher.Form
                 replace
@@ -287,52 +304,60 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                   />
 
                   <FormError error={createUpdateFetcher.data?.formError} />
-                  <c.Flex align="center" justify="space-between">
-                    {task ? (
-                      <c.HStack spacing={1}>
-                        <c.Button
-                          variant="ghost"
-                          leftIcon={<c.Box as={RiDeleteBinLine} />}
-                          colorScheme="red"
-                          onClick={handleDelete}
-                          isLoading={deleteSubmit.state !== "idle"}
-                          isDisabled={deleteSubmit.state !== "idle"}
-                        >
-                          <c.Text as="span" display={{ base: "none", md: "block" }}>
-                            Delete
-                          </c.Text>
-                        </c.Button>
-                        <c.Button
-                          variant="ghost"
-                          leftIcon={<c.Box as={RiFileCopyLine} />}
-                          onClick={handleDuplicate}
-                          isLoading={duplicateSubmit.state !== "idle"}
-                          isDisabled={duplicateSubmit.state !== "idle"}
-                        >
-                          <c.Text as="span" display={{ base: "none", md: "block" }}>
-                            Duplicate
-                          </c.Text>
-                        </c.Button>
-                      </c.HStack>
-                    ) : (
-                      <c.Box />
-                    )}
 
-                    <ButtonGroup>
-                      <c.Button variant="ghost" onClick={() => navigate("/timeline")}>
-                        Cancel
-                      </c.Button>
-                      <FormButton
-                        colorScheme="primary"
-                        name="_action"
-                        value={task ? TaskActionMethods.UpdateTask : TasksActionMethods.AddTask}
-                        isLoading={createUpdateFetcher.state !== "idle"}
-                        isDisabled={createUpdateFetcher.state !== "idle"}
-                      >
-                        {task ? "Update" : "Create"}
-                      </FormButton>
-                    </ButtonGroup>
-                  </c.Flex>
+                  <ButtonGroup>
+                    <c.Button variant="ghost" onClick={() => navigate("/timeline")}>
+                      Cancel
+                    </c.Button>
+                    <FormButton
+                      colorScheme="primary"
+                      name="_action"
+                      value={task ? TaskActionMethods.UpdateTask : TasksActionMethods.AddTask}
+                      isLoading={createUpdateFetcher.state !== "idle"}
+                    >
+                      {task ? "Update" : "Create"}
+                    </FormButton>
+                  </ButtonGroup>
+                  {task && (
+                    <>
+                      <c.Divider />
+                      <c.Center>
+                        <c.HStack spacing={0}>
+                          <c.Button
+                            variant="ghost"
+                            leftIcon={<c.Box as={RiDeleteBinLine} />}
+                            colorScheme="red"
+                            onClick={handleDelete}
+                            isLoading={deleteSubmit.state !== "idle"}
+                          >
+                            <c.Text as="span" display={{ base: "none", md: "block" }}>
+                              Delete
+                            </c.Text>
+                          </c.Button>
+                          <c.Button
+                            variant="ghost"
+                            leftIcon={<c.Box as={RiFileCopyLine} />}
+                            onClick={handleDuplicate}
+                            isLoading={duplicateSubmit.state !== "idle"}
+                          >
+                            <c.Text as="span" display={{ base: "none", md: "block" }}>
+                              Duplicate
+                            </c.Text>
+                          </c.Button>
+                          <c.Button
+                            variant="ghost"
+                            leftIcon={<c.Box as={RiTimeLine} />}
+                            onClick={handleToBacklog}
+                            isLoading={addToBacklogSubmit.state !== "idle"}
+                          >
+                            <c.Text as="span" display={{ base: "none", md: "block" }}>
+                              Add to backlog
+                            </c.Text>
+                          </c.Button>
+                        </c.HStack>
+                      </c.Center>
+                    </>
+                  )}
                 </c.Stack>
               </createUpdateFetcher.Form>
             </React.Suspense>
@@ -386,7 +411,6 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                 type="submit"
                 colorScheme="primary"
                 isLoading={createElementFetcher.state !== "idle"}
-                isDisabled={createElementFetcher.state !== "idle"}
               >
                 Create
               </c.Button>

@@ -18,7 +18,8 @@ interface Props {
   day: string
   habitEntries: TimelineHabitEntry[]
 }
-export function Habits({ habits, day, habitEntries }: Props) {
+export const Habits = React.memo(_Habits)
+function _Habits({ habits, day, habitEntries }: Props) {
   const habitBgRed = c.useColorModeValue("red.300", "red.700")
   const habitBgGreen = c.useColorModeValue("green.400", "green.600")
   const habitsModalProps = c.useDisclosure()
@@ -48,7 +49,7 @@ export function Habits({ habits, day, habitEntries }: Props) {
   }, [createFetcher.type, createFetcher.data])
 
   return (
-    <c.Popover initialFocusRef={initialFocusRef}>
+    <c.Popover isLazy initialFocusRef={initialFocusRef}>
       <c.PopoverTrigger>
         <c.Button size="xs" w="100%" px={0} tabIndex={-1} variant="ghost" onClick={habitsModalProps.onOpen}>
           <c.HStack spacing="3px">

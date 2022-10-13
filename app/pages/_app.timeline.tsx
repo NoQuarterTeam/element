@@ -128,6 +128,11 @@ export default function Timeline() {
   })
   const bg = c.useColorModeValue("gray.100", "gray.800")
   const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HABIT_HEIGHT : HEADER_HEIGHT
+  const dropTasks = React.useMemo(
+    () => tasks.map((t) => ({ id: t.id, date: t.date, order: t.order })),
+    [tasks],
+  )
+
   return (
     <>
       <c.Box
@@ -141,10 +146,10 @@ export default function Timeline() {
         <TimelineHeader isLoading={isLoading || isFetching} days={days} months={months} />
         <c.Box ref={daysRef} h={`calc(100vh - ${headerHeight}px)`} w="min-content" overflow="scroll">
           <c.Flex>
-            <DropContainer tasks={tasks.map((t) => ({ id: t.id, date: t.date, order: t.order }))}>
+            <DropContainer tasks={dropTasks}>
               {days.map((day, index) => (
                 <Day
-                  key={day.toISOString() + index}
+                  key={index}
                   {...{ index, day, daysForward, daysBack }}
                   tasks={tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))}
                 />

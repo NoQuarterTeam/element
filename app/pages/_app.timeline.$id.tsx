@@ -27,6 +27,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export enum TaskActionMethods {
   UpdateTask = "updateTask",
   DeleteTask = "deleteTask",
+  AddToBacklog = "addToBacklog",
   DuplicateTask = "duplicateTask",
 }
 export const action = async ({ request, params }: ActionArgs) => {
@@ -87,6 +88,19 @@ export const action = async ({ request, params }: ActionArgs) => {
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error deleting task") },
+        })
+      }
+    case TaskActionMethods.AddToBacklog:
+      try {
+        const backlogTask = await db.task.update({
+          where: { id: taskId },
+          select: taskSelectFields,
+          data: { date: null },
+        })
+        return json({ task: backlogTask })
+      } catch (e: any) {
+        return badRequest(e.message, {
+          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error backlogging task") },
         })
       }
     case TaskActionMethods.DeleteTask:
