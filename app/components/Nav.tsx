@@ -38,6 +38,10 @@ export function Nav() {
       event.preventDefault()
       navigate("/timeline/focus")
     }
+    if (event.metaKey && event.key === "b") {
+      event.preventDefault()
+      navigate("/timeline/backlog")
+    }
     if (event.metaKey && event.key === "e") {
       event.preventDefault()
       navigate("/timeline/elements")
