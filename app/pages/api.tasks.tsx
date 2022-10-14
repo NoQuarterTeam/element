@@ -58,12 +58,18 @@ export const action = async ({ request }: ActionArgs) => {
         }
         const createSchema = z.object({
           name: z.string(),
-          date: z.string(),
           elementId: z.string().uuid(),
-          description: z.string().nullable(),
-          durationHours: z.preprocess(Number, z.number()).nullable(),
-          durationMinutes: z.preprocess(Number, z.number()).nullable(),
-          startTime: z.string().nullable(),
+          date: z.string().optional().nullable(),
+          description: z.string().optional().nullable(),
+          durationHours: z
+            .preprocess((d) => (d ? Number(d) : undefined), z.number())
+            .optional()
+            .nullable(),
+          durationMinutes: z
+            .preprocess((d) => (d ? Number(d) : undefined), z.number())
+            .optional()
+            .nullable(),
+          startTime: z.string().optional().nullable(),
         })
         const isComplete = formData.has("isComplete")
         const newForm = await validateFormData(createSchema, formData)
@@ -75,7 +81,7 @@ export const action = async ({ request }: ActionArgs) => {
             durationHours: newForm.data.durationHours || null,
             durationMinutes: newForm.data.durationMinutes || null,
             startTime: newForm.data.startTime || null,
-            date: dayjs(newForm.data.date).add(12, "h").toDate(),
+            date: newForm.data.date ? dayjs(newForm.data.date).add(12, "h").toDate() : null,
             name: newForm.data.name,
             description: newForm.data.description || null,
             element: { connect: { id: newForm.data.elementId } },

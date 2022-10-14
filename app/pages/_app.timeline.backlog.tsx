@@ -1,18 +1,26 @@
 import * as React from "react"
 import { RiAddLine } from "react-icons/ri"
+import Select from "react-select"
 import * as c from "@chakra-ui/react"
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
+import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
+import { ButtonGroup } from "~/components/ButtonGroup"
+import { InlineFormField } from "~/components/Form"
+import { Modal } from "~/components/Modal"
 import { TooltipIconButton } from "~/components/TooltipIconButton"
 import { safeReadableColor } from "~/lib/color"
 import { db } from "~/lib/db.server"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
+import { customSelectStyle } from "~/lib/styles/react-select"
 import { requireUser } from "~/services/auth/auth.server"
 
 import { TaskActionMethods } from "./_app.timeline.$id"
+import type { TaskElement } from "./api.elements"
+import { TasksActionMethods } from "./api.tasks"
 
 const selectFields = {
   id: true,
@@ -42,7 +50,30 @@ export default function Backlog() {
   const { tasks, backlogTasks } = useLoaderData<typeof loader>()
   const createModalProps = c.useDisclosure()
   const navigate = useNavigate()
+  const { data: elements } = useQuery(
+    ["task-elements"],
+    async () => {
+      const response = await fetch(`/api/elements`)
+      if (!response.ok) throw new Error("Network response was not ok")
+      return response.json() as Promise<TaskElement[]>
+    },
+    { keepPreviousData: true, staleTime: 10_000 },
+  )
+  const createFetcher = useFetcher()
+  React.useEffect(() => {
+    if (!createFetcher.data) return
+    if (createFetcher.type === "actionReload" && createFetcher.data.task) {
+      createModalProps.onClose()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createFetcher.type, createFetcher.data])
 
+  const [element, setElement] = React.useState<{ label: string; value: string; color: string } | undefined>(
+    undefined,
+  )
+  const theme: c.Theme = c.useTheme()
+  const colorMode = c.useColorMode()
+  const isDark = colorMode.colorMode === "dark"
   return (
     <c.Drawer isOpen={true} size="md" onClose={() => navigate("/timeline")} placement="right">
       <c.DrawerOverlay>
@@ -58,6 +89,53 @@ export default function Backlog() {
               >
                 Add
               </c.Button>
+              <Modal {...createModalProps} title="Create backlog task">
+                <createFetcher.Form method="post" replace action="/api/tasks">
+                  <c.Stack>
+                    <InlineFormField
+                      isRequired
+                      autoFocus
+                      error={createFetcher.data?.fieldErrors?.name?.[0]}
+                      name="name"
+                      label="Name"
+                    />
+                    <input type="hidden" name="elementId" value={element?.value} />
+                    <InlineFormField
+                      isRequired
+                      error={createFetcher.data?.fieldErrors?.elementId?.[0]}
+                      label="Element"
+                      name="element"
+                      shouldPassProps={false}
+                      input={
+                        <Select
+                          onChange={setElement}
+                          formatOptionLabel={(option) => (
+                            <c.HStack>
+                              <c.Box borderRadius="full" boxSize="16px" bg={option.color} />
+                              <c.Text>{option.label}</c.Text>
+                            </c.HStack>
+                          )}
+                          styles={customSelectStyle(theme, false, isDark)}
+                          options={elements?.map((e) => ({ label: e.name, value: e.id, color: e.color }))}
+                          value={element}
+                        />
+                      }
+                    />
+                    <ButtonGroup>
+                      <c.Button onClick={createModalProps.onClose}>Cancel</c.Button>
+                      <c.Button
+                        name="_action"
+                        value={TasksActionMethods.AddTask}
+                        type="submit"
+                        isLoading={createFetcher.state !== "idle"}
+                        colorScheme="primary"
+                      >
+                        Create
+                      </c.Button>
+                    </ButtonGroup>
+                  </c.Stack>
+                </createFetcher.Form>
+              </Modal>
             </c.Flex>
             <c.Stack pt={2}>
               {tasks.length === 0 ? (

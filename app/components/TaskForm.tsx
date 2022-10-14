@@ -3,7 +3,6 @@ import { HexColorPicker } from "react-colorful"
 import { RiAddLine, RiDeleteBinLine, RiFileCopyLine, RiTimeLine } from "react-icons/ri"
 import { lazyWithPreload } from "react-lazy-with-preload"
 import Select from "react-select"
-import type { Theme } from "@chakra-ui/react"
 import * as c from "@chakra-ui/react"
 import { useFetcher, useNavigate, useSearchParams } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
@@ -42,7 +41,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
   const navigate = useNavigate()
   const day = searchParams.get("day") || undefined
   const { addTask, updateTask, removeTask } = useTimelineTasks()
-  const theme: Theme = c.useTheme()
+  const theme: c.Theme = c.useTheme()
   const { colorMode } = c.useColorMode()
   const isDark = colorMode === "dark"
   const [color, setColor] = React.useState(randomHexColor())
