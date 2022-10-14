@@ -5,9 +5,6 @@ import type { TimelineTask } from "~/pages/api.tasks"
 import type { ReorderTask } from "../helpers/timeline"
 import { useTimelineDays } from "./useTimelineDays"
 
-export const DAYS_BACK = 20
-export const DAYS_FORWARD = 40
-
 export function useTimelineTasks() {
   const client = useQueryClient()
   const { back, forward } = useTimelineDays((s) => ({ back: s.daysBack, forward: s.daysForward }))

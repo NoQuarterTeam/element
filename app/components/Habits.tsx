@@ -132,7 +132,8 @@ interface ItemProps {
   day: string
   habitEntries: TimelineHabitEntry[]
 }
-function HabitItem({ habit, day, habitEntries }: ItemProps) {
+const HabitItem = React.memo(_HabitItem)
+function _HabitItem({ habit, day, habitEntries }: ItemProps) {
   const daysBack = useTimelineDays((s) => s.daysBack)
   const habitEntryFetcher = useFetcher()
   const entry = habitEntries.find((e) => e.habitId === habit.id)

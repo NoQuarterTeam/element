@@ -17,7 +17,7 @@ import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
-import { DAYS_BACK, DAYS_FORWARD } from "~/lib/hooks/useTimelineTasks"
+import { DAYS_BACK, DAYS_FORWARD } from "~/lib/hooks/useTimelineDays"
 
 import type { TimelineTask } from "./api.tasks"
 
@@ -27,7 +27,9 @@ export function links() {
   return [{ rel: "stylesheet", href: styles }]
 }
 
-export default function Timeline() {
+const Timeline = React.memo(_Timeline)
+export default Timeline
+function _Timeline() {
   const navigate = useNavigate()
   const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineDays()
 
@@ -128,10 +130,6 @@ export default function Timeline() {
   })
   const bg = c.useColorModeValue("gray.100", "gray.800")
   const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HABIT_HEIGHT : HEADER_HEIGHT
-  const dropTasks = React.useMemo(
-    () => tasks.map((t) => ({ id: t.id, date: t.date, order: t.order })),
-    [tasks],
-  )
 
   return (
     <>
@@ -145,17 +143,7 @@ export default function Timeline() {
       >
         <TimelineHeader isLoading={isLoading || isFetching} days={days} months={months} />
         <c.Box ref={daysRef} h={`calc(100vh - ${headerHeight}px)`} w="min-content" overflow="scroll">
-          <c.Flex>
-            <DropContainer tasks={dropTasks}>
-              {days.map((day, index) => (
-                <Day
-                  key={index}
-                  {...{ index, day, daysForward, daysBack }}
-                  tasks={tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))}
-                />
-              ))}
-            </DropContainer>
-          </c.Flex>
+          <TimelineContent days={days} tasks={tasks} />
         </c.Box>
         <Nav />
         <c.Box pos="absolute" bottom={{ base: 4, md: 8 }} left={{ base: 4, md: 8 }} borderRadius="full">
@@ -187,5 +175,27 @@ export default function Timeline() {
       </c.Box>
       <Outlet />
     </>
+  )
+}
+
+const TimelineContent = React.memo(_TimelineContent)
+function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
+  const dropTasks = React.useMemo(
+    () => props.tasks.map((t) => ({ id: t.id, date: t.date, order: t.order })),
+    [props.tasks],
+  )
+  return (
+    <c.Flex>
+      <DropContainer tasks={dropTasks}>
+        {props.days.map((day, index) => (
+          <Day
+            key={index}
+            day={day}
+            index={index}
+            tasks={props.tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))}
+          />
+        ))}
+      </DropContainer>
+    </c.Flex>
   )
 }

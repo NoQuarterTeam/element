@@ -1,8 +1,8 @@
 import create from "zustand"
 
-export const DAYS_BACK = 20
+export const DAYS_BACK = 10
 
-export const DAYS_FORWARD = 40
+export const DAYS_FORWARD = 20
 
 export const useTimelineDays = create<{
   daysForward: number

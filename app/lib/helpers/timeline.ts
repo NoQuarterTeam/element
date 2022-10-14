@@ -19,7 +19,7 @@ export const MONTH_NAMES = [
 ]
 
 export const getDays = (startDate: Dayjs, daysCount: number) => {
-  return Array.from({ length: daysCount }).map((_, i) => startDate.add(i, "day"))
+  return Array.from({ length: daysCount }).map((_, i) => startDate.add(i, "day").format("YYYY-MM-DD"))
 }
 
 export const getMonths = (startDate: Dayjs, daysCount: number) => {

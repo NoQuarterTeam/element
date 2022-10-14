@@ -12,7 +12,8 @@ interface Props {
   children: React.ReactNode
 }
 
-export function DropContainer({ children, tasks }: Props) {
+export const DropContainer = React.memo(_DropContainer)
+function _DropContainer({ children, tasks }: Props) {
   const { updateOrder } = useTimelineTasks()
 
   // Ordering
@@ -31,7 +32,6 @@ export function DropContainer({ children, tasks }: Props) {
   const onDragEnd = React.useCallback(
     ({ source, destination }: DropResult) => {
       if (!destination) return
-
       if (source.droppableId === destination.droppableId) {
         // If re-ordering
         const dayTasks = getDayTasksAndOrder(tasks, source)

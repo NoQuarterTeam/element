@@ -8,7 +8,7 @@ import { useFeatures } from "~/lib/hooks/useFeatures"
 import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
 import { useMe } from "~/pages/_app"
 import type { TimelineHabitResponse } from "~/pages/api.habits"
-import type { WeatherData } from "~/pages/api.weather"
+import type { DayWeather, WeatherData } from "~/pages/api.weather"
 
 import { DAY_WIDTH } from "./Day"
 import { Habits } from "./Habits"
@@ -19,7 +19,7 @@ export const HEADER_HABIT_HEIGHT = 138
 
 interface TimelineHeaderProps {
   isLoading: boolean
-  days: dayjs.Dayjs[]
+  days: string[]
   months: { month: number; year: number }[]
 }
 export const TimelineHeader = React.memo(_TimelineHeader)
@@ -29,6 +29,7 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
   const isDark = colorMode === "dark"
   const features = useFeatures((s) => s.features)
   const isHabitsEnabled = features.includes("habits")
+  const isWeatherEnabled = features.includes("weather")
   const daysBack = useTimelineDays((s) => s.daysBack)
 
   const { data } = useQuery(
@@ -43,7 +44,6 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
   const habits = data?.habits || []
   const habitEntries = data?.habitEntries || []
 
-  const isWeatherEnabled = features.includes("weather")
   const { data: weatherData } = useQuery(
     ["/api/weather"],
     async () => {
@@ -75,52 +75,71 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
           </c.Flex>
           <c.Flex>
             {days
-              .filter((day) => month === day.month() && year === day.year())
-              .map((day) => {
-                const dayWeather = weatherData?.find((d) => d.date === day.format("DD/MM/YYYY"))
-                return (
-                  <c.VStack spacing={0} px={2} minW={DAY_WIDTH} key={day.unix()}>
-                    <c.HStack spacing={0} h="34px" overflow="hidden">
-                      {isWeatherEnabled && dayWeather && (
-                        <>
-                          <c.Text fontSize="x-small" opacity={0.8}>
-                            {dayWeather.temp}°C
-                          </c.Text>
-                          <c.Image
-                            src={`https://openweathermap.org/img/wn/${dayWeather.icon}@2x.png`}
-                            boxSize="35px"
-                            objectFit="cover"
-                          />
-                        </>
-                      )}
-                    </c.HStack>
-                    <c.Text
-                      textAlign="center"
-                      fontSize="sm"
-                      fontWeight={dayjs(day).isSame(dayjs(), "day") ? 700 : 400}
-                    >
-                      {day.format("ddd Do")}
-                    </c.Text>
-                    {isHabitsEnabled &&
-                      !!me.stripeSubscriptionId &&
-                      !dayjs(day).startOf("d").isAfter(dayjs()) && (
-                        <Habits
-                          day={day.format("YYYY-MM-DD")}
-                          habits={habits}
-                          habitEntries={habitEntries.filter((e) =>
-                            dayjs(day.format("YYYY-MM-DD")).isSame(
-                              dayjs(e.createdAt).format("YYYY-MM-DD"),
-                              "date",
-                            ),
-                          )}
-                        />
-                      )}
-                  </c.VStack>
-                )
-              })}
+              .filter((day) => month === dayjs(day).month() && year === dayjs(day).year())
+              .map((day) => (
+                <HeaderDay
+                  key={day}
+                  day={day}
+                  habits={habits}
+                  habitEntries={habitEntries}
+                  weather={weatherData?.find((w) => w.date === dayjs(day).format("DD/MM/YYYY"))}
+                  isWeatherEnabled={isWeatherEnabled}
+                  isHabitsEnabled={
+                    isHabitsEnabled && !me.stripeSubscriptionId && !dayjs(day).startOf("d").isAfter(dayjs())
+                  }
+                />
+              ))}
           </c.Flex>
         </c.Box>
       ))}
     </c.Flex>
+  )
+}
+
+const HeaderDay = React.memo(_HeaderDay)
+function _HeaderDay(props: {
+  day: string
+  habits: TimelineHabitResponse["habits"]
+  habitEntries: TimelineHabitResponse["habitEntries"]
+  weather?: DayWeather
+  isHabitsEnabled: boolean
+  isWeatherEnabled: boolean
+}) {
+  return (
+    <c.VStack spacing={0} px={2} minW={DAY_WIDTH} key={dayjs(props.day).unix()}>
+      <c.HStack spacing={0} h="34px" overflow="hidden">
+        {props.isWeatherEnabled && props.weather && (
+          <>
+            <c.Text fontSize="x-small" opacity={0.8}>
+              {props.weather.temp}°C
+            </c.Text>
+            <c.Image
+              src={`https://openweathermap.org/img/wn/${props.weather.icon}@2x.png`}
+              boxSize="35px"
+              objectFit="cover"
+            />
+          </>
+        )}
+      </c.HStack>
+      <c.Text
+        textAlign="center"
+        fontSize="sm"
+        fontWeight={dayjs(props.day).isSame(dayjs(), "day") ? 700 : 400}
+      >
+        {dayjs(props.day).format("ddd Do")}
+      </c.Text>
+      {props.isHabitsEnabled && (
+        <Habits
+          day={dayjs(props.day).format("YYYY-MM-DD")}
+          habits={props.habits}
+          habitEntries={props.habitEntries.filter((e) =>
+            dayjs(dayjs(props.day).format("YYYY-MM-DD")).isSame(
+              dayjs(e.createdAt).format("YYYY-MM-DD"),
+              "date",
+            ),
+          )}
+        />
+      )}
+    </c.VStack>
   )
 }

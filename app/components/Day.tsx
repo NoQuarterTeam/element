@@ -14,11 +14,9 @@ import { TaskItem } from "./TaskItem"
 import { HEADER_HABIT_HEIGHT, HEADER_HEIGHT } from "./TimelineHeader"
 
 interface Props {
-  day: dayjs.Dayjs
+  day: string
   index: number
   tasks: TimelineTask[]
-  daysForward: number
-  daysBack: number
 }
 
 export const DAY_WIDTH = 98
@@ -45,7 +43,7 @@ function _Day(props: Props) {
     : "white"
 
   return (
-    <Droppable droppableId={props.day.toString()}>
+    <Droppable droppableId={props.day}>
       {(provided) => (
         <div ref={provided.innerRef} {...provided.droppableProps} style={{ minHeight: "min-content" }}>
           <c.Box
@@ -88,9 +86,9 @@ function _Day(props: Props) {
                 variant="ghost"
                 opacity={0}
                 _focus={{ opacity: 1 }}
-                tabIndex={props.day.isSame(dayjs(), "day") ? 1 : -1}
+                tabIndex={dayjs(props.day).isSame(dayjs(), "day") ? 1 : -1}
                 size="md"
-                onClick={() => navigate(`new?day=${props.day.format("YYYY-MM-DD")}`)}
+                onClick={() => navigate(`new?day=${dayjs(props.day).format("YYYY-MM-DD")}`)}
                 borderRadius="full"
                 icon={<c.Box as={RiAddCircleLine} boxSize="20px" />}
                 aria-label="new task"
