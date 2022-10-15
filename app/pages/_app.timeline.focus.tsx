@@ -1,14 +1,15 @@
 import * as React from "react"
+import { ChevronDownIcon,ChevronUpIcon } from "@chakra-ui/icons"
 import * as c from "@chakra-ui/react"
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
 import { motion } from "framer-motion"
 
+import { TooltipIconButton } from "~/components/TooltipIconButton"
 import { safeReadableColor } from "~/lib/color"
 import { db } from "~/lib/db.server"
-import { formatDuration } from "~/lib/helpers/duration"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { requireUser } from "~/services/auth/auth.server"
@@ -40,23 +41,15 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   return json(tasks)
 }
+
+type FocusTask = SerializeFrom<typeof loader>[0]
 export default function Focus() {
   const navigate = useNavigate()
-  const { updateTask } = useTimelineTasks()
   const tasks = useLoaderData<typeof loader>()
-  const borderColor = c.useColorModeValue("gray.200", "gray.600")
-  const updateFetcher = useFetcher()
   const setFeaturesSeen = useFeaturesSeen((s) => s.setFeaturesSeen)
   React.useEffect(() => {
     setFeaturesSeen(["focus"])
   }, [])
-  React.useEffect(() => {
-    if (!updateFetcher.data) return
-    if (updateFetcher.type === "actionReload" && updateFetcher.data.task) {
-      updateTask(updateFetcher.data.task)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateFetcher.type, updateFetcher.data])
 
   const bg = c.useColorModeValue("white", "gray.800")
   return (
@@ -76,53 +69,90 @@ export default function Focus() {
                 </c.VStack>
               </motion.div>
             ) : (
-              tasks.map((task) => (
-                <c.Box
-                  borderRadius="sm"
-                  overflow="hidden"
-                  w="100%"
-                  maxW="500px"
-                  key={task.id}
-                  pt={2}
-                  border="1px solid"
-                  borderColor={borderColor}
-                >
-                  <c.Stack px={4} spacing={2}>
-                    <c.Flex justify="space-between">
-                      <c.Text fontSize="xl">{task.name}</c.Text>
-                      <c.Checkbox
-                        defaultChecked={task.isComplete}
-                        onChange={() =>
-                          updateFetcher.submit(
-                            { isComplete: String(!task.isComplete), _action: TaskActionMethods.UpdateTask },
-                            { action: `/timeline/${task.id}`, method: "post" },
-                          )
-                        }
-                      />
-                    </c.Flex>
-                    {(task.startTime || task.durationHours || task.durationMinutes) && (
-                      <c.HStack fontSize="sm">
-                        {task.startTime && <c.Text>{task.startTime}</c.Text>}
-                        <c.Text>{formatDuration(task.durationHours, task.durationMinutes)}</c.Text>
-                      </c.HStack>
-                    )}
-                    <c.Box
-                      fontSize="sm"
-                      sx={{ p: { m: 0, p: 0 }, ul: { my: 4, pl: 4 }, ol: { ml: 4, my: 4 } }}
-                      dangerouslySetInnerHTML={{ __html: task.description || "" }}
-                    />
-                  </c.Stack>
-                  <c.Box py={1} px={4} bg={task.element.color}>
-                    <c.Text fontSize="xs" color={safeReadableColor(task.element.color)}>
-                      {task.element.name}
-                    </c.Text>
-                  </c.Box>
-                </c.Box>
-              ))
+              tasks.map((task) => <FocusItem key={task.id} task={task} />)
             )}
           </c.VStack>
         </c.ModalBody>
       </c.ModalContent>
     </c.Modal>
+  )
+}
+
+function FocusItem({ task }: { task: FocusTask }) {
+  const borderColor = c.useColorModeValue("gray.200", "gray.600")
+  const bg = c.useColorModeValue("gray.50", "gray.800")
+
+  const { updateTask } = useTimelineTasks()
+  const updateFetcher = useFetcher()
+  React.useEffect(() => {
+    if (!updateFetcher.data) return
+    if (updateFetcher.type === "actionReload" && updateFetcher.data.task) {
+      updateTask(updateFetcher.data.task)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateFetcher.type, updateFetcher.data])
+  const { isOpen, onToggle } = c.useDisclosure({ defaultIsOpen: false })
+
+  return (
+    <c.Box w="100%" maxW="500px" key={task.id} border="1px solid" borderRadius="sm" borderColor={borderColor}>
+      <c.Flex p={2} justify="space-between" align="flex-start">
+        <c.Text>{task.name}</c.Text>
+
+        <c.HStack>
+          {task.description && (
+            <TooltipIconButton
+              variant="outline"
+              tooltipProps={{
+                placement: "bottom",
+                zIndex: 50,
+                hasArrow: true,
+                label: "Show description",
+              }}
+              onClick={onToggle}
+              borderRadius="full"
+              size="xs"
+              aria-label="show description"
+              icon={<c.Box as={isOpen ? ChevronUpIcon : ChevronDownIcon} />}
+            />
+          )}
+
+          <c.Checkbox
+            size="lg"
+            defaultChecked={task.isComplete}
+            onChange={() =>
+              updateFetcher.submit(
+                { _action: TaskActionMethods.CompleteBacklogTask },
+                { action: `/timeline/${task.id}`, method: "post" },
+              )
+            }
+          />
+        </c.HStack>
+      </c.Flex>
+      {task.description && (
+        <c.Collapse in={isOpen} animateOpacity>
+          <c.Box p={2} pt={0}>
+            <c.Text
+              borderRadius="sm"
+              sx={{ ul: { my: 0, pl: 4 }, ol: { ml: 4, my: 0 } }}
+              bg={bg}
+              p={2}
+              w="100%"
+              fontSize="sm"
+              dangerouslySetInnerHTML={{ __html: task.description }}
+            />
+          </c.Box>
+        </c.Collapse>
+      )}
+
+      <c.Text
+        px={2}
+        w="100%"
+        fontSize="xs"
+        bg={task.element.color}
+        color={safeReadableColor(task.element.color)}
+      >
+        {task.element.name}
+      </c.Text>
+    </c.Box>
   )
 }

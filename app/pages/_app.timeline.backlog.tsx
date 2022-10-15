@@ -254,7 +254,7 @@ type BacklogTask = SerializeFrom<typeof loader>[0]
 function BacklogItem({ task }: { task: BacklogTask }) {
   const editModalProps = c.useDisclosure()
   const borderColor = c.useColorModeValue("gray.100", "gray.600")
-  const bg = c.useColorModeValue("gray.75", "gray.900")
+  const bg = c.useColorModeValue("gray.50", "gray.800")
   const updateFetcher = useFetcher()
   const { isOpen, onToggle } = c.useDisclosure()
   const { addTask } = useTimelineTasks()
