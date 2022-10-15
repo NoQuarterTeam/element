@@ -1,7 +1,7 @@
 import create from "zustand"
 import { persist } from "zustand/middleware"
 
-export type Feature = "weather" | "habits" | "focus"
+export type Feature = "weather" | "habits" | "focus" | "backlog"
 
 export const useFeatures = create<{
   features: Feature[]
@@ -21,7 +21,7 @@ export const useFeatures = create<{
   ),
 )
 
-export const NEW_UPDATES: Feature[] = ["weather", "habits", "focus"]
+export const NEW_UPDATES: Feature[] = ["weather", "habits", "focus", "backlog"]
 
 interface Create {
   featuresSeen: Feature[]

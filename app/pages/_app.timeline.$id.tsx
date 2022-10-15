@@ -26,6 +26,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export enum TaskActionMethods {
   UpdateTask = "updateTask",
+  CompleteBacklogTask = "completeBacklogTask",
   DeleteTask = "deleteTask",
   AddToBacklog = "addToBacklog",
   DuplicateTask = "duplicateTask",
@@ -74,6 +75,19 @@ export const action = async ({ request, params }: ActionArgs) => {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating task") },
         })
       }
+    case TaskActionMethods.CompleteBacklogTask:
+      try {
+        const updatedTask = await db.task.update({
+          select: taskSelectFields,
+          where: { id: taskId },
+          data: { date: dayjs().startOf("d").add(12, "h").toDate(), isComplete: true },
+        })
+        return json({ task: updatedTask })
+      } catch (e: any) {
+        return badRequest(e.message, {
+          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error completing task") },
+        })
+      }
     case TaskActionMethods.DuplicateTask:
       try {
         const taskToDupe = await db.task.findUniqueOrThrow({ where: { id: taskId } })
@@ -95,7 +109,7 @@ export const action = async ({ request, params }: ActionArgs) => {
         const backlogTask = await db.task.update({
           where: { id: taskId },
           select: taskSelectFields,
-          data: { date: null },
+          data: { date: null, isComplete: false },
         })
         return json({ task: backlogTask })
       } catch (e: any) {

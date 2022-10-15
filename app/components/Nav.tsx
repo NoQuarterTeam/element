@@ -103,7 +103,14 @@ export function Nav() {
               variant="ghost"
               aria-label="open backlog"
               onClick={() => navigate("backlog")}
-              icon={<c.Box as={RiTimeLine} boxSize="18px" />}
+              icon={
+                <c.Box pos="relative">
+                  <c.Box as={RiTimeLine} boxSize="18px" />
+                  {!featuresSeen.includes("backlog") && (
+                    <c.Box boxSize="5px" borderRadius="full" bg="red.500" pos="absolute" top={0} right={0} />
+                  )}
+                </c.Box>
+              }
             />
           </c.Tooltip>
           <c.Tooltip label="Elements" placement="auto" zIndex={50} hasArrow>
