@@ -70,7 +70,9 @@ export default function Focus() {
               <motion.div initial={{ paddingTop: 30 }} animate={{ paddingTop: 0 }} exit={{ paddingTop: 30 }}>
                 <c.VStack spacing={4}>
                   <c.Image src="/logo.png" boxSize="200px" />
-                  <c.Text fontSize="3xl" textAlign="center">Looks like you're done for the day!</c.Text>
+                  <c.Text fontSize="3xl" textAlign="center">
+                    Looks like you're done for the day!
+                  </c.Text>
                 </c.VStack>
               </motion.div>
             ) : (
@@ -106,7 +108,7 @@ export default function Focus() {
                     )}
                     <c.Box
                       fontSize="sm"
-                      sx={{ p: { m: 0, p: 0 }, ul: { my: 4, pl: 4 } }}
+                      sx={{ p: { m: 0, p: 0 }, ul: { my: 4, pl: 4 }, ol: { ml: 4, my: 4 } }}
                       dangerouslySetInnerHTML={{ __html: task.description || "" }}
                     />
                   </c.Stack>

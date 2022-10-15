@@ -1,16 +1,18 @@
 import * as React from "react"
-import { RiAddLine } from "react-icons/ri"
+import { RiAddLine, RiEditLine } from "react-icons/ri"
+import lazyWithPreload from "react-lazy-with-preload"
 import Select from "react-select"
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons"
 import * as c from "@chakra-ui/react"
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
+import { ClientOnly } from "remix-utils"
 
 import { ButtonGroup } from "~/components/ButtonGroup"
-import { InlineFormField } from "~/components/Form"
-import { Modal } from "~/components/Modal"
+import { FormButton, InlineFormField } from "~/components/Form"
 import { TooltipIconButton } from "~/components/TooltipIconButton"
 import { safeReadableColor } from "~/lib/color"
 import { db } from "~/lib/db.server"
@@ -26,6 +28,9 @@ import { TasksActionMethods } from "./api.tasks"
 const selectFields = {
   id: true,
   isComplete: true,
+  durationHours: true,
+  durationMinutes: true,
+  description: true,
   name: true,
   element: {
     select: { id: true, name: true, color: true },
@@ -66,9 +71,8 @@ export default function Backlog() {
               >
                 Add
               </c.Button>
-              <Modal {...createModalProps} title="Create backlog task">
-                <CreateTaskForm onClose={createModalProps.onClose} />
-              </Modal>
+
+              <BacklogTaskForm {...createModalProps} />
             </c.Flex>
             <c.Stack pt={2}>
               {tasks.length === 0 ? (
@@ -86,7 +90,12 @@ export default function Backlog() {
   )
 }
 
-function CreateTaskForm(props: { onClose: () => void }) {
+export const PreloadedEditorInput = lazyWithPreload(() => import("../components/EditorInput"))
+
+function BacklogTaskForm({
+  task,
+  ...createModalProps
+}: { task?: BacklogTask } & Omit<c.ModalProps, "children">) {
   const { data: elements } = useQuery(
     ["task-elements"],
     async () => {
@@ -97,76 +106,157 @@ function CreateTaskForm(props: { onClose: () => void }) {
     { keepPreviousData: true, staleTime: 10_000 },
   )
 
-  const createFetcher = useFetcher()
+  const taskFetcher = useFetcher()
   React.useEffect(() => {
-    if (!createFetcher.data) return
-    if (createFetcher.type === "actionReload" && createFetcher.data.task) {
-      props.onClose()
+    if (!taskFetcher.data) return
+    if (taskFetcher.type === "actionReload" && taskFetcher.data.task) {
+      createModalProps.onClose()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createFetcher.type, createFetcher.data])
+  }, [taskFetcher.type, taskFetcher.data])
 
-  const [element, setElement] = React.useState<{ label: string; value: string; color: string } | undefined>(
-    undefined,
+  const [element, setElement] = React.useState(
+    task?.element
+      ? { value: task.element.id, label: task.element.name, color: task.element.color }
+      : undefined,
   )
   const theme: c.Theme = c.useTheme()
   const colorMode = c.useColorMode()
   const isDark = colorMode.colorMode === "dark"
   return (
-    <createFetcher.Form method="post" replace action="/api/tasks">
-      <c.Stack>
-        <InlineFormField
-          isRequired
-          autoFocus
-          error={createFetcher.data?.fieldErrors?.name?.[0]}
-          name="name"
-          label="Name"
-        />
-        <input type="hidden" name="elementId" value={element?.value} />
-        <InlineFormField
-          isRequired
-          error={createFetcher.data?.fieldErrors?.elementId?.[0]}
-          label="Element"
-          name="element"
-          shouldPassProps={false}
-          input={
-            <Select
-              onChange={setElement}
-              formatOptionLabel={(option) => (
-                <c.HStack>
-                  <c.Box borderRadius="full" boxSize="16px" bg={option.color} />
-                  <c.Text>{option.label}</c.Text>
-                </c.HStack>
-              )}
-              styles={customSelectStyle(theme, false, isDark)}
-              options={elements?.map((e) => ({ label: e.name, value: e.id, color: e.color }))}
-              value={element}
-            />
-          }
-        />
-        <ButtonGroup>
-          <c.Button onClick={props.onClose}>Cancel</c.Button>
-          <c.Button
-            name="_action"
-            value={TasksActionMethods.AddTask}
-            type="submit"
-            isLoading={createFetcher.state !== "idle"}
-            colorScheme="primary"
-          >
-            Create
-          </c.Button>
-        </ButtonGroup>
-      </c.Stack>
-    </createFetcher.Form>
+    <c.Modal size="xl" {...createModalProps}>
+      <c.ModalOverlay>
+        <c.ModalContent minH="400px" overflowY="scroll">
+          <c.ModalBody mb={2}>
+            <React.Suspense>
+              <taskFetcher.Form method="post" replace action={task ? `/timeline/${task.id}` : "/api/tasks"}>
+                <c.Stack>
+                  <c.Input
+                    name="name"
+                    placeholder="Name"
+                    w="95%"
+                    isRequired
+                    defaultValue={task?.name}
+                    isInvalid={!!taskFetcher.data?.fieldErrors?.name?.[0]}
+                    autoFocus
+                    size="lg"
+                    fontSize="4xl"
+                    minH="70px"
+                    pr={2}
+                    pl={4}
+                    ml={-4}
+                    focusBorderColor="transparent"
+                    border="none!important"
+                    bg="transparent"
+                  />
+                  <input type="hidden" name="elementId" value={element?.value} />
+                  <InlineFormField
+                    isRequired
+                    error={taskFetcher.data?.fieldErrors?.elementId?.[0]}
+                    label="Element"
+                    name="element"
+                    shouldPassProps={false}
+                    input={
+                      <Select
+                        onChange={setElement}
+                        formatOptionLabel={(option) => (
+                          <c.HStack>
+                            <c.Box borderRadius="full" boxSize="16px" bg={option.color} />
+                            <c.Text>{option.label}</c.Text>
+                          </c.HStack>
+                        )}
+                        styles={customSelectStyle(theme, false, isDark)}
+                        options={elements?.map((e) => ({ label: e.name, value: e.id, color: e.color }))}
+                        value={element}
+                      />
+                    }
+                  />
+                  <c.Box>
+                    <c.Flex>
+                      <c.FormLabel htmlFor="durationHours" fontSize="sm" minW={{ base: "80px", md: "100px" }}>
+                        Duration
+                      </c.FormLabel>
+                      <c.HStack>
+                        <c.HStack spacing={1}>
+                          <c.Input
+                            textAlign="center"
+                            px={0}
+                            defaultValue={task?.durationHours ? task.durationHours.toString() : undefined}
+                            id="durationHours"
+                            min={0}
+                            max={24}
+                            boxSize="30px"
+                            name="durationHours"
+                          />
+                          <c.Text fontSize="xs" opacity={0.8}>
+                            Hours
+                          </c.Text>
+                        </c.HStack>
+                        <c.HStack spacing={1}>
+                          <c.Input
+                            defaultValue={task?.durationMinutes ? task.durationMinutes.toString() : undefined}
+                            max={60}
+                            textAlign="center"
+                            px={0}
+                            min={0}
+                            boxSize="30px"
+                            name="durationMinutes"
+                          />
+                          <c.Text fontSize="xs" opacity={0.8}>
+                            Minutes
+                          </c.Text>
+                        </c.HStack>
+                      </c.HStack>
+                    </c.Flex>
+                    <c.FormErrorMessage>
+                      {taskFetcher.data?.fieldErrors?.durationHours?.[0] ||
+                        taskFetcher.data?.fieldErrors?.durationMinutes?.[0]}
+                    </c.FormErrorMessage>
+                  </c.Box>
+                  <InlineFormField
+                    name="description"
+                    defaultValue={task?.description}
+                    label="Description"
+                    input={
+                      <c.Box minH="250px" w="100%">
+                        <ClientOnly fallback={<c.Box h="250px" />}>
+                          {() => <PreloadedEditorInput name="description" defaultValue={task?.description} />}
+                        </ClientOnly>
+                      </c.Box>
+                    }
+                    error={taskFetcher.data?.fieldErrors?.description?.[0]}
+                  />
+                  <ButtonGroup>
+                    <c.Button variant="ghost" onClick={createModalProps.onClose}>
+                      Cancel
+                    </c.Button>
+                    <FormButton
+                      colorScheme="primary"
+                      name="_action"
+                      value={task ? TaskActionMethods.UpdateTask : TasksActionMethods.AddTask}
+                      isLoading={taskFetcher.state !== "idle"}
+                    >
+                      {task ? "Update" : "Create"}
+                    </FormButton>
+                  </ButtonGroup>
+                </c.Stack>
+              </taskFetcher.Form>
+            </React.Suspense>
+          </c.ModalBody>
+        </c.ModalContent>
+      </c.ModalOverlay>
+    </c.Modal>
   )
 }
 
 type BacklogTask = SerializeFrom<typeof loader>[0]
 
 function BacklogItem({ task }: { task: BacklogTask }) {
+  const editModalProps = c.useDisclosure()
   const borderColor = c.useColorModeValue("gray.100", "gray.600")
+  const bg = c.useColorModeValue("gray.75", "gray.900")
   const updateFetcher = useFetcher()
-
+  const { isOpen, onToggle } = c.useDisclosure()
   const { addTask } = useTimelineTasks()
   React.useEffect(() => {
     if (!updateFetcher.data) return
@@ -178,12 +268,47 @@ function BacklogItem({ task }: { task: BacklogTask }) {
 
   return (
     <c.Box key={task.id} border="1px solid" borderRadius="sm" borderColor={borderColor}>
-      <c.Flex p={2} justify="space-between">
+      <c.Flex p={2} justify="space-between" align="flex-start">
         <c.Text>{task.name}</c.Text>
+
         <c.HStack>
-          <c.Popover>
+          {task.description && (
+            <TooltipIconButton
+              variant="outline"
+              tooltipProps={{
+                placement: "bottom",
+                zIndex: 50,
+                hasArrow: true,
+                label: "Show description",
+              }}
+              onClick={onToggle}
+              borderRadius="full"
+              size="xs"
+              aria-label="show description"
+              icon={<c.Box as={isOpen ? ChevronUpIcon : ChevronDownIcon} />}
+            />
+          )}
+
+          <TooltipIconButton
+            variant="outline"
+            tooltipProps={{
+              placement: "bottom",
+              zIndex: 50,
+              hasArrow: true,
+              label: "Edit",
+            }}
+            onClick={editModalProps.onOpen}
+            borderRadius="full"
+            size="xs"
+            aria-label="edit"
+            icon={<c.Box as={RiEditLine} />}
+          />
+          <BacklogTaskForm task={task} {...editModalProps} />
+
+          <c.Popover isLazy>
             <c.PopoverTrigger>
               <TooltipIconButton
+                variant="outline"
                 tooltipProps={{
                   placement: "bottom",
                   zIndex: 50,
@@ -231,9 +356,24 @@ function BacklogItem({ task }: { task: BacklogTask }) {
           />
         </c.HStack>
       </c.Flex>
+      {task.description && (
+        <c.Collapse in={isOpen} animateOpacity>
+          <c.Box p={2} pt={0}>
+            <c.Text
+              borderRadius="sm"
+              sx={{ ul: { my: 0, pl: 4 }, ol: { ml: 4, my: 0 } }}
+              bg={bg}
+              p={2}
+              w="100%"
+              fontSize="sm"
+              dangerouslySetInnerHTML={{ __html: task.description }}
+            />
+          </c.Box>
+        </c.Collapse>
+      )}
+
       <c.Text
         px={2}
-        // py={1}
         w="100%"
         fontSize="xs"
         bg={task.element.color}
