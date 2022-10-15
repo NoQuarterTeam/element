@@ -85,7 +85,7 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
                   weather={weatherData?.find((w) => w.date === dayjs(day).format("DD/MM/YYYY"))}
                   isWeatherEnabled={isWeatherEnabled}
                   isHabitsEnabled={
-                    isHabitsEnabled && !me.stripeSubscriptionId && !dayjs(day).startOf("d").isAfter(dayjs())
+                    isHabitsEnabled && !!me.stripeSubscriptionId && !dayjs(day).startOf("d").isAfter(dayjs())
                   }
                 />
               ))}

@@ -18,6 +18,12 @@ export function ShortcutsInfo() {
       </Flex>
       <Flex align="center" justify="space-between">
         <Text>
+          <Kbd>cmd</Kbd> + <Kbd>b</Kbd>
+        </Text>
+        <Text fontSize="sm">Open backlog</Text>
+      </Flex>
+      <Flex align="center" justify="space-between">
+        <Text>
           <Kbd>cmd</Kbd> + <Kbd>e</Kbd>
         </Text>
         <Text fontSize="sm">Open element sidebar</Text>
