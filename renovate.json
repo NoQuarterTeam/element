@@ -18,5 +18,5 @@
       "extends": ["schedule:weekly"]
     }
   ],
-  "ignoreDeps": ["@chakra-ui/react"]
+  "ignoreDeps": []
 }
