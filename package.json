@@ -18,7 +18,6 @@
     "hooks": "stripe listen --forward-to localhost:3000/api/stripe/webhook --events customer.subscription.created,customer.subscription.updated,customer.subscription.deleted",
     "lint:fix": "eslint --config .eslintrc.commit.js --fix --cache --ext .ts,.tsx app",
     "lint": "eslint --config .eslintrc.commit.js --ext .ts,.tsx app",
-    "pre-commit": "lint-staged",
     "prettier": "prettier --check app",
     "prettify": "prettier --write app",
     "start": "cross-env NODE_ENV=production node ./build/server.js",
@@ -83,8 +82,6 @@
     "zustand": "4.1.4"
   },
   "devDependencies": {
-    "@commitlint/cli": "17.2.0",
-    "@commitlint/config-conventional": "17.2.0",
     "@remix-run/dev": "1.7.4",
     "@remix-run/eslint-config": "1.7.4",
     "@types/bcrypt": "5.0.0",
