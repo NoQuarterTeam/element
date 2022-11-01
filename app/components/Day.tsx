@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Draggable, Droppable } from "react-beautiful-dnd"
+import { Draggable, Droppable } from "@hello-pangea/dnd"
 import { RiAddCircleLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { useNavigate } from "@remix-run/react"
