@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ChevronDownIcon,ChevronUpIcon } from "@chakra-ui/icons"
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons"
 import * as c from "@chakra-ui/react"
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"

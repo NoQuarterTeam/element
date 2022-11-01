@@ -46,11 +46,11 @@ export function EditorInput({ name, defaultValue, isRequired, isDisabled }: Prop
               borderColor: c.useColorModeValue("gray.200", "gray.600"),
               bgColor: c.useColorModeValue("white", "gray.700"),
             },
-          },
-          ".se-toolbar": {
-            outlineColor: c.useColorModeValue("gray.200", "gray.600"),
-            bgColor: c.useColorModeValue("white", "gray.700"),
-            color: c.useColorModeValue("black", "white"),
+            ".se-toolbar": {
+              outlineColor: c.useColorModeValue("gray.200", "gray.600"),
+              bgColor: c.useColorModeValue("white", "gray.700"),
+              color: c.useColorModeValue("black", "white"),
+            },
           },
           ".sun-editor-editable": {
             bgColor: c.useColorModeValue("white", "gray.700"),
