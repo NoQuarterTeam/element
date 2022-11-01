@@ -9,6 +9,10 @@ jobs:
   prettier:
     name: Prettier
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        version: [16]
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -19,7 +23,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ matrix.version }}
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
@@ -27,13 +31,13 @@ jobs:
       - name: ✨ Prettier
         run: npm run prettier
 
-      - name: Cancelling parallel jobs
-        if: failure()
-        uses: andymckay/cancel-action@0.2
-
   lint:
     name: ESLint
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        version: [16]
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -44,7 +48,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ matrix.version }}
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
@@ -52,13 +56,13 @@ jobs:
       - name: 🔬 Lint
         run: npm run lint
 
-      - name: Cancelling parallel jobs
-        if: failure()
-        uses: andymckay/cancel-action@0.2
-
   typecheck:
     name: TypeScript
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        version: [16]
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -69,7 +73,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ matrix.version }}
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
@@ -77,14 +81,14 @@ jobs:
       - name: 🔎 Type check
         run: npm run typecheck
 
-      - name: Cancelling parallel jobs
-        if: failure()
-        uses: andymckay/cancel-action@0.2
-
   build:
     name: 🐳 Build
     # only build/deploy main branch on pushes
     if: ${{ (github.ref == 'refs/heads/main') && github.event_name == 'push' }}
+    strategy:
+      fail-fast: true
+      matrix:
+        version: [16]
     runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
@@ -140,9 +144,6 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
-      - name: Cancelling parallel jobs
-        if: failure()
-        uses: andymckay/cancel-action@0.2
   deploy:
     name: 🚀 Deploy
     runs-on: ubuntu-latest
