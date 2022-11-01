@@ -9,7 +9,7 @@ import { LinkButton } from "~/components/LinkButton"
 import { getUser } from "~/services/auth/auth.server"
 
 export const meta: MetaFunction = () => {
-  return { title: "Element" }
+    return { title: "Element" }
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
