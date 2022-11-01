@@ -1,5 +1,5 @@
 import * as React from "react"
-import { RiAddLine, RiEditLine } from "react-icons/ri"
+import { RiAddLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri"
 import lazyWithPreload from "react-lazy-with-preload"
 import Select from "react-select"
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons"
@@ -266,6 +266,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateFetcher.type, updateFetcher.data])
 
+  const deleteFetcher = useFetcher()
   return (
     <c.Box key={task.id} border="1px solid" borderRadius="sm" borderColor={borderColor}>
       <c.Flex p={2} justify="space-between" align="flex-start">
@@ -302,6 +303,25 @@ function BacklogItem({ task }: { task: BacklogTask }) {
             size="xs"
             aria-label="edit"
             icon={<c.Box as={RiEditLine} />}
+          />
+          <TooltipIconButton
+            variant="outline"
+            tooltipProps={{
+              placement: "bottom",
+              zIndex: 50,
+              hasArrow: true,
+              label: "Delete",
+            }}
+            onClick={() => {
+              deleteFetcher.submit(
+                { _action: TaskActionMethods.DeleteTask },
+                { action: `/timeline/${task.id}`, method: "post" },
+              )
+            }}
+            borderRadius="full"
+            size="xs"
+            aria-label="delete"
+            icon={<c.Box as={RiDeleteBinLine} />}
           />
           <BacklogTaskForm task={task} {...editModalProps} />
 
