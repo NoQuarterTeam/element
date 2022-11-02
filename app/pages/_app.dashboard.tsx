@@ -154,7 +154,7 @@ export default function Dashboard() {
               <c.Text>Count</c.Text>
               <PieChart data={pie.map((e) => ({ value: e.taskCount, name: e.name, color: e.color }))} />
 
-              <c.Text>Tast duration</c.Text>
+              <c.Text>Task duration</c.Text>
               <PieChart
                 data={pie.map((e) => ({
                   value: Math.round(e.totalMinutes / 60),
