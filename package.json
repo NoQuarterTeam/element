@@ -37,7 +37,7 @@
     "@emotion/server": "11.10.0",
     "@emotion/styled": "11.10.5",
     "@hello-pangea/dnd": "^16.0.1",
-    "@prisma/client": "4.5.0",
+    "@prisma/client": "4.6.0",
     "@remix-run/express": "1.7.5",
     "@remix-run/node": "1.7.5",
     "@remix-run/react": "1.7.5",
