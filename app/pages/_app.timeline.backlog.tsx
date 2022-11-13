@@ -23,7 +23,8 @@ import { requireUser } from "~/services/auth/auth.server"
 
 import { TaskActionMethods } from "./_app.timeline.$id"
 import type { TaskElement } from "./api.elements"
-import { TasksActionMethods } from "./api.tasks"
+import { TasksActionMethods, TimelineTask } from "./api.tasks"
+import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 
 const selectFields = {
   id: true,
@@ -105,15 +106,7 @@ function BacklogTaskForm({
     },
     { keepPreviousData: true, staleTime: 10_000 },
   )
-
-  const taskFetcher = useFetcher()
-  React.useEffect(() => {
-    if (!taskFetcher.data) return
-    if (taskFetcher.type === "actionReload" && taskFetcher.data.task) {
-      createModalProps.onClose()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskFetcher.type, taskFetcher.data])
+  const taskFetcher = useFetcherSubmit({ onSuccess: createModalProps.onClose })
 
   const [element, setElement] = React.useState(
     task?.element
@@ -255,16 +248,10 @@ function BacklogItem({ task }: { task: BacklogTask }) {
   const editModalProps = c.useDisclosure()
   const borderColor = c.useColorModeValue("gray.100", "gray.600")
   const bg = c.useColorModeValue("gray.50", "gray.800")
-  const updateFetcher = useFetcher()
   const { isOpen, onToggle } = c.useDisclosure()
   const { addTask } = useTimelineTasks()
-  React.useEffect(() => {
-    if (!updateFetcher.data) return
-    if (updateFetcher.type === "actionReload" && updateFetcher.data.task) {
-      addTask(updateFetcher.data.task)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateFetcher.type, updateFetcher.data])
+
+  const updateFetcher = useFetcherSubmit<{ task: TimelineTask }>({ onSuccess: (data) => addTask(data.task) })
 
   const deleteFetcher = useFetcher()
   return (
