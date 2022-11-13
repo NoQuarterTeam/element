@@ -17,14 +17,15 @@ import { TooltipIconButton } from "~/components/TooltipIconButton"
 import { safeReadableColor } from "~/lib/color"
 import { db } from "~/lib/db.server"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
+import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { customSelectStyle } from "~/lib/styles/react-select"
 import { requireUser } from "~/services/auth/auth.server"
 
 import { TaskActionMethods } from "./_app.timeline.$id"
 import type { TaskElement } from "./api.elements"
-import { TasksActionMethods, TimelineTask } from "./api.tasks"
-import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
+import type { TimelineTask } from "./api.tasks";
+import { TasksActionMethods } from "./api.tasks"
 
 const selectFields = {
   id: true,
