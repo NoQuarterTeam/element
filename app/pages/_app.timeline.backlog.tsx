@@ -24,7 +24,7 @@ import { requireUser } from "~/services/auth/auth.server"
 
 import { TaskActionMethods } from "./_app.timeline.$id"
 import type { TaskElement } from "./api.elements"
-import type { TimelineTask } from "./api.tasks";
+import type { TimelineTask } from "./api.tasks"
 import { TasksActionMethods } from "./api.tasks"
 
 const selectFields = {
