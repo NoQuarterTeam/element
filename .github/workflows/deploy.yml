@@ -9,6 +9,7 @@ jobs:
   prettier:
     name: Prettier
     runs-on: ubuntu-latest
+    if: ${{ (github.ref == 'refs/heads/main') && github.event_name == 'push' }}
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -30,6 +31,7 @@ jobs:
   lint:
     name: ESLint
     runs-on: ubuntu-latest
+    if: ${{ (github.ref == 'refs/heads/main') && github.event_name == 'push' }}
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -51,6 +53,7 @@ jobs:
   typecheck:
     name: TypeScript
     runs-on: ubuntu-latest
+    if: ${{ (github.ref == 'refs/heads/main') && github.event_name == 'push' }}
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
