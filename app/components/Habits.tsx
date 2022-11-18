@@ -12,6 +12,7 @@ import { HabitActionMethods } from "~/pages/api.habits.$id"
 
 import { ButtonGroup } from "./ButtonGroup"
 import { FormButton, FormError, FormField } from "./Form"
+import { useColorModeValue } from "@chakra-ui/react"
 
 interface Props {
   habits: TimelineHabit[]
@@ -51,7 +52,16 @@ function _Habits({ habits, day, habitEntries }: Props) {
   return (
     <c.Popover isLazy initialFocusRef={initialFocusRef}>
       <c.PopoverTrigger>
-        <c.Button size="xs" w="100%" px={0} tabIndex={-1} variant="ghost" onClick={habitsModalProps.onOpen}>
+        <c.Button
+          size="xs"
+          w="100%"
+          px={0}
+          borderRadius="full"
+          tabIndex={-1}
+          _hover={{ bg: useColorModeValue("blackAlpha.100", "gray.700") }}
+          variant="ghost"
+          onClick={habitsModalProps.onOpen}
+        >
           <c.HStack spacing="3px">
             {dayHabits.length === 0 ? (
               <c.Box as={RiAddCircleLine} boxSize="12px" />
@@ -92,12 +102,12 @@ function _Habits({ habits, day, habitEntries }: Props) {
           <c.Popover isLazy placement="auto" initialFocusRef={initialNewFocusRef} {...createFormProps}>
             <ButtonGroup>
               <c.PopoverTrigger>
-                <c.Button onClick={createFormProps.onOpen}>New habbit</c.Button>
+                <c.Button onClick={createFormProps.onOpen}>New habit</c.Button>
               </c.PopoverTrigger>
             </ButtonGroup>
 
             <c.PopoverContent>
-              <c.PopoverHeader>New habbit</c.PopoverHeader>
+              <c.PopoverHeader>New habit</c.PopoverHeader>
               <c.PopoverArrow />
               <c.PopoverCloseButton onClick={createFormProps.onClose} />
               <c.PopoverBody>

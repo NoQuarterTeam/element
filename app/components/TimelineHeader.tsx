@@ -1,5 +1,8 @@
 import * as React from "react"
 import * as c from "@chakra-ui/react"
+import { TbDroplet, TbLocation } from "react-icons/tb"
+// import { WiHumidity } from "react-icons/wi"
+import { BsSunrise, BsThermometerHalf } from "react-icons/bs"
 import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
@@ -8,14 +11,15 @@ import { useFeatures } from "~/lib/hooks/useFeatures"
 import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
 import { useMe } from "~/pages/_app"
 import type { TimelineHabitResponse } from "~/pages/api.habits"
-import type { DayWeather, WeatherData } from "~/pages/api.weather"
+import type { WeatherData } from "~/pages/api.weather"
 
 import { DAY_WIDTH } from "./Day"
 import { Habits } from "./Habits"
+import { RiWindyLine } from "react-icons/ri"
 
-export const HEADER_HEIGHT = 115
+export const HEADER_HEIGHT = 120
 
-export const HEADER_HABIT_HEIGHT = 138
+export const HEADER_HABIT_HEIGHT = 143
 
 interface TimelineHeaderProps {
   isLoading: boolean
@@ -41,7 +45,7 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
     },
     { refetchOnWindowFocus: false, enabled: !!me.stripeSubscriptionId && isHabitsEnabled },
   )
-  const habits = data?.habits || []
+  const habits = data?.habits
   const habitEntries = data?.habitEntries || []
 
   const { data: weatherData } = useQuery(
@@ -99,47 +103,115 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
 const HeaderDay = React.memo(_HeaderDay)
 function _HeaderDay(props: {
   day: string
-  habits: TimelineHabitResponse["habits"]
+  habits?: TimelineHabitResponse["habits"]
   habitEntries: TimelineHabitResponse["habitEntries"]
-  weather?: DayWeather
+  weather?: NonNullable<WeatherData>[number]
   isHabitsEnabled: boolean
   isWeatherEnabled: boolean
 }) {
+  const bg = c.useColorModeValue("transparent", "gray.700")
   return (
-    <c.VStack spacing={0} px={2} minW={DAY_WIDTH} key={dayjs(props.day).unix()}>
-      <c.HStack spacing={0} h="34px" overflow="hidden">
+    <c.VStack spacing={1} px={2} minW={DAY_WIDTH} key={dayjs(props.day).unix()}>
+      <c.Box h="34px" overflow="hidden">
         {props.isWeatherEnabled && props.weather && (
-          <>
-            <c.Text fontSize="x-small" opacity={0.8}>
-              {props.weather.temp}°C
-            </c.Text>
-            <c.Image
-              src={`https://openweathermap.org/img/wn/${props.weather.icon}@2x.png`}
-              boxSize="35px"
-              objectFit="cover"
-            />
-          </>
+          <c.Popover isLazy trigger="hover" openDelay={50} closeDelay={0} offset={[0, 4]}>
+            <c.PopoverTrigger>
+              <c.HStack spacing={0} bg={bg} px={3} borderRadius="full">
+                <c.Text fontSize="x-small" opacity={0.8}>
+                  {props.weather.temp.max}°C
+                </c.Text>
+
+                <c.Image
+                  src={`https://openweathermap.org/img/wn/${props.weather.icon}@2x.png`}
+                  boxSize="32px"
+                  objectFit="cover"
+                />
+              </c.HStack>
+            </c.PopoverTrigger>
+            <c.PopoverContent>
+              <c.PopoverArrow />
+              <c.PopoverHeader>
+                {dayjs(props.day).format("dddd Do")} -{" "}
+                {props.weather.description[0].toUpperCase() + props.weather.description.slice(1)}
+              </c.PopoverHeader>
+              <c.PopoverBody>
+                <c.SimpleGrid columns={2} spacing={2}>
+                  <WeatherStat icon={BsThermometerHalf} label="Temp">
+                    <c.Flex justify="space-between" flexDir="column" h="100%">
+                      <c.Text fontSize="2xl">{props.weather.temp.max}°</c.Text>
+                      <c.Text fontSize="xs">Min: {props.weather.temp.min}°</c.Text>
+                    </c.Flex>
+                  </WeatherStat>
+                  <WeatherStat icon={BsSunrise} label="Sunrise">
+                    <c.Flex justify="space-between" flexDir="column" h="100%">
+                      <c.Text fontSize="2xl">{props.weather.sunrise}</c.Text>
+                      <c.Text fontSize="xs">Sunset: {props.weather.sunset}</c.Text>
+                    </c.Flex>
+                  </WeatherStat>
+                  <WeatherStat icon={TbDroplet} label="Rain">
+                    <c.Text fontSize="2xl">{props.weather.rain} mm</c.Text>
+                  </WeatherStat>
+                  {/* <WeatherStat icon={WiHumidity} label="Humidity">
+                    <c.Text fontSize="2xl">{props.weather.humidity}%</c.Text>
+                  </WeatherStat> */}
+                  <WeatherStat icon={RiWindyLine} label="Wind">
+                    <c.Box>
+                      <c.HStack spacing={2}>
+                        <c.Text fontSize="2xl">{props.weather.windSpeed}mph</c.Text>
+                        <c.Box
+                          as={TbLocation}
+                          boxSize="16px"
+                          style={{ transform: `rotate(${135 + props.weather.windDirection}deg)` }}
+                          opacity={0.6}
+                        />
+                      </c.HStack>
+                    </c.Box>
+                  </WeatherStat>
+                </c.SimpleGrid>
+              </c.PopoverBody>
+            </c.PopoverContent>
+          </c.Popover>
         )}
-      </c.HStack>
-      <c.Text
-        textAlign="center"
-        fontSize="sm"
-        fontWeight={dayjs(props.day).isSame(dayjs(), "day") ? 700 : 400}
-      >
-        {dayjs(props.day).format("ddd Do")}
-      </c.Text>
-      {props.isHabitsEnabled && (
-        <Habits
-          day={dayjs(props.day).format("YYYY-MM-DD")}
-          habits={props.habits}
-          habitEntries={props.habitEntries.filter((e) =>
-            dayjs(dayjs(props.day).format("YYYY-MM-DD")).isSame(
-              dayjs(e.createdAt).format("YYYY-MM-DD"),
-              "date",
-            ),
-          )}
-        />
-      )}
+      </c.Box>
+      <c.VStack spacing={0}>
+        <c.Text textAlign="center" fontSize="sm">
+          {dayjs(props.day).format("ddd Do")}
+        </c.Text>
+        {props.isHabitsEnabled && props.habits && (
+          <Habits
+            day={dayjs(props.day).format("YYYY-MM-DD")}
+            habits={props.habits}
+            habitEntries={props.habitEntries.filter((e) =>
+              dayjs(dayjs(props.day).format("YYYY-MM-DD")).isSame(
+                dayjs(e.createdAt).format("YYYY-MM-DD"),
+                "date",
+              ),
+            )}
+          />
+        )}
+      </c.VStack>
     </c.VStack>
+  )
+}
+
+function WeatherStat({
+  icon,
+  children,
+  label,
+}: {
+  icon: React.ElementType
+  children: React.ReactNode
+  label: string
+}) {
+  const borderColor = c.useColorModeValue("gray.100", "gray.600")
+
+  return (
+    <c.Box p={2} borderRadius="md" border="1px solid" borderColor={borderColor}>
+      <c.HStack spacing={1} opacity={0.6}>
+        <c.Box as={icon} boxSize="14px" />
+        <c.Text fontSize="sm">{label}</c.Text>
+      </c.HStack>
+      <c.Box h="55px">{children}</c.Box>
+    </c.Box>
   )
 }
