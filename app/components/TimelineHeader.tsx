@@ -173,7 +173,7 @@ function _HeaderDay(props: {
           </c.Popover>
         )}
       </c.Box>
-      <c.VStack spacing={0}>
+      <c.VStack spacing="2px">
         <c.Text textAlign="center" fontSize="sm">
           {dayjs(props.day).format("ddd Do")}
         </c.Text>
