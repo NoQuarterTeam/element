@@ -1,8 +1,9 @@
 import * as React from "react"
-import * as c from "@chakra-ui/react"
-import { TbDroplet, TbLocation } from "react-icons/tb"
 // import { WiHumidity } from "react-icons/wi"
 import { BsSunrise, BsThermometerHalf } from "react-icons/bs"
+import { RiWindyLine } from "react-icons/ri"
+import { TbDroplet, TbLocation } from "react-icons/tb"
+import * as c from "@chakra-ui/react"
 import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
@@ -15,7 +16,6 @@ import type { WeatherData } from "~/pages/api.weather"
 
 import { DAY_WIDTH } from "./Day"
 import { Habits } from "./Habits"
-import { RiWindyLine } from "react-icons/ri"
 
 export const HEADER_HEIGHT = 120
 
@@ -109,14 +109,14 @@ function _HeaderDay(props: {
   isHabitsEnabled: boolean
   isWeatherEnabled: boolean
 }) {
-  const bg = c.useColorModeValue("transparent", "gray.700")
+  const borderColor = c.useColorModeValue("gray.100", "gray.700")
   return (
     <c.VStack spacing={1} px={2} minW={DAY_WIDTH} key={dayjs(props.day).unix()}>
       <c.Box h="34px" overflow="hidden">
         {props.isWeatherEnabled && props.weather && (
-          <c.Popover isLazy trigger="hover" openDelay={50} closeDelay={0} offset={[0, 4]}>
+          <c.Popover isLazy trigger="hover" openDelay={0} closeDelay={50} offset={[0, 4]}>
             <c.PopoverTrigger>
-              <c.HStack spacing={0} bg={bg} px={3} borderRadius="full">
+              <c.HStack spacing={0} border="1px solid" borderColor={borderColor} px={3} borderRadius="full">
                 <c.Text fontSize="x-small" opacity={0.8}>
                   {props.weather.temp.max}°C
                 </c.Text>

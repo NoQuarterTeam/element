@@ -1,6 +1,7 @@
 import * as React from "react"
 import { RiAddCircleLine, RiDeleteBin4Line, RiFolder2Line } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
+import { useColorModeValue } from "@chakra-ui/react"
 import { useFetcher } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
@@ -12,7 +13,7 @@ import { HabitActionMethods } from "~/pages/api.habits.$id"
 
 import { ButtonGroup } from "./ButtonGroup"
 import { FormButton, FormError, FormField } from "./Form"
-import { useColorModeValue } from "@chakra-ui/react"
+import { TooltipIconButton } from "./TooltipIconButton"
 
 interface Props {
   habits: TimelineHabit[]
@@ -119,7 +120,6 @@ function _Habits({ habits, day, habitEntries }: Props) {
                     <ButtonGroup>
                       <FormButton
                         isLoading={createFetcher.state !== "idle"}
-                        isDisabled={createFetcher.state !== "idle"}
                         name="_action"
                         value={HabitsActionMethods.CreateHabit}
                       >
@@ -162,7 +162,6 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
     )
   }
 
-  const cancelArchiveRef = React.useRef(null)
   const archiveProps = c.useDisclosure()
   const archiveHabitFetcher = useFetcher()
   const handleArchiveHabit = () => {
@@ -180,7 +179,6 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
 
   const deleteHabitFetcher = useFetcher()
   const deleteProps = c.useDisclosure()
-  const cancelDeleteRef = React.useRef(null)
   const handleDeleteHabit = () => {
     const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
     client.setQueryData(["habits", { daysBack }], {
@@ -192,6 +190,7 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
       { action: `/api/habits/${habit.id}`, method: "post" },
     )
   }
+
   return (
     <c.Flex
       _hover={{ ".habit-actions": { display: "flex" } }}
@@ -202,25 +201,52 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
       justify="space-between"
     >
       <c.Editable w="75%" defaultValue={habit.name}>
-        <c.EditablePreview _hover={{ textDecor: "underline" }} />
+        <c.EditablePreview w="100%" _hover={{ textDecor: "underline" }} />
         <c.EditableInput onBlur={(e) => handleUpdateHabit(e.target.value)} />
       </c.Editable>
       <c.HStack spacing={0}>
-        <c.Tooltip label="Archive" placement="bottom" zIndex={50} hasArrow>
-          <c.IconButton
-            className="habit-actions"
-            borderRadius="full"
-            variant="ghost"
-            display="none"
-            aria-label="archive habit"
-            size="xs"
-            onClick={archiveProps.onOpen}
-            icon={<c.Box as={RiFolder2Line} boxSize="14px" />}
-          />
-        </c.Tooltip>
-        <c.Tooltip label="Delete" placement="bottom" zIndex={50} hasArrow>
-          <c.Box pr={1}>
-            <c.IconButton
+        <c.Popover isLazy placement="auto" {...archiveProps}>
+          <c.PopoverTrigger>
+            <TooltipIconButton
+              className="habit-actions"
+              borderRadius="full"
+              variant="ghost"
+              display="none"
+              aria-label="archive habit"
+              size="xs"
+              onClick={archiveProps.onOpen}
+              icon={<c.Box as={RiFolder2Line} boxSize="14px" />}
+              tooltipProps={{
+                label: "Archive",
+                "aria-label": "archive habit",
+                placement: "bottom",
+                zIndex: 50,
+                hasArrow: true,
+              }}
+            />
+          </c.PopoverTrigger>
+          <c.PopoverContent>
+            <c.PopoverArrow />
+            <c.PopoverCloseButton />
+            <c.PopoverHeader>Archive habit</c.PopoverHeader>
+            <c.PopoverBody>Are you sure? This will stop showing this habit from this date.</c.PopoverBody>
+            <c.PopoverBody>
+              <ButtonGroup>
+                <c.Button onClick={archiveProps.onClose}>Cancel</c.Button>
+                <c.Button
+                  colorScheme="red"
+                  onClick={handleArchiveHabit}
+                  isLoading={archiveHabitFetcher.state !== "idle"}
+                >
+                  Archive
+                </c.Button>
+              </ButtonGroup>
+            </c.PopoverBody>
+          </c.PopoverContent>
+        </c.Popover>
+        <c.Popover isLazy placement="auto" {...deleteProps}>
+          <c.PopoverTrigger>
+            <TooltipIconButton
               className="habit-actions"
               borderRadius="full"
               variant="ghost"
@@ -229,92 +255,64 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
               size="xs"
               onClick={deleteProps.onOpen}
               icon={<c.Box as={RiDeleteBin4Line} boxSize="14px" />}
+              tooltipProps={{
+                label: "Delete",
+                "aria-label": "delete habit",
+                placement: "bottom",
+                zIndex: 50,
+                hasArrow: true,
+              }}
             />
-          </c.Box>
-        </c.Tooltip>
-        <c.AlertDialog {...archiveProps} leastDestructiveRef={cancelArchiveRef}>
-          <c.AlertDialogOverlay>
-            <c.AlertDialogContent>
-              <c.AlertDialogHeader fontSize="lg" fontWeight="bold">
-                Archive habit
-              </c.AlertDialogHeader>
+          </c.PopoverTrigger>
+          <c.PopoverContent>
+            <c.PopoverArrow />
+            <c.PopoverCloseButton />
+            <c.PopoverHeader>Delete habit</c.PopoverHeader>
+            <c.PopoverBody>
+              Are you sure? This will delete the habit and all entries. This action cannot be undone.
+            </c.PopoverBody>
+            <c.PopoverBody>
+              <ButtonGroup>
+                <c.Button onClick={deleteProps.onClose}>Cancel</c.Button>
+                <c.Button
+                  colorScheme="red"
+                  onClick={handleDeleteHabit}
+                  isLoading={archiveHabitFetcher.state !== "idle"}
+                >
+                  Delete
+                </c.Button>
+              </ButtonGroup>
+            </c.PopoverBody>
+          </c.PopoverContent>
+        </c.Popover>
 
-              <c.AlertDialogBody py={0}>
-                Are you sure? This will stop showing this habit from this date.
-              </c.AlertDialogBody>
-
-              <c.AlertDialogFooter>
-                <ButtonGroup>
-                  <c.Button ref={cancelArchiveRef} onClick={archiveProps.onClose}>
-                    Cancel
-                  </c.Button>
-                  <c.Button
-                    colorScheme="red"
-                    onClick={handleArchiveHabit}
-                    isLoading={archiveHabitFetcher.state !== "idle"}
-                    isDisabled={archiveHabitFetcher.state !== "idle"}
-                  >
-                    Archive
-                  </c.Button>
-                </ButtonGroup>
-              </c.AlertDialogFooter>
-            </c.AlertDialogContent>
-          </c.AlertDialogOverlay>
-        </c.AlertDialog>
-        <c.AlertDialog {...deleteProps} leastDestructiveRef={cancelDeleteRef}>
-          <c.AlertDialogOverlay>
-            <c.AlertDialogContent>
-              <c.AlertDialogHeader fontSize="lg" fontWeight="bold">
-                Delete habit
-              </c.AlertDialogHeader>
-
-              <c.AlertDialogBody py={0}>
-                Are you sure? This will delete the habit and all entries. This action cannot be undone.
-              </c.AlertDialogBody>
-
-              <c.AlertDialogFooter>
-                <ButtonGroup>
-                  <c.Button ref={cancelDeleteRef} onClick={deleteProps.onClose}>
-                    Cancel
-                  </c.Button>
-                  <c.Button
-                    colorScheme="red"
-                    onClick={handleDeleteHabit}
-                    isLoading={archiveHabitFetcher.state !== "idle"}
-                    isDisabled={archiveHabitFetcher.state !== "idle"}
-                  >
-                    Delete
-                  </c.Button>
-                </ButtonGroup>
-              </c.AlertDialogFooter>
-            </c.AlertDialogContent>
-          </c.AlertDialogOverlay>
-        </c.AlertDialog>
-
-        <c.Checkbox
-          defaultChecked={!!entry}
-          onChange={() => {
-            const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
-            if (!res) return
-            client.setQueryData<TimelineHabitResponse>(["habits", { daysBack }], {
-              habits: res.habits || [],
-              habitEntries: entry
-                ? res.habitEntries.filter((e) => e.id !== entry.id)
-                : [
-                    ...res.habitEntries,
-                    {
-                      id: new Date().getMilliseconds().toString(),
-                      habitId: habit.id,
-                      createdAt: dayjs(day).startOf("d").add(12, "h").format(),
-                    },
-                  ],
-            })
-            habitEntryFetcher.submit(
-              { _action: HabitActionMethods.ToggleComplete, date: dayjs(day).format() },
-              { action: `/api/habits/${habit.id}`, method: "post" },
-            )
-          }}
-        />
+        <c.Box>
+          <c.Checkbox
+            ml={2}
+            defaultChecked={!!entry}
+            onChange={() => {
+              const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
+              if (!res) return
+              client.setQueryData<TimelineHabitResponse>(["habits", { daysBack }], {
+                habits: res.habits || [],
+                habitEntries: entry
+                  ? res.habitEntries.filter((e) => e.id !== entry.id)
+                  : [
+                      ...res.habitEntries,
+                      {
+                        id: new Date().getMilliseconds().toString(),
+                        habitId: habit.id,
+                        createdAt: dayjs(day).startOf("d").add(12, "h").format(),
+                      },
+                    ],
+              })
+              habitEntryFetcher.submit(
+                { _action: HabitActionMethods.ToggleComplete, date: dayjs(day).format() },
+                { action: `/api/habits/${habit.id}`, method: "post" },
+              )
+            }}
+          />
+        </c.Box>
       </c.HStack>
     </c.Flex>
   )
