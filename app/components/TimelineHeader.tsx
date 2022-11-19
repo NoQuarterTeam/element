@@ -134,7 +134,7 @@ function _HeaderDay(props: {
                 {dayjs(props.day).format("dddd Do")} -{" "}
                 {props.weather.description[0].toUpperCase() + props.weather.description.slice(1)}
               </c.PopoverHeader>
-              <c.PopoverBody>
+              <c.PopoverBody py={3}>
                 <c.SimpleGrid columns={2} spacing={2}>
                   <WeatherStat icon={BsThermometerHalf} label="Temp">
                     <c.Flex justify="space-between" flexDir="column" h="100%">
@@ -149,23 +149,37 @@ function _HeaderDay(props: {
                     </c.Flex>
                   </WeatherStat>
                   <WeatherStat icon={TbDroplet} label="Rain">
-                    <c.Text fontSize="2xl">{props.weather.rain} mm</c.Text>
+                    <c.Flex justify="space-between" flexDir="column" h="100%">
+                      <c.Text fontSize="2xl">{props.weather.rain} mm</c.Text>
+                      <c.Text fontSize="xs">Chance: {props.weather.chanceOfRain}%</c.Text>
+                    </c.Flex>
                   </WeatherStat>
                   {/* <WeatherStat icon={WiHumidity} label="Humidity">
                     <c.Text fontSize="2xl">{props.weather.humidity}%</c.Text>
                   </WeatherStat> */}
                   <WeatherStat icon={RiWindyLine} label="Wind">
-                    <c.Box>
-                      <c.HStack spacing={2}>
-                        <c.Text fontSize="2xl">{props.weather.windSpeed}mph</c.Text>
-                        <c.Box
-                          as={TbLocation}
-                          boxSize="16px"
-                          style={{ transform: `rotate(${135 + props.weather.windDirection}deg)` }}
-                          opacity={0.6}
-                        />
-                      </c.HStack>
-                    </c.Box>
+                    <c.Flex justify="space-between" flexDir="column" h="100%">
+                      <c.Box>
+                        <c.HStack spacing={2}>
+                          <c.Text fontSize="2xl">
+                            {props.weather.windSpeed}
+                            <c.Text as="span" fontSize="lg">
+                              km/h
+                            </c.Text>
+                          </c.Text>
+                          <c.Box
+                            as={TbLocation}
+                            boxSize="16px"
+                            style={{ transform: `rotate(${135 + props.weather.windDirection}deg)` }}
+                            opacity={0.6}
+                          />
+                        </c.HStack>
+                      </c.Box>
+                      <c.Text fontSize="xs">
+                        Gusts: {props.weather.windGust}
+                        <c.Text as="span">km/h</c.Text>
+                      </c.Text>
+                    </c.Flex>
                   </WeatherStat>
                 </c.SimpleGrid>
               </c.PopoverBody>
@@ -211,7 +225,7 @@ function WeatherStat({
         <c.Box as={icon} boxSize="14px" />
         <c.Text fontSize="sm">{label}</c.Text>
       </c.HStack>
-      <c.Box h="55px">{children}</c.Box>
+      <c.Box h="65px">{children}</c.Box>
     </c.Box>
   )
 }

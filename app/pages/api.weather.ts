@@ -58,6 +58,7 @@ async function getWeatherData(request: Request) {
     )
     const json = (await res.json()) as WeatherResponse
     if (!json.daily) return null
+
     return json.daily.map((day) => ({
       description: day.weather[0].description,
       sunrise: dayjs.unix(day.sunrise).format("HH:mm"),
@@ -65,9 +66,11 @@ async function getWeatherData(request: Request) {
       date: dayjs.unix(day.dt).format("DD/MM/YYYY"),
       icon: day.weather[0]?.icon,
       humidity: day.humidity,
-      windSpeed: Math.round(day.wind_speed),
+      windSpeed: Math.round(day.wind_speed * 3.6), // comes in m/s, convert to km/h
+      windGust: Math.round(day.wind_gust * 3.6), // comes in m/s, convert to km/h
       windDirection: day.wind_deg,
-      rain: day.rain,
+      rain: day.rain || 0,
+      chanceOfRain: Math.round(day.pop * 100),
       temp: {
         max: Math.round(day.temp.max),
         min: Math.round(day.temp.min),
