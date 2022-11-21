@@ -144,8 +144,8 @@ function _HeaderDay(props: {
                   </WeatherStat>
                   <WeatherStat icon={BsSunrise} label="Sunrise">
                     <c.Flex justify="space-between" flexDir="column" h="100%">
-                      <c.Text fontSize="2xl">{props.weather.sunrise}</c.Text>
-                      <c.Text fontSize="xs">Sunset: {props.weather.sunset}</c.Text>
+                      <c.Text fontSize="2xl">{dayjs(props.weather.sunrise).format("HH:mm")}</c.Text>
+                      <c.Text fontSize="xs">Sunset: {dayjs(props.weather.sunset).format("HH:mm")}</c.Text>
                     </c.Flex>
                   </WeatherStat>
                   <WeatherStat icon={TbDroplet} label="Rain">
