@@ -86,9 +86,9 @@ export const InlineFormField = React.forwardRef(function _InlineFormField(
     )
   return (
     <c.FormControl isRequired={props.isRequired} isInvalid={!!form?.fieldErrors?.[props.name] || !!error}>
-      <c.Flex>
+      <c.Flex w="100%" flexDir={{ base: "column", md: "row" }}>
         {label && (
-          <c.FormLabel minW={{ base: "80px", md: "100px" }} fontSize="sm" htmlFor={props.name}>
+          <c.FormLabel minW="100px" fontSize="sm" htmlFor={props.name}>
             {label}
           </c.FormLabel>
         )}

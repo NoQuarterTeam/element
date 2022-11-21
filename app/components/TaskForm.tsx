@@ -152,14 +152,14 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
       <c.Modal isOpen onClose={() => navigate("/timeline")} size="xl" trapFocus={false}>
         <c.ModalOverlay />
         <c.ModalContent minH="400px" overflowY="scroll">
-          <c.ModalBody mb={2}>
+          <c.ModalBody mb={2} px={{ base: 3, md: 4 }}>
             <React.Suspense>
               <createUpdateFetcher.Form
                 replace
                 method="post"
                 action={task ? `/timeline/${task.id}` : "/api/tasks"}
               >
-                <c.Stack spacing={3}>
+                <c.Stack spacing={{ base: 1, md: 3 }}>
                   <c.Flex w="100%" align="flex-start" justify="space-between">
                     <c.Input
                       name="name"
@@ -170,8 +170,8 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                       isInvalid={!!createUpdateFetcher.data?.fieldErrors?.name?.[0]}
                       autoFocus
                       size="lg"
-                      fontSize="4xl"
-                      minH="70px"
+                      fontSize={{ base: "2xl", md: "4xl" }}
+                      minH={{ base: "60px", md: "70px" }}
                       pr={2}
                       pl={4}
                       ml={-4}
@@ -190,7 +190,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     </c.Box>
                   </c.Flex>
                   <input type="hidden" name="elementId" value={element?.value} />
-                  <c.Flex align="flex-start">
+                  <c.Flex align={{ base: "flex-end", md: "flex-start" }}>
                     <InlineFormField
                       isRequired
                       label="Element"
@@ -239,7 +239,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                   />
 
                   <c.Box>
-                    <c.Flex>
+                    <c.Flex flexDir={{ base: "column", md: "row" }}>
                       <c.FormLabel htmlFor="durationHours" fontSize="sm" minW={{ base: "80px", md: "100px" }}>
                         Duration
                       </c.FormLabel>
