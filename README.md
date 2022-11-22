@@ -6,16 +6,14 @@ Comes with user authentication included
 
 - [React](https://github.com/facebook/react)
 - [Prisma](https://www.prisma.io)
-- Remix
+- [Remix](https://remix.run)
 - TypeScript
 - Postgres
 - Chakra UI
 - Customizable theme & Dark mode
 - Eslint
 - Prettier
-- Sendgrid SMTP
-- Husky
-- Lint staged
+- Sendgrid
 
 & many more tasty treats
 
@@ -24,23 +22,10 @@ Comes with user authentication included
 **Must have node and postgres installed and setup locally**
 
 1. `npm i`
-2. `createdb boilerplate`
-3. `npm run db:push`
+2. `createdb element`
+3. `npm run db:migrate`
 
 Make sure you have created a .env file in the api package with the right values, you can use .env.example as the template
-
-We use Husky to run a couple of checks each commit (prettier, eslint & commitlint), make sure to add a
-.huskyrc file to your home directory ~/.huskyrc, and add this in:
-
-```bash
-export PATH="/usr/local/bin:$PATH"
-```
-
-then run
-
-```bash
-npx husky install
-```
 
 ## Development
 
