@@ -49,6 +49,10 @@ model Task {
   creator         User      @relation(fields: [creatorId], references: [id])
   elementId       String    @db.Uuid
   element         Element   @relation(fields: [elementId], references: [id], onDelete: Cascade)
+
+  @@index([date])
+  @@index([elementId])
+  @@index([creatorId])
 }
 
 model Element {
@@ -64,6 +68,9 @@ model Element {
   creator    User      @relation(fields: [creatorId], references: [id])
   creatorId  String    @db.Uuid
   tasks      Task[]
+
+  @@index([parentId])
+  @@index([creatorId])
 }
 
 model Habit {
@@ -77,6 +84,9 @@ model Habit {
   creatorId   String       @db.Uuid
   creator     User         @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   entries     HabitEntry[]
+
+  @@index([startDate])
+  @@index([creatorId])
 }
 
 model HabitEntry {
@@ -87,6 +97,10 @@ model HabitEntry {
   habit     Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
   creatorId String   @db.Uuid
   creator   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([habitId])
+  @@index([creatorId])
 }
 
 enum FeedbackType {
