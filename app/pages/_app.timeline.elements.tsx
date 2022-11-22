@@ -63,11 +63,11 @@ export const action = async ({ request, params }: ActionArgs) => {
           color = parent.color
         }
         if (!color) color = randomHexColor()
-        const updatedElement = await db.element.create({ data: { ...data, color, creatorId: user.id } })
-        return json({ element: updatedElement })
+        const createdElement = await db.element.create({ data: { ...data, color, creatorId: user.id } })
+        return json({ element: createdElement })
       } catch (e: any) {
         return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating element") },
+          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error creating element") },
         })
       }
     case ElementsActionMethods.UpdateElement:

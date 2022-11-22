@@ -1,7 +1,6 @@
-import * as React from "react"
+import { BiMessage } from "react-icons/bi"
 import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi"
 import {
-  // RiBarChartLine,
   RiBookLine,
   RiDashboard3Line,
   RiFocus3Line,
@@ -185,6 +184,15 @@ export function Nav() {
               aria-label="Shortcuts"
               variant="ghost"
               icon={<c.Box as={RiQuestionLine} boxSize="18px" />}
+            />
+          </c.Tooltip>
+          <c.Tooltip label="Give feedback" placement="auto" zIndex={50} hasArrow>
+            <c.IconButton
+              borderRadius="full"
+              onClick={() => navigate("feedback")}
+              aria-label="Give feedback"
+              variant="ghost"
+              icon={<c.Box as={BiMessage} boxSize="18px" />}
             />
           </c.Tooltip>
           {me.role === Role.ADMIN && (
