@@ -3,7 +3,7 @@ import { BiMessage } from "react-icons/bi"
 import { RiBug2Line, RiLightbulbLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { FeedbackType } from "@prisma/client"
-import type { ActionArgs} from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { useActionData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
