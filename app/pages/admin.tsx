@@ -14,7 +14,7 @@ import { requireUser } from "~/services/auth/auth.server"
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   if (user.role !== Role.ADMIN) throw redirect("/")
-  const [users, taskCountTotal, tastCountLastMonth, taskCountThisMonth] = await Promise.all([
+  const [users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback] = await Promise.all([
     db.user.findMany({
       where: { role: Role.USER },
       orderBy: { createdAt: "desc" },
@@ -30,12 +30,23 @@ export const loader = async ({ request }: LoaderArgs) => {
       },
     }),
     db.task.count({ where: { createdAt: { gte: dayjs().startOf("month").toDate() } } }),
+    db.feedback.findMany({
+      select: {
+        id: true,
+        content: true,
+        type: true,
+        creator: { select: { email: true, avatar: true, firstName: true, lastName: true } },
+      },
+      take: 20,
+      orderBy: { createdAt: "desc" },
+    }),
   ])
-  return json({ users, taskCountTotal, tastCountLastMonth, taskCountThisMonth })
+  return json({ users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback })
 }
 
 export default function Admin() {
-  const { users, taskCountTotal, tastCountLastMonth, taskCountThisMonth } = useLoaderData<typeof loader>()
+  const { users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback } =
+    useLoaderData<typeof loader>()
   const percentageChange = Math.round((taskCountThisMonth / (tastCountLastMonth || 1) - 1) * 100)
   return (
     <c.Stack p={6}>
@@ -45,7 +56,7 @@ export default function Admin() {
         </LinkButton>
       </c.Box>
       <c.Heading>Admin</c.Heading>
-      <c.SimpleGrid columns={{ base: 1, md: 2 }}>
+      <c.SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
         <c.Stack spacing={6}>
           <c.Box>
             <c.Heading as="h4" fontSize="lg">
@@ -78,6 +89,22 @@ export default function Admin() {
               {Math.abs(percentageChange)}%
             </c.StatHelpText>
           </c.Stat>
+        </c.Stack>
+        <c.Stack spacing={6}>
+          <c.Box>
+            <c.Heading as="h4" fontSize="lg">
+              Feedback
+            </c.Heading>
+          </c.Box>
+          <c.Box>
+            {feedback.map((feedback) => (
+              <c.HStack fontSize="sm" key={feedback.id}>
+                <c.Text>{feedback.content}</c.Text>
+                <c.Text>{feedback.type}</c.Text>
+                <c.Text>{feedback.creator.email}</c.Text>
+              </c.HStack>
+            ))}
+          </c.Box>
         </c.Stack>
       </c.SimpleGrid>
     </c.Stack>

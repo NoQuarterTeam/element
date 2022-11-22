@@ -30,6 +30,7 @@ model User {
   elements             Element[]
   habits               Habit[]
   habitEntries         HabitEntry[]
+  feedbacks            Feedback[]
 }
 
 model Task {
@@ -86,4 +87,20 @@ model HabitEntry {
   habit     Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
   creatorId String   @db.Uuid
   creator   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+}
+
+enum FeedbackType {
+  ISSUE
+  IDEA
+  OTHER
+}
+
+model Feedback {
+  id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  content   String
+  type      FeedbackType
+  createdAt DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
+  creatorId String       @db.Uuid
+  creator   User         @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 }

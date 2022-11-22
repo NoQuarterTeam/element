@@ -61,8 +61,8 @@ async function getWeatherData(request: Request) {
 
     return json.daily.map((day) => ({
       description: day.weather[0].description,
-      sunrise: dayjs.unix(day.sunrise).format("HH:mm"),
-      sunset: dayjs.unix(day.sunset).format("HH:mm"),
+      sunrise: dayjs.unix(day.sunrise).format(),
+      sunset: dayjs.unix(day.sunset).format(),
       date: dayjs.unix(day.dt).format("DD/MM/YYYY"),
       icon: day.weather[0]?.icon,
       humidity: day.humidity,
