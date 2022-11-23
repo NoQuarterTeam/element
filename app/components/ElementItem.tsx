@@ -14,6 +14,7 @@ import { useFetcher, useTransition } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
 
 import { isValidHex, safeReadableColor } from "~/lib/color"
+import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { useToast } from "~/lib/hooks/useToast"
@@ -24,7 +25,6 @@ import { ElementActionMethods } from "~/pages/api.elements.$id"
 import { ButtonGroup } from "./ButtonGroup"
 import { Form, FormButton, FormError, InlineFormField } from "./Form"
 import { Modal } from "./Modal"
-import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 
 const MAX_DEPTH = 2
 

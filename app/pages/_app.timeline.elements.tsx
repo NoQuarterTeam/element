@@ -16,12 +16,12 @@ import { isValidHex, randomHexColor, safeReadableColor } from "~/lib/color"
 import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
+import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useToast } from "~/lib/hooks/useToast"
 import { badRequest } from "~/lib/remix"
 import { requireUser } from "~/services/auth/auth.server"
 import { getFlashSession } from "~/services/session/session.server"
 import { getSidebarElements } from "~/services/timeline/sidebar.server"
-import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)

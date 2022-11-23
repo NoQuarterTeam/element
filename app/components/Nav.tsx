@@ -16,12 +16,12 @@ import { Role } from "@prisma/client"
 import { useNavigate, useSubmit } from "@remix-run/react"
 
 import { NEW_UPDATES, useFeaturesSeen } from "~/lib/hooks/useFeatures"
+import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useMe } from "~/pages/_app"
 
 import { Modal } from "./Modal"
 import { ShortcutsInfo } from "./ShortcutsInfo"
-import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 
 export function Nav() {
   const shortcutModalProps = c.useDisclosure()

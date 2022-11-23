@@ -16,11 +16,11 @@ import { HEADER_HABIT_HEIGHT, HEADER_HEIGHT, TimelineHeader } from "~/components
 import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
 import { useFeatures } from "~/lib/hooks/useFeatures"
+import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
 import { DAYS_BACK, DAYS_FORWARD } from "~/lib/hooks/useTimelineDays"
 
 import type { TimelineTask } from "./api.tasks"
-import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
 
 dayjs.extend(advancedFormat)
 
