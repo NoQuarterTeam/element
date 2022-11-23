@@ -95,7 +95,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
           <c.Button
             flex={1}
             borderRadius="none"
-            borderRightRadius="md"
+            borderRightRadius="full"
             variant={isSelected ? "solid" : "ghost"}
             py={2}
             fontSize="sm"
@@ -313,7 +313,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
         </Modal>
       </c.Flex>
       {matchedChildren.length > 0 && expandProps.isOpen ? (
-        <c.Stack mt={0} spacing={0}>
+        <c.Stack mt="1px" spacing="1px">
           {matchedChildren.map((child) => (
             <ElementItem
               search={search}
