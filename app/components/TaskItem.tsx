@@ -41,7 +41,7 @@ function _TaskItem({ task }: Props) {
     if (dupeFetcher.type === "actionReload" && dupeFetcher.data?.task) {
       addTask(dupeFetcher.data.task)
     }
-  }, [task, dupeFetcher.data, dupeFetcher.type, addTask])
+  }, [dupeFetcher.data, dupeFetcher.type, addTask])
 
   const handleClick = (event: React.MouseEvent<any, MouseEvent>) => {
     if (event.metaKey) {
@@ -89,7 +89,6 @@ function _TaskItem({ task }: Props) {
           border="1px solid"
           borderColor={borderColor}
           bg={bg}
-          _hover={{ boxShadow: "sm" }}
           borderRadius="md"
           sx={{
             "&:hover .task-element": {
