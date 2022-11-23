@@ -24,6 +24,7 @@ import { ElementActionMethods } from "~/pages/api.elements.$id"
 import { ButtonGroup } from "./ButtonGroup"
 import { Form, FormButton, FormError, InlineFormField } from "./Form"
 import { Modal } from "./Modal"
+import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 
 const MAX_DEPTH = 2
 
@@ -83,25 +84,33 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
     },
   )
 
+  const { elementIds, toggleElementId } = useSelectedElements()
+
+  const isSelected = elementIds.includes(element.id)
+
   return (
     <c.Box>
       <c.Flex align="center" justify="space-between" pr={2}>
         <c.Flex align="center" justify="space-between" flex={1} pos="relative">
-          <c.Text
+          <c.Button
             flex={1}
-            borderRadius={0}
-            borderRightRadius="full"
+            borderRadius="none"
+            borderRightRadius="md"
+            variant={isSelected ? "solid" : "ghost"}
             py={2}
             fontSize="sm"
+            textAlign="left"
+            justifyContent="flex-start"
             opacity={element.archivedAt ? 0.5 : 1}
             pl={props.depth === 0 ? "35px" : `${35 + props.depth * 15}px`}
-            pr={14}
-            fontWeight={400}
+            // pr={14}
+            onClick={() => toggleElementId(element.id)}
+            fontWeight="normal"
             borderLeft="4px solid"
             borderColor={element.color}
           >
             {element.name}
-          </c.Text>
+          </c.Button>
           {element.children.length > 0 && (
             <c.IconButton
               position="absolute"

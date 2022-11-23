@@ -18,6 +18,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url)
   const backParam = url.searchParams.get("back")
   const forwardParam = url.searchParams.get("forward")
+  const elementIds = url.searchParams.getAll("elementId")
   const back = backParam ? parseInt(backParam) : DAYS_BACK
   const forward = forwardParam ? parseInt(forwardParam) : DAYS_FORWARD
 
@@ -25,7 +26,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     select: taskSelectFields,
     where: {
       creatorId: { equals: user.id },
-      element: { archivedAt: { equals: null } },
+      element: { archivedAt: { equals: null }, id: elementIds.length ? { in: elementIds } : undefined },
       date: {
         not: { equals: null },
         gte: dayjs().subtract(back, "day").startOf("d").toDate(),
