@@ -9,6 +9,7 @@ import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import type { TimelineTask } from "~/pages/api.tasks"
 
 import { DAY_WIDTH } from "./Day"
+import { Prisma } from "@prisma/client"
 
 export const taskSelectFields = {
   id: true,
@@ -22,7 +23,8 @@ export const taskSelectFields = {
   order: true,
   startTime: true,
   element: { select: { id: true, color: true, name: true } },
-}
+} satisfies Prisma.TaskSelect
+
 interface Props {
   task: TimelineTask
 }

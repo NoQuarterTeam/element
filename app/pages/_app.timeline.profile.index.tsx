@@ -14,7 +14,6 @@ import { badRequest } from "~/lib/remix"
 import { UPLOAD_PATHS } from "~/lib/uploadPaths"
 import { requireUser } from "~/services/auth/auth.server"
 import { getFlashSession, getUserSession } from "~/services/session/session.server"
-import { updateUser } from "~/services/user/user.server"
 
 import { useMe } from "./_app"
 
@@ -43,8 +42,11 @@ export const action = async ({ request }: ActionArgs) => {
         let updateData: Partial<typeof data> = { ...data }
         if (data.email === user.email) delete updateData.email
         if (data.avatar && data.avatar === "") updateData.avatar = null
-        const { error } = await updateUser(user.id, updateData)
-        if (error) return badRequest({ data, formError: error })
+        if (data.email) {
+          const existing = await db.user.findFirst({ where: { email: { equals: data.email as string } } })
+          if (existing) return badRequest({ data, formError: "User with these details already exists" })
+        }
+        await db.user.update({ where: { id: user.id }, data })
         return redirect("/timeline/profile", {
           headers: { "Set-Cookie": await createFlash(FlashType.Success, "Profile updated") },
         })

@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client"
+import type { Prisma, User } from "@prisma/client"
 import { redirect } from "@remix-run/node"
 
 import { FlashType } from "~/lib/config.server"
@@ -73,7 +73,8 @@ const userSelectFields = {
   role: true,
   stripeSubscriptionId: true,
   stripeCustomerId: true,
-}
+} satisfies Prisma.UserSelect
+
 export async function getUser(request: Request) {
   const { userId } = await getUserSession(request)
   if (!userId) return null
