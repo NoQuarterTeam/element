@@ -16,6 +16,7 @@ import { isValidHex, randomHexColor, safeReadableColor } from "~/lib/color"
 import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
+import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useToast } from "~/lib/hooks/useToast"
 import { badRequest } from "~/lib/remix"
 import { requireUser } from "~/services/auth/auth.server"
@@ -119,6 +120,7 @@ export default function Elements() {
       keys: ["name", "children.*.name", "children.*.children.*.name"],
     },
   )
+  const elementIds = useSelectedElements((s) => s.elementIds)
   const navigate = useNavigate()
   const toast = useToast()
   return (
@@ -126,7 +128,15 @@ export default function Elements() {
       <c.DrawerOverlay>
         <c.DrawerContent>
           <c.DrawerCloseButton />
-          <c.DrawerHeader>Elements</c.DrawerHeader>
+          <c.DrawerHeader>
+            Elements
+            {elementIds.length > 0 && (
+              <c.Text fontSize="md" as="span">
+                {" "}
+                · {elementIds.length} selected
+              </c.Text>
+            )}
+          </c.DrawerHeader>
           <c.Box overflowY="scroll" minH="100vh" pb={200} pos="relative">
             <c.Flex p={4} pt="2px" align="center" justify="space-between">
               <c.Input
@@ -205,15 +215,17 @@ export default function Elements() {
               </Modal>
             </c.Flex>
 
-            {matchedMyElements.map((element) => (
-              <ElementItem
-                key={element.id}
-                {...{ element }}
-                search={search}
-                depth={0}
-                isArchivedShown={isArchivedShown}
-              />
-            ))}
+            <c.Stack spacing="1px">
+              {matchedMyElements.map((element) => (
+                <ElementItem
+                  key={element.id}
+                  {...{ element }}
+                  search={search}
+                  depth={0}
+                  isArchivedShown={isArchivedShown}
+                />
+              ))}
+            </c.Stack>
             {elements.filter((e) => !!e.archivedAt).length > 0 && (
               <c.Box p={4}>
                 <c.Button onClick={toggle} size="sm" variant="ghost" w="100%">

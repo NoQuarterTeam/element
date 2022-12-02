@@ -14,6 +14,7 @@ import { useFetcher, useTransition } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
 
 import { isValidHex, safeReadableColor } from "~/lib/color"
+import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { useToast } from "~/lib/hooks/useToast"
@@ -83,25 +84,33 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
     },
   )
 
+  const { elementIds, toggleElementId } = useSelectedElements()
+
+  const isSelected = elementIds.includes(element.id)
+
   return (
     <c.Box>
       <c.Flex align="center" justify="space-between" pr={2}>
         <c.Flex align="center" justify="space-between" flex={1} pos="relative">
-          <c.Text
+          <c.Button
             flex={1}
-            borderRadius={0}
+            borderRadius="none"
             borderRightRadius="full"
+            variant={isSelected ? "solid" : "ghost"}
             py={2}
             fontSize="sm"
+            textAlign="left"
+            justifyContent="flex-start"
             opacity={element.archivedAt ? 0.5 : 1}
             pl={props.depth === 0 ? "35px" : `${35 + props.depth * 15}px`}
-            pr={14}
-            fontWeight={400}
+            // pr={14}
+            onClick={() => toggleElementId(element.id)}
+            fontWeight="normal"
             borderLeft="4px solid"
             borderColor={element.color}
           >
             {element.name}
-          </c.Text>
+          </c.Button>
           {element.children.length > 0 && (
             <c.IconButton
               position="absolute"
@@ -304,7 +313,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
         </Modal>
       </c.Flex>
       {matchedChildren.length > 0 && expandProps.isOpen ? (
-        <c.Stack mt={0} spacing={0}>
+        <c.Stack mt="1px" spacing="1px">
           {matchedChildren.map((child) => (
             <ElementItem
               search={search}

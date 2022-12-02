@@ -16,6 +16,7 @@ import { Role } from "@prisma/client"
 import { useNavigate, useSubmit } from "@remix-run/react"
 
 import { NEW_UPDATES, useFeaturesSeen } from "~/lib/hooks/useFeatures"
+import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useMe } from "~/pages/_app"
 
@@ -57,6 +58,7 @@ export function Nav() {
 
   const borderColor = c.useColorModeValue("gray.100", "gray.900")
 
+  const elementIds = useSelectedElements((s) => s.elementIds)
   return (
     <>
       <c.Flex position="absolute" top={4} right={0} w="65px" justify="center">
@@ -118,7 +120,21 @@ export function Nav() {
               variant="ghost"
               aria-label="open element sidebar"
               onClick={() => navigate("elements")}
-              icon={<c.Box as={RiBookLine} boxSize="18px" />}
+              icon={
+                <c.Box pos="relative">
+                  <c.Box as={RiBookLine} boxSize="18px" />
+                  {elementIds.length > 0 && (
+                    <c.Box
+                      boxSize="10px"
+                      borderRadius="full"
+                      bg="orange.500"
+                      pos="absolute"
+                      top={-1}
+                      right={-1}
+                    />
+                  )}
+                </c.Box>
+              }
             />
           </c.Tooltip>
           <c.Tooltip label="Focus mode" placement="auto" zIndex={50} hasArrow>

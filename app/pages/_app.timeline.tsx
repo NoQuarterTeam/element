@@ -16,6 +16,7 @@ import { HEADER_HABIT_HEIGHT, HEADER_HEIGHT, TimelineHeader } from "~/components
 import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
 import { useFeatures } from "~/lib/hooks/useFeatures"
+import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
 import { DAYS_BACK, DAYS_FORWARD } from "~/lib/hooks/useTimelineDays"
 
@@ -32,20 +33,39 @@ export default Timeline
 function _Timeline() {
   const navigate = useNavigate()
   const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineDays()
+  const client = useQueryClient()
 
+  const elementIds = useSelectedElements((s) => s.elementIds)
   const {
     data: tasks = [],
     isLoading,
     isFetching,
   } = useQuery(
-    ["tasks"],
+    ["tasks", { elementIds }],
     async () => {
-      const response = await fetch(`/api/tasks`)
+      const response = await fetch(`/api/tasks?${selectedUrlElements(elementIds)}`)
       if (!response.ok) throw new Error("Failed to load tasks")
       return response.json() as Promise<TimelineTask[]>
     },
     { refetchOnWindowFocus: false, staleTime: Infinity },
   )
+
+  React.useEffect(() => {
+    async function UpdateAfterSelectElements() {
+      const res = await client.fetchQuery<TimelineTask[]>(
+        ["tasks", { back: daysBack, forward: daysForward, elementIds }],
+        async () => {
+          const response = await fetch(
+            `/api/tasks?back=${daysBack}&forward=${daysForward}&${selectedUrlElements(elementIds)}`,
+          )
+          if (!response.ok) throw new Error("Failed to load tasks")
+          return response.json() as Promise<TimelineTask[]>
+        },
+      )
+      client.setQueryData(["tasks", { elementIds }], [...res])
+    }
+    UpdateAfterSelectElements()
+  }, [elementIds])
 
   const timelineRef = React.useRef<HTMLDivElement>(null)
   const daysRef = React.useRef<HTMLDivElement>(null)
@@ -65,18 +85,22 @@ function _Timeline() {
     try {
       const back = -daysForward - 1
       const forward = daysForward + DAYS_FORWARD
-      const res = await client.fetchQuery<TimelineTask[]>(["tasks", { back, forward }], async () => {
-        const response = await fetch(`/api/tasks?back=${back}&forward=${forward}`)
-        if (!response.ok) throw new Error("Failed to load tasks")
-        return response.json() as Promise<TimelineTask[]>
-      })
-      const oldTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
-      client.setQueryData(["tasks"], [...oldTasks, ...res])
+      const res = await client.fetchQuery<TimelineTask[]>(
+        ["tasks", { back, forward, elementIds }],
+        async () => {
+          const response = await fetch(
+            `/api/tasks?back=${back}&forward=${forward}&${selectedUrlElements(elementIds)}`,
+          )
+          if (!response.ok) throw new Error("Failed to load tasks")
+          return response.json() as Promise<TimelineTask[]>
+        },
+      )
+      const oldTasks = client.getQueryData<TimelineTask[]>(["tasks", { elementIds }]) || []
+      client.setQueryData(["tasks", { elementIds }], [...oldTasks, ...res])
     } catch (error) {
       console.log(error)
     }
   }
-  const client = useQueryClient()
 
   const handleBack = async () => {
     // Need to scroll a bit right otherwise it keeps running handleBack
@@ -85,13 +109,18 @@ function _Timeline() {
     try {
       const back = daysBack + DAYS_BACK
       const forward = -daysBack - 2
-      const res = await client.fetchQuery<TimelineTask[]>(["tasks", { back, forward }], async () => {
-        const response = await fetch(`/api/tasks?back=${back}&forward=${forward}`)
-        if (!response.ok) throw new Error("Failed to load tasks")
-        return response.json() as Promise<TimelineTask[]>
-      })
-      const oldTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
-      client.setQueryData(["tasks"], [...oldTasks, ...res])
+      const res = await client.fetchQuery<TimelineTask[]>(
+        ["tasks", { back, forward, elementIds }],
+        async () => {
+          const response = await fetch(
+            `/api/tasks?back=${back}&forward=${forward}&${selectedUrlElements(elementIds)}`,
+          )
+          if (!response.ok) throw new Error("Failed to load tasks")
+          return response.json() as Promise<TimelineTask[]>
+        },
+      )
+      const oldTasks = client.getQueryData<TimelineTask[]>(["tasks", { elementIds }]) || []
+      client.setQueryData(["tasks", { elementIds }], [...oldTasks, ...res])
     } catch (error) {
       console.log(error)
     }
