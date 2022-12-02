@@ -1,4 +1,5 @@
-import { Prisma } from "@prisma/client"
+import type { Prisma } from "@prisma/client"
+
 import { db } from "~/lib/db.server"
 
 const elementSelectFields = {
