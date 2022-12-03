@@ -1,5 +1,6 @@
 import * as React from "react"
 import * as c from "@chakra-ui/react"
+import type { Prisma } from "@prisma/client"
 import { Link, useFetcher, useNavigate } from "@remix-run/react"
 
 import { safeReadableColor } from "~/lib/color"
@@ -9,7 +10,6 @@ import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import type { TimelineTask } from "~/pages/api.tasks"
 
 import { DAY_WIDTH } from "./Day"
-import { Prisma } from "@prisma/client"
 
 export const taskSelectFields = {
   id: true,
