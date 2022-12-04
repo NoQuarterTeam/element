@@ -8,7 +8,7 @@ import { z } from "zod"
 import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
-import { DAYS_BACK } from "~/lib/hooks/useTimelineDays"
+
 import { requireUser } from "~/services/auth/auth.server"
 import { getFlashSession } from "~/services/session/session.server"
 
@@ -16,7 +16,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   const url = new URL(request.url)
   const backParam = url.searchParams.get("back")
-  const back = backParam ? parseInt(backParam) : DAYS_BACK
+
   const [habits, habitEntries] = await Promise.all([
     db.habit.findMany({
       orderBy: { createdAt: "desc" },
@@ -28,7 +28,9 @@ export const loader = async ({ request }: LoaderArgs) => {
       where: {
         creatorId: { equals: user.id },
         createdAt: {
-          gte: dayjs().subtract(back, "day").startOf("d").toDate(),
+          gte: dayjs(backParam || dayjs().subtract(1, "m"))
+            .startOf("d")
+            .toDate(),
           lte: dayjs().endOf("d").toDate(),
         },
       },

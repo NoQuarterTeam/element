@@ -1,5 +1,5 @@
 import * as React from "react"
-// import { WiHumidity } from "react-icons/wi"
+
 import { BsSunrise, BsThermometerHalf } from "react-icons/bs"
 import { RiWindyLine } from "react-icons/ri"
 import { TbDroplet, TbLocation } from "react-icons/tb"
@@ -9,13 +9,14 @@ import dayjs from "dayjs"
 
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
 import { useFeatures } from "~/lib/hooks/useFeatures"
-import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
+
 import { useMe } from "~/pages/_app"
 import type { TimelineHabitResponse } from "~/pages/api.habits"
 import type { WeatherData } from "~/pages/api.weather"
 
 import { DAY_WIDTH } from "./Day"
 import { Habits } from "./Habits"
+import { useTimelineDates } from "~/lib/hooks/useTimelineDates"
 
 export const HEADER_HEIGHT = 120
 
@@ -34,12 +35,12 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
   const features = useFeatures((s) => s.features)
   const isHabitsEnabled = features.includes("habits")
   const isWeatherEnabled = features.includes("weather")
-  const daysBack = useTimelineDays((s) => s.daysBack)
+  const dateBack = useTimelineDates((s) => s.dateBack)
 
   const { data } = useQuery(
-    ["habits", { daysBack }],
+    ["habits", { dateBack }],
     async () => {
-      const response = await fetch(`/api/habits?back=${daysBack}`)
+      const response = await fetch(`/api/habits?back=${dateBack}`)
       if (!response.ok) throw new Error("Failed to load tasks")
       return response.json() as Promise<TimelineHabitResponse>
     },

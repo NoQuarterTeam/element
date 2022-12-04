@@ -1,6 +1,5 @@
 import * as React from "react"
 import * as c from "@chakra-ui/react"
-import type { Prisma } from "@prisma/client"
 import { Link, useFetcher, useNavigate } from "@remix-run/react"
 
 import { safeReadableColor } from "~/lib/color"
@@ -23,7 +22,8 @@ export const taskSelectFields = {
   order: true,
   startTime: true,
   element: { select: { id: true, color: true, name: true } },
-} satisfies Prisma.TaskSelect
+  // } satisfies Prisma.TaskSelect
+}
 
 interface Props {
   task: TimelineTask

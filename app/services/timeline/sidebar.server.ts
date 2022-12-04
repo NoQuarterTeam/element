@@ -1,5 +1,3 @@
-import type { Prisma } from "@prisma/client"
-
 import { db } from "~/lib/db.server"
 
 const elementSelectFields = {
@@ -7,8 +5,8 @@ const elementSelectFields = {
   name: true,
   archivedAt: true,
   color: true,
-} satisfies Prisma.ElementSelect
-
+  // } satisfies Prisma.ElementSelect
+}
 export async function getSidebarElements(userId: string) {
   return await db.element.findMany({
     orderBy: { name: "asc" },

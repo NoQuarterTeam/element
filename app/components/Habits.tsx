@@ -6,7 +6,6 @@ import { useFetcher } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
-import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
 import type { TimelineHabit, TimelineHabitEntry, TimelineHabitResponse } from "~/pages/api.habits"
 import { HabitsActionMethods } from "~/pages/api.habits"
 import { HabitActionMethods } from "~/pages/api.habits.$id"
@@ -14,6 +13,7 @@ import { HabitActionMethods } from "~/pages/api.habits.$id"
 import { ButtonGroup } from "./ButtonGroup"
 import { FormButton, FormError, FormField } from "./Form"
 import { TooltipIconButton } from "./TooltipIconButton"
+import { useTimelineDates } from "~/lib/hooks/useTimelineDates"
 
 interface Props {
   habits: TimelineHabit[]
@@ -26,7 +26,7 @@ function _Habits({ habits, day, habitEntries }: Props) {
   const habitBgGreen = c.useColorModeValue("green.400", "green.600")
   const habitsModalProps = c.useDisclosure()
   const client = useQueryClient()
-  const daysBack = useTimelineDays((s) => s.daysBack)
+  const dateBack = useTimelineDates((s) => s.dateBack)
   const initialFocusRef = React.useRef(null)
   const initialNewFocusRef = React.useRef(null)
   const createFetcher = useFetcher()
@@ -40,9 +40,9 @@ function _Habits({ habits, day, habitEntries }: Props) {
 
   React.useEffect(() => {
     if (createFetcher.type === "actionReload" && createFetcher.data?.habit) {
-      const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
+      const res = client.getQueryData<TimelineHabitResponse>(["habits", { dateBack }])
       if (!res) return
-      client.setQueryData<TimelineHabitResponse>(["habits", { daysBack }], {
+      client.setQueryData<TimelineHabitResponse>(["habits", { dateBack }], {
         habits: [...res.habits, createFetcher.data.habit],
         habitEntries: res.habitEntries || [],
       })
@@ -144,15 +144,15 @@ interface ItemProps {
 }
 const HabitItem = React.memo(_HabitItem)
 function _HabitItem({ habit, day, habitEntries }: ItemProps) {
-  const daysBack = useTimelineDays((s) => s.daysBack)
+  const dateBack = useTimelineDates((s) => s.dateBack)
   const habitEntryFetcher = useFetcher()
   const entry = habitEntries.find((e) => e.habitId === habit.id)
   const client = useQueryClient()
 
   const updateHabitFetcher = useFetcher()
   const handleUpdateHabit = (name: string) => {
-    const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
-    client.setQueryData(["habits", { daysBack }], {
+    const res = client.getQueryData<TimelineHabitResponse>(["habits", { dateBack }])
+    client.setQueryData(["habits", { dateBack }], {
       habits: res?.habits.map((h) => (h.id === habit.id ? { ...h, name } : h)) || [],
       habitEntries: res?.habitEntries || [],
     })
@@ -165,8 +165,8 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
   const archiveProps = c.useDisclosure()
   const archiveHabitFetcher = useFetcher()
   const handleArchiveHabit = () => {
-    const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
-    client.setQueryData(["habits", { daysBack }], {
+    const res = client.getQueryData<TimelineHabitResponse>(["habits", { dateBack }])
+    client.setQueryData(["habits", { dateBack }], {
       habits:
         res?.habits.map((h) => (h.id === habit.id ? { ...h, archivedAt: dayjs(day).toDate() } : h)) || [],
       habitEntries: res?.habitEntries || [],
@@ -180,8 +180,8 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
   const deleteHabitFetcher = useFetcher()
   const deleteProps = c.useDisclosure()
   const handleDeleteHabit = () => {
-    const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
-    client.setQueryData(["habits", { daysBack }], {
+    const res = client.getQueryData<TimelineHabitResponse>(["habits", { dateBack }])
+    client.setQueryData(["habits", { dateBack }], {
       habits: res?.habits.filter((h) => h.id !== habit.id) || [],
       habitEntries: res?.habitEntries || [],
     })
@@ -291,9 +291,9 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
             ml={2}
             defaultChecked={!!entry}
             onChange={() => {
-              const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
+              const res = client.getQueryData<TimelineHabitResponse>(["habits", { dateBack }])
               if (!res) return
-              client.setQueryData<TimelineHabitResponse>(["habits", { daysBack }], {
+              client.setQueryData<TimelineHabitResponse>(["habits", { dateBack }], {
                 habits: res.habits || [],
                 habitEntries: entry
                   ? res.habitEntries.filter((e) => e.id !== entry.id)

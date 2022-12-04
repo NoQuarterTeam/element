@@ -12,6 +12,10 @@ import type { TimelineTask } from "~/pages/api.tasks"
 
 import { TaskItem } from "./TaskItem"
 import { HEADER_HABIT_HEIGHT, HEADER_HEIGHT } from "./TimelineHeader"
+import { useInView } from "react-intersection-observer"
+import { useTimelineDates } from "~/lib/hooks/useTimelineDates"
+import { useQueryClient } from "@tanstack/react-query"
+import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
 
 interface Props {
   day: string
@@ -34,18 +38,50 @@ function _Day(props: Props) {
     ? isDark
       ? "gray.900"
       : "gray.50"
-    : props.index % 2 === 0
-    ? isDark
-      ? "gray.800"
-      : "white"
     : isDark
     ? "gray.800"
     : "white"
+
+  const client = useQueryClient()
+  const elementIds = useSelectedElements((s) => s.elementIds)
+  const { setDate, dateBack, dateForward } = useTimelineDates()
+  const { ref } = useInView({
+    triggerOnce: true,
+    onChange: async (inView) => {
+      if (dayjs(props.day).isBefore(dayjs(dateForward)) && dayjs(props.day).isAfter(dayjs(dateBack))) return
+      if (inView) {
+        let back: string, forward: string
+        // if scrolling back
+        if (dayjs(props.day).isSame(dayjs(dateBack)) || dayjs(props.day).isBefore(dayjs(dateBack))) {
+          back = dayjs(props.day).subtract(1, "w").format("YYYY-MM-DD")
+          forward = dayjs(props.day).format("YYYY-MM-DD")
+        } else {
+          // scrolling forward
+          forward = dayjs(props.day).add(1, "w").format("YYYY-MM-DD")
+          back = dayjs(props.day).add(1, "w").subtract(6, "d").endOf("d").format("YYYY-MM-DD")
+        }
+        const res = await client.fetchQuery<TimelineTask[]>(
+          ["tasks", { back, forward, elementIds }],
+          async () => {
+            const response = await fetch(
+              `/api/tasks?back=${back}&forward=${forward}&${selectedUrlElements(elementIds)}`,
+            )
+            if (!response.ok) throw new Error("Failed to load tasks")
+            return response.json() as Promise<TimelineTask[]>
+          },
+        )
+        const oldTasks = client.getQueryData<TimelineTask[]>(["tasks", { elementIds }]) || []
+        client.setQueryData(["tasks", { elementIds }], [...oldTasks, ...res])
+        setDate(props.day)
+      }
+    },
+  })
 
   return (
     <Droppable droppableId={props.day}>
       {(provided) => (
         <div ref={provided.innerRef} {...provided.droppableProps} style={{ minHeight: "min-content" }}>
+          {dayjs(props.day).day() === 0 && <div ref={ref} />}
           <c.Box
             borderRight="1px solid"
             borderColor={isDark ? "gray.700" : "gray.100"}
