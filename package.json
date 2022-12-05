@@ -85,7 +85,7 @@
   },
   "devDependencies": {
     "@remix-run/dev": "1.8.0",
-    "@remix-run/eslint-config": "1.8.0",
+    "@remix-run/eslint-config": "1.8.1",
     "@types/bcrypt": "5.0.0",
     "@types/compression": "1.7.2",
     "@types/cookie": "0.5.1",
