@@ -4,7 +4,7 @@ import create from "zustand"
 dayjs.extend(weekday)
 
 export const DATE_BACK = dayjs().startOf("w").subtract(1, "w").endOf("d").format("YYYY-MM-DD")
-export const DATE_FORWARD = dayjs().endOf("w").add(2, "w").startOf("d").format("YYYY-MM-DD")
+export const DATE_FORWARD = dayjs().endOf("w").add(2, "w").endOf("d").format("YYYY-MM-DD")
 
 export const useTimelineDates = create<{
   dateBack: string
