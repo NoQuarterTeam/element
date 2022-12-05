@@ -11,6 +11,7 @@
     "build:remix": "remix build",
     "build:server": "esbuild --platform=node --format=cjs ./app/lib/server.ts --outdir=build",
     "build": "run-s build:*",
+    "ci": "run-s lint:fix prettify",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "generate": "prisma generate",

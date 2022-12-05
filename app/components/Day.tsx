@@ -1,22 +1,22 @@
 import * as React from "react"
 import { RiAddCircleLine } from "react-icons/ri"
+import { useInView } from "react-intersection-observer"
 import * as c from "@chakra-ui/react"
 import { Draggable, Droppable } from "@hello-pangea/dnd"
+import { Link } from "@remix-run/react"
+import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import deepEqual from "deep-equal"
 
 import { getTotalTaskDuration } from "~/lib/helpers/duration"
 import { useFeatures } from "~/lib/hooks/useFeatures"
+import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
+import { useTimelineDates } from "~/lib/hooks/useTimelineDates"
+import type { TimelineHabitResponse } from "~/pages/api.habits"
 import type { TimelineTask } from "~/pages/api.tasks"
 
 import { TaskItem } from "./TaskItem"
 import { HEADER_HABIT_HEIGHT, HEADER_HEIGHT } from "./TimelineHeader"
-import { useInView } from "react-intersection-observer"
-import { useTimelineDates } from "~/lib/hooks/useTimelineDates"
-import { useQueryClient } from "@tanstack/react-query"
-import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
-import { TimelineHabitResponse } from "~/pages/api.habits"
-import { Link } from "@remix-run/react"
 
 interface Props {
   day: string

@@ -1,5 +1,4 @@
 import * as React from "react"
-
 import { BsSunrise, BsThermometerHalf } from "react-icons/bs"
 import { RiWindyLine } from "react-icons/ri"
 import { TbDroplet, TbLocation } from "react-icons/tb"
@@ -9,14 +8,13 @@ import dayjs from "dayjs"
 
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
 import { useFeatures } from "~/lib/hooks/useFeatures"
-
+import { DATE_BACK } from "~/lib/hooks/useTimelineDates"
 import { useMe } from "~/pages/_app"
 import type { TimelineHabitResponse } from "~/pages/api.habits"
 import type { WeatherData } from "~/pages/api.weather"
 
 import { DAY_WIDTH } from "./Day"
 import { Habits } from "./Habits"
-import { DATE_BACK } from "~/lib/hooks/useTimelineDates"
 
 export const HEADER_HEIGHT = 120
 

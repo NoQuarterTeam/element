@@ -1,11 +1,11 @@
 import * as React from "react"
 import { RiAddCircleLine, RiCalendarEventLine } from "react-icons/ri"
+import { useInView } from "react-intersection-observer"
 import * as c from "@chakra-ui/react"
 import { Outlet, useNavigate } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
-
 import styles from "suneditor/dist/css/suneditor.min.css"
 
 import { Day, DAY_WIDTH } from "~/components/Day"
@@ -17,11 +17,10 @@ import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
+import { DATE_BACK, DATE_FORWARD, useTimelineDates } from "~/lib/hooks/useTimelineDates"
+import { SCROLL_DAYS, useTimelineScroll } from "~/lib/hooks/useTimelineScroll"
 
 import type { TimelineTask } from "./api.tasks"
-import { SCROLL_DAYS, useTimelineScroll } from "~/lib/hooks/useTimelineScroll"
-import { DATE_BACK, DATE_FORWARD, useTimelineDates } from "~/lib/hooks/useTimelineDates"
-import { useInView } from "react-intersection-observer"
 
 dayjs.extend(advancedFormat)
 
