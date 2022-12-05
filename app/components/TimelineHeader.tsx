@@ -16,7 +16,7 @@ import type { WeatherData } from "~/pages/api.weather"
 
 import { DAY_WIDTH } from "./Day"
 import { Habits } from "./Habits"
-import { useTimelineDates } from "~/lib/hooks/useTimelineDates"
+import { DATE_BACK } from "~/lib/hooks/useTimelineDates"
 
 export const HEADER_HEIGHT = 120
 
@@ -35,17 +35,17 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
   const features = useFeatures((s) => s.features)
   const isHabitsEnabled = features.includes("habits")
   const isWeatherEnabled = features.includes("weather")
-  const dateBack = useTimelineDates((s) => s.dateBack)
 
   const { data } = useQuery(
-    ["habits", { dateBack }],
+    ["habits"],
     async () => {
-      const response = await fetch(`/api/habits?back=${dateBack}`)
-      if (!response.ok) throw new Error("Failed to load tasks")
+      const response = await fetch(`/api/habits?back=${DATE_BACK}`)
+      if (!response.ok) throw new Error("Failed to load habits")
       return response.json() as Promise<TimelineHabitResponse>
     },
     { refetchOnWindowFocus: false, enabled: !!me.stripeSubscriptionId && isHabitsEnabled },
   )
+
   const habits = data?.habits
   const habitEntries = data?.habitEntries || []
 
@@ -71,7 +71,7 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
     >
       <c.Image position="absolute" top={5} left={5} src="/logo.png" boxSize="32px" />
       {months.map(({ month, year }) => (
-        <c.Box key={month + year}>
+        <c.Box key={`${month}${year}`}>
           <c.Flex pt={4} pl={4} position="sticky" w="max-content" left={12} align="center">
             <c.Heading as="h3" fontSize="3xl">
               {MONTH_NAMES[month]}
@@ -111,6 +111,20 @@ function _HeaderDay(props: {
   isWeatherEnabled: boolean
 }) {
   const borderColor = c.useColorModeValue("gray.100", "gray.700")
+
+  const habitEntries = React.useMemo(
+    () =>
+      (props.isHabitsEnabled &&
+        props.habits &&
+        props.habitEntries.filter((e) =>
+          dayjs(dayjs(props.day).format("YYYY-MM-DD")).isSame(
+            dayjs(e.createdAt).format("YYYY-MM-DD"),
+            "date",
+          ),
+        )) ||
+      [],
+    [props.day, props.habitEntries],
+  )
   return (
     <c.VStack spacing={1} px={2} minW={DAY_WIDTH} key={dayjs(props.day).unix()}>
       <c.Box h="34px" overflow="hidden">
@@ -196,12 +210,7 @@ function _HeaderDay(props: {
           <Habits
             day={dayjs(props.day).format("YYYY-MM-DD")}
             habits={props.habits}
-            habitEntries={props.habitEntries.filter((e) =>
-              dayjs(dayjs(props.day).format("YYYY-MM-DD")).isSame(
-                dayjs(e.createdAt).format("YYYY-MM-DD"),
-                "date",
-              ),
-            )}
+            habitEntries={habitEntries}
           />
         )}
       </c.VStack>

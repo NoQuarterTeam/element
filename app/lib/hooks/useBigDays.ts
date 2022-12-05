@@ -1,6 +1,6 @@
 import create from "zustand"
 
-export const BIG_DAYS = 100
+export const BIG_DAYS = 200
 
 export const useBigDays = create<{
   daysForward: number

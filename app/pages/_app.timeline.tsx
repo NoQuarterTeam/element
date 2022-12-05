@@ -20,7 +20,8 @@ import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelecte
 
 import type { TimelineTask } from "./api.tasks"
 import { BIG_DAYS, useBigDays } from "~/lib/hooks/useBigDays"
-import { useTimelineDates } from "~/lib/hooks/useTimelineDates"
+import { DATE_BACK, DATE_FORWARD, useTimelineDates } from "~/lib/hooks/useTimelineDates"
+import { useInView } from "react-intersection-observer"
 
 dayjs.extend(advancedFormat)
 
@@ -30,7 +31,14 @@ export function links() {
 
 const Timeline = React.memo(_Timeline)
 export default Timeline
+
 function _Timeline() {
+  const [isFinishedLoading, setIsFinishedLoading] = React.useState(false)
+  React.useEffect(() => {
+    const timeout = setTimeout(() => setIsFinishedLoading(true), 500)
+    return () => clearTimeout(timeout)
+  }, [])
+
   const navigate = useNavigate()
   const bigDays = useBigDays()
   const { dateBack, dateForward } = useTimelineDates()
@@ -45,7 +53,7 @@ function _Timeline() {
   } = useQuery(
     ["tasks", { elementIds }],
     async () => {
-      const response = await fetch(`/api/tasks?${selectedUrlElements(elementIds)}`)
+      const response = await fetch(`/api/tasks?back=${DATE_BACK}&forward=${DATE_FORWARD}`)
       if (!response.ok) throw new Error("Failed to load tasks")
       return response.json() as Promise<TimelineTask[]>
     },
@@ -54,6 +62,7 @@ function _Timeline() {
 
   React.useEffect(() => {
     async function UpdateAfterSelectElements() {
+      // when changing
       const res = await client.fetchQuery<TimelineTask[]>(
         ["tasks", { back: dateBack, forward: dateForward, elementIds }],
         async () => {
@@ -71,6 +80,19 @@ function _Timeline() {
 
   const timelineRef = React.useRef<HTMLDivElement>(null)
   const daysRef = React.useRef<HTMLDivElement>(null)
+
+  React.useEffect(function SetInitialScroll() {
+    const scrollTo = isMobile ? BIG_DAYS * DAY_WIDTH : (BIG_DAYS - 3) * DAY_WIDTH
+    timelineRef.current?.scrollTo(scrollTo, 0)
+  }, [])
+
+  React.useEffect(
+    function UpdateScrollAfterBack() {
+      const scrollTo = BIG_DAYS * DAY_WIDTH
+      timelineRef.current?.scrollTo(scrollTo, 0)
+    },
+    [bigDays.daysBack],
+  )
 
   React.useEffect(function SetInitialScroll() {
     const scrollTo = isMobile ? BIG_DAYS * DAY_WIDTH : (BIG_DAYS - 3) * DAY_WIDTH
@@ -106,6 +128,7 @@ function _Timeline() {
   const bg = c.useColorModeValue("gray.100", "gray.800")
   const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HABIT_HEIGHT : HEADER_HEIGHT
 
+  const loadingBg = c.useColorModeValue("white", "gray.900")
   return (
     <>
       <c.Box
@@ -148,6 +171,11 @@ function _Timeline() {
           </c.VStack>
         </c.Box>
       </c.Box>
+      {!isFinishedLoading && (
+        <c.Center pos="fixed" top={0} left={0} zIndex={100} h="100vh" w="100vw" bg={loadingBg}>
+          <c.Image src="/logo.png" boxSize="100px" />
+        </c.Center>
+      )}
       <Outlet />
     </>
   )
@@ -159,9 +187,25 @@ function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
     () => props.tasks.map((t) => ({ id: t.id, date: t.date, order: t.order })),
     [props.tasks],
   )
+  const { daysBack, daysForward, setDaysBack, setDaysForward } = useBigDays()
+  const { ref: leftRef } = useInView({
+    onChange: (inView) => {
+      if (inView) {
+        setDaysBack(daysBack + 100)
+      }
+    },
+  })
+  const { ref: rightRef } = useInView({
+    onChange: (inView) => {
+      if (inView) {
+        setDaysForward(daysForward + 100)
+      }
+    },
+  })
   return (
     <c.Flex>
       <DropContainer tasks={dropTasks}>
+        <div ref={leftRef} />
         {props.days.map((day, index) => (
           <Day
             key={index}
@@ -170,6 +214,7 @@ function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
             tasks={props.tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))}
           />
         ))}
+        <div ref={rightRef} />
       </DropContainer>
     </c.Flex>
   )

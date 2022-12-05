@@ -16,22 +16,27 @@ export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   const url = new URL(request.url)
   const backParam = url.searchParams.get("back")
+  const forwardParam = url.searchParams.get("forward")
+
+  if (!backParam) return json({ habits: [], habitEntries: [] })
 
   const [habits, habitEntries] = await Promise.all([
     db.habit.findMany({
       orderBy: { createdAt: "desc" },
       select: { id: true, name: true, startDate: true, archivedAt: true },
-      where: { creatorId: { equals: user.id } },
+      where: {
+        creatorId: { equals: user.id },
+      },
     }),
     db.habitEntry.findMany({
       select: { id: true, habitId: true, createdAt: true },
       where: {
         creatorId: { equals: user.id },
         createdAt: {
-          gte: dayjs(backParam || dayjs().subtract(1, "m"))
-            .startOf("d")
+          gte: dayjs(backParam).startOf("d").toDate(),
+          lte: dayjs(forwardParam || undefined)
+            .endOf("d")
             .toDate(),
-          lte: dayjs().endOf("d").toDate(),
         },
       },
     }),

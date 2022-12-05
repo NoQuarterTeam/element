@@ -1,4 +1,5 @@
 import * as React from "react"
+import * as c from "@chakra-ui/react"
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import type { ShouldReloadFunction } from "@remix-run/react"
@@ -22,7 +23,13 @@ type User = SerializeFrom<typeof loader>
 export default function TimelineLayout() {
   const user = useLoaderData<typeof loader>()
   const isHydrated = useHydrated()
-  if (!isHydrated) return null
+  const loadingBg = c.useColorModeValue("gray.900", "gray.900")
+  if (!isHydrated)
+    return (
+      <c.Center pos="fixed" top={0} left={0} zIndex={100} h="100vh" w="100vw" bg={loadingBg}>
+        <c.Image src="/logo.png" boxSize="100px" />
+      </c.Center>
+    )
   return (
     <MeContext.Provider value={user}>
       <Outlet />

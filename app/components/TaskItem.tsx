@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as c from "@chakra-ui/react"
-import { Link, useFetcher, useNavigate } from "@remix-run/react"
+import { Link, useFetcher } from "@remix-run/react"
 
 import { safeReadableColor } from "~/lib/color"
 import { formatDuration } from "~/lib/helpers/duration"
@@ -31,10 +31,9 @@ interface Props {
 
 function _TaskItem({ task }: Props) {
   const { removeTask, updateTask, addTask } = useTimelineTasks()
-  const navigate = useNavigate()
   const bg = c.useColorModeValue("white", "gray.700")
   const borderColor = c.useColorModeValue("gray.100", "gray.900")
-  // const navigate = useNavigate()
+
   const deleteFetcher = useFetcher()
   const toggleCompleteFetcher = useFetcher()
 
@@ -74,13 +73,7 @@ function _TaskItem({ task }: Props) {
 
   return (
     <c.Box w={DAY_WIDTH} p={2} pb={0} zIndex={1} tabIndex={-1}>
-      <Link
-        to={task.id}
-        onClick={handleClick}
-        onTouchEnd={() => navigate(task.id)}
-        prefetch="intent"
-        tabIndex={-1}
-      >
+      <Link to={task.id} onClick={handleClick} prefetch="intent" tabIndex={-1}>
         <c.Box
           tabIndex={-1}
           outline="none"

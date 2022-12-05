@@ -2,7 +2,6 @@ import * as React from "react"
 import { RiAddCircleLine } from "react-icons/ri"
 import * as c from "@chakra-ui/react"
 import { Draggable, Droppable } from "@hello-pangea/dnd"
-import { useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
 import deepEqual from "deep-equal"
 
@@ -16,6 +15,8 @@ import { useInView } from "react-intersection-observer"
 import { useTimelineDates } from "~/lib/hooks/useTimelineDates"
 import { useQueryClient } from "@tanstack/react-query"
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
+import { TimelineHabitResponse } from "~/pages/api.habits"
+import { Link } from "@remix-run/react"
 
 interface Props {
   day: string
@@ -26,7 +27,6 @@ interface Props {
 export const DAY_WIDTH = 98
 
 function _Day(props: Props) {
-  const navigate = useNavigate()
   const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HABIT_HEIGHT : HEADER_HEIGHT
   const { colorMode } = c.useColorMode()
   const isDark = colorMode === "dark"
@@ -55,11 +55,29 @@ function _Day(props: Props) {
         if (dayjs(props.day).isSame(dayjs(dateBack)) || dayjs(props.day).isBefore(dayjs(dateBack))) {
           back = dayjs(props.day).subtract(1, "w").format("YYYY-MM-DD")
           forward = dayjs(props.day).format("YYYY-MM-DD")
+          // update habits only if going backward
+          const habitsRes = await client.fetchQuery<TimelineHabitResponse>(
+            ["habits", { back, forward }],
+            async () => {
+              const response = await fetch(`/api/habits?back=${back}&forward=${forward}`)
+              if (!response.ok) throw new Error("Failed to load habits")
+              return response.json() as Promise<TimelineHabitResponse>
+            },
+          )
+          const oldHabits = client.getQueryData<TimelineHabitResponse>(["habits"]) || {
+            habits: [],
+            habitEntries: [],
+          }
+          client.setQueryData<TimelineHabitResponse>(["habits"], {
+            habits: [...oldHabits.habits],
+            habitEntries: [...habitsRes.habitEntries, ...oldHabits.habitEntries],
+          })
         } else {
           // scrolling forward
           forward = dayjs(props.day).add(1, "w").format("YYYY-MM-DD")
           back = dayjs(props.day).add(1, "w").subtract(6, "d").endOf("d").format("YYYY-MM-DD")
         }
+        // update tasks
         const res = await client.fetchQuery<TimelineTask[]>(
           ["tasks", { back, forward, elementIds }],
           async () => {
@@ -71,7 +89,8 @@ function _Day(props: Props) {
           },
         )
         const oldTasks = client.getQueryData<TimelineTask[]>(["tasks", { elementIds }]) || []
-        client.setQueryData(["tasks", { elementIds }], [...oldTasks, ...res])
+        client.setQueryData(["tasks", { elementIds }], [...oldTasks, ...(res || [])])
+
         setDate(props.day)
       }
     },
@@ -83,6 +102,7 @@ function _Day(props: Props) {
         <div ref={provided.innerRef} {...provided.droppableProps} style={{ minHeight: "min-content" }}>
           {dayjs(props.day).day() === 0 && <div ref={ref} />}
           <c.Box
+            // key={props.day}
             borderRight="1px solid"
             borderColor={isDark ? "gray.700" : "gray.100"}
             minH={`calc(100vh - ${headerHeight}px)`}
@@ -117,18 +137,22 @@ function _Day(props: Props) {
               <c.Text fontSize="xs">{getTotalTaskDuration(props.tasks)}</c.Text>
             </c.Flex>
             <c.Flex w="100%" justify="center" pt={0} flex={1}>
-              <c.IconButton
-                className="add-task-day"
-                variant="ghost"
-                opacity={0}
-                _focus={{ opacity: 1 }}
+              <Link
+                to={`new?day=${dayjs(props.day).format("YYYY-MM-DD")}`}
                 tabIndex={dayjs(props.day).isSame(dayjs(), "day") ? 1 : -1}
-                size="md"
-                onClick={() => navigate(`new?day=${dayjs(props.day).format("YYYY-MM-DD")}`)}
-                borderRadius="full"
-                icon={<c.Box as={RiAddCircleLine} boxSize="20px" />}
-                aria-label="new task"
-              />
+              >
+                <c.IconButton
+                  className="add-task-day"
+                  variant="ghost"
+                  opacity={0}
+                  _focus={{ opacity: 1 }}
+                  tabIndex={-1}
+                  size="md"
+                  borderRadius="full"
+                  icon={<c.Box as={RiAddCircleLine} boxSize="20px" />}
+                  aria-label="new task"
+                />
+              </Link>
             </c.Flex>
           </c.Box>
         </div>
