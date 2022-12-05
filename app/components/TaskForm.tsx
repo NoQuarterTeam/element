@@ -10,6 +10,7 @@ import dayjs from "dayjs"
 import { ClientOnly } from "remix-utils"
 
 import { randomHexColor, safeReadableColor } from "~/lib/color"
+import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { customSelectStyle } from "~/lib/styles/react-select"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
@@ -21,7 +22,6 @@ import { TasksActionMethods } from "~/pages/api.tasks"
 import { ButtonGroup } from "./ButtonGroup"
 import { FormButton, FormError, InlineFormField } from "./Form"
 import { Modal } from "./Modal"
-import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 
 export const PreloadedEditorInput = lazyWithPreload(() => import("./EditorInput"))
 
