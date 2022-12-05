@@ -27,7 +27,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       element: { archivedAt: { equals: null }, id: elementIds.length ? { in: elementIds } : undefined },
       date: {
         not: { equals: null },
-        gte: dayjs(backParam).startOf("d").toDate(),
+        gte: dayjs(backParam).endOf("d").toDate(),
         lte: dayjs(forwardParam).endOf("d").toDate(),
       },
     },
