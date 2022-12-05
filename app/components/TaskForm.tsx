@@ -21,6 +21,7 @@ import { TasksActionMethods } from "~/pages/api.tasks"
 import { ButtonGroup } from "./ButtonGroup"
 import { FormButton, FormError, InlineFormField } from "./Form"
 import { Modal } from "./Modal"
+import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 
 export const PreloadedEditorInput = lazyWithPreload(() => import("./EditorInput"))
 
@@ -60,7 +61,14 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createUpdateFetcher.type, createUpdateFetcher.data, task])
 
-  const deleteSubmit = useFetcher()
+  const deleteSubmit = useFetcherSubmit<{ success: boolean }>({
+    onSuccess: (data) => {
+      if (data.success && task) {
+        removeTask(task)
+        navigate("/timeline")
+      }
+    },
+  })
   const handleDelete = () => {
     if (!task) return
     deleteSubmit.submit(
@@ -68,14 +76,6 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
       { method: "delete", action: `/timeline/${task.id}` },
     )
   }
-  React.useEffect(() => {
-    if (!task) return
-    if (deleteSubmit.type === "actionReload" && deleteSubmit.data?.success) {
-      navigate("/timeline")
-      removeTask(task)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [task, deleteSubmit.data, deleteSubmit.type])
 
   const duplicateSubmit = useFetcher()
   const handleDuplicate = () => {

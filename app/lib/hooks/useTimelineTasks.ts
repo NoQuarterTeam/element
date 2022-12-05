@@ -20,41 +20,41 @@ export function useTimelineTasks() {
           if (!res.ok) throw new Error("Failed to fetch tasks")
           return res.json() as Promise<TimelineTask[]>
         })
-        client.setQueryData(["tasks", { elementIds }], res)
+        client.setQueryData(["tasks"], res)
       } catch (error) {
         console.log(error)
       }
     },
     setTasks: (tasks: TimelineTask[]) => {
-      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks", { elementIds }]) || []
-      client.setQueryData(["tasks", { elementIds }], [...existingTasks, ...tasks])
+      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
+      client.setQueryData(["tasks"], [...existingTasks, ...tasks])
     },
     addTask: (task: TimelineTask) => {
-      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks", { elementIds }]) || []
-      client.setQueryData(["tasks", { elementIds }], [...existingTasks, task])
+      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
+      client.setQueryData(["tasks"], [...existingTasks, task])
     },
     removeTask: (task: TimelineTask) => {
-      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks", { elementIds }]) || []
+      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
       client.setQueryData(
-        ["tasks", { elementIds }],
+        ["tasks"],
         existingTasks.filter((t) => t.id !== task.id),
       )
     },
     updateTask: (task: TimelineTask) => {
-      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks", { elementIds }]) || []
+      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
       client.setQueryData(
-        ["tasks", { elementIds }],
+        ["tasks"],
         existingTasks.map((t) => (t.id === task.id ? task : t)),
       )
     },
     updateOrder: (orderedTasks: ReorderTask[]) => {
-      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks", { elementIds }]) || []
+      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
       const newTasks = existingTasks.map((t) => {
         const task = orderedTasks.find((o) => o.id === t.id)
         if (task) return { ...t, order: task.order, date: task.date }
         return t
       })
-      client.setQueryData(["tasks", { elementIds }], newTasks)
+      client.setQueryData(["tasks"], newTasks)
     },
   }
 }

@@ -50,7 +50,7 @@ function _Timeline() {
     isLoading,
     isFetching,
   } = useQuery(
-    ["tasks", { elementIds }],
+    ["tasks"],
     async () => {
       const response = await fetch(`/api/tasks?back=${DATE_BACK}&forward=${DATE_FORWARD}`)
       if (!response.ok) throw new Error("Failed to load tasks")
@@ -74,7 +74,7 @@ function _Timeline() {
           return response.json() as Promise<TimelineTask[]>
         },
       )
-      client.setQueryData(["tasks", { elementIds }], [...res])
+      client.setQueryData(["tasks"], [...res])
     }
     UpdateAfterSelectElements()
   }, [elementIds])
@@ -83,8 +83,10 @@ function _Timeline() {
   const daysRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(function SetInitialScroll() {
-    const scrollTo = isMobile ? SCROLL_DAYS_BACK * DAY_WIDTH : (SCROLL_DAYS_BACK - 3) * DAY_WIDTH
-    timelineRef.current?.scrollTo(scrollTo, 0)
+    requestAnimationFrame(() => {
+      const scrollTo = isMobile ? SCROLL_DAYS_BACK * DAY_WIDTH : (SCROLL_DAYS_BACK - 2) * DAY_WIDTH
+      timelineRef.current?.scrollTo(scrollTo, 0)
+    })
   }, [])
 
   React.useEffect(

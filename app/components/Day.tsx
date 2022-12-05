@@ -88,8 +88,8 @@ function _Day(props: Props) {
             return response.json() as Promise<TimelineTask[]>
           },
         )
-        const oldTasks = client.getQueryData<TimelineTask[]>(["tasks", { elementIds }]) || []
-        client.setQueryData(["tasks", { elementIds }], [...oldTasks, ...(res || [])])
+        const oldTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
+        client.setQueryData(["tasks"], [...oldTasks, ...(res || [])])
 
         setDate(props.day)
       }
