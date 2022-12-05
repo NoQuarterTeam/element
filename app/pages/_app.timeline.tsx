@@ -5,7 +5,7 @@ import { Outlet, useNavigate } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
-import throttle from "lodash.throttle"
+
 import styles from "suneditor/dist/css/suneditor.min.css"
 
 import { Day, DAY_WIDTH } from "~/components/Day"
@@ -17,10 +17,11 @@ import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
-import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
-import { DAYS_BACK, DAYS_FORWARD } from "~/lib/hooks/useTimelineDays"
 
 import type { TimelineTask } from "./api.tasks"
+import { SCROLL_DAYS, useTimelineScroll } from "~/lib/hooks/useTimelineScroll"
+import { DATE_BACK, DATE_FORWARD, useTimelineDates } from "~/lib/hooks/useTimelineDates"
+import { useInView } from "react-intersection-observer"
 
 dayjs.extend(advancedFormat)
 
@@ -30,9 +31,18 @@ export function links() {
 
 const Timeline = React.memo(_Timeline)
 export default Timeline
+
 function _Timeline() {
+  const [isFinishedLoading, setIsFinishedLoading] = React.useState(false)
+  React.useEffect(() => {
+    const timeout = setTimeout(() => setIsFinishedLoading(true), 500)
+    return () => clearTimeout(timeout)
+  }, [])
+
   const navigate = useNavigate()
-  const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineDays()
+  const bigDays = useTimelineScroll()
+  const { dateBack, dateForward } = useTimelineDates()
+
   const client = useQueryClient()
 
   const elementIds = useSelectedElements((s) => s.elementIds)
@@ -43,7 +53,7 @@ function _Timeline() {
   } = useQuery(
     ["tasks", { elementIds }],
     async () => {
-      const response = await fetch(`/api/tasks?${selectedUrlElements(elementIds)}`)
+      const response = await fetch(`/api/tasks?back=${DATE_BACK}&forward=${DATE_FORWARD}`)
       if (!response.ok) throw new Error("Failed to load tasks")
       return response.json() as Promise<TimelineTask[]>
     },
@@ -52,11 +62,12 @@ function _Timeline() {
 
   React.useEffect(() => {
     async function UpdateAfterSelectElements() {
+      // when changing
       const res = await client.fetchQuery<TimelineTask[]>(
-        ["tasks", { back: daysBack, forward: daysForward, elementIds }],
+        ["tasks", { back: dateBack, forward: dateForward, elementIds }],
         async () => {
           const response = await fetch(
-            `/api/tasks?back=${daysBack}&forward=${daysForward}&${selectedUrlElements(elementIds)}`,
+            `/api/tasks?back=${dateBack}&forward=${dateForward}&${selectedUrlElements(elementIds)}`,
           )
           if (!response.ok) throw new Error("Failed to load tasks")
           return response.json() as Promise<TimelineTask[]>
@@ -71,7 +82,20 @@ function _Timeline() {
   const daysRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(function SetInitialScroll() {
-    const scrollTo = isMobile ? DAYS_BACK * DAY_WIDTH : (DAYS_BACK - 3) * DAY_WIDTH
+    const scrollTo = isMobile ? SCROLL_DAYS * DAY_WIDTH : (SCROLL_DAYS - 3) * DAY_WIDTH
+    timelineRef.current?.scrollTo(scrollTo, 0)
+  }, [])
+
+  React.useEffect(
+    function UpdateScrollAfterBack() {
+      const scrollTo = SCROLL_DAYS * DAY_WIDTH
+      timelineRef.current?.scrollTo(scrollTo, 0)
+    },
+    [bigDays.daysBack],
+  )
+
+  React.useEffect(function SetInitialScroll() {
+    const scrollTo = isMobile ? SCROLL_DAYS * DAY_WIDTH : (SCROLL_DAYS - 3) * DAY_WIDTH
     timelineRef.current?.scrollTo(scrollTo, 0)
   }, [])
 
@@ -80,74 +104,18 @@ function _Timeline() {
     PreloadedEditorInput.preload()
   }, [])
 
-  const handleForward = async () => {
-    setDaysForward(daysForward + DAYS_FORWARD)
-    try {
-      const back = -daysForward - 1
-      const forward = daysForward + DAYS_FORWARD
-      const res = await client.fetchQuery<TimelineTask[]>(
-        ["tasks", { back, forward, elementIds }],
-        async () => {
-          const response = await fetch(
-            `/api/tasks?back=${back}&forward=${forward}&${selectedUrlElements(elementIds)}`,
-          )
-          if (!response.ok) throw new Error("Failed to load tasks")
-          return response.json() as Promise<TimelineTask[]>
-        },
-      )
-      const oldTasks = client.getQueryData<TimelineTask[]>(["tasks", { elementIds }]) || []
-      client.setQueryData(["tasks", { elementIds }], [...oldTasks, ...res])
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const handleBack = async () => {
-    // Need to scroll a bit right otherwise it keeps running handleBack
-    timelineRef.current?.scrollTo({ left: DAYS_BACK * DAY_WIDTH })
-    setDaysBack(daysBack + DAYS_BACK)
-    try {
-      const back = daysBack + DAYS_BACK
-      const forward = -daysBack - 2
-      const res = await client.fetchQuery<TimelineTask[]>(
-        ["tasks", { back, forward, elementIds }],
-        async () => {
-          const response = await fetch(
-            `/api/tasks?back=${back}&forward=${forward}&${selectedUrlElements(elementIds)}`,
-          )
-          if (!response.ok) throw new Error("Failed to load tasks")
-          return response.json() as Promise<TimelineTask[]>
-        },
-      )
-      const oldTasks = client.getQueryData<TimelineTask[]>(["tasks", { elementIds }]) || []
-      client.setQueryData(["tasks", { elementIds }], [...oldTasks, ...res])
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const handleScroll = () => {
-    if (!daysRef.current || isLoading) return
-    const right = daysRef.current.getBoundingClientRect().right - DAY_WIDTH <= window.innerWidth
-    const left = daysRef.current.getBoundingClientRect().left + DAY_WIDTH >= 0
-    if (right) return handleForward()
-    if (left) return handleBack()
-  }
-  c.useEventListener("wheel", throttle(handleScroll, 200, { leading: true, trailing: true }))
-  c.useEventListener("touchmove", throttle(handleScroll, 200, { leading: true, trailing: true }))
-
   const handleJumpToToday = () => {
-    const scrollTo = isMobile ? daysBack * DAY_WIDTH : (daysBack - 3) * DAY_WIDTH
+    const scrollTo = isMobile ? bigDays.daysBack * DAY_WIDTH : (bigDays.daysBack - 3) * DAY_WIDTH
     timelineRef.current?.scrollTo(scrollTo, 0)
   }
 
   const days = React.useMemo(
-    () => getDays(dayjs().subtract(daysBack, "day"), daysBack + daysForward),
-    [daysBack, daysForward],
+    () => getDays(dayjs().subtract(bigDays.daysBack, "day"), bigDays.daysBack + bigDays.daysForward),
+    [bigDays.daysBack, bigDays.daysForward],
   )
   const months = React.useMemo(
-    () => getMonths(dayjs().subtract(daysBack, "day"), daysBack + daysForward),
-    [daysBack, daysForward],
+    () => getMonths(dayjs().subtract(bigDays.daysBack, "day"), bigDays.daysBack + bigDays.daysForward),
+    [bigDays.daysBack, bigDays.daysForward],
   )
 
   c.useEventListener("keydown", (event) => {
@@ -160,6 +128,7 @@ function _Timeline() {
   const bg = c.useColorModeValue("gray.100", "gray.800")
   const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HABIT_HEIGHT : HEADER_HEIGHT
 
+  const loadingBg = c.useColorModeValue("white", "gray.900")
   return (
     <>
       <c.Box
@@ -202,6 +171,11 @@ function _Timeline() {
           </c.VStack>
         </c.Box>
       </c.Box>
+      {!isFinishedLoading && (
+        <c.Center pos="fixed" top={0} left={0} zIndex={100} h="100vh" w="100vw" bg={loadingBg}>
+          <c.Image src="/logo.png" boxSize="100px" />
+        </c.Center>
+      )}
       <Outlet />
     </>
   )
@@ -213,9 +187,25 @@ function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
     () => props.tasks.map((t) => ({ id: t.id, date: t.date, order: t.order })),
     [props.tasks],
   )
+  const { daysBack, daysForward, setDaysBack, setDaysForward } = useTimelineScroll()
+  const { ref: leftRef } = useInView({
+    onChange: (inView) => {
+      if (inView) {
+        setDaysBack(daysBack + 100)
+      }
+    },
+  })
+  const { ref: rightRef } = useInView({
+    onChange: (inView) => {
+      if (inView) {
+        setDaysForward(daysForward + 100)
+      }
+    },
+  })
   return (
     <c.Flex>
       <DropContainer tasks={dropTasks}>
+        <div ref={leftRef} />
         {props.days.map((day, index) => (
           <Day
             key={index}
@@ -224,6 +214,7 @@ function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
             tasks={props.tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))}
           />
         ))}
+        <div ref={rightRef} />
       </DropContainer>
     </c.Flex>
   )

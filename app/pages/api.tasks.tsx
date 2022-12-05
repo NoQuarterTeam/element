@@ -8,7 +8,7 @@ import { taskSelectFields } from "~/components/TaskItem"
 import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
-import { DAYS_BACK, DAYS_FORWARD } from "~/lib/hooks/useTimelineDays"
+
 import { badRequest } from "~/lib/remix"
 import { requireUser } from "~/services/auth/auth.server"
 import { getFlashSession } from "~/services/session/session.server"
@@ -19,9 +19,8 @@ export const loader = async ({ request }: LoaderArgs) => {
   const backParam = url.searchParams.get("back")
   const forwardParam = url.searchParams.get("forward")
   const elementIds = url.searchParams.getAll("elementId")
-  const back = backParam ? parseInt(backParam) : DAYS_BACK
-  const forward = forwardParam ? parseInt(forwardParam) : DAYS_FORWARD
 
+  if (!backParam || !forwardParam) return json([])
   const tasks = await db.task.findMany({
     select: taskSelectFields,
     where: {
@@ -29,8 +28,8 @@ export const loader = async ({ request }: LoaderArgs) => {
       element: { archivedAt: { equals: null }, id: elementIds.length ? { in: elementIds } : undefined },
       date: {
         not: { equals: null },
-        gte: dayjs().subtract(back, "day").startOf("d").toDate(),
-        lte: dayjs().add(forward, "day").endOf("d").toDate(),
+        gte: dayjs(backParam).startOf("d").toDate(),
+        lte: dayjs(forwardParam).endOf("d").toDate(),
       },
     },
   })

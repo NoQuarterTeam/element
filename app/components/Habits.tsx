@@ -6,7 +6,6 @@ import { useFetcher } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
-import { useTimelineDays } from "~/lib/hooks/useTimelineDays"
 import type { TimelineHabit, TimelineHabitEntry, TimelineHabitResponse } from "~/pages/api.habits"
 import { HabitsActionMethods } from "~/pages/api.habits"
 import { HabitActionMethods } from "~/pages/api.habits.$id"
@@ -21,15 +20,14 @@ interface Props {
   habitEntries: TimelineHabitEntry[]
 }
 export const Habits = React.memo(_Habits)
+
 function _Habits({ habits, day, habitEntries }: Props) {
   const habitBgRed = c.useColorModeValue("red.300", "red.700")
   const habitBgGreen = c.useColorModeValue("green.400", "green.600")
   const habitsModalProps = c.useDisclosure()
-  const client = useQueryClient()
-  const daysBack = useTimelineDays((s) => s.daysBack)
   const initialFocusRef = React.useRef(null)
   const initialNewFocusRef = React.useRef(null)
-  const createFetcher = useFetcher()
+
   const createFormProps = c.useDisclosure()
 
   const dayHabits = habits.filter(
@@ -37,18 +35,6 @@ function _Habits({ habits, day, habitEntries }: Props) {
       dayjs(h.startDate).isBefore(dayjs(day).endOf("d")) &&
       (h.archivedAt ? dayjs(h.archivedAt).isAfter(dayjs(day).endOf("d")) : true),
   )
-
-  React.useEffect(() => {
-    if (createFetcher.type === "actionReload" && createFetcher.data?.habit) {
-      const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
-      if (!res) return
-      client.setQueryData<TimelineHabitResponse>(["habits", { daysBack }], {
-        habits: [...res.habits, createFetcher.data.habit],
-        habitEntries: res.habitEntries || [],
-      })
-      createFormProps.onClose()
-    }
-  }, [createFetcher.type, createFetcher.data])
 
   return (
     <c.Popover isLazy initialFocusRef={initialFocusRef}>
@@ -112,28 +98,48 @@ function _Habits({ habits, day, habitEntries }: Props) {
               <c.PopoverArrow />
               <c.PopoverCloseButton onClick={createFormProps.onClose} />
               <c.PopoverBody>
-                <createFetcher.Form action="/api/habits" replace method="post">
-                  <c.Stack>
-                    <FormField ref={initialNewFocusRef} autoFocus name="name" label="Name" />
-                    <input type="hidden" value={day} name="date" />
-                    <FormError />
-                    <ButtonGroup>
-                      <FormButton
-                        isLoading={createFetcher.state !== "idle"}
-                        name="_action"
-                        value={HabitsActionMethods.CreateHabit}
-                      >
-                        Save
-                      </FormButton>
-                    </ButtonGroup>
-                  </c.Stack>
-                </createFetcher.Form>
+                <HabitForm onClose={createFormProps.onClose} day={day} focusRef={initialNewFocusRef} />
               </c.PopoverBody>
             </c.PopoverContent>
           </c.Popover>
         </c.PopoverFooter>
       </c.PopoverContent>
     </c.Popover>
+  )
+}
+
+function HabitForm(props: { onClose: () => void; day: string; focusRef: React.RefObject<any> }) {
+  const client = useQueryClient()
+
+  const createFetcher = useFetcher()
+  React.useEffect(() => {
+    if (createFetcher.type === "actionReload" && createFetcher.data?.habit) {
+      const res = client.getQueryData<TimelineHabitResponse>(["habits"])
+      if (!res) return
+      client.setQueryData<TimelineHabitResponse>(["habits"], {
+        habits: [...res.habits, createFetcher.data.habit],
+        habitEntries: res.habitEntries || [],
+      })
+      props.onClose()
+    }
+  }, [createFetcher.type, createFetcher.data])
+  return (
+    <createFetcher.Form action="/api/habits" replace method="post">
+      <c.Stack>
+        <FormField ref={props.focusRef} autoFocus name="name" label="Name" />
+        <input type="hidden" value={props.day} name="date" />
+        <FormError />
+        <ButtonGroup>
+          <FormButton
+            isLoading={createFetcher.state !== "idle"}
+            name="_action"
+            value={HabitsActionMethods.CreateHabit}
+          >
+            Save
+          </FormButton>
+        </ButtonGroup>
+      </c.Stack>
+    </createFetcher.Form>
   )
 }
 
@@ -144,15 +150,14 @@ interface ItemProps {
 }
 const HabitItem = React.memo(_HabitItem)
 function _HabitItem({ habit, day, habitEntries }: ItemProps) {
-  const daysBack = useTimelineDays((s) => s.daysBack)
   const habitEntryFetcher = useFetcher()
   const entry = habitEntries.find((e) => e.habitId === habit.id)
   const client = useQueryClient()
 
   const updateHabitFetcher = useFetcher()
   const handleUpdateHabit = (name: string) => {
-    const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
-    client.setQueryData(["habits", { daysBack }], {
+    const res = client.getQueryData<TimelineHabitResponse>(["habits"])
+    client.setQueryData(["habits"], {
       habits: res?.habits.map((h) => (h.id === habit.id ? { ...h, name } : h)) || [],
       habitEntries: res?.habitEntries || [],
     })
@@ -165,8 +170,8 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
   const archiveProps = c.useDisclosure()
   const archiveHabitFetcher = useFetcher()
   const handleArchiveHabit = () => {
-    const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
-    client.setQueryData(["habits", { daysBack }], {
+    const res = client.getQueryData<TimelineHabitResponse>(["habits"])
+    client.setQueryData(["habits"], {
       habits:
         res?.habits.map((h) => (h.id === habit.id ? { ...h, archivedAt: dayjs(day).toDate() } : h)) || [],
       habitEntries: res?.habitEntries || [],
@@ -180,8 +185,8 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
   const deleteHabitFetcher = useFetcher()
   const deleteProps = c.useDisclosure()
   const handleDeleteHabit = () => {
-    const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
-    client.setQueryData(["habits", { daysBack }], {
+    const res = client.getQueryData<TimelineHabitResponse>(["habits"])
+    client.setQueryData(["habits"], {
       habits: res?.habits.filter((h) => h.id !== habit.id) || [],
       habitEntries: res?.habitEntries || [],
     })
@@ -291,9 +296,9 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
             ml={2}
             defaultChecked={!!entry}
             onChange={() => {
-              const res = client.getQueryData<TimelineHabitResponse>(["habits", { daysBack }])
+              const res = client.getQueryData<TimelineHabitResponse>(["habits"])
               if (!res) return
-              client.setQueryData<TimelineHabitResponse>(["habits", { daysBack }], {
+              client.setQueryData<TimelineHabitResponse>(["habits"], {
                 habits: res.habits || [],
                 habitEntries: entry
                   ? res.habitEntries.filter((e) => e.id !== entry.id)

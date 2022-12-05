@@ -71,6 +71,7 @@
     "react-dom": "18.2.0",
     "react-dropzone": "14.2.3",
     "react-icons": "4.7.1",
+    "react-intersection-observer": "^9.4.1",
     "react-lazy-with-preload": "2.2.1",
     "react-select": "5.7.0",
     "recharts": "2.1.16",
