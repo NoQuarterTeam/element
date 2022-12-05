@@ -66,7 +66,9 @@ function _Timeline() {
         ["tasks", { back: dateBack, forward: dateForward, elementIds }],
         async () => {
           const response = await fetch(
-            `/api/tasks?back=${dateBack}&forward=${dateForward}&${selectedUrlElements(elementIds)}`,
+            `/api/tasks?back=${dateBack}&forward=${dateForward}${
+              elementIds.length > 0 ? `&${selectedUrlElements(elementIds)}` : ``
+            }`,
           )
           if (!response.ok) throw new Error("Failed to load tasks")
           return response.json() as Promise<TimelineTask[]>
