@@ -19,7 +19,7 @@ import { useFeatures } from "~/lib/hooks/useFeatures"
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
 
 import type { TimelineTask } from "./api.tasks"
-import { BIG_DAYS, useBigDays } from "~/lib/hooks/useBigDays"
+import { SCROLL_DAYS, useTimelineScroll } from "~/lib/hooks/useTimelineScroll"
 import { DATE_BACK, DATE_FORWARD, useTimelineDates } from "~/lib/hooks/useTimelineDates"
 import { useInView } from "react-intersection-observer"
 
@@ -40,7 +40,7 @@ function _Timeline() {
   }, [])
 
   const navigate = useNavigate()
-  const bigDays = useBigDays()
+  const bigDays = useTimelineScroll()
   const { dateBack, dateForward } = useTimelineDates()
 
   const client = useQueryClient()
@@ -82,20 +82,20 @@ function _Timeline() {
   const daysRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(function SetInitialScroll() {
-    const scrollTo = isMobile ? BIG_DAYS * DAY_WIDTH : (BIG_DAYS - 3) * DAY_WIDTH
+    const scrollTo = isMobile ? SCROLL_DAYS * DAY_WIDTH : (SCROLL_DAYS - 3) * DAY_WIDTH
     timelineRef.current?.scrollTo(scrollTo, 0)
   }, [])
 
   React.useEffect(
     function UpdateScrollAfterBack() {
-      const scrollTo = BIG_DAYS * DAY_WIDTH
+      const scrollTo = SCROLL_DAYS * DAY_WIDTH
       timelineRef.current?.scrollTo(scrollTo, 0)
     },
     [bigDays.daysBack],
   )
 
   React.useEffect(function SetInitialScroll() {
-    const scrollTo = isMobile ? BIG_DAYS * DAY_WIDTH : (BIG_DAYS - 3) * DAY_WIDTH
+    const scrollTo = isMobile ? SCROLL_DAYS * DAY_WIDTH : (SCROLL_DAYS - 3) * DAY_WIDTH
     timelineRef.current?.scrollTo(scrollTo, 0)
   }, [])
 
@@ -187,7 +187,7 @@ function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
     () => props.tasks.map((t) => ({ id: t.id, date: t.date, order: t.order })),
     [props.tasks],
   )
-  const { daysBack, daysForward, setDaysBack, setDaysForward } = useBigDays()
+  const { daysBack, daysForward, setDaysBack, setDaysForward } = useTimelineScroll()
   const { ref: leftRef } = useInView({
     onChange: (inView) => {
       if (inView) {
