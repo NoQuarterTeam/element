@@ -18,7 +18,7 @@ import { isMobile } from "~/lib/helpers/utils"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { DATE_BACK, DATE_FORWARD, useTimelineDates } from "~/lib/hooks/useTimelineDates"
-import { SCROLL_DAYS, useTimelineScroll } from "~/lib/hooks/useTimelineScroll"
+import { SCROLL_DAYS_BACK, useTimelineScroll } from "~/lib/hooks/useTimelineScroll"
 
 import type { TimelineTask } from "./api.tasks"
 
@@ -83,22 +83,17 @@ function _Timeline() {
   const daysRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(function SetInitialScroll() {
-    const scrollTo = isMobile ? SCROLL_DAYS * DAY_WIDTH : (SCROLL_DAYS - 3) * DAY_WIDTH
+    const scrollTo = isMobile ? SCROLL_DAYS_BACK * DAY_WIDTH : (SCROLL_DAYS_BACK - 3) * DAY_WIDTH
     timelineRef.current?.scrollTo(scrollTo, 0)
   }, [])
 
   React.useEffect(
     function UpdateScrollAfterBack() {
-      const scrollTo = SCROLL_DAYS * DAY_WIDTH
+      const scrollTo = SCROLL_DAYS_BACK * DAY_WIDTH
       timelineRef.current?.scrollTo(scrollTo, 0)
     },
     [bigDays.daysBack],
   )
-
-  React.useEffect(function SetInitialScroll() {
-    const scrollTo = isMobile ? SCROLL_DAYS * DAY_WIDTH : (SCROLL_DAYS - 3) * DAY_WIDTH
-    timelineRef.current?.scrollTo(scrollTo, 0)
-  }, [])
 
   React.useEffect(() => {
     // Might as well load the editor input code
