@@ -74,8 +74,8 @@ function _Day(props: Props) {
           })
         } else {
           // scrolling forward
+          back = dayjs(props.day).endOf("d").format("YYYY-MM-DD")
           forward = dayjs(props.day).add(1, "w").format("YYYY-MM-DD")
-          back = dayjs(props.day).add(1, "w").subtract(6, "d").endOf("d").format("YYYY-MM-DD")
         }
         // update tasks
         const res = await client.fetchQuery<TimelineTask[]>(
