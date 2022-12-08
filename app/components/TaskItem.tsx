@@ -44,7 +44,7 @@ function _TaskItem({ task }: Props) {
     }
   }, [dupeFetcher.data, dupeFetcher.type, addTask])
 
-  const handleClick = (event: React.MouseEvent<any, MouseEvent>) => {
+  const handleClick = async (event: React.MouseEvent<any, MouseEvent>) => {
     if (event.metaKey) {
       event.preventDefault()
       // Duplicate
@@ -55,11 +55,11 @@ function _TaskItem({ task }: Props) {
     } else if (event.shiftKey) {
       event.preventDefault()
       // Delete
-      removeTask(task)
       deleteFetcher.submit(
         { _action: TaskActionMethods.DeleteTask },
         { action: `/timeline/${task.id}`, method: "post" },
       )
+      requestAnimationFrame(() => removeTask(task))
     } else if (event.altKey) {
       event.preventDefault()
       // Toggle complete
