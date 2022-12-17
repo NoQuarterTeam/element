@@ -54,7 +54,7 @@
     "dayjs": "1.11.7",
     "deep-equal": "2.1.0",
     "dotenv": "16.0.3",
-    "downshift": "7.0.4",
+    "downshift": "7.0.5",
     "framer-motion": "7.10.2",
     "handlebars": "4.7.7",
     "js-confetti": "0.11.0",
