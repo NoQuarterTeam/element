@@ -81,7 +81,7 @@
     "suneditor": "2.44.3",
     "suneditor-react": "3.4.1",
     "zod": "3.20.2",
-    "zustand": "4.2.0"
+    "zustand": "4.3.1"
   },
   "devDependencies": {
     "@remix-run/dev": "1.10.0",
