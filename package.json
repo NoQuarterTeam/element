@@ -75,7 +75,7 @@
     "react-intersection-observer": "^9.4.1",
     "react-lazy-with-preload": "2.2.1",
     "react-select": "5.7.0",
-    "recharts": "2.2.0",
+    "recharts": "2.3.1",
     "remix-utils": "5.2.1",
     "stripe": "10.17.0",
     "suneditor": "2.44.3",
