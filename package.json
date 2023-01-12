@@ -92,7 +92,7 @@
     "@types/deep-equal": "1.0.1",
     "@types/express": "4.17.15",
     "@types/js-cookie": "3.0.2",
-    "@types/jsonwebtoken": "9.0.0",
+    "@types/jsonwebtoken": "9.0.1",
     "@types/lodash.throttle": "4.1.7",
     "@types/morgan": "1.9.4",
     "@types/nodemailer": "6.4.7",
