@@ -5,7 +5,7 @@ import { json } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 
-import { LinkButton } from "~/components/LinkButton"
+import { LinkButton } from "~/components/ui/LinkButton"
 import { getUser } from "~/services/auth/auth.server"
 
 export const meta: MetaFunction = () => {
@@ -107,12 +107,7 @@ export default function HomeLayout() {
             </c.VStack>
 
             <c.Box boxShadow={boxShadow} overflow="hidden" borderRadius="lg">
-              <c.Image
-                src={isDark ? "/demo-dark.png" : "/demo.png"}
-                w="100%"
-                maxW="800px"
-                objectFit="contain"
-              />
+              <c.Image src={isDark ? "/demo-dark.png" : "/demo.png"} w="100%" maxW="800px" objectFit="contain" />
             </c.Box>
           </c.Center>
 
@@ -123,9 +118,9 @@ export default function HomeLayout() {
             </c.VStack>
 
             <c.Text textAlign="center" w="100%" maxW="800px">
-              Task planners don't give a good enough overview of your day/week. Most aren't built to handle
-              your calendar events. With a built in habit tracker, Element helps you stay on track with your
-              goals and aids you in creating a healthier work-life balance.
+              Task planners don't give a good enough overview of your day/week. Most aren't built to handle your calendar events.
+              With a built in habit tracker, Element helps you stay on track with your goals and aids you in creating a healthier
+              work-life balance.
             </c.Text>
           </c.VStack>
           <c.Stack spacing={6} pt={10} id="pricing">
@@ -180,79 +175,32 @@ export default function HomeLayout() {
                     </c.Stack>
                   </c.Flex>
                 </c.Flex>
-                <c.Flex
-                  borderBottom="1px solid"
-                  borderLeft="1px solid"
-                  borderTop="1px solid"
-                  borderColor={pricingBorderColor}
-                >
+                <c.Flex borderBottom="1px solid" borderLeft="1px solid" borderTop="1px solid" borderColor={pricingBorderColor}>
                   <c.Flex p={{ base: 2, md: 3 }} flex={3} fontWeight="semibold">
                     Usage
                   </c.Flex>
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={2}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  />
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={2}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  />
+                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor} />
+                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor} />
                 </c.Flex>
                 <c.Flex borderBottom="1px solid" borderColor={pricingBorderColor}>
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={3}
-                    opacity={0.7}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  >
+                  <c.Flex p={{ base: 2, md: 3 }} flex={3} opacity={0.7} borderLeft="1px solid" borderColor={pricingBorderColor}>
                     Tasks
                   </c.Flex>
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={2}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  >
+                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
                     1000
                   </c.Flex>
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={2}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  >
+                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
                     Unlimited
                   </c.Flex>
                 </c.Flex>
                 <c.Flex borderBottom="1px solid" borderColor={pricingBorderColor}>
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={3}
-                    opacity={0.7}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  >
+                  <c.Flex p={{ base: 2, md: 3 }} flex={3} opacity={0.7} borderLeft="1px solid" borderColor={pricingBorderColor}>
                     Elements
                   </c.Flex>
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={2}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  >
+                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
                     5
                   </c.Flex>
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={2}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  >
+                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
                     Unlimited
                   </c.Flex>
                 </c.Flex>
@@ -260,37 +208,17 @@ export default function HomeLayout() {
                   <c.Flex p={{ base: 2, md: 3 }} flex={3} fontWeight="semibold">
                     Features
                   </c.Flex>
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={2}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  />
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={2}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  />
+                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor} />
+                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor} />
                 </c.Flex>
                 <c.Flex borderBottom="1px solid" borderLeft="1px solid" borderColor={pricingBorderColor}>
                   <c.Flex p={{ base: 2, md: 3 }} flex={3} opacity={0.7}>
                     Weather forecast
                   </c.Flex>
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={2}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  >
+                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
                     ✓
                   </c.Flex>
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={2}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  >
+                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
                     ✓
                   </c.Flex>
                 </c.Flex>
@@ -298,18 +226,8 @@ export default function HomeLayout() {
                   <c.Flex p={{ base: 2, md: 3 }} flex={3} opacity={0.7}>
                     Habit tracking
                   </c.Flex>
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={2}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  ></c.Flex>
-                  <c.Flex
-                    p={{ base: 2, md: 3 }}
-                    flex={2}
-                    borderLeft="1px solid"
-                    borderColor={pricingBorderColor}
-                  >
+                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}></c.Flex>
+                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
                     ✓
                   </c.Flex>
                 </c.Flex>

@@ -48,10 +48,17 @@ export const action = async ({ request, params }: ActionArgs) => {
         const toggleSchema = z.object({ date: z.string() })
         const toggleForm = await validateFormData(toggleSchema, formData)
         if (toggleForm.fieldErrors) return badRequest(toggleForm)
-        const date = toggleForm.data.date
+        const now = dayjs()
+        const date = dayjs(toggleForm.data.date)
+          .set("hour", now.get("hour"))
+          .set("minute", now.get("minute"))
+          .set("second", now.get("second"))
+          .set("millisecond", now.get("millisecond"))
+          .toDate()
         const gt = dayjs(date).startOf("d").toDate()
         const lte = dayjs(date).endOf("d").toDate()
-        const entry = await db.habitEntry.findFirst({
+
+        const entries = await db.habitEntry.findMany({
           select: { id: true },
           where: {
             creatorId: { equals: user.id },
@@ -59,11 +66,12 @@ export const action = async ({ request, params }: ActionArgs) => {
             createdAt: { gt, lte },
           },
         })
-        if (entry) {
-          await db.habitEntry.delete({ where: { id: entry.id } })
+
+        if (entries.length > 0) {
+          await db.habitEntry.deleteMany({ where: { id: { in: entries.map((e) => e.id) } } })
         } else {
           await db.habitEntry.create({
-            data: { creatorId: user.id, habitId: id, createdAt: dayjs(date).toDate() },
+            data: { creatorId: user.id, habitId: id, createdAt: date },
           })
         }
         return json({ success: true })

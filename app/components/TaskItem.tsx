@@ -1,14 +1,14 @@
 import * as React from "react"
-import * as c from "@chakra-ui/react"
+
+import { type Prisma } from "@prisma/client"
 import { Link, useFetcher } from "@remix-run/react"
+import clsx from "clsx"
 
 import { safeReadableColor } from "~/lib/color"
 import { formatDuration } from "~/lib/helpers/duration"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
-import type { TimelineTask } from "~/pages/api.tasks"
-
-import { DAY_WIDTH } from "./Day"
+import { type TimelineTask } from "~/pages/api+/tasks"
 
 export const taskSelectFields = {
   id: true,
@@ -22,8 +22,7 @@ export const taskSelectFields = {
   order: true,
   startTime: true,
   element: { select: { id: true, color: true, name: true } },
-  // } satisfies Prisma.TaskSelect
-}
+} satisfies Prisma.TaskSelect
 
 interface Props {
   task: TimelineTask
@@ -31,8 +30,6 @@ interface Props {
 
 function _TaskItem({ task }: Props) {
   const { removeTask, updateTask, addTask } = useTimelineTasks()
-  const bg = c.useColorModeValue("white", "gray.700")
-  const borderColor = c.useColorModeValue("gray.100", "gray.900")
 
   const deleteFetcher = useFetcher()
   const toggleCompleteFetcher = useFetcher()
@@ -48,17 +45,11 @@ function _TaskItem({ task }: Props) {
     if (event.metaKey) {
       event.preventDefault()
       // Duplicate
-      dupeFetcher.submit(
-        { _action: TaskActionMethods.DuplicateTask },
-        { action: `/timeline/${task.id}`, method: "post" },
-      )
+      dupeFetcher.submit({ _action: TaskActionMethods.DuplicateTask }, { action: `/timeline/${task.id}`, method: "post" })
     } else if (event.shiftKey) {
       event.preventDefault()
       // Delete
-      deleteFetcher.submit(
-        { _action: TaskActionMethods.DeleteTask },
-        { action: `/timeline/${task.id}`, method: "post" },
-      )
+      deleteFetcher.submit({ _action: TaskActionMethods.DeleteTask }, { action: `/timeline/${task.id}`, method: "post" })
       requestAnimationFrame(() => removeTask(task))
     } else if (event.altKey) {
       event.preventDefault()
@@ -72,103 +63,64 @@ function _TaskItem({ task }: Props) {
   }
 
   return (
-    <c.Box w={DAY_WIDTH} p={2} pb={0} zIndex={1} tabIndex={-1}>
+    <div className="z-[1] w-day p-2 pb-0">
       <Link to={task.id} onClick={handleClick} prefetch="intent" tabIndex={-1}>
-        <c.Box
-          tabIndex={-1}
-          outline="none"
-          cursor="pointer!important"
-          overflow="hidden"
-          w="100%"
-          pos="relative"
-          border="1px solid"
-          borderColor={borderColor}
-          bg={bg}
-          borderRadius="md"
-          sx={{
-            "&:hover .task-element": {
-              transition: "200ms height",
-              h: "16px",
-              opacity: 1,
-            },
-            "&:hover .task-element p": { opacity: "1 !important" },
-            "&:hover > div": {
-              filter: "blur(0px) !important",
-            },
-            "&:hover .task-name": {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              WebkitLineClamp: task.isComplete ? "1" : "10",
-            },
-          }}
+        <div
+          className="group/task-item relative w-full cursor-pointer overflow-hidden rounded-md border border-solid border-gray-100 bg-white outline-none dark:border-gray-900 dark:bg-gray-700"
+          // tabIndex={-1}
         >
-          <c.Flex
-            minH={task.isComplete ? undefined : "60px"}
-            p="7px"
-            style={{ filter: task.isComplete ? "blur(1px)" : undefined }}
-            w="100%"
-            justify="space-between"
-            flexDir="column"
-            h="100%"
+          <div
+            className={clsx(
+              "flex h-full w-full flex-col justify-between p-[6px] group-hover/task-item:blur-0",
+              task.isComplete ? "blur-[1px]" : "min-h-[60px] blur-0",
+            )}
           >
-            <c.Box mb={task.isComplete ? 4 : 3}>
-              <c.Flex justify="space-between" mb={1}>
-                <c.Text fontSize="0.6rem" className="task-name" noOfLines={task.isComplete ? 1 : 2}>
+            <div className={clsx(task.isComplete ? "mb-4" : "mb-3")}>
+              <div className="mb-1 flex justify-between">
+                <p
+                  className={clsx(
+                    "text-xxs",
+                    task.isComplete ? "line-clamp-1" : "line-clamp-2 group-hover/task-item:line-clamp-6",
+                  )}
+                >
                   {task.name}
-                </c.Text>
+                </p>
                 {!task.isComplete && task.description && (
-                  <c.Box
-                    borderTop="8px solid"
-                    borderLeft="8px solid"
-                    borderTopColor={task.element.color}
-                    borderRadius="3px"
-                    borderLeftColor="transparent"
-                    boxSize="0px"
+                  <div
+                    className="h-0 w-0 rounded-sm border-t-8 border-l-8 border-l-transparent"
+                    style={{ borderTopColor: task.element.color }}
                   />
                 )}
-              </c.Flex>
-            </c.Box>
+              </div>
+            </div>
             {!task.isComplete && (
-              <c.Flex justify="space-between" align="flex-end">
+              <div className="flex items-end justify-between">
                 {task.durationHours || task.durationMinutes ? (
-                  <c.Text fontSize="0.4rem">
-                    {formatDuration(task.durationHours, task.durationMinutes)}
-                  </c.Text>
+                  <p className="xxxs">{formatDuration(task.durationHours, task.durationMinutes)}</p>
                 ) : (
-                  <c.Box />
+                  <div />
                 )}
-                {task.startTime ? <c.Text fontSize="0.4rem">{task.startTime}</c.Text> : <c.Box />}
-              </c.Flex>
+                {task.startTime ? <p className="xxxs">{task.startTime}</p> : <div />}
+              </div>
             )}
-          </c.Flex>
-          <c.Flex
-            align="center"
-            className="task-element"
-            overflow="hidden"
-            bottom={0}
-            left={0}
-            pos="absolute"
-            height="4px"
-            width="100%"
-            borderRadius="sm"
-            opacity={task.isComplete ? 0.4 : 1}
-            bg={task.element.color}
+          </div>
+          <div
+            style={{ backgroundColor: task.element.color }}
+            className={clsx(
+              "group-hove/task-itemr:opacity-100 absolute bottom-0 left-0 flex h-1 w-full items-center overflow-hidden rounded-sm transition-all group-hover/task-item:h-4",
+              task.isComplete ? "opacity-40" : "opacity-100",
+            )}
           >
-            <c.Text
-              pl={2}
-              lineHeight="0.6rem"
-              whiteSpace="nowrap"
-              noOfLines={1}
-              opacity={0}
-              fontSize="0.6rem"
-              color={safeReadableColor(task.element.color)}
+            <p
+              style={{ color: safeReadableColor(task.element.color) }}
+              className="truncate whitespace-nowrap pl-2 text-xxs opacity-0 group-hover/task-item:opacity-100"
             >
               {task.element.name}
-            </c.Text>
-          </c.Flex>
-        </c.Box>
+            </p>
+          </div>
+        </div>
       </Link>
-    </c.Box>
+    </div>
   )
 }
 export const TaskItem = React.memo(_TaskItem)

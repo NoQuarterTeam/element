@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query"
 
-import type { TimelineTask } from "~/pages/api.tasks"
+import type { TimelineTask } from "~/pages/api+/tasks"
 
 import type { ReorderTask } from "../helpers/timeline"
 import { selectedUrlElements, useSelectedElements } from "./useSelectedElements"
@@ -14,9 +14,7 @@ export function useTimelineTasks() {
     refetch: async () => {
       try {
         const res = await client.fetchQuery(["tasks", { back, forward, elementIds }], async () => {
-          const res = await fetch(
-            `/api/tasks?back=${back}&forward=${forward}&${selectedUrlElements(elementIds)}`,
-          )
+          const res = await fetch(`/api/tasks?back=${back}&forward=${forward}&${selectedUrlElements(elementIds)}`)
           if (!res.ok) throw new Error("Failed to fetch tasks")
           return res.json() as Promise<TimelineTask[]>
         })

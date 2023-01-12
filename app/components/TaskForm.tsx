@@ -2,26 +2,28 @@ import * as React from "react"
 import { HexColorPicker } from "react-colorful"
 import { RiAddLine, RiDeleteBinLine, RiFileCopyLine, RiTimeLine } from "react-icons/ri"
 import { lazyWithPreload } from "react-lazy-with-preload"
-import Select from "react-select"
-import * as c from "@chakra-ui/react"
 import { useFetcher, useNavigate, useSearchParams } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
-import { ClientOnly } from "remix-utils"
 
 import { randomHexColor, safeReadableColor } from "~/lib/color"
 import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { customSelectStyle } from "~/lib/styles/react-select"
+
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
-import type { TaskElement } from "~/pages/api.elements"
-import type { TimelineTask } from "~/pages/api.tasks"
-import { TasksActionMethods } from "~/pages/api.tasks"
+import type { TaskElement } from "~/pages/api+/elements"
+import type { TimelineTask } from "~/pages/api+/tasks"
+import { TasksActionMethods } from "~/pages/api+/tasks"
 
 import { ButtonGroup } from "./ButtonGroup"
-import { FormButton, FormError, InlineFormField } from "./Form"
-import { Modal } from "./Modal"
+
+import { Modal, useModal } from "./ui/Modal"
+import { Button } from "./ui/Button"
+import { Dialog } from "@headlessui/react"
+import { Checkbox, Input, Textarea } from "./ui/Inputs"
+import { FormFieldError, FormButton, FormError, InlineFormField, FormFieldLabel } from "./ui/Form"
+import { Singleselect } from "./ui/ReactSelect"
 
 export const PreloadedEditorInput = lazyWithPreload(() => import("./EditorInput"))
 
@@ -42,9 +44,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
   const navigate = useNavigate()
   const day = searchParams.get("day") || undefined
   const { addTask, updateTask, removeTask } = useTimelineTasks()
-  const theme: c.Theme = c.useTheme()
-  const { colorMode } = c.useColorMode()
-  const isDark = colorMode === "dark"
+
   const [color, setColor] = React.useState(randomHexColor())
 
   const createUpdateFetcher = useFetcher<CreateUpdateRes>()
@@ -71,27 +71,18 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
   })
   const handleDelete = () => {
     if (!task) return
-    deleteSubmit.submit(
-      { _action: TaskActionMethods.DeleteTask },
-      { method: "delete", action: `/timeline/${task.id}` },
-    )
+    deleteSubmit.submit({ _action: TaskActionMethods.DeleteTask }, { method: "delete", action: `/timeline/${task.id}` })
   }
 
   const duplicateSubmit = useFetcher()
   const handleDuplicate = () => {
     if (!task) return
-    duplicateSubmit.submit(
-      { _action: TaskActionMethods.DuplicateTask },
-      { method: "post", action: `/timeline/${task.id}` },
-    )
+    duplicateSubmit.submit({ _action: TaskActionMethods.DuplicateTask }, { method: "post", action: `/timeline/${task.id}` })
   }
   const addToBacklogSubmit = useFetcher()
   const handleToBacklog = () => {
     if (!task) return
-    addToBacklogSubmit.submit(
-      { _action: TaskActionMethods.AddToBacklog },
-      { method: "post", action: `/timeline/${task.id}` },
-    )
+    addToBacklogSubmit.submit({ _action: TaskActionMethods.AddToBacklog }, { method: "post", action: `/timeline/${task.id}` })
   }
   React.useEffect(() => {
     if (!task) return
@@ -121,11 +112,9 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
   )
 
   const [element, setElement] = React.useState(
-    task?.element
-      ? { value: task.element.id, label: task.element.name, color: task.element.color }
-      : undefined,
+    task?.element ? { value: task.element.id, label: task.element.name, color: task.element.color } : undefined,
   )
-  const elementModalProps = c.useDisclosure()
+  const elementModalProps = useModal()
 
   const client = useQueryClient()
   const createElementFetcher = useFetcher()
@@ -145,141 +134,102 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createElementFetcher.data, createElementFetcher.type])
 
-  if (!elements) return <c.Center h="379px" />
-
   return (
     <>
-      <c.Modal isOpen onClose={() => navigate("/timeline")} size="xl" trapFocus={false}>
-        <c.ModalOverlay />
-        <c.ModalContent minH="400px" overflowY="scroll">
-          <c.ModalBody mb={2} px={{ base: 3, md: 4 }}>
-            <React.Suspense>
-              <createUpdateFetcher.Form
-                replace
-                method="post"
-                action={task ? `/timeline/${task.id}` : "/api/tasks"}
-              >
-                <c.Stack spacing={{ base: 1, md: 3 }}>
-                  <c.Flex w="100%" align="flex-start" justify="space-between">
-                    <c.Input
+      <Dialog open={true} as="div" className="relative z-50" onClose={() => navigate("/timeline")}>
+        <div className="fixed inset-0 bg-black/50" />
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full flex-col items-center justify-start p-0 sm:p-4">
+            <Dialog.Panel className="mt-10 w-full max-w-xl overflow-hidden bg-white p-4 pt-2 text-left shadow-xl transition-all dark:bg-gray-700">
+              <createUpdateFetcher.Form replace method="post" action={task ? `/timeline/${task.id}` : "/api/tasks"}>
+                <div className="stack space-y-1 md:space-y-3">
+                  <div className="flex w-full items-start justify-between">
+                    <input
+                      className="-ml-4 min-h-[60px] w-[95%] border-none bg-transparent pl-4 pr-2 text-2xl text-gray-900 focus:outline-none dark:text-gray-100 md:min-h-[70px] md:text-4xl"
+                      required
                       name="name"
                       placeholder="Name"
-                      w="95%"
-                      isRequired
                       defaultValue={task?.name}
-                      isInvalid={!!createUpdateFetcher.data?.fieldErrors?.name?.[0]}
                       autoFocus
-                      size="lg"
-                      fontSize={{ base: "2xl", md: "4xl" }}
-                      minH={{ base: "60px", md: "70px" }}
-                      pr={2}
-                      pl={4}
-                      ml={-4}
-                      focusBorderColor="transparent"
-                      border="none!important"
-                      bg="transparent"
                     />
-                    <c.Box pt={2}>
-                      <c.Checkbox
-                        tabIndex={1}
-                        type="checkbox"
-                        size="lg"
-                        defaultChecked={task?.isComplete}
-                        name="isComplete"
-                      />
-                    </c.Box>
-                  </c.Flex>
+
+                    <Checkbox defaultChecked={task?.isComplete} name="isComplete" className="mt-2 sq-6" />
+                  </div>
                   <input type="hidden" name="elementId" value={element?.value} />
-                  <c.Flex align={{ base: "flex-end", md: "flex-start" }}>
+
+                  <div className="flex w-full items-end md:items-start">
                     <InlineFormField
-                      isRequired
+                      required
                       label="Element"
                       name="element"
                       error={createUpdateFetcher.data?.fieldErrors?.elementId?.[0]}
                       input={
-                        <Select
-                          value={element || ""}
+                        <Singleselect
+                          value={element}
                           onChange={setElement}
                           formatOptionLabel={(option) => (
-                            <c.HStack>
-                              <c.Box borderRadius="full" boxSize="16px" bg={option.color} />
-                              <c.Text>{option.label}</c.Text>
-                            </c.HStack>
+                            <div className="hstack">
+                              <div className="rounded-full sq-4" style={{ background: option.color }} />
+                              <p>{option.label}</p>
+                            </div>
                           )}
-                          styles={customSelectStyle(
-                            theme,
-                            !!createUpdateFetcher.data?.fieldErrors?.elementId?.[0],
-                            isDark,
-                          )}
-                          options={elements.map((e) => ({ label: e.name, value: e.id, color: e.color }))}
+                          options={elements?.map((e) => ({ label: e.name, value: e.id, color: e.color }))}
                         />
                       }
                     />
-                    <c.Button
-                      ml={2}
-                      pr={4}
+                    <Button
+                      className="ml-2"
                       onClick={elementModalProps.onOpen}
-                      size="sm"
                       variant="outline"
-                      leftIcon={<c.Box as={RiAddLine} boxSize="16px" mr={-2} />}
+                      leftIcon={<RiAddLine className="sq-4" />}
                     >
                       Create
-                    </c.Button>
-                  </c.Flex>
+                    </Button>
+                  </div>
 
                   <InlineFormField
                     type="date"
                     name="date"
-                    isRequired
-                    defaultValue={
-                      day || (task ? dayjs(task.date).format("YYYY-MM-DD") : dayjs().format("YYYY-MM-DD"))
-                    }
+                    required
+                    defaultValue={day || (task ? dayjs(task.date).format("YYYY-MM-DD") : dayjs().format("YYYY-MM-DD"))}
                     label="Date"
                     error={createUpdateFetcher.data?.fieldErrors?.date?.[0]}
                   />
 
-                  <c.Box>
-                    <c.Flex flexDir={{ base: "column", md: "row" }}>
-                      <c.FormLabel htmlFor="durationHours" fontSize="sm" minW={{ base: "80px", md: "100px" }}>
+                  <div>
+                    <div className="flex flex-col space-x-0 md:flex-row md:space-x-3">
+                      <FormFieldLabel htmlFor="durationHours" className="min-w-[80px] text-sm md:w-[100px]">
                         Duration
-                      </c.FormLabel>
-                      <c.HStack>
-                        <c.HStack spacing={1}>
-                          <c.Input
-                            textAlign="center"
-                            px={0}
+                      </FormFieldLabel>
+                      <div className="hstack">
+                        <div className="hstack space-x-1">
+                          <Input
+                            className="px-0 text-center sq-8"
                             defaultValue={task?.durationHours ? task.durationHours.toString() : undefined}
                             id="durationHours"
                             min={0}
                             max={24}
-                            boxSize="30px"
                             name="durationHours"
                           />
-                          <c.Text fontSize="xs" opacity={0.8}>
-                            Hours
-                          </c.Text>
-                        </c.HStack>
-                        <c.HStack spacing={1}>
-                          <c.Input
+                          <p className="text-xs opacity-80">Hours</p>
+                        </div>
+                        <div className="hstack space-x-1">
+                          <Input
+                            className="px-0 text-center sq-8"
                             defaultValue={task?.durationMinutes ? task.durationMinutes.toString() : undefined}
                             max={60}
-                            textAlign="center"
-                            px={0}
                             min={0}
-                            boxSize="30px"
                             name="durationMinutes"
                           />
-                          <c.Text fontSize="xs" opacity={0.8}>
-                            Minutes
-                          </c.Text>
-                        </c.HStack>
-                      </c.HStack>
-                    </c.Flex>
-                    <c.FormErrorMessage>
+                          <p className="text-xs opacity-80">Minutes</p>
+                        </div>
+                      </div>
+                    </div>
+                    <FormFieldError>
                       {createUpdateFetcher.data?.fieldErrors?.durationHours?.[0] ||
                         createUpdateFetcher.data?.fieldErrors?.durationMinutes?.[0]}
-                    </c.FormErrorMessage>
-                  </c.Box>
+                    </FormFieldError>
+                  </div>
                   <InlineFormField
                     pattern="^([01]\d|2[0-3]):?([0-5]\d)$"
                     type="time"
@@ -292,24 +242,17 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     name="description"
                     defaultValue={task?.description}
                     label="Description"
-                    input={
-                      <c.Box minH="250px" w="100%">
-                        <ClientOnly fallback={<c.Box h="250px" />}>
-                          {() => <PreloadedEditorInput name="description" defaultValue={task?.description} />}
-                        </ClientOnly>
-                      </c.Box>
-                    }
+                    input={<Textarea rows={8} />}
                     error={createUpdateFetcher.data?.fieldErrors?.description?.[0]}
                   />
 
                   <FormError error={createUpdateFetcher.data?.formError} />
 
                   <ButtonGroup>
-                    <c.Button variant="ghost" onClick={() => navigate("/timeline")}>
+                    <Button variant="ghost" onClick={() => navigate("/timeline")}>
                       Cancel
-                    </c.Button>
+                    </Button>
                     <FormButton
-                      colorScheme="primary"
                       name="_action"
                       value={task ? TaskActionMethods.UpdateTask : TasksActionMethods.AddTask}
                       isLoading={createUpdateFetcher.state !== "idle"}
@@ -319,92 +262,82 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                   </ButtonGroup>
                   {task && (
                     <>
-                      <c.Divider />
-                      <c.Center>
-                        <c.HStack spacing={0}>
-                          <c.Button
+                      <hr />
+                      <div className="center">
+                        <div className="hstack space-x-0">
+                          <Button
                             variant="ghost"
-                            leftIcon={<c.Box as={RiDeleteBinLine} />}
+                            leftIcon={<RiDeleteBinLine />}
                             colorScheme="red"
                             onClick={handleDelete}
                             isLoading={deleteSubmit.state !== "idle"}
                           >
-                            <c.Text as="span" display={{ base: "none", md: "block" }}>
-                              Delete
-                            </c.Text>
-                          </c.Button>
-                          <c.Button
+                            <span className="hidden md:block">Delete</span>
+                          </Button>
+                          <Button
                             variant="ghost"
-                            leftIcon={<c.Box as={RiFileCopyLine} />}
+                            leftIcon={<RiFileCopyLine />}
                             onClick={handleDuplicate}
                             isLoading={duplicateSubmit.state !== "idle"}
                           >
-                            <c.Text as="span" display={{ base: "none", md: "block" }}>
-                              Duplicate
-                            </c.Text>
-                          </c.Button>
-                          <c.Button
+                            <span className="hidden md:block">Duplicate</span>
+                          </Button>
+                          <Button
                             variant="ghost"
-                            leftIcon={<c.Box as={RiTimeLine} />}
+                            leftIcon={<RiTimeLine />}
                             onClick={handleToBacklog}
                             isLoading={addToBacklogSubmit.state !== "idle"}
                           >
-                            <c.Text as="span" display={{ base: "none", md: "block" }}>
-                              Add to backlog
-                            </c.Text>
-                          </c.Button>
-                        </c.HStack>
-                      </c.Center>
+                            <span className="hidden md:block">Add to backlog</span>
+                          </Button>
+                        </div>
+                      </div>
                     </>
                   )}
-                </c.Stack>
+                </div>
               </createUpdateFetcher.Form>
-            </React.Suspense>
-          </c.ModalBody>
-        </c.ModalContent>
-      </c.Modal>
-      <Modal title="Create an Element" size="xl" {...elementModalProps}>
+            </Dialog.Panel>
+          </div>
+        </div>
+      </Dialog>
+      <Modal title="Create an Element" {...elementModalProps}>
         <createElementFetcher.Form replace method="post" action="/timeline/elements">
-          <c.Stack spacing={4}>
+          <div className="stack">
             <InlineFormField
               autoFocus
               name="name"
               label="Name"
               size="sm"
-              isRequired
+              required
               error={createElementFetcher.data?.fieldErrors?.name?.[0]}
             />
-            <c.Input type="hidden" name="color" value={color} />
+            <input type="hidden" name="color" value={color} />
             <InlineFormField
               name="color"
-              isRequired
+              required
               error={createElementFetcher.data?.fieldErrors?.color?.[0]}
               label="Color"
               input={
-                <c.SimpleGrid w="100%" columns={{ base: 1, md: 2 }} spacing={1}>
-                  <c.Flex w="100%">
+                <div className="grid w-full grid-cols-1 gap-1 md:grid-cols-2">
+                  <div className="flex w-full">
                     <HexColorPicker color={color} onChange={setColor} />
-                  </c.Flex>
-                  <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
-                    <c.Center bg={color} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
-                      <c.Text textAlign="center" w="100%" color={safeReadableColor(color)}>
+                  </div>
+                  <div className="center w-full justify-start md:justify-center">
+                    <div className="center h-full w-full max-w-[200px] rounded-lg p-4 px-6" style={{ background: color }}>
+                      <p className="w-full text-center" style={{ color: safeReadableColor(color) }}>
                         {color}
-                      </c.Text>
-                    </c.Center>
-                  </c.Center>
-                </c.SimpleGrid>
+                      </p>
+                    </div>
+                  </div>
+                </div>
               }
             />
 
             <ButtonGroup>
-              <c.Button
-                variant="ghost"
-                isDisabled={createElementFetcher.state !== "idle"}
-                onClick={elementModalProps.onClose}
-              >
+              <Button variant="ghost" disabled={createElementFetcher.state !== "idle"} onClick={elementModalProps.onClose}>
                 Cancel
-              </c.Button>
-              <c.Button
+              </Button>
+              <Button
                 name="_action"
                 value={ElementsActionMethods.CreateElement}
                 type="submit"
@@ -412,9 +345,9 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                 isLoading={createElementFetcher.state !== "idle"}
               >
                 Create
-              </c.Button>
+              </Button>
             </ButtonGroup>
-          </c.Stack>
+          </div>
         </createElementFetcher.Form>
       </Modal>
     </>

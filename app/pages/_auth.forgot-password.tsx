@@ -1,10 +1,10 @@
 import * as React from "react"
-import * as c from "@chakra-ui/react"
+
 import type { ActionArgs } from "@remix-run/node"
 import { Link, useTransition } from "@remix-run/react"
 import { z } from "zod"
 
-import { Form, FormButton, FormError, FormField } from "~/components/Form"
+import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
 import { validateFormData } from "~/lib/form"
 import { useToast } from "~/lib/hooks/useToast"
 import { badRequest } from "~/lib/remix"
@@ -35,16 +35,14 @@ export default function ForgotPassword() {
 
   return (
     <Form method="post">
-      <c.Stack spacing={4}>
-        <c.Heading as="h1">Forgot your password?</c.Heading>
-        <c.Text>Enter your email below to receive your password reset instructions.</c.Text>
-        <FormField isRequired label="Email address" name="email" placeholder="jim@gmail.com" />
+      <div className="stack">
+        <h1 className="text-6xl font-bold">Forgot your password?</h1>
+        <p>Enter your email below to receive your password reset instructions.</p>
+        <FormField required label="Email address" name="email" placeholder="jim@gmail.com" />
         <FormError />
-        <FormButton w="100%" colorScheme="primary">
-          Send instructions
-        </FormButton>
+        <FormButton className="w-full">Send instructions</FormButton>
         <Link to="/login">Login</Link>
-      </c.Stack>
+      </div>
     </Form>
   )
 }

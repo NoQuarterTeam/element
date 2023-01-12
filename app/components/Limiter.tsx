@@ -1,12 +1,6 @@
-import type { BoxProps } from "@chakra-ui/react"
-import { Box } from "@chakra-ui/react"
+import * as React from "react"
+import clsx from "clsx"
 
-export function Limiter(props: BoxProps) {
-  const px = {
-    base: 4,
-    md: 10,
-    lg: 24,
-    xl: 60,
-  }
-  return <Box w="100%" px={px} {...props} />
+export function Limiter({ className, ...props }: React.HtmlHTMLAttributes<HTMLDivElement>) {
+  return <div className={clsx("w-full px-4 md:px-10 lg:px-24 xl:px-60", className)} {...props} />
 }

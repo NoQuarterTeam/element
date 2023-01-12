@@ -4,8 +4,7 @@ import lazyWithPreload from "react-lazy-with-preload"
 import Select from "react-select"
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons"
 import * as c from "@chakra-ui/react"
-import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
-import { json } from "@remix-run/node"
+import { type LoaderArgs, type SerializeFrom, json } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
@@ -22,10 +21,10 @@ import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { customSelectStyle } from "~/lib/styles/react-select"
 import { requireUser } from "~/services/auth/auth.server"
 
-import { TaskActionMethods } from "./_app.timeline.$id"
-import type { TaskElement } from "./api.elements"
-import type { TimelineTask } from "./api.tasks"
-import { TasksActionMethods } from "./api.tasks"
+import { TaskActionMethods } from "~/pages/_app.timeline.$id"
+import { type TaskElement } from "~/pages/api+/elements"
+import { type TimelineTask, TasksActionMethods } from "~/pages/api+/tasks"
+import { Prisma } from "@prisma/client"
 
 const selectFields = {
   id: true,
@@ -37,7 +36,8 @@ const selectFields = {
   element: {
     select: { id: true, name: true, color: true },
   },
-}
+} satisfies Prisma.TaskSelect
+
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   const tasks = await db.task.findMany({
@@ -66,11 +66,7 @@ export default function Backlog() {
           <c.DrawerHeader>Backlog</c.DrawerHeader>
           <c.Box px={4} overflowY="scroll" minH="100vh" pb={200} pos="relative">
             <c.Flex align="center" justify="space-between">
-              <c.Button
-                colorScheme="primary"
-                rightIcon={<c.Box as={RiAddLine} />}
-                onClick={createModalProps.onOpen}
-              >
+              <c.Button colorScheme="primary" rightIcon={<c.Box as={RiAddLine} />} onClick={createModalProps.onOpen}>
                 Add
               </c.Button>
 
@@ -94,10 +90,7 @@ export default function Backlog() {
 
 export const PreloadedEditorInput = lazyWithPreload(() => import("../components/EditorInput"))
 
-function BacklogTaskForm({
-  task,
-  ...createModalProps
-}: { task?: BacklogTask } & Omit<c.ModalProps, "children">) {
+function BacklogTaskForm({ task, ...createModalProps }: { task?: BacklogTask } & Omit<c.ModalProps, "children">) {
   const { data: elements } = useQuery(
     ["task-elements"],
     async () => {
@@ -110,9 +103,7 @@ function BacklogTaskForm({
   const taskFetcher = useFetcherSubmit({ onSuccess: createModalProps.onClose })
 
   const [element, setElement] = React.useState(
-    task?.element
-      ? { value: task.element.id, label: task.element.name, color: task.element.color }
-      : undefined,
+    task?.element ? { value: task.element.id, label: task.element.name, color: task.element.color } : undefined,
   )
   const theme: c.Theme = c.useTheme()
   const colorMode = c.useColorMode()
@@ -203,8 +194,7 @@ function BacklogTaskForm({
                       </c.HStack>
                     </c.Flex>
                     <c.FormErrorMessage>
-                      {taskFetcher.data?.fieldErrors?.durationHours?.[0] ||
-                        taskFetcher.data?.fieldErrors?.durationMinutes?.[0]}
+                      {taskFetcher.data?.fieldErrors?.durationHours?.[0] || taskFetcher.data?.fieldErrors?.durationMinutes?.[0]}
                     </c.FormErrorMessage>
                   </c.Box>
                   <InlineFormField
@@ -301,10 +291,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
               label: "Delete",
             }}
             onClick={() => {
-              deleteFetcher.submit(
-                { _action: TaskActionMethods.DeleteTask },
-                { action: `/timeline/${task.id}`, method: "post" },
-              )
+              deleteFetcher.submit({ _action: TaskActionMethods.DeleteTask }, { action: `/timeline/${task.id}`, method: "post" })
             }}
             borderRadius="full"
             size="xs"
@@ -380,13 +367,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
         </c.Collapse>
       )}
 
-      <c.Text
-        px={2}
-        w="100%"
-        fontSize="xs"
-        bg={task.element.color}
-        color={safeReadableColor(task.element.color)}
-      >
+      <c.Text px={2} w="100%" fontSize="xs" bg={task.element.color} color={safeReadableColor(task.element.color)}>
         {task.element.name}
       </c.Text>
     </c.Box>

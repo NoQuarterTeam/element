@@ -1,4 +1,4 @@
-import create from "zustand"
+import { create } from "zustand"
 
 export const SCROLL_DAYS_FORWARD = 100
 export const SCROLL_DAYS_BACK = 30

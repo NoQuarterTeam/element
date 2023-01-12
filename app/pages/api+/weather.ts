@@ -6,7 +6,7 @@ import dayjs from "dayjs"
 import { OPEN_WEATHER_KEY } from "~/lib/config.server"
 import { requireUser } from "~/services/auth/auth.server"
 
-import { USER_LOCATION_COOKIE_KEY } from "./_app.timeline.profile.settings"
+import { USER_LOCATION_COOKIE_KEY } from "~/pages/_app.timeline.profile.settings"
 
 export const loader = async ({ request }: LoaderArgs) => {
   await requireUser(request)

@@ -1,22 +1,9 @@
 import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
 
-import type { TimelineTask } from "~/pages/api.tasks"
+import type { TimelineTask } from "~/pages/api+/tasks"
 
-export const MONTH_NAMES = [
-  "jan.",
-  "feb.",
-  "mar.",
-  "apr.",
-  "may.",
-  "jun.",
-  "jul.",
-  "aug.",
-  "sept.",
-  "oct.",
-  "nov.",
-  "dec.",
-]
+export const MONTH_NAMES = ["jan.", "feb.", "mar.", "apr.", "may.", "jun.", "jul.", "aug.", "sept.", "oct.", "nov.", "dec."]
 
 export const getDays = (startDate: Dayjs, daysCount: number) => {
   return Array.from({ length: daysCount }).map((_, i) => startDate.add(i, "day").format("YYYY-MM-DD"))
@@ -69,7 +56,5 @@ export function moveTasks(
 }
 
 export const getDayTasksAndOrder = (tasks: ReorderTask[], target: any) => {
-  return tasks
-    .filter((t) => dayjs(t.date).isSame(dayjs(target.droppableId), "day"))
-    .sort((a, b) => a.order - b.order)
+  return tasks.filter((t) => dayjs(t.date).isSame(dayjs(target.droppableId), "day")).sort((a, b) => a.order - b.order)
 }

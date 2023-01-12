@@ -1,9 +1,9 @@
-import * as c from "@chakra-ui/react"
+import clsx from "clsx"
 
-export function ButtonGroup(props: c.ButtonGroupProps) {
+export function ButtonGroup(props: React.HtmlHTMLAttributes<HTMLDivElement>) {
   return (
-    <c.ButtonGroup spacing={2} display="flex" justifyContent="flex-end" alignItems="center" {...props}>
+    <div {...props} className={clsx("flex items-center justify-end space-x-2", props.className)}>
       {props.children}
-    </c.ButtonGroup>
+    </div>
   )
 }

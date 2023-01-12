@@ -20,7 +20,7 @@ import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { useToast } from "~/lib/hooks/useToast"
 import type { SidebarElement } from "~/pages/_app.timeline.elements"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
-import { ElementActionMethods } from "~/pages/api.elements.$id"
+import { ElementActionMethods } from "~/pages/api+/elements.$id"
 
 import { ButtonGroup } from "./ButtonGroup"
 import { Form, FormButton, FormError, InlineFormField } from "./Form"
@@ -156,10 +156,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                   Unarchive
                 </c.MenuItem>
               ) : (
-                <c.MenuItem
-                  onClick={archiveModalProps.onOpen}
-                  icon={<c.Box as={RiDeleteBinLine} boxSize="12px" />}
-                >
+                <c.MenuItem onClick={archiveModalProps.onOpen} icon={<c.Box as={RiDeleteBinLine} boxSize="12px" />}>
                   Archive
                 </c.MenuItem>
               )}

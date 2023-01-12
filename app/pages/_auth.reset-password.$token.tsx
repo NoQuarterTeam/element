@@ -1,10 +1,9 @@
-import * as c from "@chakra-ui/react"
 import type { ActionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Link, useParams } from "@remix-run/react"
 import { z } from "zod"
 
-import { Form, FormButton, FormError, FormField } from "~/components/Form"
+import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { resetPassword } from "~/services/auth/auth.server"
@@ -26,19 +25,17 @@ export default function ResetPassword() {
 
   return (
     <Form method="post">
-      <c.Stack spacing={4}>
-        <c.Box>
-          <c.Heading as="h1">Reset password</c.Heading>
-          <c.Text>Enter a new password below.</c.Text>
-        </c.Box>
+      <div className="stack">
+        <div>
+          <h1 className="text-6xl font-bold">Reset password</h1>
+          <p>Enter a new password below.</p>
+        </div>
         <input name="token" type="hidden" value={token} />
-        <FormField isRequired label="Password" name="password" type="password" placeholder="********" />
+        <FormField required label="Password" name="password" type="password" placeholder="********" />
         <FormError />
-        <FormButton w="100%" colorScheme="primary">
-          Reset
-        </FormButton>
+        <FormButton className="w-full">Reset</FormButton>
         <Link to="/login">Login</Link>
-      </c.Stack>
+      </div>
     </Form>
   )
 }

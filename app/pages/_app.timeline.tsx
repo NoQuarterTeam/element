@@ -20,7 +20,9 @@ import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelecte
 import { DATE_BACK, DATE_FORWARD, useTimelineDates } from "~/lib/hooks/useTimelineDates"
 import { SCROLL_DAYS_BACK, useTimelineScroll } from "~/lib/hooks/useTimelineScroll"
 
-import type { TimelineTask } from "./api.tasks"
+import type { TimelineTask } from "./api+/tasks"
+import { Tooltip } from "~/components/ui/Tooltip"
+import { IconButton } from "~/components/ui/IconButton"
 
 dayjs.extend(advancedFormat)
 
@@ -123,56 +125,51 @@ function _Timeline() {
       navigate("new")
     }
   })
-  const bg = c.useColorModeValue("gray.100", "gray.800")
   const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HABIT_HEIGHT : HEADER_HEIGHT
 
-  const loadingBg = c.useColorModeValue("white", "gray.900")
   return (
     <>
-      <c.Box
+      <div
+        className="h-screen w-screen overflow-x-auto overflow-y-hidden"
         ref={timelineRef}
-        w="100vw"
-        h="100vh"
-        maxH="-webkit-fill-available"
-        overflowX="auto"
-        overflowY="hidden"
+        style={{ maxHeight: "-webkit-fill-available" }}
       >
         <TimelineHeader isLoading={isLoading || isFetching} days={days} months={months} />
-        <c.Box ref={daysRef} h={`calc(100vh - ${headerHeight}px)`} w="min-content" overflow="scroll">
+        <div ref={daysRef} className="w-min overflow-scroll" style={{ height: `calc(100vh - ${headerHeight}px)` }}>
           <TimelineContent days={days} tasks={tasks} />
-        </c.Box>
+        </div>
         <Nav />
-        <c.Box pos="absolute" bottom={{ base: 4, md: 8 }} left={{ base: 4, md: 8 }} borderRadius="full">
-          <c.VStack>
-            <c.Tooltip label="Create task" placement="auto" zIndex={50} hasArrow>
-              <c.IconButton
+        <div className="absolute bottom-4 left-4 md:bottom-8 md:left-8">
+          <div className="vstack">
+            <Tooltip label="Create task">
+              <IconButton
                 size="md"
-                bg={bg}
-                borderRadius="full"
+                rounded="full"
+                className="bg-gray-100 dark:bg-gray-800"
                 onClick={() => navigate("new")}
                 aria-label="Create task"
                 variant="ghost"
-                icon={<c.Box as={RiAddCircleLine} boxSize="20px" />}
+                icon={<RiAddCircleLine className="sq-[20px]" />}
               />
-            </c.Tooltip>
-            <c.Tooltip label="Jump to today" placement="auto" zIndex={50} hasArrow>
-              <c.IconButton
+            </Tooltip>
+            <Tooltip label="Jump to today">
+              <IconButton
                 size="md"
-                bg={bg}
-                borderRadius="full"
+                rounded="full"
+                className="bg-gray-100 dark:bg-gray-800"
                 onClick={handleJumpToToday}
                 aria-label="Jump to today"
                 variant="ghost"
-                icon={<c.Box as={RiCalendarEventLine} boxSize="18px" />}
+                icon={<RiCalendarEventLine className="sq-[18px]" />}
               />
-            </c.Tooltip>
-          </c.VStack>
-        </c.Box>
-      </c.Box>
+            </Tooltip>
+          </div>
+        </div>
+      </div>
       {!isFinishedLoading && (
-        <c.Center pos="fixed" top={0} left={0} zIndex={100} h="100vh" w="100vw" bg={loadingBg}>
-          <c.Image src="/logo.png" boxSize="100px" />
-        </c.Center>
+        <div className="center fixed inset-0 z-[100] h-screen w-screen bg-white dark:bg-gray-900">
+          <img src="/logo.png" alt="logo" className="sq-[100px]" />
+        </div>
       )}
       <Outlet />
     </>
@@ -181,10 +178,7 @@ function _Timeline() {
 
 const TimelineContent = React.memo(_TimelineContent)
 function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
-  const dropTasks = React.useMemo(
-    () => props.tasks.map((t) => ({ id: t.id, date: t.date, order: t.order })),
-    [props.tasks],
-  )
+  const dropTasks = React.useMemo(() => props.tasks.map((t) => ({ id: t.id, date: t.date, order: t.order })), [props.tasks])
   const { daysBack, daysForward, setDaysBack, setDaysForward } = useTimelineScroll()
   const { ref: leftRef } = useInView({
     onChange: (inView) => {
@@ -205,12 +199,7 @@ function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
       <DropContainer tasks={dropTasks}>
         <div ref={leftRef} />
         {props.days.map((day, index) => (
-          <Day
-            key={index}
-            day={day}
-            index={index}
-            tasks={props.tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))}
-          />
+          <Day key={index} day={day} index={index} tasks={props.tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))} />
         ))}
         <div ref={rightRef} />
       </DropContainer>

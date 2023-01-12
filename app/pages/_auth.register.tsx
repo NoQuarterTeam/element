@@ -1,10 +1,9 @@
-import * as c from "@chakra-ui/react"
 import type { ActionArgs, MetaFunction } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 import { z } from "zod"
 
-import { Form, FormButton, FormError, FormField } from "~/components/Form"
+import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
 import { FlashType } from "~/lib/config.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
@@ -48,24 +47,22 @@ export const action = async ({ request }: ActionArgs) => {
 export default function Register() {
   return (
     <Form method="post" replace>
-      <c.Stack spacing={3}>
-        <c.Heading as="h1" fontSize="6xl">
-          Register
-        </c.Heading>
-        <FormField isRequired label="Email address" name="email" placeholder="jim@gmail.com" />
-        <FormField isRequired label="Password" name="password" type="password" placeholder="********" />
-        <FormField isRequired label="First name" name="firstName" placeholder="Jim" />
-        <FormField isRequired label="Last name" name="lastName" placeholder="Bob" />
-        <c.Box>
-          <FormButton w="100%">Register</FormButton>
+      <div className="stack">
+        <h1 className="text-6xl font-bold">Register</h1>
+        <FormField required label="Email address" name="email" placeholder="jim@gmail.com" />
+        <FormField required label="Password" name="password" type="password" placeholder="********" />
+        <FormField required label="First name" name="firstName" placeholder="Jim" />
+        <FormField required label="Last name" name="lastName" placeholder="Bob" />
+        <div>
+          <FormButton className="w-full">Register</FormButton>
           <FormError />
-        </c.Box>
+        </div>
 
-        <c.Flex justify="space-between">
+        <div className="flex justify-between">
           <Link to="/login">Login</Link>
           <Link to="/forgot-password">Forgot password?</Link>
-        </c.Flex>
-      </c.Stack>
+        </div>
+      </div>
     </Form>
   )
 }

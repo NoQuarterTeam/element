@@ -24,6 +24,7 @@ export function EditorInput({ name, defaultValue, isRequired, isDisabled }: Prop
             textDecor: "underline",
           },
           ".sun-editor": {
+            zIndex: "1!important",
             bgColor: c.useColorModeValue("white", "gray.700"),
             color: c.useColorModeValue("black", "white"),
             borderColor: c.useColorModeValue("gray.200", "gray.600"),
@@ -47,16 +48,20 @@ export function EditorInput({ name, defaultValue, isRequired, isDisabled }: Prop
               bgColor: c.useColorModeValue("white", "gray.700"),
             },
             ".se-toolbar": {
+              zIndex: "1!important",
               outlineColor: c.useColorModeValue("gray.200", "gray.600"),
               bgColor: c.useColorModeValue("white", "gray.700"),
               color: c.useColorModeValue("black", "white"),
             },
           },
           ".sun-editor-editable": {
+            zIndex: "1!important",
             bgColor: c.useColorModeValue("white", "gray.700"),
             color: c.useColorModeValue("black", "white"),
           },
           ".se-wrapper-inner": {
+            zIndex: "1!important",
+            width: "100%",
             p: 2,
           },
         }}
@@ -68,9 +73,7 @@ export function EditorInput({ name, defaultValue, isRequired, isDisabled }: Prop
           defaultValue={defaultValue || ""}
           setOptions={{
             resizingBar: false,
-            buttonList: [
-              ["undo", "redo", "bold", "underline", "italic", "strike", "outdent", "indent", "align", "list"],
-            ],
+            buttonList: [["undo", "redo", "bold", "underline", "italic", "strike", "outdent", "indent", "align", "list"]],
           }}
         />
       </c.Box>

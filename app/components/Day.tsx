@@ -1,7 +1,7 @@
 import * as React from "react"
 import { RiAddCircleLine } from "react-icons/ri"
+import clsx from "clsx"
 import { useInView } from "react-intersection-observer"
-import * as c from "@chakra-ui/react"
 import { Draggable, Droppable } from "@hello-pangea/dnd"
 import { Link } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
@@ -9,14 +9,14 @@ import dayjs from "dayjs"
 import deepEqual from "deep-equal"
 
 import { getTotalTaskDuration } from "~/lib/helpers/duration"
-import { useFeatures } from "~/lib/hooks/useFeatures"
+
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useTimelineDates } from "~/lib/hooks/useTimelineDates"
-import type { TimelineHabitResponse } from "~/pages/api.habits"
-import type { TimelineTask } from "~/pages/api.tasks"
+import type { TimelineHabitResponse } from "~/pages/api+/habits"
+import type { TimelineTask } from "~/pages/api+/tasks"
 
 import { TaskItem } from "./TaskItem"
-import { HEADER_HABIT_HEIGHT, HEADER_HEIGHT } from "./TimelineHeader"
+import { IconButton } from "./ui/IconButton"
 
 interface Props {
   day: string
@@ -27,21 +27,6 @@ interface Props {
 export const DAY_WIDTH = 98
 
 function _Day(props: Props) {
-  const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HABIT_HEIGHT : HEADER_HEIGHT
-  const { colorMode } = c.useColorMode()
-  const isDark = colorMode === "dark"
-  const bg = dayjs(props.day).isSame(dayjs(), "day")
-    ? isDark
-      ? "primary.900"
-      : "primary.100"
-    : dayjs(props.day).day() === 6 || dayjs(props.day).day() === 0
-    ? isDark
-      ? "gray.900"
-      : "gray.50"
-    : isDark
-    ? "gray.800"
-    : "white"
-
   const client = useQueryClient()
   const elementIds = useSelectedElements((s) => s.elementIds)
   const { setDate, dateBack, dateForward } = useTimelineDates()
@@ -56,14 +41,11 @@ function _Day(props: Props) {
           back = dayjs(props.day).subtract(1, "w").format("YYYY-MM-DD")
           forward = dayjs(props.day).format("YYYY-MM-DD")
           // update habits only if going backward
-          const habitsRes = await client.fetchQuery<TimelineHabitResponse>(
-            ["habits", { back, forward }],
-            async () => {
-              const response = await fetch(`/api/habits?back=${back}&forward=${forward}`)
-              if (!response.ok) throw new Error("Failed to load habits")
-              return response.json() as Promise<TimelineHabitResponse>
-            },
-          )
+          const habitsRes = await client.fetchQuery<TimelineHabitResponse>(["habits", { back, forward }], async () => {
+            const response = await fetch(`/api/habits?back=${back}&forward=${forward}`)
+            if (!response.ok) throw new Error("Failed to load habits")
+            return response.json() as Promise<TimelineHabitResponse>
+          })
           const oldHabits = client.getQueryData<TimelineHabitResponse>(["habits"]) || {
             habits: [],
             habitEntries: [],
@@ -78,19 +60,13 @@ function _Day(props: Props) {
           forward = dayjs(props.day).add(1, "w").format("YYYY-MM-DD")
         }
         // update tasks
-        const res = await client.fetchQuery<TimelineTask[]>(
-          ["tasks", { back, forward, elementIds }],
-          async () => {
-            const response = await fetch(
-              `/api/tasks?back=${back}&forward=${forward}&${selectedUrlElements(elementIds)}`,
-            )
-            if (!response.ok) throw new Error("Failed to load tasks")
-            return response.json() as Promise<TimelineTask[]>
-          },
-        )
+        const res = await client.fetchQuery<TimelineTask[]>(["tasks", { back, forward, elementIds }], async () => {
+          const response = await fetch(`/api/tasks?back=${back}&forward=${forward}&${selectedUrlElements(elementIds)}`)
+          if (!response.ok) throw new Error("Failed to load tasks")
+          return response.json() as Promise<TimelineTask[]>
+        })
         const oldTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
         client.setQueryData(["tasks"], [...oldTasks, ...(res || [])])
-
         setDate(props.day)
       }
     },
@@ -99,20 +75,17 @@ function _Day(props: Props) {
   return (
     <Droppable droppableId={props.day}>
       {(provided) => (
-        <div ref={provided.innerRef} {...provided.droppableProps} style={{ minHeight: "min-content" }}>
+        <div ref={provided.innerRef} {...provided.droppableProps} className="min-h-min">
           {dayjs(props.day).day() === 0 && <div ref={ref} />}
-          <c.Box
-            // key={props.day}
-            borderRight="1px solid"
-            borderColor={isDark ? "gray.700" : "gray.100"}
-            minH={`calc(100vh - ${headerHeight}px)`}
-            h="100%"
-            w={DAY_WIDTH}
-            _hover={{
-              ".add-task-day": { opacity: 1 },
-            }}
-            bg={bg}
-            pb={2}
+          <div
+            className={clsx(
+              "group/day h-full min-h-screen w-day border-r border-gray-100 pb-2 hover:opacity-100 dark:border-gray-700",
+              dayjs(props.day).isSame(dayjs(), "day")
+                ? "bg-primary-100 dark:bg-primary-900/90"
+                : dayjs(props.day).day() === 6 || dayjs(props.day).day() === 0
+                ? "bg-gray-50 dark:bg-gray-900"
+                : "bg-white dark:bg-gray-800",
+            )}
           >
             {props.tasks
               .sort((a, b) => a.order - b.order)
@@ -120,7 +93,7 @@ function _Day(props: Props) {
                 <Draggable key={task.id} draggableId={task.id} index={index}>
                   {(provided) => (
                     <div
-                      style={{ outline: "none" }}
+                      className="outline-none"
                       ref={provided.innerRef}
                       key={index}
                       {...provided.draggableProps}
@@ -133,28 +106,26 @@ function _Day(props: Props) {
               ))}
             {provided.placeholder}
 
-            <c.Flex w="100%" justify="center" py={3} flex={1}>
-              <c.Text fontSize="xs">{getTotalTaskDuration(props.tasks)}</c.Text>
-            </c.Flex>
-            <c.Flex w="100%" justify="center" pt={0} flex={1}>
+            <div className="center w-full flex-1 py-3">
+              <p className="text-sm">{getTotalTaskDuration(props.tasks)}</p>
+            </div>
+            <div className="center w-full flex-1 pt-0">
               <Link
                 to={`new?day=${dayjs(props.day).format("YYYY-MM-DD")}`}
                 tabIndex={dayjs(props.day).isSame(dayjs(), "day") ? 1 : -1}
               >
-                <c.IconButton
-                  className="add-task-day"
+                <IconButton
+                  rounded="full"
+                  className="opacity-0 focus:opacity-100 group-hover/day:opacity-100"
                   variant="ghost"
-                  opacity={0}
-                  _focus={{ opacity: 1 }}
-                  tabIndex={-1}
                   size="md"
-                  borderRadius="full"
-                  icon={<c.Box as={RiAddCircleLine} boxSize="20px" />}
+                  tabIndex={-1}
+                  icon={<RiAddCircleLine className="sq-5" />}
                   aria-label="new task"
                 />
               </Link>
-            </c.Flex>
-          </c.Box>
+            </div>
+          </div>
         </div>
       )}
     </Droppable>

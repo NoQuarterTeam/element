@@ -1,28 +1,31 @@
 import * as React from "react"
 import * as c from "@chakra-ui/react"
 import { withEmotionCache } from "@emotion/react"
-import type { LoaderArgs, MetaFunction } from "@remix-run/node"
+import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useCatch,
-  useLoaderData,
-} from "@remix-run/react"
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 import { ClientStyleContext, ServerStyleContext } from "~/lib/emotion/context"
 import { theme } from "~/lib/theme"
+import appStyles from "~/styles/app.css"
+import generatedStyles from "~/styles/tailwind.css"
+import toastStyles from "~/styles/toast.css"
 
 import { FlashMessage } from "./components/FlashMessage"
 import { getFlashSession } from "./services/session/session.server"
+import * as Tooltip from "@radix-ui/react-tooltip"
 
 export const meta: MetaFunction = () => {
   return { title: "Element" }
+}
+
+export const links: LinksFunction = () => {
+  return [
+    { rel: "stylesheet", href: generatedStyles },
+    { rel: "stylesheet", href: appStyles },
+    { rel: "stylesheet", href: toastStyles, async: true },
+  ]
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -109,7 +112,7 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
   }, [])
 
   return (
-    <html lang="en">
+    <html lang="en" className="element">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="user-scalable=no, initial-scale=1, width=device-width" />
@@ -139,16 +142,14 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
         <Meta />
         <Links />
         {serverSyleData?.map(({ key, ids, css }) => (
-          <style
-            key={key}
-            data-emotion={`${key} ${ids.join(" ")}`}
-            dangerouslySetInnerHTML={{ __html: css }}
-          />
+          <style key={key} data-emotion={`${key} ${ids.join(" ")}`} dangerouslySetInnerHTML={{ __html: css }} />
         ))}
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
-          <c.ChakraProvider theme={theme}>{children}</c.ChakraProvider>
+          <c.ChakraProvider theme={theme}>
+            <Tooltip.Provider>{children}</Tooltip.Provider>
+          </c.ChakraProvider>
         </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />

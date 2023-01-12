@@ -1,6 +1,6 @@
 import dayjs from "dayjs"
 import weekday from "dayjs/plugin/weekday"
-import create from "zustand"
+import { create } from "zustand"
 dayjs.extend(weekday)
 
 export const DATE_BACK = dayjs().startOf("w").subtract(1, "w").format("YYYY-MM-DD")

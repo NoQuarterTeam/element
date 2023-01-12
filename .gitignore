@@ -12,3 +12,5 @@ tsconfig.tsbuildinfo
 fly.wireguard.conf
 
 /.vscode/**/*
+
+tailwind.css
