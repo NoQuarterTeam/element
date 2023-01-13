@@ -21,9 +21,6 @@
   hr {
     @apply border-gray-100 dark:border-gray-600;
   }
-  a {
-    @apply hover:opacity-70;
-  }
 }
 .react-menu {
   z-index: 99999 !important;

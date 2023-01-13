@@ -138,7 +138,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         )}
       >
         <div className={clsx("center", isLoading ? "opacity-0" : "")} aria-hidden={isLoading}>
-          {leftIcon && <span className="mr-1">{leftIcon}</span>}
+          {leftIcon && <span className="mr-0 md:mr-1">{leftIcon}</span>}
           {props.children}
         </div>
         {isLoading && (
