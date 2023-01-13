@@ -96,18 +96,18 @@ function _TaskItem({ task }: Props) {
             {!task.isComplete && (
               <div className="flex items-end justify-between">
                 {task.durationHours || task.durationMinutes ? (
-                  <p className="xxxs">{formatDuration(task.durationHours, task.durationMinutes)}</p>
+                  <p className="text-xxxs">{formatDuration(task.durationHours, task.durationMinutes)}</p>
                 ) : (
                   <div />
                 )}
-                {task.startTime ? <p className="xxxs">{task.startTime}</p> : <div />}
+                {task.startTime ? <p className="text-xxxs">{task.startTime}</p> : <div />}
               </div>
             )}
           </div>
           <div
             style={{ backgroundColor: task.element.color }}
             className={clsx(
-              "group-hove/task-itemr:opacity-100 absolute bottom-0 left-0 flex h-1 w-full items-center overflow-hidden rounded-sm transition-all group-hover/task-item:h-4",
+              "absolute bottom-0 left-0 flex h-1 w-full items-center overflow-hidden rounded-sm transition-all group-hover/task-item:h-4 group-hover/task-item:opacity-100",
               task.isComplete ? "opacity-40" : "opacity-100",
             )}
           >

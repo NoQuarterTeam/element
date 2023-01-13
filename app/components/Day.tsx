@@ -37,7 +37,8 @@ function _Day(props: Props) {
       if (inView) {
         let back: string, forward: string
         // if scrolling back
-        if (dayjs(props.day).isSame(dayjs(dateBack)) || dayjs(props.day).isBefore(dayjs(dateBack))) {
+        const isScrollingBack = dayjs(props.day).isSame(dayjs(dateBack)) || dayjs(props.day).isBefore(dayjs(dateBack))
+        if (isScrollingBack) {
           back = dayjs(props.day).subtract(1, "w").format("YYYY-MM-DD")
           forward = dayjs(props.day).format("YYYY-MM-DD")
           // update habits only if going backward

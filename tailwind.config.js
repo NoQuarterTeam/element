@@ -35,8 +35,8 @@ module.exports = {
         xs: "2px",
       },
       fontSize: {
-        xxxs: ".4rem",
-        xxs: ".625rem",
+        xxxs: "0.4rem",
+        xxs: "0.625rem",
       },
       colors: {
         primary: colors.orange,

@@ -179,14 +179,14 @@ function _Timeline() {
 const TimelineContent = React.memo(_TimelineContent)
 function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
   const dropTasks = React.useMemo(() => props.tasks.map((t) => ({ id: t.id, date: t.date, order: t.order })), [props.tasks])
-  const { daysBack, daysForward, setDaysBack, setDaysForward } = useTimelineScroll()
-  const { ref: leftRef } = useInView({
-    onChange: (inView) => {
-      if (inView) {
-        setDaysBack(daysBack + 100)
-      }
-    },
-  })
+  const { daysForward, setDaysForward } = useTimelineScroll()
+  // const { ref: leftRef } = useInView({
+  //   onChange: (inView) => {
+  //     if (inView) {
+  //       setDaysBack(daysBack + 100)
+  //     }
+  //   },
+  // })
   const { ref: rightRef } = useInView({
     onChange: (inView) => {
       if (inView) {
@@ -197,7 +197,7 @@ function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
   return (
     <c.Flex>
       <DropContainer tasks={dropTasks}>
-        <div ref={leftRef} />
+        {/* <div ref={leftRef} /> */}
         {props.days.map((day, index) => (
           <Day key={index} day={day} index={index} tasks={props.tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))} />
         ))}
