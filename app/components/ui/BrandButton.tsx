@@ -1,5 +1,6 @@
+import React from "react"
 import { type ButtonProps, Button } from "./Button"
 
-export function BrandButton(props: ButtonProps) {
-  return <Button colorScheme="primary" {...props} />
-}
+export const BrandButton = React.forwardRef<HTMLButtonElement, ButtonProps>(function BrandButton(props, ref) {
+  return <Button colorScheme="primary" {...props} ref={ref} />
+})
