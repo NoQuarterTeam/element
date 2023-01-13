@@ -8,6 +8,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   const elements = await db.element.findMany({
     orderBy: { name: "asc" },
+    select: { id: true, name: true, color: true },
     where: { archivedAt: { equals: null }, creatorId: { equals: user.id } },
   })
 
