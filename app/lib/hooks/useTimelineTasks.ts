@@ -47,11 +47,13 @@ export function useTimelineTasks() {
     },
     updateOrder: (orderedTasks: ReorderTask[]) => {
       const existingTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
-      const newTasks = existingTasks.map((t) => {
-        const task = orderedTasks.find((o) => o.id === t.id)
-        if (task) return { ...t, order: task.order, date: task.date }
-        return t
-      })
+      const newTasks = existingTasks
+        .map((t) => {
+          const task = orderedTasks.find((o) => o.id === t.id)
+          if (task) return { ...t, order: task.order, date: task.date }
+          return t
+        })
+        .sort((a, b) => a.order - b.order)
       client.setQueryData(["tasks"], newTasks)
     },
   }

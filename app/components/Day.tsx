@@ -88,14 +88,13 @@ function _Day(props: Props) {
             )}
           >
             {props.tasks
-              .sort((a, b) => a.order - b.order)
+              // .sort((a, b) => a.order - b.order)
               .map((task, index) => (
                 <Draggable key={task.id} draggableId={task.id} index={index}>
                   {(provided) => (
                     <div
                       className="outline-none"
                       ref={provided.innerRef}
-                      key={index}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >

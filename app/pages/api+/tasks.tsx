@@ -22,6 +22,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   if (!backParam || !forwardParam) return json([])
   const tasks = await db.task.findMany({
     select: taskSelectFields,
+    orderBy: { order: "asc" },
     where: {
       creatorId: { equals: user.id },
       element: { archivedAt: { equals: null }, id: elementIds.length ? { in: elementIds } : undefined },

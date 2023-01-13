@@ -1,3 +1,4 @@
+import { DraggableLocation } from "@hello-pangea/dnd"
 import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
 
@@ -29,7 +30,7 @@ function reorder<R>(list: R[], startIndex: number, endIndex: number): R[] {
   return result
 }
 
-export const reorderTasks = (source: any, destination: any, dayTasks: ReorderTask[]) => {
+export const reorderTasks = (source: DraggableLocation, destination: DraggableLocation, dayTasks: ReorderTask[]) => {
   const orderedTasks = reorder<ReorderTask>(dayTasks, source.index, destination.index)
   return orderedTasks.map((task, index) => ({ ...task, order: index }))
 }
@@ -37,8 +38,8 @@ export const reorderTasks = (source: any, destination: any, dayTasks: ReorderTas
 export function moveTasks(
   source: ReorderTask[],
   destination: ReorderTask[],
-  droppableSource: any,
-  droppableDestination: any,
+  droppableSource: DraggableLocation,
+  droppableDestination: DraggableLocation,
 ): [ReorderTask[], ReorderTask[]] {
   const sourceClone = [...source]
   const destClone = [...destination]
