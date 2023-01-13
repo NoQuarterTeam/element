@@ -73,7 +73,7 @@ function _Day(props: Props) {
   })
 
   return (
-    <Droppable droppableId={props.day}>
+    <Droppable droppableId={props.day} direction="vertical">
       {(provided) => (
         <div ref={provided.innerRef} {...provided.droppableProps} className="min-h-min">
           {dayjs(props.day).day() === 0 && <div ref={ref} />}

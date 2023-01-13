@@ -62,12 +62,9 @@ function _TaskItem({ task }: Props) {
   }
 
   return (
-    <div className="z-[1] w-day p-2 pb-0">
+    <div className="z-[1] w-day p-2 pb-0" tabIndex={-1}>
       <Link to={task.id} onClick={handleClick} prefetch="intent" tabIndex={-1}>
-        <div
-          className="group/task-item relative w-full cursor-pointer overflow-hidden rounded-md border border-solid border-gray-100 bg-white outline-none dark:border-gray-900 dark:bg-gray-700"
-          // tabIndex={-1}
-        >
+        <div className="group/task-item relative w-full cursor-pointer overflow-hidden rounded-md border border-solid border-gray-100 bg-white outline-none dark:border-gray-900 dark:bg-gray-700">
           <div
             className={clsx(
               "flex h-full w-full flex-col justify-between p-[6px] group-hover/task-item:blur-0",
