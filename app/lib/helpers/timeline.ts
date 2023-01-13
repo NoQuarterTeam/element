@@ -57,5 +57,5 @@ export function moveTasks(
 }
 
 export const getDayTasksAndOrder = (tasks: ReorderTask[], target: any) => {
-  return tasks.filter((t) => dayjs(t.date).isSame(dayjs(target.droppableId), "day")).sort((a, b) => a.order - b.order)
+  return tasks.filter((t) => dayjs(t.date).isSame(dayjs(target.droppableId), "day"))
 }
