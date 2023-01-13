@@ -187,7 +187,7 @@ export function FormError({ error }: { error?: string }) {
   if (!form?.formError || !error) return null
   return <FormFieldError id="form-error">{form?.formError || error}</FormFieldError>
 }
-export function FormButton(props: ButtonProps) {
+export const FormButton = React.forwardRef<HTMLButtonElement, ButtonProps>(function _FormButton(props, ref) {
   const transition = useTransition()
-  return <BrandButton type="submit" isLoading={transition.state === "submitting"} {...props} />
-}
+  return <BrandButton type="submit" isLoading={transition.state === "submitting"} {...props} ref={ref} />
+})
