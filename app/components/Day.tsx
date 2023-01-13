@@ -111,12 +111,13 @@ function _Day(props: Props) {
             </div>
             <div className="center w-full flex-1 pt-0">
               <Link
+                className="outline-none"
                 to={`new?day=${dayjs(props.day).format("YYYY-MM-DD")}`}
                 tabIndex={dayjs(props.day).isSame(dayjs(), "day") ? 1 : -1}
               >
                 <IconButton
                   rounded="full"
-                  className="opacity-0 focus:opacity-100 group-hover/day:opacity-100"
+                  className="opacity-0 outline-none focus:opacity-100 group-hover/day:opacity-100"
                   variant="ghost"
                   size="md"
                   tabIndex={-1}
