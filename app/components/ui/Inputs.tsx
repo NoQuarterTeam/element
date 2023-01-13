@@ -93,7 +93,7 @@ export function Checkbox(props: React.DetailedHTMLProps<React.InputHTMLAttribute
       type="checkbox"
       {...props}
       className={clsx(
-        "cursor-pointer border-none bg-black/5 text-primary-500 transition-all hover:bg-black/10 hover:text-primary-600 focus:ring-primary-800 dark:bg-white/5 dark:hover:bg-white/10",
+        "cursor-pointer border-none bg-black/5 text-primary-500 outline-none transition-all hover:bg-black/10 hover:text-primary-600 focus:ring-primary-800 dark:bg-white/5 dark:hover:bg-white/10",
         props.className,
       )}
     />
