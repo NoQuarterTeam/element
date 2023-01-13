@@ -1,8 +1,8 @@
 import * as React from "react"
-import { cva, VariantProps } from "class-variance-authority"
+import { type VariantProps, cva } from "class-variance-authority"
 import clsx from "clsx"
 
-import { ButtonProps, buttonStyles } from "./Button"
+import { type ButtonProps, buttonStyles } from "./Button"
 import { Spinner } from "./Spinner"
 
 export const iconbuttonStyles = cva("px-0", {

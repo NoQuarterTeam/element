@@ -143,9 +143,7 @@ export default function Plan() {
 
   const borderColor = c.useColorModeValue("gray.100", "gray.600")
 
-  const discountedPlanAmount = data?.subscription?.discountPercent
-    ? 4 - (4 * 100) / data.subscription.discountPercent
-    : null
+  const discountedPlanAmount = data?.subscription?.discountPercent ? 4 - (4 * 100) / data.subscription.discountPercent : null
 
   return (
     <c.Stack spacing={4}>
@@ -160,8 +158,8 @@ export default function Plan() {
           </c.Text>
           {discountedPlanAmount || discountedPlanAmount === 0 ? (
             <c.Text fontSize="sm">
-              A {data?.subscription.discountPercent}% discount is applied to your subscription, you pay €
-              {discountedPlanAmount} per month
+              A {data?.subscription.discountPercent}% discount is applied to your subscription, you pay €{discountedPlanAmount}{" "}
+              per month
             </c.Text>
           ) : null}
           {data.subscription.isCancelled ? (
@@ -189,13 +187,7 @@ export default function Plan() {
               <c.StatNumber>
                 <c.Text
                   as="span"
-                  color={
-                    (data?.taskCount || 0) >= 1000
-                      ? "red.500"
-                      : (data?.taskCount || 0) > 900
-                      ? "primary.500"
-                      : undefined
-                  }
+                  color={(data?.taskCount || 0) >= 1000 ? "red.500" : (data?.taskCount || 0) > 900 ? "primary.500" : undefined}
                 >
                   {data?.taskCount}{" "}
                 </c.Text>
@@ -209,13 +201,7 @@ export default function Plan() {
               <c.StatNumber>
                 <c.Text
                   as="span"
-                  color={
-                    (data?.elementCount || 0) >= 5
-                      ? "red.500"
-                      : (data?.elementCount || 0) > 4
-                      ? "primary.500"
-                      : undefined
-                  }
+                  color={(data?.elementCount || 0) >= 5 ? "red.500" : (data?.elementCount || 0) > 4 ? "primary.500" : undefined}
                 >
                   {data?.elementCount}
                 </c.Text>{" "}
@@ -239,13 +225,7 @@ export default function Plan() {
       >
         <c.Flex>
           <c.Flex flex={3} p={{ base: 1, md: 2 }} borderLeft="1px solid" borderColor="transparent" />
-          <c.Flex
-            flex={2}
-            p={{ base: 1, md: 2 }}
-            borderLeft="1px solid"
-            borderTop="1px solid"
-            borderColor={borderColor}
-          >
+          <c.Flex flex={2} p={{ base: 1, md: 2 }} borderLeft="1px solid" borderTop="1px solid" borderColor={borderColor}>
             <c.Stack spacing={{ base: 0, md: 2 }}>
               <c.Text fontWeight="bold" fontSize="md">
                 Personal
@@ -261,11 +241,7 @@ export default function Plan() {
               >
                 {data?.subscription ? "Downgrade" : "Current plan"}
               </c.Button>
-              <c.AlertDialog
-                {...cancelPlanProps}
-                motionPreset="slideInBottom"
-                leastDestructiveRef={cancelRef}
-              >
+              <c.AlertDialog {...cancelPlanProps} motionPreset="slideInBottom" leastDestructiveRef={cancelRef}>
                 <c.AlertDialogOverlay>
                   <c.AlertDialogContent>
                     <c.AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -298,13 +274,7 @@ export default function Plan() {
               </c.AlertDialog>
             </c.Stack>
           </c.Flex>
-          <c.Flex
-            flex={2}
-            p={{ base: 1, md: 2 }}
-            borderLeft="1px solid"
-            borderTop="1px solid"
-            borderColor={borderColor}
-          >
+          <c.Flex flex={2} p={{ base: 1, md: 2 }} borderLeft="1px solid" borderTop="1px solid" borderColor={borderColor}>
             <c.Stack spacing={{ base: 0, md: 2 }}>
               <c.Text fontWeight="bold" fontSize="md">
                 Pro
@@ -317,22 +287,13 @@ export default function Plan() {
               </c.Text>
 
               {!data?.subscription ? (
-                <c.Button
-                  size={{ base: "xs", md: "sm" }}
-                  onClick={joinPlanProps.onOpen}
-                  colorScheme="primary"
-                >
+                <c.Button size={{ base: "xs", md: "sm" }} onClick={joinPlanProps.onOpen} colorScheme="primary">
                   Upgrade
                 </c.Button>
               ) : data.subscription.isCancelled ? (
                 <c.Button
                   size={{ base: "xs", md: "sm" }}
-                  onClick={() =>
-                    reactivateFetcher.submit(
-                      { _action: ProfilePlanMethods.ReactivatePlan },
-                      { method: "post" },
-                    )
-                  }
+                  onClick={() => reactivateFetcher.submit({ _action: ProfilePlanMethods.ReactivatePlan }, { method: "post" })}
                   colorScheme="primary"
                   isLoading={reactivateFetcher.state !== "idle"}
                   isDisabled={reactivateFetcher.state !== "idle"}
@@ -360,12 +321,7 @@ export default function Plan() {
             </c.Stack>
           </c.Flex>
         </c.Flex>
-        <c.Flex
-          borderBottom="1px solid"
-          borderLeft="1px solid"
-          borderTop="1px solid"
-          borderColor={borderColor}
-        >
+        <c.Flex borderBottom="1px solid" borderLeft="1px solid" borderTop="1px solid" borderColor={borderColor}>
           <c.Flex p={{ base: 1, md: 2 }} flex={3} fontWeight="semibold">
             Usage
           </c.Flex>
@@ -373,13 +329,7 @@ export default function Plan() {
           <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor} />
         </c.Flex>
         <c.Flex borderBottom="1px solid" borderColor={borderColor}>
-          <c.Flex
-            p={{ base: 1, md: 2 }}
-            flex={3}
-            opacity={0.7}
-            borderLeft="1px solid"
-            borderColor={borderColor}
-          >
+          <c.Flex p={{ base: 1, md: 2 }} flex={3} opacity={0.7} borderLeft="1px solid" borderColor={borderColor}>
             Tasks
           </c.Flex>
           <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
@@ -390,13 +340,7 @@ export default function Plan() {
           </c.Flex>
         </c.Flex>
         <c.Flex borderBottom="1px solid" borderColor={borderColor}>
-          <c.Flex
-            p={{ base: 1, md: 2 }}
-            flex={3}
-            opacity={0.7}
-            borderLeft="1px solid"
-            borderColor={borderColor}
-          >
+          <c.Flex p={{ base: 1, md: 2 }} flex={3} opacity={0.7} borderLeft="1px solid" borderColor={borderColor}>
             Elements
           </c.Flex>
           <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>

@@ -1,6 +1,7 @@
 import * as React from "react"
 import * as c from "@chakra-ui/react"
 import { withEmotionCache } from "@emotion/react"
+import * as Tooltip from "@radix-ui/react-tooltip"
 import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from "@remix-run/react"
@@ -14,7 +15,6 @@ import toastStyles from "~/styles/toast.css"
 
 import { FlashMessage } from "./components/FlashMessage"
 import { getFlashSession } from "./services/session/session.server"
-import * as Tooltip from "@radix-ui/react-tooltip"
 
 export const meta: MetaFunction = () => {
   return { title: "Element" }

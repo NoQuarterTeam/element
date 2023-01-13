@@ -124,14 +124,7 @@ export function Nav() {
                 <c.Box pos="relative">
                   <c.Box as={RiBookLine} boxSize="18px" />
                   {elementIds.length > 0 && (
-                    <c.Box
-                      boxSize="10px"
-                      borderRadius="full"
-                      bg="orange.500"
-                      pos="absolute"
-                      top={-1}
-                      right={-1}
-                    />
+                    <c.Box boxSize="10px" borderRadius="full" bg="orange.500" pos="absolute" top={-1} right={-1} />
                   )}
                 </c.Box>
               }

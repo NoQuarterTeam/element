@@ -32,10 +32,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     email: stripeCustomer.email,
     taxId: { value: stripeCustomer.tax_ids?.data?.[0]?.value, type: stripeCustomer.tax_ids?.data?.[0]?.type },
   }
-  return json(
-    { billing, invoices: invoices.data },
-    { headers: { "Cache-Control": "max-age=60, s-maxage=360" } },
-  )
+  return json({ billing, invoices: invoices.data }, { headers: { "Cache-Control": "max-age=60, s-maxage=360" } })
 }
 export type ProfileBilling = SerializeFrom<typeof loader>
 
@@ -156,23 +153,11 @@ export default function Billing() {
               Billing address
             </c.Text>
             <c.Stack spacing={1}>
-              <FormField
-                placeholder="Address 1"
-                defaultValue={billing?.address?.line1 || ""}
-                name="address1"
-              />
-              <FormField
-                placeholder="Address 2"
-                defaultValue={billing?.address?.line2 || ""}
-                name="address2"
-              />
+              <FormField placeholder="Address 1" defaultValue={billing?.address?.line1 || ""} name="address1" />
+              <FormField placeholder="Address 2" defaultValue={billing?.address?.line2 || ""} name="address2" />
               <c.HStack align="flex-start">
                 <FormField placeholder="City" defaultValue={billing?.address?.city || ""} name="city" />
-                <FormField
-                  placeholder="State/Province"
-                  defaultValue={billing?.address?.state || ""}
-                  name="state"
-                />
+                <FormField placeholder="State/Province" defaultValue={billing?.address?.state || ""} name="state" />
               </c.HStack>
               <c.HStack align="flex-start">
                 <FormField
@@ -189,11 +174,7 @@ export default function Billing() {
                     </c.Select>
                   }
                 />
-                <FormField
-                  placeholder="Post code/Zip code"
-                  defaultValue={billing?.address?.postal_code || ""}
-                  name="postCode"
-                />
+                <FormField placeholder="Post code/Zip code" defaultValue={billing?.address?.postal_code || ""} name="postCode" />
               </c.HStack>
             </c.Stack>
           </c.Flex>
@@ -246,13 +227,7 @@ export default function Billing() {
                 <c.Text textAlign="right" fontSize="sm">
                   €{currencyjs(invoice.total, { fromCents: true }).value}
                 </c.Text>
-                <c.Link
-                  textAlign="right"
-                  opacity={0.7}
-                  fontSize="sm"
-                  href={invoice.invoice_pdf || ""}
-                  download={true}
-                >
+                <c.Link textAlign="right" opacity={0.7} fontSize="sm" href={invoice.invoice_pdf || ""} download={true}>
                   Download
                 </c.Link>
               </c.HStack>

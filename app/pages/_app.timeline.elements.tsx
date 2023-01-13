@@ -146,12 +146,7 @@ export default function Elements() {
                 variant="outline"
                 flex={1}
               />
-              <c.Button
-                ml={2}
-                colorScheme="primary"
-                rightIcon={<c.Box as={RiAddLine} />}
-                onClick={createModalProps.onOpen}
-              >
+              <c.Button ml={2} colorScheme="primary" rightIcon={<c.Box as={RiAddLine} />} onClick={createModalProps.onOpen}>
                 Add
               </c.Button>
               <Modal title="Create an Element" size="xl" {...createModalProps}>
@@ -179,15 +174,7 @@ export default function Elements() {
                             <HexColorPicker color={color} onChange={setColor} />
                           </c.Flex>
                           <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
-                            <c.Center
-                              bg={color}
-                              maxW="200px"
-                              w="100%"
-                              h="100%"
-                              p={4}
-                              px={6}
-                              borderRadius="lg"
-                            >
+                            <c.Center bg={color} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
                               <c.Input
                                 color={safeReadableColor(color)}
                                 textAlign="center"
@@ -217,13 +204,7 @@ export default function Elements() {
 
             <c.Stack spacing="1px">
               {matchedMyElements.map((element) => (
-                <ElementItem
-                  key={element.id}
-                  {...{ element }}
-                  search={search}
-                  depth={0}
-                  isArchivedShown={isArchivedShown}
-                />
+                <ElementItem key={element.id} {...{ element }} search={search} depth={0} isArchivedShown={isArchivedShown} />
               ))}
             </c.Stack>
             {elements.filter((e) => !!e.archivedAt).length > 0 && (

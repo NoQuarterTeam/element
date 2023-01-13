@@ -1,7 +1,7 @@
-import { Link, LinkProps } from "@remix-run/react"
+import { type LinkProps, Link } from "@remix-run/react"
 import clsx from "clsx"
 
-import { buttonSizeStyleProps, ButtonStyleProps, buttonStyles } from "./Button"
+import { type ButtonStyleProps, buttonSizeStyleProps, buttonStyles } from "./Button"
 import { Spinner } from "./Spinner"
 
 interface LinkButtonProps extends ButtonStyleProps, LinkProps {

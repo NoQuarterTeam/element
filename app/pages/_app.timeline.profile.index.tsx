@@ -121,8 +121,7 @@ export default function Account() {
       <c.Stack>
         <c.Text fontSize="sm">Danger zone</c.Text>
         <c.Text fontSize="xs">
-          Permanently delete your account and all of its contents. This action is not reversible - please
-          continue with caution.
+          Permanently delete your account and all of its contents. This action is not reversible - please continue with caution.
         </c.Text>
         <c.Box>
           <c.Button colorScheme="red" onClick={alertProps.onOpen}>

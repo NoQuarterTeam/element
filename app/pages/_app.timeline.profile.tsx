@@ -46,14 +46,7 @@ export default function Profile() {
                   <c.Box pos="relative">
                     <c.Box as={RiSettings2Line} boxSize="15px" />
                     {!featuresSeen.find((u) => ["weather", "habits"].includes(u)) && (
-                      <c.Box
-                        boxSize="5px"
-                        borderRadius="full"
-                        bg="red.500"
-                        pos="absolute"
-                        top="-3px"
-                        right="-3px"
-                      />
+                      <c.Box boxSize="5px" borderRadius="full" bg="red.500" pos="absolute" top="-3px" right="-3px" />
                     )}
                   </c.Box>
                 }
@@ -77,21 +70,11 @@ export default function Profile() {
   )
 }
 
-function TabLink({
-  children,
-  icon,
-  to,
-}: {
-  to: string
-  children: string
-  icon: React.ReactElement<any> | undefined
-}) {
+function TabLink({ children, icon, to }: { to: string; children: string; icon: React.ReactElement<any> | undefined }) {
   const transition = useTransition()
 
   const isLoading =
-    transition.type === "normalLoad" &&
-    transition.state === "loading" &&
-    transition.location.pathname.includes(to)
+    transition.type === "normalLoad" && transition.state === "loading" && transition.location.pathname.includes(to)
   const bg = c.useColorModeValue("gray.100", "gray.700")
   return (
     <NavLink to={to} end={to === "."} style={{ outline: "none" }} prefetch="render">

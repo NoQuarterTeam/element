@@ -12,13 +12,7 @@ import { sendPasswordChangedEmail, sendResetPasswordEmail } from "../user/user.m
 import { comparePasswords, hashPassword } from "./password.server"
 
 export type LoginResponse = { success: false; error: string } | { success: true; user: User }
-export async function login({
-  email,
-  password,
-}: {
-  email: string
-  password: string
-}): Promise<LoginResponse> {
+export async function login({ email, password }: { email: string; password: string }): Promise<LoginResponse> {
   const user = await db.user.findUnique({ where: { email } })
   if (!user) return { success: false, error: "Incorrect email or password" }
   if (user?.archivedAt) return { success: false, error: "Incorrect email or password" }

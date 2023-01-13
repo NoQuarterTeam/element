@@ -20,5 +20,4 @@ export const useSelectedElements = create<{
   ),
 )
 
-export const selectedUrlElements = (elementIds: string[]) =>
-  elementIds.map((id) => `elementId=${id}`).join("&")
+export const selectedUrlElements = (elementIds: string[]) => elementIds.map((id) => `elementId=${id}`).join("&")

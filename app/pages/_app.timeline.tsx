@@ -13,6 +13,8 @@ import { DropContainer } from "~/components/DropContainer"
 import { Nav } from "~/components/Nav"
 import { PreloadedEditorInput } from "~/components/TaskForm"
 import { HEADER_HABIT_HEIGHT, HEADER_HEIGHT, TimelineHeader } from "~/components/TimelineHeader"
+import { IconButton } from "~/components/ui/IconButton"
+import { Tooltip } from "~/components/ui/Tooltip"
 import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
 import { useFeatures } from "~/lib/hooks/useFeatures"
@@ -21,8 +23,6 @@ import { DATE_BACK, DATE_FORWARD, useTimelineDates } from "~/lib/hooks/useTimeli
 import { SCROLL_DAYS_BACK, useTimelineScroll } from "~/lib/hooks/useTimelineScroll"
 
 import type { TimelineTask } from "./api+/tasks"
-import { Tooltip } from "~/components/ui/Tooltip"
-import { IconButton } from "~/components/ui/IconButton"
 
 dayjs.extend(advancedFormat)
 

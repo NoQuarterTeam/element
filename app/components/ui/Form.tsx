@@ -7,9 +7,9 @@ import type { ActionData } from "~/lib/form"
 import { createImageUrl } from "~/lib/s3"
 
 import { BrandButton } from "./BrandButton"
-import { ButtonProps } from "./Button"
+import { type ButtonProps } from "./Button"
 import { ImageUploader } from "./ImageUploader"
-import { Input, InputProps } from "./Inputs"
+import { type InputProps, Input } from "./Inputs"
 
 export const Form = React.forwardRef(function _Form(props: RemixFormProps, ref: React.ForwardedRef<HTMLFormElement> | null) {
   const form = useActionData<ActionData<any>>()

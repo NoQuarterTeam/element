@@ -1,7 +1,6 @@
-import { LoaderArgs, redirect, ActionArgs, json } from "@remix-run/node"
+import { type ActionArgs, type LoaderArgs, json, redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
-
 import { z } from "zod"
 
 import { TaskForm } from "~/components/TaskForm"

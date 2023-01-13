@@ -24,9 +24,7 @@ export type UploadFile = {
   fileName: string
   fileType: string | null
 }
-export function useS3Upload(
-  props?: Props,
-): [(file: File, lazyProps?: Props) => Promise<UploadFile>, { isLoading: boolean }] {
+export function useS3Upload(props?: Props): [(file: File, lazyProps?: Props) => Promise<UploadFile>, { isLoading: boolean }] {
   const [isLoading, setIsLoading] = React.useState(false)
 
   async function upload(file: File, lazyProps?: Props) {

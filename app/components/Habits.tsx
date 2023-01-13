@@ -1,24 +1,21 @@
 import * as React from "react"
 import { RiAddCircleLine, RiDeleteBin4Line, RiFolder2Line } from "react-icons/ri"
-
-import * as Popover from "~/components/ui/Popover"
 import { useFetcher } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
+import clsx from "clsx"
 import dayjs from "dayjs"
 
+import * as Popover from "~/components/ui/Popover"
 import type { TimelineHabit, TimelineHabitEntry, TimelineHabitResponse } from "~/pages/api+/habits"
 import { HabitsActionMethods } from "~/pages/api+/habits"
 import { HabitActionMethods } from "~/pages/api+/habits.$id"
 
-import { FormButton, FormError, FormField } from "./ui/Form"
-
-import clsx from "clsx"
 import { Button } from "./ui/Button"
 import { CloseButton } from "./ui/CloseButton"
-
+import { FormButton, FormError, FormField } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
-import { Tooltip } from "./ui/Tooltip"
 import { Checkbox } from "./ui/Inputs"
+import { Tooltip } from "./ui/Tooltip"
 
 interface Props {
   habits: TimelineHabit[]

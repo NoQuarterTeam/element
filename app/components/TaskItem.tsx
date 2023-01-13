@@ -1,5 +1,4 @@
 import * as React from "react"
-
 import { type Prisma } from "@prisma/client"
 import { Link, useFetcher } from "@remix-run/react"
 import clsx from "clsx"

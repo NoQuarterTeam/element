@@ -4,6 +4,7 @@ import lazyWithPreload from "react-lazy-with-preload"
 import Select from "react-select"
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons"
 import * as c from "@chakra-ui/react"
+import { type Prisma } from "@prisma/client"
 import { type LoaderArgs, type SerializeFrom, json } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
@@ -19,12 +20,10 @@ import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { customSelectStyle } from "~/lib/styles/react-select"
-import { requireUser } from "~/services/auth/auth.server"
-
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TaskElement } from "~/pages/api+/elements"
 import { type TimelineTask, TasksActionMethods } from "~/pages/api+/tasks"
-import { Prisma } from "@prisma/client"
+import { requireUser } from "~/services/auth/auth.server"
 
 const selectFields = {
   id: true,

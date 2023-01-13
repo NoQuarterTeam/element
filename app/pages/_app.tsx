@@ -1,6 +1,6 @@
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { ShouldRevalidateFunction, useRouteLoaderData } from "@remix-run/react"
+import { type ShouldRevalidateFunction, useRouteLoaderData } from "@remix-run/react"
 import { useLoaderData } from "@remix-run/react"
 import { Outlet } from "@remix-run/react"
 import { useHydrated } from "remix-utils"

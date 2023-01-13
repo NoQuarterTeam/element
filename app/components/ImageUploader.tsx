@@ -77,31 +77,18 @@ export function ImageUploader({ children, path, onSubmit, dropzoneOptions }: Pro
 
   return (
     <>
-      <c.Box
-        cursor="pointer"
-        {...getRootProps()}
-        position="relative"
-        _hover={{ opacity: 0.9 }}
-        transition="200ms"
-      >
+      <c.Box cursor="pointer" {...getRootProps()} position="relative" _hover={{ opacity: 0.9 }} transition="200ms">
         <input {...getInputProps()} />
         {children}
       </c.Box>
 
       <Modal {...modalProps} onClose={handleClose} title="Upload new image">
-        {image && (
-          <c.Image alt="image preview" objectFit="contain" w="100%" p={12} maxH="400px" src={image.preview} />
-        )}
+        {image && <c.Image alt="image preview" objectFit="contain" w="100%" p={12} maxH="400px" src={image.preview} />}
         <ButtonGroup>
           <c.Button variant="ghost" isDisabled={isLoading} onClick={handleClose}>
             Cancel
           </c.Button>
-          <c.Button
-            colorScheme="primary"
-            isLoading={isLoading}
-            isDisabled={isLoading}
-            onClick={handleSubmitImage}
-          >
+          <c.Button colorScheme="primary" isLoading={isLoading} isDisabled={isLoading} onClick={handleSubmitImage}>
             Submit
           </c.Button>
         </ButtonGroup>

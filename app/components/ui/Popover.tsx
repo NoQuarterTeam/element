@@ -1,6 +1,6 @@
+import * as React from "react"
 import * as Popover from "@radix-ui/react-popover"
 import clsx from "clsx"
-import * as React from "react"
 
 export * from "@radix-ui/react-popover"
 

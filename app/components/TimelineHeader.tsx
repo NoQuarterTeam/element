@@ -2,8 +2,9 @@ import * as React from "react"
 import { BsSunrise, BsThermometerHalf } from "react-icons/bs"
 import { RiWindyLine } from "react-icons/ri"
 import { TbDroplet, TbLocation } from "react-icons/tb"
-
+import * as HoverCard from "@radix-ui/react-hover-card"
 import { useQuery } from "@tanstack/react-query"
+import clsx from "clsx"
 import dayjs from "dayjs"
 
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
@@ -14,9 +15,7 @@ import type { TimelineHabitResponse } from "~/pages/api+/habits"
 import type { WeatherData } from "~/pages/api+/weather"
 
 import { Habits } from "./Habits"
-import clsx from "clsx"
 import { Spinner } from "./ui/Spinner"
-import * as HoverCard from "@radix-ui/react-hover-card"
 
 export const HEADER_HEIGHT = 120
 

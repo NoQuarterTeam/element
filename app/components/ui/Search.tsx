@@ -6,7 +6,7 @@ import clsx from "clsx"
 import queryString from "query-string"
 
 import { IconButton } from "./IconButton"
-import { Input, InputProps } from "./Inputs"
+import { type InputProps, Input } from "./Inputs"
 
 export function Search({ placeholder, name = "search", ...props }: InputProps) {
   const [params, setParams] = useSearchParams()

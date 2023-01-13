@@ -1,15 +1,14 @@
 import * as React from "react"
 import { RiAddCircleLine } from "react-icons/ri"
-import clsx from "clsx"
 import { useInView } from "react-intersection-observer"
 import { Draggable, Droppable } from "@hello-pangea/dnd"
 import { Link } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
+import clsx from "clsx"
 import dayjs from "dayjs"
 import deepEqual from "deep-equal"
 
 import { getTotalTaskDuration } from "~/lib/helpers/duration"
-
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useTimelineDates } from "~/lib/hooks/useTimelineDates"
 import type { TimelineHabitResponse } from "~/pages/api+/habits"

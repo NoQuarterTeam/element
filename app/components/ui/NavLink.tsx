@@ -1,4 +1,4 @@
-import { NavLink as RNavLink, NavLinkProps } from "@remix-run/react"
+import { type NavLinkProps, NavLink as RNavLink } from "@remix-run/react"
 import clsx from "clsx"
 
 export function NavLink(props: NavLinkProps) {

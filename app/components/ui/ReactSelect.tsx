@@ -1,4 +1,4 @@
-import Select, { ClassNamesConfig, GroupBase } from "react-select"
+import Select, { type ClassNamesConfig, type GroupBase } from "react-select"
 import Creatable from "react-select/creatable"
 import type { StateManagerProps } from "react-select/dist/declarations/src/stateManager"
 import clsx from "clsx"

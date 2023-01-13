@@ -12,9 +12,7 @@ export const useFeatures = create<{
       features: [],
       toggle: (feature: Feature) =>
         set(({ features }) => ({
-          features: features.includes(feature)
-            ? features.filter((f) => f !== feature)
-            : [...features, feature],
+          features: features.includes(feature) ? features.filter((f) => f !== feature) : [...features, feature],
         })),
     }),
     { name: "element.features.enabled" },

@@ -59,9 +59,7 @@ export const FormField = React.forwardRef(function FormField(
           {label}
         </c.FormLabel>
       )}
-      {clonedInput || (
-        <c.Input ref={ref} defaultValue={form?.data?.[props.name] || ""} id={props.name} {...props} />
-      )}
+      {clonedInput || <c.Input ref={ref} defaultValue={form?.data?.[props.name] || ""} id={props.name} {...props} />}
       <c.FormErrorMessage>{form?.fieldErrors?.[props.name]?.[0] || error}</c.FormErrorMessage>
     </c.FormControl>
   )
@@ -93,9 +91,7 @@ export const InlineFormField = React.forwardRef(function _InlineFormField(
           </c.FormLabel>
         )}
         <c.Box w="100%">
-          {clonedInput || (
-            <c.Input ref={ref} defaultValue={form?.data?.[props.name] || ""} id={props.name} {...props} />
-          )}
+          {clonedInput || <c.Input ref={ref} defaultValue={form?.data?.[props.name] || ""} id={props.name} {...props} />}
           <c.FormErrorMessage>{form?.fieldErrors?.[props.name]?.[0] || error}</c.FormErrorMessage>
         </c.Box>
       </c.Flex>
@@ -113,15 +109,7 @@ interface ImageFieldProps extends Omit<c.FlexProps, "defaultValue"> {
   error?: string
 }
 
-export function ImageField({
-  label,
-  path,
-  placeholder,
-  isRequired,
-  defaultValue,
-  error,
-  ...props
-}: ImageFieldProps) {
+export function ImageField({ label, path, placeholder, isRequired, defaultValue, error, ...props }: ImageFieldProps) {
   const form = useActionData<ActionData<any>>()
   const [image, setImage] = React.useState(defaultValue)
   const borderColor = useColorModeValue("gray.200", "gray.600")
@@ -133,14 +121,7 @@ export function ImageField({
       <c.Box>
         <ImageUploader onSubmit={setImage} path={path}>
           {image ? (
-            <c.Image
-              _hover={{ opacity: 0.8 }}
-              objectFit="cover"
-              src={createImageUrl(image)}
-              h="200px"
-              w="100%"
-              {...props}
-            />
+            <c.Image _hover={{ opacity: 0.8 }} objectFit="cover" src={createImageUrl(image)} h="200px" w="100%" {...props} />
           ) : (
             <c.Center
               _hover={{ bg: "whiteAlpha.100", transition: "100ms all" }}

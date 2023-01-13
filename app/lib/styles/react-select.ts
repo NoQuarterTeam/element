@@ -1,11 +1,7 @@
 import type { StylesConfig } from "react-select"
 import type { Theme } from "@chakra-ui/react"
 
-export const customSelectStyle = (
-  theme: Theme,
-  hasError: boolean,
-  isDark: boolean,
-): StylesConfig<any, any> => ({
+export const customSelectStyle = (theme: Theme, hasError: boolean, isDark: boolean): StylesConfig<any, any> => ({
   container: (styles) => ({
     ...styles,
     paddingTop: 0,

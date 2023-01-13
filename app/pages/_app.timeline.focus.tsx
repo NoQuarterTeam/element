@@ -144,13 +144,7 @@ function FocusItem({ task }: { task: FocusTask }) {
         </c.Collapse>
       )}
 
-      <c.Text
-        px={2}
-        w="100%"
-        fontSize="xs"
-        bg={task.element.color}
-        color={safeReadableColor(task.element.color)}
-      >
+      <c.Text px={2} w="100%" fontSize="xs" bg={task.element.color} color={safeReadableColor(task.element.color)}>
         {task.element.name}
       </c.Text>
     </c.Box>

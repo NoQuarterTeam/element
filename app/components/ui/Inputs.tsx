@@ -1,5 +1,5 @@
-import * as React from "react"
-import { cva, VariantProps } from "class-variance-authority"
+import type * as React from "react"
+import { type VariantProps, cva } from "class-variance-authority"
 import clsx from "clsx"
 
 export const inputStyles = cva(

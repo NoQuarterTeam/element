@@ -6,8 +6,7 @@ export default function PlanLimit() {
     <c.Stack p={4} border="1px solid" borderColor={borderColor}>
       <c.Text fontWeight="bold">Element limit reached</c.Text>
       <c.Text>
-        Thank you for using Element, you've reached the limit of the Personal plan. To add more elements,
-        please upgrade to Pro.
+        Thank you for using Element, you've reached the limit of the Personal plan. To add more elements, please upgrade to Pro.
       </c.Text>
     </c.Stack>
   )

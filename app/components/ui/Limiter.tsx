@@ -1,4 +1,4 @@
-import * as React from "react"
+import type * as React from "react"
 import clsx from "clsx"
 
 export function Limiter({ className, ...props }: React.HtmlHTMLAttributes<HTMLDivElement>) {

@@ -1,10 +1,5 @@
 import { modalAnatomy as parts } from "@chakra-ui/anatomy"
-import type {
-  PartsStyleFunction,
-  PartsStyleObject,
-  SystemStyleFunction,
-  SystemStyleObject,
-} from "@chakra-ui/styled-system"
+import type { PartsStyleFunction, PartsStyleObject, SystemStyleFunction, SystemStyleObject } from "@chakra-ui/styled-system"
 import { mode } from "@chakra-ui/theme-tools"
 
 const baseStyleOverlay: SystemStyleObject = {

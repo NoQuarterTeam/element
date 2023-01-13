@@ -9,10 +9,7 @@ export function formatTotalDuration(duration: number) {
 }
 
 export function getMinutesFromTasks(tasks: Pick<Task, "durationHours" | "durationMinutes">[]) {
-  return tasks.reduce(
-    (total, task) => total + (task.durationHours || 0) * 60 + (task.durationMinutes || 0),
-    0,
-  )
+  return tasks.reduce((total, task) => total + (task.durationHours || 0) * 60 + (task.durationMinutes || 0), 0)
 }
 
 export function getTotalTaskDuration(tasks: Pick<Task, "durationHours" | "durationMinutes">[]) {

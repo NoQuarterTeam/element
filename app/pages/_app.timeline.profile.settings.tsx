@@ -37,11 +37,9 @@ export default function Settings() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async ({ coords }) => {
           const sleep = (delay = 200) => new Promise((res) => setTimeout(res, delay))
-          Cookies.set(
-            USER_LOCATION_COOKIE_KEY,
-            JSON.stringify({ lat: coords.latitude, lon: coords.longitude }),
-            { expires: 10000 },
-          )
+          Cookies.set(USER_LOCATION_COOKIE_KEY, JSON.stringify({ lat: coords.latitude, lon: coords.longitude }), {
+            expires: 10000,
+          })
           await sleep()
           toggle("weather")
         }, handleError)

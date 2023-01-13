@@ -4,13 +4,7 @@ import { Box, Flex, Heading, useColorModeValue } from "@chakra-ui/react"
 
 export function Tile({ children, ...props }: BoxProps) {
   return (
-    <Box
-      w="100%"
-      border="1px solid"
-      borderColor={useColorModeValue("gray.100", "gray.700")}
-      borderRadius="md"
-      {...props}
-    >
+    <Box w="100%" border="1px solid" borderColor={useColorModeValue("gray.100", "gray.700")} borderRadius="md" {...props}>
       {children}
     </Box>
   )

@@ -1,4 +1,4 @@
-import * as React from "react"
+import type * as React from "react"
 import * as RTooltip from "@radix-ui/react-tooltip"
 
 interface Props {
