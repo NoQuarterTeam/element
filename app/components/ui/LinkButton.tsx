@@ -11,15 +11,10 @@ interface LinkButtonProps extends ButtonStyleProps, LinkProps {
 
 export function LinkButton({ variant, size, isLoading, leftIcon, disabled, colorScheme, ...props }: LinkButtonProps) {
   return (
-    <div className={disabled ? "cursor-not-allowed" : undefined}>
+    <div className={clsx(disabled && "cursor-not-allowed", "inline-block")}>
       <Link
         style={{ pointerEvents: disabled ? "none" : undefined }}
-        className={clsx(
-          buttonStyles({ size, colorScheme, variant, disabled }),
-          buttonSizeStyleProps({ size }),
-          "block",
-          props.className,
-        )}
+        className={clsx(buttonStyles({ size, colorScheme, variant, disabled }), buttonSizeStyleProps({ size }), props.className)}
         {...props}
       >
         <div className={clsx("center", isLoading ? "opacity-0" : "")} aria-hidden={isLoading}>

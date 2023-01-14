@@ -1,6 +1,6 @@
 import * as React from "react"
 import { RiArrowLeftLine } from "react-icons/ri"
-import * as c from "@chakra-ui/react"
+
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
@@ -10,6 +10,7 @@ import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
 import { getMinutesFromTasks, getTotalTaskDuration } from "~/lib/helpers/duration"
 import { requireUser } from "~/services/auth/auth.server"
+import clsx from "clsx"
 
 const PieChart = React.lazy(() => import("../components/ElementsChart"))
 
@@ -113,48 +114,40 @@ export default function Dashboard() {
   const { table, pie, habits } = useLoaderData<typeof loader>()
 
   return (
-    <c.Stack p={{ base: 4, md: 6 }} spacing={4}>
-      <c.Box>
-        <LinkButton to="/timeline" variant="ghost" leftIcon={<c.Box as={RiArrowLeftLine} />}>
+    <div className="stack p-4 md:p-6">
+      <div className="block">
+        <LinkButton to="/timeline" variant="ghost" leftIcon={<RiArrowLeftLine />}>
           Back to timeline
         </LinkButton>
-      </c.Box>
-      <c.Heading>Dashboard</c.Heading>
-      <c.Stack>
-        <c.SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-          <c.Stack spacing={8}>
-            <c.Stack>
-              <c.Text fontSize="xl" fontWeight="medium">
-                Elements
-              </c.Text>
-              <c.Divider />
-              <c.Flex justify="space-between">
-                <c.Text>Name</c.Text>
-                <c.HStack>
-                  <c.Text w="100px" textAlign="center">
-                    Count
-                  </c.Text>
-                  <c.Text w="100px" textAlign="center">
-                    Duration
-                  </c.Text>
-                </c.HStack>
-              </c.Flex>
-              <c.Box>
+      </div>
+      <h1 className="text-5xl font-bold">Dashboard</h1>
+      <div className="stack">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="stack space-y-8">
+            <div className="stack">
+              <p className="text-xl font-medium">Elements</p>
+              <hr />
+              <div className="flex justify-between">
+                <p>Name</p>
+                <div className="hstack">
+                  <p className="w-24 text-center">Count</p>
+                  <p className="w-24 text-center">Duration</p>
+                </div>
+              </div>
+              <div>
                 {table.map((element) => (
                   <ElementStat key={element.id} element={element} depth={1} />
                 ))}
-              </c.Box>
-            </c.Stack>
+              </div>
+            </div>
 
-            <c.Stack>
-              <c.Text fontSize="xl" fontWeight="medium">
-                Tasks
-              </c.Text>
-              <c.Divider />
-              <c.Text>Count</c.Text>
+            <div className="stack">
+              <p className="text-xl font-medium">Tasks</p>
+              <hr />
+              <p>Count</p>
               <PieChart data={pie.map((e) => ({ value: e.taskCount, name: e.name, color: e.color }))} />
 
-              <c.Text>Task duration</c.Text>
+              <p>Task duration</p>
               <PieChart
                 data={pie.map((e) => ({
                   value: Math.round(e.totalMinutes / 60),
@@ -162,35 +155,33 @@ export default function Dashboard() {
                   color: e.color,
                 }))}
               />
-            </c.Stack>
-          </c.Stack>
-          <c.Stack>
-            <c.Text fontSize="xl" fontWeight="medium">
-              Habits
-            </c.Text>
-            <c.Divider />
-            <c.Flex align="center" justify="space-between">
-              <c.Text>Name</c.Text>
-              <c.Text>% Complete</c.Text>
-            </c.Flex>
+            </div>
+          </div>
+          <div className="stack">
+            <p className="text-xl font-medium">Habits</p>
+            <hr />
+            <div className="flex items-center justify-between ">
+              <p>Name</p>
+              <p>% Complete</p>
+            </div>
             {habits.map((habit) => {
               const totalDays = dayjs(habit.archivedAt || undefined).diff(dayjs(habit.startDate), "days")
               return (
-                <c.Flex align="center" justify="space-between" key={habit.id} py={2}>
-                  <c.Box>
-                    <c.Text fontWeight="medium">{habit.name}</c.Text>
-                    <c.Text>
+                <div className="flex items-center justify-between py-2" key={habit.id}>
+                  <div>
+                    <p className="font-medium">{habit.name}</p>
+                    <p>
                       {habit._count.entries} entries / {totalDays} days
-                    </c.Text>
-                  </c.Box>
-                  <c.Text fontSize="2xl">{Math.round((habit._count.entries / totalDays) * 100)}%</c.Text>
-                </c.Flex>
+                    </p>
+                  </div>
+                  <p className="text-2xl">{Math.round((habit._count.entries / totalDays) * 100)}%</p>
+                </div>
               )
             })}
-          </c.Stack>
-        </c.SimpleGrid>
-      </c.Stack>
-    </c.Stack>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -201,28 +192,24 @@ interface Props {
 
 function ElementStat({ element, depth }: Props) {
   return (
-    <c.Stack>
-      <c.Flex align="center" justify="space-between">
-        <c.HStack>
-          <c.Box boxSize="20px" bg={element.color} borderRadius="full" />
-          <c.Text>{element.name}</c.Text>
-        </c.HStack>
-        <c.HStack>
-          <c.Text fontSize="lg" w="100px" textAlign="center">
-            {element.taskCount}
-          </c.Text>
-          <c.Text fontSize="md" w="100px" textAlign="center">
-            {element.taskDuration}
-          </c.Text>
-        </c.HStack>
-      </c.Flex>
+    <div className="stack">
+      <div className="flex items-center justify-between">
+        <div className="hstack">
+          <div className="rounded-full sq-5" style={{ background: element.color }} />
+          <p>{element.name}</p>
+        </div>
+        <div className="hstack">
+          <p className="w-24 text-center text-lg">{element.taskCount}</p>
+          <p className="text-md w-24 text-center">{element.taskDuration}</p>
+        </div>
+      </div>
       {element.children && element.children.length > 0 && (
-        <c.Stack pl={4 * depth}>
+        <div className={clsx("stack", `pl-${4 * depth}`)}>
           {element.children?.map((child) => (
             <ElementStat key={child.id} element={child} depth={depth + 1} />
           ))}
-        </c.Stack>
+        </div>
       )}
-    </c.Stack>
+    </div>
   )
 }
