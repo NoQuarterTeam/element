@@ -19,7 +19,7 @@ export const useFeatures = create<{
   ),
 )
 
-export const NEW_UPDATES: Feature[] = ["weather", "habits", "focus", "backlog"]
+export const NEW_UPDATES: Feature[] = ["weather", "habits"]
 
 interface Create {
   featuresSeen: Feature[]

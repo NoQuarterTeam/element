@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import clsx from "clsx"
+import { CloseButton } from "./CloseButton"
 
 export function useModal({ defaultIsOpen = false }: { defaultIsOpen?: boolean } | undefined = {}) {
   const [isOpen, setIsOpen] = React.useState(defaultIsOpen)
@@ -16,11 +17,12 @@ export interface ModalProps {
   onOpen?: () => void
   onClose: () => void
   title?: string
+  position?: "top" | "center"
   children?: React.ReactNode
   size?: "sm" | "md" | "lg" | "xl" | "full"
 }
 
-export function Modal({ isOpen, onClose, ...props }: ModalProps) {
+export function Modal({ isOpen, onClose, position = "top", ...props }: ModalProps) {
   return (
     <Transition appear show={isOpen} as={React.Fragment}>
       <Dialog open={isOpen} as="div" className="relative z-50" onClose={onClose}>
@@ -37,7 +39,12 @@ export function Modal({ isOpen, onClose, ...props }: ModalProps) {
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full flex-col items-center justify-start p-0 pt-14 sm:p-4">
+          <div
+            className={clsx(
+              "flex min-h-full flex-col items-center p-0 pt-14 sm:p-4",
+              position === "top" ? "justify-start" : "justify-center",
+            )}
+          >
             <Transition.Child
               as={React.Fragment}
               enter="ease-out duration-300"
@@ -49,7 +56,7 @@ export function Modal({ isOpen, onClose, ...props }: ModalProps) {
             >
               <Dialog.Panel
                 className={clsx(
-                  "w-full overflow-hidden bg-white p-4 pt-2 text-left shadow-xl transition-all dark:bg-gray-700",
+                  "relative w-full overflow-hidden bg-white p-4 pt-2 text-left shadow-xl transition-all dark:bg-gray-700",
                   props.size ? `max-w-${props.size}` : "max-w-xl",
                 )}
               >
@@ -58,6 +65,9 @@ export function Modal({ isOpen, onClose, ...props }: ModalProps) {
                     {props.title}
                   </Dialog.Title>
                 )}
+                <div className="absolute right-2 top-2">
+                  <CloseButton size="sm" onClick={onClose} />
+                </div>
                 <div>{props.children}</div>
               </Dialog.Panel>
             </Transition.Child>

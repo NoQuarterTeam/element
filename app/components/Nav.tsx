@@ -15,12 +15,12 @@ import * as c from "@chakra-ui/react"
 import { Role } from "@prisma/client"
 import { useNavigate, useSubmit } from "@remix-run/react"
 
-import { NEW_UPDATES, useFeaturesSeen } from "~/lib/hooks/useFeatures"
+import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useMe } from "~/pages/_app"
 
-import { Modal } from "./Modal"
+import { Modal } from "./ui/Modal"
 import { ShortcutsInfo } from "./ShortcutsInfo"
 
 export function Nav() {
@@ -169,7 +169,7 @@ export function Nav() {
               icon={
                 <c.Box pos="relative">
                   <c.Box as={RiUser3Line} boxSize="18px" />
-                  {featuresSeen.length !== NEW_UPDATES.length && (
+                  {(!featuresSeen.includes("backlog") || !featuresSeen.includes("habits")) && (
                     <c.Box boxSize="5px" borderRadius="full" bg="red.500" pos="absolute" top={0} right={0} />
                   )}
                 </c.Box>
@@ -227,7 +227,7 @@ export function Nav() {
           </c.Tooltip>
         </c.VStack>
 
-        <Modal title="Shortcuts" {...shortcutModalProps}>
+        <Modal position="center" title="Shortcuts" {...shortcutModalProps}>
           <ShortcutsInfo />
         </Modal>
       </c.Flex>
