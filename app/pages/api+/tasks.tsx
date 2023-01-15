@@ -5,12 +5,11 @@ import dayjs from "dayjs"
 import { z } from "zod"
 
 import { taskSelectFields } from "~/components/TaskItem"
-import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { requireUser } from "~/services/auth/auth.server"
-import { getFlashSession } from "~/services/session/session.server"
+import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
@@ -25,7 +24,10 @@ export const loader = async ({ request }: LoaderArgs) => {
     orderBy: { order: "asc" },
     where: {
       creatorId: { equals: user.id },
-      element: { archivedAt: { equals: null }, id: elementIds.length ? { in: elementIds } : undefined },
+      element: {
+        archivedAt: elementIds.length ? undefined : { equals: null },
+        id: elementIds.length ? { in: elementIds } : undefined,
+      },
       date: {
         not: { equals: null },
         gte: dayjs(backParam).startOf("d").toDate(),

@@ -28,7 +28,7 @@ export function MenuList(props: { className?: string; children: React.ReactNode 
     >
       <HMenu.Items
         className={clsx(
-          "absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-800 bg-black shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
+          "absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-800 rounded-xs bg-black shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
           props.className,
         )}
         static

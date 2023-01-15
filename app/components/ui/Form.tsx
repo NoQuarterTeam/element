@@ -53,6 +53,7 @@ interface FormFieldProps extends InputProps {
   input?: React.ReactElement
   defaultValue?: any
   error?: string
+  shouldPassProps?: boolean
 }
 
 export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(function FormField(
@@ -93,22 +94,24 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(func
   )
 })
 export const InlineFormField = React.forwardRef<HTMLInputElement, FormFieldProps>(function FormField(
-  { label, error, input, ...props },
+  { label, error, input, shouldPassProps = true, ...props },
   ref,
 ) {
   const form = useActionData<ActionData<any>>()
   const errors = form?.fieldErrors?.[props.name]
   const className = clsx(error || (errors?.length && "border-red-500 focus:border-red-500"), props.className)
-  const sharedProps = {
-    "aria-invalid": error || errors?.length ? true : undefined,
-    "aria-errormessage": props.name + "-error",
-    id: props.name,
-    ref,
-    defaultValue: form?.data?.[props.name],
-    ...props,
-    name: props.name,
-    className,
-  }
+  const sharedProps = shouldPassProps
+    ? {
+        "aria-invalid": error || errors?.length ? true : undefined,
+        "aria-errormessage": props.name + "-error",
+        id: props.name,
+        ref,
+        defaultValue: form?.data?.[props.name],
+        ...props,
+        name: props.name,
+        className,
+      }
+    : {}
   const clonedInput = input && React.cloneElement(input, sharedProps)
   return (
     <div className="w-full">

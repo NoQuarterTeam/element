@@ -1,7 +1,6 @@
 import * as React from "react"
 import { HexColorPicker } from "react-colorful"
 import { RiAddLine, RiDeleteBinLine, RiFileCopyLine, RiTimeLine } from "react-icons/ri"
-import { lazyWithPreload } from "react-lazy-with-preload"
 import { Dialog } from "@headlessui/react"
 import { useFetcher, useNavigate, useSearchParams } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
@@ -16,14 +15,12 @@ import type { TaskElement } from "~/pages/api+/elements"
 import type { TimelineTask } from "~/pages/api+/tasks"
 import { TasksActionMethods } from "~/pages/api+/tasks"
 
-import { ButtonGroup } from "./ButtonGroup"
 import { Button } from "./ui/Button"
+import { ButtonGroup } from "./ui/ButtonGroup"
 import { FormButton, FormError, FormFieldError, FormFieldLabel, InlineFormField } from "./ui/Form"
 import { Checkbox, Input, Textarea } from "./ui/Inputs"
 import { Modal, useModal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
-
-export const PreloadedEditorInput = lazyWithPreload(() => import("./EditorInput"))
 
 type FieldErrors = {
   [Property in keyof TimelineTask]: string[]
@@ -300,7 +297,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
       </Dialog>
       <Modal title="Create an Element" {...elementModalProps}>
         <createElementFetcher.Form replace method="post" action="/timeline/elements">
-          <div className="stack">
+          <div className="stack p-4">
             <InlineFormField
               autoFocus
               name="name"

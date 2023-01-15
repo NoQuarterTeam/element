@@ -1,13 +1,13 @@
 import type { User } from "@prisma/client"
 import { redirect } from "@remix-run/node"
 
-import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import type { Await } from "~/lib/helpers/types"
 import { createToken, decryptToken } from "~/lib/jwt.server"
 import { stripe } from "~/lib/stripe/stripe.server"
 
-import { getFlashSession, getUserSession } from "../session/session.server"
+import { FlashType, getFlashSession } from "../session/flash.server"
+import { getUserSession } from "../session/session.server"
 import { sendPasswordChangedEmail, sendResetPasswordEmail } from "../user/user.mailer.server"
 import { comparePasswords, hashPassword } from "./password.server"
 

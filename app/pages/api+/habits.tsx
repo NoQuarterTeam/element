@@ -5,11 +5,10 @@ import dayjs from "dayjs"
 import { badRequest } from "remix-utils"
 import { z } from "zod"
 
-import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { requireUser } from "~/services/auth/auth.server"
-import { getFlashSession } from "~/services/session/session.server"
+import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)

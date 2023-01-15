@@ -11,21 +11,25 @@ import {
   RiTimeLine,
   RiUser3Line,
 } from "react-icons/ri"
-import * as c from "@chakra-ui/react"
 import { Role } from "@prisma/client"
-import { useNavigate, useSubmit } from "@remix-run/react"
+import { useFetcher, useNavigate, useSubmit } from "@remix-run/react"
+import clsx from "clsx"
 
+import { useEventListener } from "~/lib/hooks/useEventListener"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useMe } from "~/pages/_app"
 
-import { Modal } from "./ui/Modal"
+import { useTheme } from "../lib/theme"
 import { ShortcutsInfo } from "./ShortcutsInfo"
+import { IconButton } from "./ui/IconButton"
+import { Modal, useModal } from "./ui/Modal"
+import { Tooltip } from "./ui/Tooltip"
 
 export function Nav() {
-  const shortcutModalProps = c.useDisclosure()
-
+  const shortcutModalProps = useModal()
+  const themeFetcher = useFetcher()
   const navProps = useStoredDisclosure("element.nav", { defaultIsOpen: true })
   const me = useMe()
   const featuresSeen = useFeaturesSeen((s) => s.featuresSeen)
@@ -33,7 +37,7 @@ export function Nav() {
   const logoutSubmit = useSubmit()
   const navigate = useNavigate()
 
-  c.useEventListener("keydown", (event) => {
+  useEventListener("keydown", (event: KeyboardEvent) => {
     if (event.metaKey && event.key === "k") {
       event.preventDefault()
       navigate("/timeline/focus")
@@ -52,185 +56,168 @@ export function Nav() {
     }
   })
 
-  const { colorMode, toggleColorMode } = c.useColorMode()
-  const isDark = colorMode === "dark"
-  const bg = c.useColorModeValue("white", "gray.800")
-
-  const borderColor = c.useColorModeValue("gray.100", "gray.900")
+  const theme = useTheme()
 
   const elementIds = useSelectedElements((s) => s.elementIds)
   return (
     <>
-      <c.Flex position="absolute" top={4} right={0} w="65px" justify="center">
-        <c.Fade in={!navProps.isOpen}>
-          <c.IconButton
-            borderRadius="full"
-            variant="ghost"
-            icon={<c.Box as={FiChevronsLeft} boxSize="18px" />}
-            aria-label="close sidebar"
-            onClick={navProps.onToggle}
-          />
-        </c.Fade>
-      </c.Flex>
+      <div className="absolute top-4 right-0 flex w-[65px] justify-center">
+        <IconButton
+          rounded="full"
+          variant="ghost"
+          icon={<FiChevronsLeft className="sq-[18px]" />}
+          aria-label="close sidebar"
+          onClick={navProps.onToggle}
+        />
+      </div>
 
-      <c.Flex
-        overflow="hidden"
-        flexDir="column"
-        pb={6}
-        w={navProps.isOpen ? "65px" : "0px"}
-        transition="width 80ms"
-        align="center"
-        position="fixed"
-        top={0}
-        pt={4}
-        bottom={0}
-        borderLeft="1px solid"
-        borderColor={borderColor}
-        bg={bg}
-        right={0}
-        justify="space-between"
+      <div
+        className={clsx(
+          "fixed top-0 bottom-0 right-0 flex flex-col items-center justify-between overflow-hidden border-l border-gray-100 bg-white pb-6 pt-4 transition-[width] duration-100 dark:border-gray-900 dark:bg-gray-800",
+          navProps.isOpen ? "w-[65px]" : "w-0",
+        )}
       >
-        <c.VStack spacing={1}>
-          <c.IconButton
-            borderRadius="full"
-            icon={<c.Box as={FiChevronsRight} boxSize="18px" />}
+        <div className="vstack space-y-1">
+          <IconButton
+            rounded="full"
+            icon={<FiChevronsRight className="sq-[18px]" />}
             aria-label="close nav"
             variant="ghost"
             onClick={navProps.onToggle}
           />
-          <c.Tooltip label="Backlog" placement="auto" zIndex={50} hasArrow>
-            <c.IconButton
-              borderRadius="full"
+          <Tooltip side="left" label="Backlog">
+            <IconButton
+              rounded="full"
               variant="ghost"
               aria-label="open backlog"
               onClick={() => navigate("backlog")}
               icon={
-                <c.Box pos="relative">
-                  <c.Box as={RiTimeLine} boxSize="18px" />
+                <div className="relative">
+                  <RiTimeLine className="sq-[18px]" />
                   {!featuresSeen.includes("backlog") && (
-                    <c.Box boxSize="5px" borderRadius="full" bg="red.500" pos="absolute" top={0} right={0} />
+                    <div className="absolute top-0 right-0 rounded-full bg-red-500 sq-[5px]" />
                   )}
-                </c.Box>
+                </div>
               }
             />
-          </c.Tooltip>
-          <c.Tooltip label="Elements" placement="auto" zIndex={50} hasArrow>
-            <c.IconButton
-              borderRadius="full"
+          </Tooltip>
+          <Tooltip side="left" label="Elements">
+            <IconButton
+              rounded="full"
               variant="ghost"
               aria-label="open element sidebar"
               onClick={() => navigate("elements")}
               icon={
-                <c.Box pos="relative">
-                  <c.Box as={RiBookLine} boxSize="18px" />
-                  {elementIds.length > 0 && (
-                    <c.Box boxSize="10px" borderRadius="full" bg="orange.500" pos="absolute" top={-1} right={-1} />
-                  )}
-                </c.Box>
+                <div className="relative">
+                  <RiBookLine className="sq-[18px]" />
+                  {elementIds.length > 0 && <div className="absolute -top-1 -right-1 rounded-full bg-primary-500 sq-[10px]" />}
+                </div>
               }
             />
-          </c.Tooltip>
-          <c.Tooltip label="Focus mode" placement="auto" zIndex={50} hasArrow>
-            <c.IconButton
-              borderRadius="full"
+          </Tooltip>
+          <Tooltip side="left" label="Focus mode">
+            <IconButton
+              rounded="full"
               variant="ghost"
               aria-label="open focus mode"
               onClick={() => {
                 navigate("focus")
               }}
               icon={
-                <c.Box pos="relative">
-                  <c.Box as={RiFocus3Line} boxSize="18px" />
-                  {!featuresSeen.includes("focus") && (
-                    <c.Box boxSize="5px" borderRadius="full" bg="red.500" pos="absolute" top={0} right={0} />
-                  )}
-                </c.Box>
+                <div className="relative">
+                  <RiFocus3Line className="sq-[18px]" />
+                  {!featuresSeen.includes("focus") && <div className="absolute top-0 right-0 rounded-full bg-red-500 sq-[5px]" />}
+                </div>
               }
             />
-          </c.Tooltip>
-        </c.VStack>
+          </Tooltip>
+        </div>
 
-        <c.VStack spacing={1}>
-          {/* <c.Tooltip label="Dashboard" placement="auto" zIndex={50} hasArrow>
-            <c.IconButton
-              borderRadius="full"
+        <div className="stack space-y-1">
+          {/* <Tooltip side="left" label="Dashboard" >
+            <IconButton
+              rounded="full"
               variant="ghost"
               aria-label="open dashboard"
               onClick={() => navigate("/dashboard")}
-              icon={<c.Box as={RiBarChartLine} boxSize="18px" />}
+              icon={<RiBarChartLine className="sq-[18px]" />}
             />
-          </c.Tooltip> */}
-          <c.Tooltip label="Profile" placement="auto" zIndex={50} hasArrow>
-            <c.IconButton
-              borderRadius="full"
+          </Tooltip> */}
+          <Tooltip side="left" label="Profile">
+            <IconButton
+              rounded="full"
               aria-label="Profile"
               variant="ghost"
               onClick={() => navigate("profile")}
               icon={
-                <c.Box pos="relative">
-                  <c.Box as={RiUser3Line} boxSize="18px" />
+                <div className="relative">
+                  <RiUser3Line className="sq-[18px]" />
                   {(!featuresSeen.includes("backlog") || !featuresSeen.includes("habits")) && (
-                    <c.Box boxSize="5px" borderRadius="full" bg="red.500" pos="absolute" top={0} right={0} />
+                    <div className="absolute top-0 right-0 rounded-full bg-red-500 sq-[5px]" />
                   )}
-                </c.Box>
+                </div>
               }
             />
-          </c.Tooltip>
-          <c.Tooltip label="Color mode" placement="auto" zIndex={50} hasArrow>
-            <c.IconButton
-              borderRadius="full"
-              aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-              variant="ghost"
-              onClick={toggleColorMode}
-              icon={<c.Box as={isDark ? RiSunLine : RiMoonLine} boxSize="18px" />}
-            />
-          </c.Tooltip>
+          </Tooltip>
+          <themeFetcher.Form action="/api/theme" method="post" replace>
+            <input type="hidden" name="theme" value={theme === "dark" ? "light" : "dark"} />
+            <Tooltip side="left" label="Color mode">
+              <IconButton
+                type="submit"
+                rounded="full"
+                aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                variant="ghost"
+                // onClick={toggleColorMode}
+                icon={theme === "dark" ? <RiSunLine className="sq-[18px]" /> : <RiMoonLine className="sq-[18px]" />}
+              />
+            </Tooltip>
+          </themeFetcher.Form>
 
-          <c.Tooltip label="Shortcuts" placement="auto" zIndex={50} hasArrow>
-            <c.IconButton
-              borderRadius="full"
+          <Tooltip side="left" label="Shortcuts">
+            <IconButton
+              rounded="full"
               onClick={shortcutModalProps.onOpen}
               aria-label="Shortcuts"
               variant="ghost"
-              icon={<c.Box as={RiQuestionLine} boxSize="18px" />}
+              icon={<RiQuestionLine className="sq-[18px]" />}
             />
-          </c.Tooltip>
-          <c.Tooltip label="Give feedback" placement="auto" zIndex={50} hasArrow>
-            <c.IconButton
-              borderRadius="full"
+          </Tooltip>
+          <Tooltip side="left" label="Give feedback">
+            <IconButton
+              rounded="full"
               onClick={() => navigate("feedback")}
               aria-label="Give feedback"
               variant="ghost"
-              icon={<c.Box as={BiMessage} boxSize="18px" />}
+              icon={<BiMessage className="sq-[18px]" />}
             />
-          </c.Tooltip>
+          </Tooltip>
           {me.role === Role.ADMIN && (
-            <c.Tooltip label="Admin" placement="auto" zIndex={50} hasArrow>
-              <c.IconButton
-                borderRadius="full"
+            <Tooltip side="left" label="Admin">
+              <IconButton
+                rounded="full"
                 onClick={() => navigate("/admin")}
                 aria-label="Admin"
                 variant="ghost"
-                icon={<c.Box as={RiDashboard3Line} boxSize="18px" />}
+                icon={<RiDashboard3Line className="sq-[18px]" />}
               />
-            </c.Tooltip>
+            </Tooltip>
           )}
 
-          <c.Tooltip label="Logout" placement="auto" zIndex={50} hasArrow>
-            <c.IconButton
-              borderRadius="full"
+          <Tooltip side="left" label="Logout">
+            <IconButton
+              rounded="full"
               variant="ghost"
               aria-label="logout"
               onClick={() => logoutSubmit(null, { method: "post", action: "/logout" })}
-              icon={<c.Box as={RiLogoutCircleRLine} boxSize="18px" />}
+              icon={<RiLogoutCircleRLine className="sq-[18px]" />}
             />
-          </c.Tooltip>
-        </c.VStack>
+          </Tooltip>
+        </div>
 
         <Modal position="center" title="Shortcuts" {...shortcutModalProps}>
           <ShortcutsInfo />
         </Modal>
-      </c.Flex>
+      </div>
     </>
   )
 }

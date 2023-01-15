@@ -5,15 +5,15 @@ import { redirect } from "@remix-run/node"
 import { useFetcher, useSubmit } from "@remix-run/react"
 import { z } from "zod"
 
-import { ButtonGroup } from "~/components/ButtonGroup"
-import { Form, FormButton, FormError, FormField, ImageField } from "~/components/Form"
-import { FlashType } from "~/lib/config.server"
+import { ButtonGroup } from "~/components/ui/ButtonGroup"
+import { Form, FormButton, FormError, FormField, ImageField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { UPLOAD_PATHS } from "~/lib/uploadPaths"
 import { requireUser } from "~/services/auth/auth.server"
-import { getFlashSession, getUserSession } from "~/services/session/session.server"
+import { FlashType, getFlashSession } from "~/services/session/flash.server"
+import { getUserSession } from "~/services/session/session.server"
 
 import { useMe } from "./_app"
 
@@ -96,9 +96,7 @@ export default function Account() {
           <FormField defaultValue={me.lastName} name="lastName" label="Last name" />
           <ImageField
             defaultValue={me.avatar}
-            display={{ base: "none", xl: "flex" }}
-            height="100px"
-            width="100px"
+            className="hidden sq-[100px] xl:flex"
             label="Avatar"
             name="avatar"
             path={UPLOAD_PATHS.userAvatar(me.id)}

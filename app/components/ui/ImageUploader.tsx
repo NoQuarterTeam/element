@@ -86,15 +86,17 @@ export function ImageUploader({ children, path, onSubmit, dropzoneOptions, class
       </div>
 
       <Modal {...modalProps} onClose={handleClose} title="Confirm image">
-        <img className="mb-4 max-h-[400px] w-full object-contain" alt="preview" src={image?.preview} />
-        <ButtonGroup>
-          <Button variant="ghost" disabled={isLoading} onClick={handleClose}>
-            Cancel
-          </Button>
-          <BrandButton isLoading={isLoading} onClick={handleSubmitImage}>
-            Submit
-          </BrandButton>
-        </ButtonGroup>
+        <div className="p-4">
+          <img className="mb-4 max-h-[400px] w-full object-contain" alt="preview" src={image?.preview} />
+          <ButtonGroup>
+            <Button variant="ghost" disabled={isLoading} onClick={handleClose}>
+              Cancel
+            </Button>
+            <BrandButton isLoading={isLoading} onClick={handleSubmitImage}>
+              Submit
+            </BrandButton>
+          </ButtonGroup>
+        </div>
       </Modal>
     </>
   )

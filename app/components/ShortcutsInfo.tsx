@@ -1,61 +1,61 @@
-import { Box, Divider, Flex, Kbd, Text } from "@chakra-ui/react"
+import { Kbd } from "./ui/Kbd"
 
 export function ShortcutsInfo() {
   return (
-    <Box>
-      <Text fontWeight={500}>On timeline</Text>
-      <Flex align="center" justify="space-between">
-        <Text>
+    <div>
+      <p className="font-medium">On timeline</p>
+      <div className="flex items-center justify-between">
+        <p>
           <Kbd>cmd</Kbd> + <Kbd>.</Kbd>
-        </Text>
-        <Text fontSize="sm">Create a task</Text>
-      </Flex>
-      <Flex align="center" justify="space-between">
-        <Text>
+        </p>
+        <p className="text-md">Create a task</p>
+      </div>
+      <div className="flex items-center justify-between">
+        <p>
           <Kbd>cmd</Kbd> + <Kbd>k</Kbd>
-        </Text>
-        <Text fontSize="sm">Enter focus mode</Text>
-      </Flex>
-      <Flex align="center" justify="space-between">
-        <Text>
+        </p>
+        <p className="text-md">Enter focus mode</p>
+      </div>
+      <div className="flex items-center justify-between">
+        <p>
           <Kbd>cmd</Kbd> + <Kbd>b</Kbd>
-        </Text>
-        <Text fontSize="sm">Open backlog</Text>
-      </Flex>
-      <Flex align="center" justify="space-between">
-        <Text>
+        </p>
+        <p className="text-md">Open backlog</p>
+      </div>
+      <div className="flex items-center justify-between">
+        <p>
           <Kbd>cmd</Kbd> + <Kbd>e</Kbd>
-        </Text>
-        <Text fontSize="sm">Open element sidebar</Text>
-      </Flex>
-      <Flex align="center" justify="space-between">
-        <Text>
+        </p>
+        <p className="text-md">Open element sidebar</p>
+      </div>
+      <div className="flex items-center justify-between">
+        <p>
           <Kbd>cmd</Kbd> + <Kbd>\</Kbd>
-        </Text>
-        <Text fontSize="sm">Toggle nav</Text>
-      </Flex>
+        </p>
+        <p className="text-md">Toggle nav</p>
+      </div>
 
-      <Divider my={4} />
+      <hr />
 
-      <Text fontWeight={500}>On a task</Text>
-      <Flex align="center" justify="space-between">
-        <Text>
+      <p className="font-medium">On a task</p>
+      <div className="flex items-center justify-between">
+        <p>
           <Kbd>cmd</Kbd> + <Kbd>click</Kbd>
-        </Text>
-        <Text fontSize="sm">Duplicate task</Text>
-      </Flex>
-      <Flex align="center" justify="space-between">
-        <Text>
+        </p>
+        <p className="text-md">Duplicate task</p>
+      </div>
+      <div className="flex items-center justify-between">
+        <p>
           <Kbd>shift</Kbd> + <Kbd>click</Kbd>
-        </Text>
-        <Text fontSize="sm">Delete task</Text>
-      </Flex>
-      <Flex align="center" justify="space-between">
-        <Text>
+        </p>
+        <p className="text-md">Delete task</p>
+      </div>
+      <div className="flex items-center justify-between">
+        <p>
           <Kbd>alt</Kbd> + <Kbd>click</Kbd>
-        </Text>
-        <Text fontSize="sm">Toggle task completion</Text>
-      </Flex>
-    </Box>
+        </p>
+        <p className="text-md">Toggle task completion</p>
+      </div>
+    </div>
   )
 }

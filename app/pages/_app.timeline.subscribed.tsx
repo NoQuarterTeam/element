@@ -1,7 +1,7 @@
 import * as c from "@chakra-ui/react"
 import { useNavigate } from "@remix-run/react"
 
-import { Confetti } from "~/components/Confetti"
+import { Confetti } from "~/components/ui/Confetti"
 
 export default function Subscribed() {
   const navigate = useNavigate()

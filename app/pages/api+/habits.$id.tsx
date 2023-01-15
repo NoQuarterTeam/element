@@ -3,12 +3,11 @@ import { json, redirect } from "@remix-run/node"
 import dayjs from "dayjs"
 import { z } from "zod"
 
-import { FlashType } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { requireUser } from "~/services/auth/auth.server"
-import { getFlashSession } from "~/services/session/session.server"
+import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export enum HabitActionMethods {
   ToggleComplete = "toggleComplete",

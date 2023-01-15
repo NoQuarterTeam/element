@@ -1,4 +1,4 @@
-import { DraggableLocation } from "@hello-pangea/dnd"
+import { type DraggableLocation } from "@hello-pangea/dnd"
 import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
 

@@ -5,6 +5,7 @@ import { useLoaderData } from "@remix-run/react"
 import { Outlet } from "@remix-run/react"
 import { useHydrated } from "remix-utils"
 
+import { LoadingScreen } from "~/components/ui/LoadingScreen"
 import { requireUser } from "~/services/auth/auth.server"
 
 export const shouldRevalidate: ShouldRevalidateFunction = ({ formAction }) => {
@@ -16,21 +17,16 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json(user)
 }
 
-type User = SerializeFrom<typeof loader>
+export type CurrentUser = SerializeFrom<typeof loader>
 
 export default function TimelineLayout() {
   useLoaderData<typeof loader>()
   const isHydrated = useHydrated()
 
-  if (!isHydrated)
-    return (
-      <div className="center inset-0 z-[100] flex h-screen w-screen bg-gray-900">
-        <img src="/logo.png" className="w-[100px]" alt="loading" />
-      </div>
-    )
+  if (!isHydrated) return <LoadingScreen />
   return <Outlet />
 }
 
 export function useMe() {
-  return useRouteLoaderData("pages/_app") as User
+  return useRouteLoaderData("pages/_app") as CurrentUser
 }

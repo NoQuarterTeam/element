@@ -1,26 +1,27 @@
 import * as React from "react"
-import { HexColorPicker } from "react-colorful"
 import { RiAddLine } from "react-icons/ri"
-import * as c from "@chakra-ui/react"
 import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { useLoaderData, useNavigate, useTransition } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
 import { z } from "zod"
 
-import { ButtonGroup } from "~/components/ButtonGroup"
+import { ColorInput } from "~/components/ColorInput"
 import { ElementItem } from "~/components/ElementItem"
-import { Form, FormButton, FormError, InlineFormField } from "~/components/Form"
-import { Modal } from "~/components/Modal"
-import { isValidHex, randomHexColor, safeReadableColor } from "~/lib/color"
-import { FlashType } from "~/lib/config.server"
+import { Button } from "~/components/ui/Button"
+import { ButtonGroup } from "~/components/ui/ButtonGroup"
+import { Drawer } from "~/components/ui/Drawer"
+import { Form, FormButton, FormError, InlineFormField } from "~/components/ui/Form"
+import { Input } from "~/components/ui/Inputs"
+import { Modal, useModal } from "~/components/ui/Modal"
+import { useToast } from "~/components/ui/Toast"
+import { isValidHex, randomHexColor } from "~/lib/color"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
-import { useToast } from "~/lib/hooks/useToast"
 import { badRequest } from "~/lib/remix"
 import { requireUser } from "~/services/auth/auth.server"
-import { getFlashSession } from "~/services/session/session.server"
+import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getSidebarElements } from "~/services/timeline/sidebar.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -102,9 +103,9 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function Elements() {
   const elements = useLoaderData<typeof loader>()
   const [search, setSearch] = React.useState("")
-  const [isArchivedShown, { toggle }] = c.useBoolean(false)
+  const achiveProps = useModal()
   const [color, setColor] = React.useState(randomHexColor())
-  const createModalProps = c.useDisclosure()
+  const createModalProps = useModal()
   const createFetcher = useTransition()
   React.useEffect(() => {
     if (createFetcher.type === "actionReload") {
@@ -114,109 +115,73 @@ export default function Elements() {
   }, [createFetcher.type])
 
   const matchedMyElements = matchSorter(
-    elements.filter((e) => (isArchivedShown ? e : !e.archivedAt)),
+    elements.filter((e) => (achiveProps.isOpen ? e : !e.archivedAt)),
     search,
-    {
-      keys: ["name", "children.*.name", "children.*.children.*.name"],
-    },
+    { keys: ["name", "children.*.name", "children.*.children.*.name"] },
   )
   const elementIds = useSelectedElements((s) => s.elementIds)
   const navigate = useNavigate()
   const toast = useToast()
   return (
-    <c.Drawer isOpen={true} onClose={() => navigate("/timeline")} placement="right">
-      <c.DrawerOverlay>
-        <c.DrawerContent>
-          <c.DrawerCloseButton />
-          <c.DrawerHeader>
-            Elements
-            {elementIds.length > 0 && (
-              <c.Text fontSize="md" as="span">
-                {" "}
-                · {elementIds.length} selected
-              </c.Text>
-            )}
-          </c.DrawerHeader>
-          <c.Box overflowY="scroll" minH="100vh" pb={200} pos="relative">
-            <c.Flex p={4} pt="2px" align="center" justify="space-between">
-              <c.Input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search"
-                variant="outline"
-                flex={1}
-              />
-              <c.Button ml={2} colorScheme="primary" rightIcon={<c.Box as={RiAddLine} />} onClick={createModalProps.onOpen}>
-                Add
-              </c.Button>
-              <Modal title="Create an Element" size="xl" {...createModalProps}>
-                <Form
-                  method="post"
-                  replace
-                  onSubmit={(e) => {
-                    if (!isValidHex(color)) {
-                      e.preventDefault()
-                      return toast({ description: "Invalid color", status: "error" })
-                    }
-                  }}
-                >
-                  <c.Stack spacing={4}>
-                    <InlineFormField autoFocus name="name" label="Name" isRequired />
-                    <c.Input type="hidden" name="color" value={color} />
-                    <InlineFormField
-                      name="color"
-                      isRequired
-                      label="Color"
-                      shouldPassProps={false}
-                      input={
-                        <c.SimpleGrid w="100%" columns={{ base: 1, md: 2 }} spacing={1}>
-                          <c.Flex w="100%">
-                            <HexColorPicker color={color} onChange={setColor} />
-                          </c.Flex>
-                          <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
-                            <c.Center bg={color} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
-                              <c.Input
-                                color={safeReadableColor(color)}
-                                textAlign="center"
-                                isInvalid={!isValidHex(color)}
-                                w="100%"
-                                value={color}
-                                onChange={(e) => setColor(e.target.value)}
-                              />
-                            </c.Center>
-                          </c.Center>
-                        </c.SimpleGrid>
-                      }
-                    />
-                    <FormError />
-                    <ButtonGroup>
-                      <c.Button variant="ghost" onClick={createModalProps.onClose}>
-                        Cancel
-                      </c.Button>
-                      <FormButton name="_action" value={ElementsActionMethods.CreateElement}>
-                        Create
-                      </FormButton>
-                    </ButtonGroup>
-                  </c.Stack>
-                </Form>
-              </Modal>
-            </c.Flex>
+    <Drawer
+      isOpen={true}
+      onClose={() => navigate("/timeline")}
+      title={`Elements ${elementIds.length > 0 ? `· ${elementIds.length} selected` : ""}`}
+      size="md"
+    >
+      <div className="relative min-h-screen overflow-y-scroll pb-[200px]">
+        <div className="flex items-center justify-between space-x-2 pr-3 pb-4 pl-4 pt-1">
+          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" variant="outline" />
+          <Button colorScheme="primary" leftIcon={<RiAddLine />} onClick={createModalProps.onOpen}>
+            Add
+          </Button>
+          <Modal title="Create an Element" size="xl" {...createModalProps}>
+            <Form
+              method="post"
+              replace
+              onSubmit={(e) => {
+                if (!isValidHex(color)) {
+                  e.preventDefault()
+                  return toast({ description: "Invalid color", status: "error" })
+                }
+              }}
+            >
+              <div className="stack p-4">
+                <InlineFormField autoFocus name="name" label="Name" required />
+                <InlineFormField
+                  name="color"
+                  required
+                  label="Color"
+                  shouldPassProps={false}
+                  input={<ColorInput name="color" value={color} setValue={setColor} />}
+                />
+                <FormError />
+                <ButtonGroup>
+                  <Button variant="ghost" onClick={createModalProps.onClose}>
+                    Cancel
+                  </Button>
+                  <FormButton name="_action" value={ElementsActionMethods.CreateElement}>
+                    Create
+                  </FormButton>
+                </ButtonGroup>
+              </div>
+            </Form>
+          </Modal>
+        </div>
 
-            <c.Stack spacing="1px">
-              {matchedMyElements.map((element) => (
-                <ElementItem key={element.id} {...{ element }} search={search} depth={0} isArchivedShown={isArchivedShown} />
-              ))}
-            </c.Stack>
-            {elements.filter((e) => !!e.archivedAt).length > 0 && (
-              <c.Box p={4}>
-                <c.Button onClick={toggle} size="sm" variant="ghost" w="100%">
-                  {isArchivedShown ? "Hide archived" : "Show archived"}
-                </c.Button>
-              </c.Box>
-            )}
-          </c.Box>
-        </c.DrawerContent>
-      </c.DrawerOverlay>
-    </c.Drawer>
+        <div className="stack space-y-[1px]">
+          {matchedMyElements.map((element) => (
+            <ElementItem key={element.id} {...{ element }} search={search} depth={0} isArchivedShown={achiveProps.isOpen} />
+          ))}
+        </div>
+        {elements.filter((e) => !!e.archivedAt).length > 0 && (
+          <div className="p-4">
+            <Button onClick={achiveProps.onToggle} size="sm" variant="ghost" className="w-full">
+              {achiveProps.isOpen ? "Hide archived" : "Show archived"}
+            </Button>
+          </div>
+        )}
+      </div>
+    </Drawer>
   )
 }

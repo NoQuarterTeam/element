@@ -4,11 +4,11 @@ import { Link } from "@remix-run/react"
 import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
-import { FlashType } from "~/lib/config.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { register } from "~/services/auth/auth.server"
-import { getFlashSession, getUserSession } from "~/services/session/session.server"
+import { FlashType, getFlashSession } from "~/services/session/flash.server"
+import { getUserSession } from "~/services/session/session.server"
 import { createTemplates } from "~/services/timeline/templates.server"
 
 export const meta: MetaFunction = () => {

@@ -7,15 +7,15 @@ import { redirect } from "@remix-run/node"
 import { Outlet, useFetcher, useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
 
-import { FormButton } from "~/components/Form"
-import { Modal } from "~/components/Modal"
-import { FlashType, PRICE_ID } from "~/lib/config.server"
+import { FormButton } from "~/components/ui/Form"
+import { Modal } from "~/components/ui/Modal"
+import { PRICE_ID } from "~/lib/config.server"
 import { FULL_WEB_URL } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { badRequest } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { requireUser } from "~/services/auth/auth.server"
-import { getFlashSession } from "~/services/session/session.server"
+import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)

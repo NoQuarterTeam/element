@@ -7,9 +7,8 @@ import dayjs from "dayjs"
 import type Stripe from "stripe"
 import { z } from "zod"
 
-import { ButtonGroup } from "~/components/ButtonGroup"
-import { Form, FormButton, FormField } from "~/components/Form"
-import { FlashType } from "~/lib/config.server"
+import { ButtonGroup } from "~/components/ui/ButtonGroup"
+import { Form, FormButton, FormField } from "~/components/ui/Form"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { COUNTRIES } from "~/lib/static/countries"
@@ -17,7 +16,7 @@ import { INVOICE_STATUS } from "~/lib/static/invoiceStatus"
 import { TAX_TYPES } from "~/lib/static/taxTypes"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { requireUser } from "~/services/auth/auth.server"
-import { getFlashSession } from "~/services/session/session.server"
+import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)

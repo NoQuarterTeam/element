@@ -1,5 +1,4 @@
 import React from "react"
-import { HexColorPicker } from "react-colorful"
 import {
   RiAddLine,
   RiArrowDownSLine,
@@ -9,22 +8,26 @@ import {
   RiEye2Line,
   RiMore2Fill,
 } from "react-icons/ri"
-import * as c from "@chakra-ui/react"
 import { useFetcher, useTransition } from "@remix-run/react"
+import clsx from "clsx"
 import { matchSorter } from "match-sorter"
 
-import { isValidHex, safeReadableColor } from "~/lib/color"
+import { isValidHex } from "~/lib/color"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { useToast } from "~/lib/hooks/useToast"
 import type { SidebarElement } from "~/pages/_app.timeline.elements"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
 import { ElementActionMethods } from "~/pages/api+/elements.$id"
 
-import { ButtonGroup } from "./ButtonGroup"
-import { Form, FormButton, FormError, InlineFormField } from "./Form"
-import { Modal } from "./Modal"
+import { ColorInput } from "./ColorInput"
+import { Button } from "./ui/Button"
+import { ButtonGroup } from "./ui/ButtonGroup"
+import { Form, FormButton, FormError, InlineFormField } from "./ui/Form"
+import { IconButton } from "./ui/IconButton"
+import { Menu, MenuButton, MenuItem, MenuList } from "./ui/Menu"
+import { Modal, useModal } from "./ui/Modal"
+import { useToast } from "./ui/Toast"
 
 const MAX_DEPTH = 2
 
@@ -41,7 +44,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
 
   const [newColor, setNewColor] = React.useState(element.color)
   const [editColor, setEditColor] = React.useState(element.color)
-  const createModalProps = c.useDisclosure()
+  const createModalProps = useModal()
   const transition = useTransition()
   React.useEffect(() => {
     if (transition.type === "actionReload") {
@@ -49,7 +52,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
     }
   }, [transition.type, createModalProps])
 
-  const updateModalProps = c.useDisclosure()
+  const updateModalProps = useModal()
   const updateFetcher = useFetcher()
   React.useEffect(() => {
     if (updateFetcher.type === "actionReload" && updateFetcher.data?.element) {
@@ -58,7 +61,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
     }
   }, [updateFetcher.data, updateFetcher.type, refetch])
 
-  const archiveModalProps = c.useDisclosure()
+  const archiveModalProps = useModal()
   const archiveFetcher = useFetcher()
   React.useEffect(() => {
     if (archiveFetcher.type === "actionReload" && archiveFetcher.data?.success) {
@@ -79,9 +82,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
   const matchedChildren = matchSorter(
     element.children.filter((e) => (isArchivedShown ? e : !e.archivedAt)),
     search,
-    {
-      keys: ["name", "children.*.name"],
-    },
+    { keys: ["name", "children.*.name"] },
   )
 
   const { elementIds, toggleElementId } = useSelectedElements()
@@ -89,80 +90,99 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
   const isSelected = elementIds.includes(element.id)
 
   return (
-    <c.Box>
-      <c.Flex align="center" justify="space-between" pr={2}>
-        <c.Flex align="center" justify="space-between" flex={1} pos="relative">
-          <c.Button
-            flex={1}
-            borderRadius="none"
-            borderRightRadius="full"
-            variant={isSelected ? "solid" : "ghost"}
-            py={2}
-            fontSize="sm"
-            textAlign="left"
-            justifyContent="flex-start"
-            opacity={element.archivedAt ? 0.5 : 1}
-            pl={props.depth === 0 ? "35px" : `${35 + props.depth * 15}px`}
-            // pr={14}
+    <div>
+      <div className="flex items-center justify-between pr-2">
+        <div className="relative flex flex-1 items-center justify-between">
+          <button
+            className={clsx(
+              "flex-1 truncate rounded-r-full border-l-4 py-1 pr-14 text-left text-sm outline-none",
+              element.archivedAt ? "opacity-50" : "opacity-100",
+              isSelected
+                ? "bg-black/10 dark:bg-white/10"
+                : "bg-transparent hover:bg-black/5 focus:bg-black/5 dark:hover:bg-white/5 dark:focus:bg-white/5",
+            )}
+            style={{ borderColor: element.color, paddingLeft: props.depth === 0 ? "35px" : `${35 + props.depth * 15}px` }}
             onClick={() => toggleElementId(element.id)}
-            fontWeight="normal"
-            borderLeft="4px solid"
-            borderColor={element.color}
           >
             {element.name}
-          </c.Button>
-          {element.children.length > 0 && (
-            <c.IconButton
-              position="absolute"
+          </button>
+          {element.children.filter((e) => !e.archivedAt).length > 0 && (
+            <IconButton
+              className={clsx("absolute")}
+              style={{ left: props.depth === 0 ? "10px" : `${10 + props.depth * 15}px` }}
+              rounded="full"
+              size="xs"
               aria-label="expand"
               onClick={expandProps.onToggle}
-              minW="20px"
-              borderRadius="full"
-              boxSize="20px"
-              left={props.depth === 0 ? "10px" : `${10 + props.depth * 15}px`}
               variant="ghost"
-              icon={<c.Box as={expandProps.isOpen ? RiArrowDownSLine : RiArrowRightSLine} boxSize="16px" />}
+              icon={expandProps.isOpen ? <RiArrowDownSLine className="sq-4" /> : <RiArrowRightSLine className="sq-4" />}
             />
           )}
-        </c.Flex>
-        <c.Flex>
-          <c.Menu>
-            <c.MenuButton
-              as={c.IconButton}
-              variant="ghost"
-              borderRadius="full"
-              icon={<c.Box as={RiMore2Fill} boxSize="16px" />}
-            />
+        </div>
+        <div>
+          <Menu>
+            <MenuButton>
+              <IconButton aria-label="more" variant="ghost" rounded="full" icon={<RiMore2Fill className="sq-4" />} />
+            </MenuButton>
 
-            <c.MenuList>
+            <MenuList>
               {props.depth < MAX_DEPTH && (
-                <c.MenuItem onClick={createModalProps.onOpen} icon={<c.Box as={RiAddLine} boxSize="12px" />}>
-                  Create child
-                </c.MenuItem>
+                <MenuItem>
+                  {({ isActive }) => (
+                    <button
+                      onClick={createModalProps.onOpen}
+                      className={clsx(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
+                    >
+                      <RiAddLine className="sq-[12px]" />
+                      <span>Create child</span>
+                    </button>
+                  )}
+                </MenuItem>
               )}
-              <c.MenuItem onClick={updateModalProps.onOpen} icon={<c.Box as={RiEdit2Line} boxSize="12px" />}>
-                Edit
-              </c.MenuItem>
+              <MenuItem>
+                {({ isActive }) => (
+                  <button
+                    onClick={updateModalProps.onOpen}
+                    className={clsx(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
+                  >
+                    <RiEdit2Line className="sq-[12px]" />
+                    <span>Edit</span>
+                  </button>
+                )}
+              </MenuItem>
               {element.archivedAt ? (
-                <c.MenuItem
-                  onClick={() =>
-                    unarchiveFetcher.submit(
-                      { _action: ElementActionMethods.UnarchiveElement },
-                      { method: "post", action: `/api/elements/${element.id}` },
-                    )
-                  }
-                  icon={<c.Box as={RiEye2Line} boxSize="12px" />}
-                >
-                  Unarchive
-                </c.MenuItem>
+                <MenuItem>
+                  {({ isActive }) => (
+                    <button
+                      onClick={() =>
+                        unarchiveFetcher.submit(
+                          { _action: ElementActionMethods.UnarchiveElement },
+                          { method: "post", action: `/api/elements/${element.id}` },
+                        )
+                      }
+                      className={clsx(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
+                    >
+                      <RiEye2Line className="sq-[12px]" />
+                      <span>Unarchive</span>
+                    </button>
+                  )}
+                </MenuItem>
               ) : (
-                <c.MenuItem onClick={archiveModalProps.onOpen} icon={<c.Box as={RiDeleteBinLine} boxSize="12px" />}>
-                  Archive
-                </c.MenuItem>
+                <MenuItem>
+                  {({ isActive }) => (
+                    <button
+                      onClick={archiveModalProps.onOpen}
+                      className={clsx(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
+                    >
+                      <RiDeleteBinLine className="sq-[12px]" />
+                      <span>Archive</span>
+                    </button>
+                  )}
+                </MenuItem>
               )}
-            </c.MenuList>
-          </c.Menu>
-        </c.Flex>
+            </MenuList>
+          </Menu>
+        </div>
         <Modal title="Create a child element" size="xl" {...createModalProps}>
           <Form
             method="post"
@@ -174,46 +194,28 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
               }
             }}
           >
-            <c.Stack spacing={4}>
-              <c.Input type="hidden" name="parentId" value={element.id} />
-              <InlineFormField autoFocus name="name" label="Name" isRequired />
-              <c.Input type="hidden" name="color" value={newColor} />
+            <div className="stack p-4">
+              <input type="hidden" name="parentId" value={element.id} />
+              <InlineFormField autoFocus name="name" label="Name" required />
+              <input type="hidden" name="color" value={newColor} />
               <InlineFormField
                 name="color"
-                isRequired
+                required
                 shouldPassProps={false}
                 label="Color"
-                input={
-                  <c.SimpleGrid w="100%" columns={{ base: 1, md: 2 }} spacing={1}>
-                    <c.Flex w="100%">
-                      <HexColorPicker color={newColor} onChange={setNewColor} />
-                    </c.Flex>
-                    <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
-                      <c.Center bg={newColor} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
-                        <c.Input
-                          color={safeReadableColor(newColor)}
-                          textAlign="center"
-                          isInvalid={!isValidHex(newColor)}
-                          w="100%"
-                          value={newColor}
-                          onChange={(e) => setNewColor(e.target.value)}
-                        />
-                      </c.Center>
-                    </c.Center>
-                  </c.SimpleGrid>
-                }
+                input={<ColorInput name="color" value={newColor} setValue={setNewColor} />}
               />
               <FormError />
               <ButtonGroup>
-                <c.Button variant="ghost" onClick={createModalProps.onClose}>
+                <Button variant="ghost" onClick={createModalProps.onClose}>
                   Cancel
-                </c.Button>
+                </Button>
                 <FormButton name="_action" value={ElementsActionMethods.CreateElement}>
                   Create
                 </FormButton>
               </ButtonGroup>
               <FormError />
-            </c.Stack>
+            </div>
           </Form>
         </Modal>
         <Modal title={`Edit ${element.name}`} size="xl" {...updateModalProps}>
@@ -228,73 +230,52 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
               }
             }}
           >
-            <c.Stack spacing={4}>
+            <div className="stack p-4">
               <InlineFormField
                 error={updateFetcher.data?.fieldErrors?.name?.[0]}
                 autoFocus
                 defaultValue={element.name}
                 name="name"
                 label="Name"
-                isRequired
+                required
               />
-              <c.Input type="hidden" name="color" value={editColor} />
               <InlineFormField
                 name="color"
-                isRequired
+                required
                 error={updateFetcher.data?.fieldErrors?.color?.[0]}
                 label="Color"
                 shouldPassProps={false}
-                input={
-                  <c.SimpleGrid w="100%" columns={{ base: 1, md: 2 }} spacing={1}>
-                    <c.Flex w="100%">
-                      <HexColorPicker color={editColor} onChange={setEditColor} />
-                    </c.Flex>
-                    <c.Center w="100%" justifyContent={{ base: "flex-start", md: "center" }}>
-                      <c.Center bg={editColor} maxW="200px" w="100%" h="100%" p={4} px={6} borderRadius="lg">
-                        <c.Input
-                          color={safeReadableColor(editColor)}
-                          textAlign="center"
-                          isInvalid={!isValidHex(editColor)}
-                          w="100%"
-                          value={editColor}
-                          onChange={(e) => setEditColor(e.target.value)}
-                        />
-                      </c.Center>
-                    </c.Center>
-                  </c.SimpleGrid>
-                }
+                input={<ColorInput name="color" value={editColor} setValue={setEditColor} />}
               />
               <FormError error={updateFetcher.data?.formError} />
               <ButtonGroup>
-                <c.Button variant="ghost" onClick={updateModalProps.onClose}>
+                <Button variant="ghost" onClick={updateModalProps.onClose}>
                   Cancel
-                </c.Button>
-                <c.Button
+                </Button>
+                <Button
                   type="submit"
                   colorScheme="primary"
-                  isDisabled={updateFetcher.state !== "idle"}
                   isLoading={updateFetcher.state !== "idle"}
                   name="_action"
                   value={ElementActionMethods.UpdateElement}
                 >
                   Save
-                </c.Button>
+                </Button>
               </ButtonGroup>
               <FormError />
-            </c.Stack>
+            </div>
           </updateFetcher.Form>
         </Modal>
 
         <Modal title={`Archive ${element.name}`} {...archiveModalProps}>
-          <c.Stack spacing={4}>
-            <c.Text>Are you sure you want to do this?</c.Text>
+          <div className="stack p-4">
+            <p>Are you sure you want to do this?</p>
             <ButtonGroup>
-              <c.Button variant="outline" onClick={archiveModalProps.onClose}>
+              <Button variant="outline" onClick={archiveModalProps.onClose}>
                 Cancel
-              </c.Button>
-              <c.Button
+              </Button>
+              <Button
                 colorScheme="red"
-                isDisabled={archiveFetcher.state !== "idle"}
                 isLoading={archiveFetcher.state !== "idle"}
                 onClick={() =>
                   archiveFetcher.submit(
@@ -304,13 +285,13 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                 }
               >
                 Archive
-              </c.Button>
+              </Button>
             </ButtonGroup>
-          </c.Stack>
+          </div>
         </Modal>
-      </c.Flex>
+      </div>
       {matchedChildren.length > 0 && expandProps.isOpen ? (
-        <c.Stack mt="1px" spacing="1px">
+        <div className="stack mt-[1px] space-y-[1px]">
           {matchedChildren.map((child) => (
             <ElementItem
               search={search}
@@ -320,8 +301,8 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
               isArchivedShown={isArchivedShown}
             />
           ))}
-        </c.Stack>
+        </div>
       ) : null}
-    </c.Box>
+    </div>
   )
 }

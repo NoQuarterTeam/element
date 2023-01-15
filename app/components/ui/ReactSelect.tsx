@@ -3,7 +3,7 @@ import Creatable from "react-select/creatable"
 import type { StateManagerProps } from "react-select/dist/declarations/src/stateManager"
 import clsx from "clsx"
 
-import { ClientOnly } from "../ClientOnly"
+import { ClientOnly } from "./ClientOnly"
 import { inputSizeStyles, inputStyles } from "./Inputs"
 
 type Option = {

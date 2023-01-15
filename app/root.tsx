@@ -1,20 +1,20 @@
 import * as React from "react"
-import * as c from "@chakra-ui/react"
-import { withEmotionCache } from "@emotion/react"
 import * as Tooltip from "@radix-ui/react-tooltip"
 import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import clsx from "clsx"
 
-import { ClientStyleContext, ServerStyleContext } from "~/lib/emotion/context"
-import { theme } from "~/lib/theme"
 import appStyles from "~/styles/app.css"
 import generatedStyles from "~/styles/tailwind.css"
 import toastStyles from "~/styles/toast.css"
 
 import { FlashMessage } from "./components/FlashMessage"
-import { getFlashSession } from "./services/session/session.server"
+import { Toaster } from "./components/ui/Toast"
+import { type Theme } from "./lib/theme"
+import { getFlashSession } from "./services/session/flash.server"
+import { getThemeSession } from "./services/session/theme.server"
 
 export const meta: MetaFunction = () => {
   return { title: "Element" }
@@ -30,17 +30,26 @@ export const links: LinksFunction = () => {
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { flash, commit } = await getFlashSession(request)
-  return json({ flash }, { headers: { "Set-Cookie": await commit() } })
+  const { getTheme } = await getThemeSession(request)
+  return json({ flash, theme: getTheme() }, { headers: { "Set-Cookie": await commit() } })
 }
 
+const queryClient = new QueryClient()
+
 export default function App() {
-  const { flash } = useLoaderData<typeof loader>()
+  const { flash, theme } = useLoaderData<typeof loader>()
 
   return (
-    <Document>
-      <FlashMessage flash={flash} />
-      <SyncReactNative />
-      <Outlet />
+    <Document theme={theme}>
+      <Toaster>
+        <QueryClientProvider client={queryClient}>
+          <Tooltip.Provider>
+            <FlashMessage flash={flash} />
+            <SyncReactNative theme={theme} />
+            <Outlet />
+          </Tooltip.Provider>
+        </QueryClientProvider>
+      </Toaster>
     </Document>
   )
 }
@@ -48,12 +57,12 @@ export default function App() {
 export function ErrorBoundary({ error }: { error: Error }) {
   console.error("Boundary:", error)
   return (
-    <Document>
-      <c.VStack h="100vh" justify="center" p={20}>
-        <c.Image src="/logo.png" boxSize="100px" />
-        <c.Heading>Oops, there was an error.</c.Heading>
-        <c.Text>{error.message}</c.Text>
-      </c.VStack>
+    <Document theme="dark">
+      <div className="vstack h-screen justify-center p-20">
+        <img alt="logo" src="/logo.png" className="sq-[100px]" />
+        <h1>Oops, there was an error.</h1>
+        <p>{error.message}</p>
+      </div>
     </Document>
   )
 }
@@ -63,10 +72,10 @@ export function CatchBoundary() {
   let message
   switch (caught.status) {
     case 401:
-      message = <c.Text>Oops! Looks like you tried to visit a page that you do not have access to.</c.Text>
+      message = <p>Oops! Looks like you tried to visit a page that you do not have access to.</p>
       break
     case 404:
-      message = <c.Text>Oops! Looks like you tried to visit a page that does not exist.</c.Text>
+      message = <p>Oops! Looks like you tried to visit a page that does not exist.</p>
       break
 
     default:
@@ -74,45 +83,26 @@ export function CatchBoundary() {
   }
 
   return (
-    <Document>
-      <c.VStack h="100vh" justify="center" p={20}>
-        <c.Image src="/logo.png" boxSize="100px" />
-        <c.Heading>
+    <Document theme="dark">
+      <div className="vstack h-screen justify-center p-20">
+        <img alt="logo" src="/logo.png" className="sq-[100px]" />
+        <h1>
           {caught.status}: {caught.statusText}
-        </c.Heading>
+        </h1>
         {message}
-      </c.VStack>
+      </div>
     </Document>
   )
 }
 
-const queryClient = new QueryClient()
-
 interface DocumentProps {
   children: React.ReactNode
+  theme: Theme
 }
 
-const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) => {
-  const serverSyleData = React.useContext(ServerStyleContext)
-  const clientStyleData = React.useContext(ClientStyleContext)
-
-  // Only executed on client
-  React.useEffect(() => {
-    // re-link sheet container
-    emotionCache.sheet.container = document.head
-    // re-inject tags
-    const tags = emotionCache.sheet.tags
-    emotionCache.sheet.flush()
-    tags.forEach((tag) => {
-      ;(emotionCache.sheet as any)._insertTag(tag)
-    })
-    // reset cache to reapply global styles
-    clientStyleData?.reset()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
+function Document({ theme, children }: DocumentProps) {
   return (
-    <html lang="en" className="element">
+    <html lang="en" className={clsx(theme)}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="user-scalable=no, initial-scale=1, width=device-width" />
@@ -136,34 +126,26 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
         <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="msapplication-TileColor" content="#000" />
+        <meta name="msapplication-TileColor" content={theme === "dark" ? "#000" : "#fff"} />
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
-        <meta name="theme-color" content="#000" />
+        <meta name="theme-color" content={theme === "dark" ? "#000" : "#fff"} />
         <Meta />
         <Links />
-        {serverSyleData?.map(({ key, ids, css }) => (
-          <style key={key} data-emotion={`${key} ${ids.join(" ")}`} dangerouslySetInnerHTML={{ __html: css }} />
-        ))}
       </head>
       <body>
-        <QueryClientProvider client={queryClient}>
-          <c.ChakraProvider theme={theme}>
-            <Tooltip.Provider>{children}</Tooltip.Provider>
-          </c.ChakraProvider>
-        </QueryClientProvider>
+        {children}
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
       </body>
     </html>
   )
-})
+}
 
-function SyncReactNative() {
-  const { colorMode } = c.useColorMode()
+function SyncReactNative({ theme }: { theme: Theme }) {
   React.useEffect(() => {
-    ;(window as any)?.ReactNativeWebView?.postMessage(colorMode)
-  }, [colorMode])
+    ;(window as any)?.ReactNativeWebView?.postMessage(theme)
+  }, [theme])
 
   return null
 }

@@ -5,8 +5,8 @@ import { Link as RLink, useSearchParams } from "@remix-run/react"
 import clsx from "clsx"
 import queryString from "query-string"
 
-import { NoData } from "../NoData"
 import { Button } from "./Button"
+import { NoData } from "./NoData"
 
 interface DataType {
   id: string

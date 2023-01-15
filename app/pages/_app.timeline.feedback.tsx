@@ -1,7 +1,6 @@
 import * as React from "react"
 import { BiMessage } from "react-icons/bi"
 import { RiBug2Line, RiLightbulbLine } from "react-icons/ri"
-import * as c from "@chakra-ui/react"
 import { FeedbackType } from "@prisma/client"
 import type { ActionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
@@ -9,13 +8,16 @@ import { useActionData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
 import { z } from "zod"
 
-import { Form, FormButton, FormField } from "~/components/Form"
-import { FlashType } from "~/lib/config.server"
+import { Button } from "~/components/ui/Button"
+import { ButtonGroup } from "~/components/ui/ButtonGroup"
+import { Form, FormButton, FormField } from "~/components/ui/Form"
+import { Textarea } from "~/components/ui/Inputs"
+import { Modal } from "~/components/ui/Modal"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { requireUser } from "~/services/auth/auth.server"
-import { getFlashSession } from "~/services/session/session.server"
+import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export enum FeedbackMethods {
   CreateFeedback = "createFeedback",
@@ -77,58 +79,52 @@ export default function Feedback() {
       : "Let us know your thoughts"
     : "What kind of feedback do you have?"
   return (
-    <c.Modal size="md" isOpen={true} onClose={() => navigate("/timeline")}>
-      <c.ModalOverlay />
-      <c.ModalContent>
-        <c.ModalHeader fontSize="lg">{title}</c.ModalHeader>
-        <c.ModalCloseButton />
-        <c.ModalBody mb={4} pt={0} px={8}>
-          {createdFeedback ? (
-            <c.Stack>
-              <c.Text>We will try and look at this as soon as possible</c.Text>
-              <c.Button onClick={() => navigate("/timeline")}>Close</c.Button>
-            </c.Stack>
-          ) : type ? (
-            <Form method="post" replace>
-              <c.Stack>
-                <FormField isRequired autoFocus name="content" input={<c.Textarea />} />
-                <input type="hidden" name="type" value={type} />
-                <c.Flex justify="space-between">
-                  <c.Button opacity={0.7} variant="ghost" onClick={() => setType(null)}>
-                    Change type
-                  </c.Button>
-                  <FormButton w="100px" name="_action" value={FeedbackMethods.CreateFeedback}>
-                    Send
-                  </FormButton>
-                </c.Flex>
-              </c.Stack>
-            </Form>
-          ) : (
-            <c.VStack spacing={4} py={3}>
-              <c.ButtonGroup>
-                <c.Button boxSize="100px" onClick={() => setType("ISSUE")}>
-                  <c.VStack>
-                    <c.Box boxSize="18px" as={RiBug2Line} />
-                    <c.Text>Issue</c.Text>
-                  </c.VStack>
-                </c.Button>
-                <c.Button boxSize="100px" onClick={() => setType("IDEA")}>
-                  <c.VStack>
-                    <c.Box boxSize="18px" as={RiLightbulbLine} />
-                    <c.Text>Idea</c.Text>
-                  </c.VStack>
-                </c.Button>
-                <c.Button boxSize="100px" onClick={() => setType("OTHER")}>
-                  <c.VStack>
-                    <c.Box boxSize="18px" as={BiMessage} />
-                    <c.Text>Other</c.Text>
-                  </c.VStack>
-                </c.Button>
-              </c.ButtonGroup>
-            </c.VStack>
-          )}
-        </c.ModalBody>
-      </c.ModalContent>
-    </c.Modal>
+    <Modal position="center" size="md" isOpen={true} onClose={() => navigate("/timeline")} title={title}>
+      {createdFeedback ? (
+        <div className="stack p-4">
+          <p>We will try and look at this as soon as possible</p>
+          <Button onClick={() => navigate("/timeline")}>Close</Button>
+        </div>
+      ) : type ? (
+        <Form method="post" replace>
+          <div className="stack p-4">
+            <FormField required autoFocus name="content" input={<Textarea rows={5} />} />
+            <input type="hidden" name="type" value={type} />
+            <div className="flex justify-between">
+              <Button variant="ghost" onClick={() => setType(null)}>
+                Change type
+              </Button>
+              <FormButton name="_action" value={FeedbackMethods.CreateFeedback}>
+                Send
+              </FormButton>
+            </div>
+          </div>
+        </Form>
+      ) : (
+        <div className="vstack py-3">
+          <ButtonGroup>
+            <Button className="sq-[100px]" onClick={() => setType("ISSUE")}>
+              <div className="vstack">
+                <RiBug2Line className="sq-[18px]" />
+                <p>Issue</p>
+              </div>
+            </Button>
+            <Button className="sq-[100px]" onClick={() => setType("IDEA")}>
+              <div className="vstack">
+                <RiLightbulbLine className="sq-[18px]" />
+                <p>Idea</p>
+              </div>
+            </Button>
+            <Button className="sq-[100px]" onClick={() => setType("OTHER")}>
+              <div className="vstack">
+                <BiMessage className="sq-[18px]" />
+
+                <p>Other</p>
+              </div>
+            </Button>
+          </ButtonGroup>
+        </div>
+      )}
+    </Modal>
   )
 }

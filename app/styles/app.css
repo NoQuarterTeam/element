@@ -5,7 +5,6 @@
 
 @layer base {
   html {
-    color: white;
     @apply font-body;
   }
   h1,
@@ -21,7 +20,11 @@
   hr {
     @apply border-gray-100 dark:border-gray-600;
   }
+  * {
+    @apply dark:text-white;
+  }
 }
+
 .react-menu {
   z-index: 99999 !important;
 }

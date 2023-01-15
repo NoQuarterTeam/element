@@ -1,8 +1,8 @@
 import clsx from "clsx"
 
-export function ButtonGroup({ className, ...props }: React.HtmlHTMLAttributes<HTMLDivElement>) {
+export function ButtonGroup(props: React.HtmlHTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={clsx("flex items-center justify-end space-x-4", className)} {...props}>
+    <div {...props} className={clsx("flex items-center justify-end space-x-2", props.className)}>
       {props.children}
     </div>
   )

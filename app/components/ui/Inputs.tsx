@@ -3,7 +3,7 @@ import { type VariantProps, cva } from "class-variance-authority"
 import clsx from "clsx"
 
 export const inputStyles = cva(
-  "text-md block w-full border text-black dark:text-white placeholder-gray-500 transition-colors focus:border-primary-500 focus:bg-transparent focus:ring-transparent rounded-xs focus:ring-primary-500 ring-0 focus:ring-1",
+  "text-md block w-full border text-black dark:text-white placeholder-gray-500 transition-colors focus:border-primary-500 focus:bg-transparent focus:ring-transparent rounded-xs focus:ring-primary-500 ring-0 focus:ring-2",
   {
     variants: {
       variant: {
@@ -93,7 +93,7 @@ export function Checkbox(props: React.DetailedHTMLProps<React.InputHTMLAttribute
       type="checkbox"
       {...props}
       className={clsx(
-        "cursor-pointer border-none bg-black/5 text-primary-500 outline-none transition-all checked:bg-primary-500 hover:bg-black/10 hover:text-primary-600 focus:ring-primary-300 dark:border-none dark:bg-white/5 dark:checked:bg-primary-500 dark:focus:ring-primary-300",
+        "cursor-pointer border-none bg-black/10 text-primary-500 outline-none transition-all checked:bg-primary-500 hover:bg-black/20 hover:text-primary-600 focus:ring-primary-300 dark:border-none dark:bg-white/20 dark:checked:bg-primary-500 dark:hover:bg-white/30 dark:focus:ring-primary-300",
         props.className,
       )}
     />

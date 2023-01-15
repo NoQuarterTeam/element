@@ -271,6 +271,7 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
         </Popover.Root>
 
         <Checkbox
+          className="ml-1"
           defaultChecked={!!entry}
           onChange={() => {
             habitEntryFetcher.submit(

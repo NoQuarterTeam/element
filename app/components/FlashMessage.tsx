@@ -1,10 +1,12 @@
 import * as React from "react"
+import { type SerializeFrom } from "@remix-run/node"
 
-import { useToast } from "~/lib/hooks/useToast"
-import type { FlashSession } from "~/services/session/session.server"
+import { type loader } from "~/root"
+
+import { useToast } from "./ui/Toast"
 
 interface Props {
-  flash: Partial<FlashSession["flash"]>
+  flash: SerializeFrom<typeof loader>["flash"]
 }
 
 export function FlashMessage(props: Props) {
@@ -19,7 +21,6 @@ export function FlashMessage(props: Props) {
     if (props.flash.flashInfo) {
       toast({ description: props.flash.flashInfo, status: "info" })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.flash])
   return null
 }

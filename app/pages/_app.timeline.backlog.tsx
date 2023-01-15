@@ -1,46 +1,41 @@
 import * as React from "react"
 import { RiAddLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri"
-import lazyWithPreload from "react-lazy-with-preload"
-import Select from "react-select"
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons"
 import * as c from "@chakra-ui/react"
-import { type Prisma } from "@prisma/client"
 import { type LoaderArgs, type SerializeFrom, json } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
-import { ClientOnly } from "remix-utils"
 
-import { ButtonGroup } from "~/components/ButtonGroup"
-import { FormButton, InlineFormField } from "~/components/Form"
 import { TooltipIconButton } from "~/components/TooltipIconButton"
+import { ButtonGroup } from "~/components/ui/ButtonGroup"
+import { FormButton, InlineFormField } from "~/components/ui/Form"
+import { Textarea } from "~/components/ui/Inputs"
+import { Singleselect } from "~/components/ui/ReactSelect"
 import { safeReadableColor } from "~/lib/color"
 import { db } from "~/lib/db.server"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { customSelectStyle } from "~/lib/styles/react-select"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TaskElement } from "~/pages/api+/elements"
 import { type TimelineTask, TasksActionMethods } from "~/pages/api+/tasks"
 import { requireUser } from "~/services/auth/auth.server"
 
-const selectFields = {
-  id: true,
-  isComplete: true,
-  durationHours: true,
-  durationMinutes: true,
-  description: true,
-  name: true,
-  element: {
-    select: { id: true, name: true, color: true },
-  },
-} satisfies Prisma.TaskSelect
-
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await requireUser(request)
   const tasks = await db.task.findMany({
-    select: selectFields,
+    select: {
+      id: true,
+      isComplete: true,
+      durationHours: true,
+      durationMinutes: true,
+      description: true,
+      name: true,
+      element: {
+        select: { id: true, name: true, color: true },
+      },
+    },
     orderBy: { createdAt: "desc" },
     where: { creatorId: user.id, date: { equals: null }, isComplete: { equals: false } },
   })
@@ -87,8 +82,6 @@ export default function Backlog() {
   )
 }
 
-export const PreloadedEditorInput = lazyWithPreload(() => import("../components/EditorInput"))
-
 function BacklogTaskForm({ task, ...createModalProps }: { task?: BacklogTask } & Omit<c.ModalProps, "children">) {
   const { data: elements } = useQuery(
     ["task-elements"],
@@ -104,9 +97,7 @@ function BacklogTaskForm({ task, ...createModalProps }: { task?: BacklogTask } &
   const [element, setElement] = React.useState(
     task?.element ? { value: task.element.id, label: task.element.name, color: task.element.color } : undefined,
   )
-  const theme: c.Theme = c.useTheme()
-  const colorMode = c.useColorMode()
-  const isDark = colorMode.colorMode === "dark"
+
   return (
     <c.Modal size="xl" {...createModalProps}>
       <c.ModalOverlay>
@@ -115,43 +106,32 @@ function BacklogTaskForm({ task, ...createModalProps }: { task?: BacklogTask } &
             <React.Suspense>
               <taskFetcher.Form method="post" replace action={task ? `/timeline/${task.id}` : "/api/tasks"}>
                 <c.Stack>
-                  <c.Input
+                  <input
+                    className="-ml-4 min-h-[60px] w-[95%] border-none bg-transparent pl-4 pr-2 text-2xl text-gray-900 focus:outline-none dark:text-gray-100 md:min-h-[70px] md:text-4xl"
+                    required
                     name="name"
                     placeholder="Name"
-                    w="95%"
-                    isRequired
                     defaultValue={task?.name}
-                    isInvalid={!!taskFetcher.data?.fieldErrors?.name?.[0]}
                     autoFocus
-                    size="lg"
-                    fontSize="4xl"
-                    minH="70px"
-                    pr={2}
-                    pl={4}
-                    ml={-4}
-                    focusBorderColor="transparent"
-                    border="none!important"
-                    bg="transparent"
                   />
+
                   <input type="hidden" name="elementId" value={element?.value} />
                   <InlineFormField
-                    isRequired
-                    error={taskFetcher.data?.fieldErrors?.elementId?.[0]}
+                    required
                     label="Element"
                     name="element"
-                    shouldPassProps={false}
+                    error={taskFetcher.data?.fieldErrors?.elementId?.[0]}
                     input={
-                      <Select
+                      <Singleselect
+                        value={element}
                         onChange={setElement}
                         formatOptionLabel={(option) => (
-                          <c.HStack>
-                            <c.Box borderRadius="full" boxSize="16px" bg={option.color} />
-                            <c.Text>{option.label}</c.Text>
-                          </c.HStack>
+                          <div className="hstack">
+                            <div className="rounded-full sq-4" style={{ background: option.color }} />
+                            <p>{option.label}</p>
+                          </div>
                         )}
-                        styles={customSelectStyle(theme, false, isDark)}
                         options={elements?.map((e) => ({ label: e.name, value: e.id, color: e.color }))}
-                        value={element}
                       />
                     }
                   />
@@ -200,13 +180,7 @@ function BacklogTaskForm({ task, ...createModalProps }: { task?: BacklogTask } &
                     name="description"
                     defaultValue={task?.description}
                     label="Description"
-                    input={
-                      <c.Box minH="250px" w="100%">
-                        <ClientOnly fallback={<c.Box h="250px" />}>
-                          {() => <PreloadedEditorInput name="description" defaultValue={task?.description} />}
-                        </ClientOnly>
-                      </c.Box>
-                    }
+                    input={<Textarea rows={6} />}
                     error={taskFetcher.data?.fieldErrors?.description?.[0]}
                   />
                   <ButtonGroup>

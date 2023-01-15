@@ -1,7 +1,6 @@
 import * as React from "react"
 import { RiAddCircleLine, RiCalendarEventLine } from "react-icons/ri"
 import { useInView } from "react-intersection-observer"
-import * as c from "@chakra-ui/react"
 import { Outlet, useNavigate } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
@@ -11,12 +10,13 @@ import styles from "suneditor/dist/css/suneditor.min.css"
 import { Day, DAY_WIDTH } from "~/components/Day"
 import { DropContainer } from "~/components/DropContainer"
 import { Nav } from "~/components/Nav"
-import { PreloadedEditorInput } from "~/components/TaskForm"
 import { HEADER_HABIT_HEIGHT, HEADER_HEIGHT, TimelineHeader } from "~/components/TimelineHeader"
 import { IconButton } from "~/components/ui/IconButton"
+import { LoadingScreen } from "~/components/ui/LoadingScreen"
 import { Tooltip } from "~/components/ui/Tooltip"
 import { getDays, getMonths } from "~/lib/helpers/timeline"
 import { isMobile } from "~/lib/helpers/utils"
+import { useEventListener } from "~/lib/hooks/useEventListener"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { DATE_BACK, DATE_FORWARD, useTimelineDates } from "~/lib/hooks/useTimelineDates"
@@ -36,7 +36,7 @@ export default Timeline
 function _Timeline() {
   const [isFinishedLoading, setIsFinishedLoading] = React.useState(false)
   React.useEffect(() => {
-    const timeout = setTimeout(() => setIsFinishedLoading(true), 500)
+    const timeout = setTimeout(() => setIsFinishedLoading(true), 300)
     return () => clearTimeout(timeout)
   }, [])
 
@@ -99,11 +99,6 @@ function _Timeline() {
     [bigDays.daysBack],
   )
 
-  React.useEffect(() => {
-    // Might as well load the editor input code
-    PreloadedEditorInput.preload()
-  }, [])
-
   const handleJumpToToday = () => {
     const scrollTo = isMobile ? bigDays.daysBack * DAY_WIDTH : (bigDays.daysBack - 3) * DAY_WIDTH
     timelineRef.current?.scrollTo(scrollTo, 0)
@@ -118,7 +113,7 @@ function _Timeline() {
     [bigDays.daysBack, bigDays.daysForward],
   )
 
-  c.useEventListener("keydown", (event) => {
+  useEventListener("keydown", (event: KeyboardEvent) => {
     // cmd + . to open the add task modal for current day
     if (event.metaKey && event.key === ".") {
       event.preventDefault()
@@ -145,10 +140,8 @@ function _Timeline() {
               <IconButton
                 size="md"
                 rounded="full"
-                className="bg-gray-100 dark:bg-gray-800"
                 onClick={() => navigate("new")}
                 aria-label="Create task"
-                variant="ghost"
                 icon={<RiAddCircleLine className="sq-[20px]" />}
               />
             </Tooltip>
@@ -156,21 +149,15 @@ function _Timeline() {
               <IconButton
                 size="md"
                 rounded="full"
-                className="bg-gray-100 dark:bg-gray-800"
                 onClick={handleJumpToToday}
                 aria-label="Jump to today"
-                variant="ghost"
                 icon={<RiCalendarEventLine className="sq-[18px]" />}
               />
             </Tooltip>
           </div>
         </div>
       </div>
-      {!isFinishedLoading && (
-        <div className="center fixed inset-0 z-[100] h-screen w-screen bg-white dark:bg-gray-900">
-          <img src="/logo.png" alt="logo" className="sq-[100px]" />
-        </div>
-      )}
+      {!isFinishedLoading && <LoadingScreen />}
       <Outlet />
     </>
   )
@@ -195,7 +182,7 @@ function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
     },
   })
   return (
-    <c.Flex>
+    <div className="flex">
       <DropContainer tasks={dropTasks}>
         {/* <div ref={leftRef} /> */}
         {props.days.map((day, index) => (
@@ -203,6 +190,6 @@ function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
         ))}
         <div ref={rightRef} />
       </DropContainer>
-    </c.Flex>
+    </div>
   )
 }
