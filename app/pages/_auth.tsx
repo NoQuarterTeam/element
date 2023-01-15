@@ -2,11 +2,11 @@ import type { LoaderArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Outlet } from "@remix-run/react"
 
-import { getUser } from "~/services/auth/auth.server"
+import { getUserSession } from "~/services/session/session.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await getUser(request)
-  if (user) return redirect("/")
+  const userId = await getUserSession(request)
+  if (userId) return redirect("/")
   return null
 }
 

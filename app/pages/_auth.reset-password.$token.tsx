@@ -4,9 +4,13 @@ import { Link, useParams } from "@remix-run/react"
 import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
+import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
+import { decryptToken } from "~/lib/jwt.server"
 import { badRequest } from "~/lib/remix"
-import { resetPassword } from "~/services/auth/auth.server"
+
+import { hashPassword } from "~/services/auth/password.server"
+import { sendPasswordChangedEmail } from "~/services/user/user.mailer.server"
 
 export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData()
@@ -16,7 +20,15 @@ export const action = async ({ request }: ActionArgs) => {
   })
   const { data, fieldErrors } = await validateFormData(resetPasswordSchema, formData)
   if (fieldErrors) return badRequest({ fieldErrors, data })
-  await resetPassword(data)
+
+  const payload = decryptToken<{ id: string }>(data.token)
+  const hashedPassword = await hashPassword(data.password)
+  const user = await db.user.update({
+    where: { id: payload.id },
+    data: { password: hashedPassword },
+  })
+  await sendPasswordChangedEmail(user)
+
   return redirect("/login")
 }
 

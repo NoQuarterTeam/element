@@ -6,14 +6,14 @@ import { Outlet } from "@remix-run/react"
 import { useHydrated } from "remix-utils"
 
 import { LoadingScreen } from "~/components/ui/LoadingScreen"
-import { requireUser } from "~/services/auth/auth.server"
+import { getUser } from "~/services/auth/auth.server"
 
 export const shouldRevalidate: ShouldRevalidateFunction = ({ formAction }) => {
   if (!formAction) return false
   return ["profile"].some((path) => formAction.includes(path))
 }
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await requireUser(request)
+  const user = await getUser(request)
   return json(user)
 }
 

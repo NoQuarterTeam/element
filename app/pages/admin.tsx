@@ -9,10 +9,10 @@ import dayjs from "dayjs"
 
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
-import { requireUser } from "~/services/auth/auth.server"
+import { getUser } from "~/services/auth/auth.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await requireUser(request)
+  const user = await getUser(request)
   if (user.role !== Role.ADMIN) throw redirect("/")
   const [users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback] = await Promise.all([
     db.user.findMany({

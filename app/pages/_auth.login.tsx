@@ -4,9 +4,11 @@ import { Link } from "@remix-run/react"
 import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
+import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
-import { login } from "~/services/auth/auth.server"
+
+import { comparePasswords } from "~/services/auth/password.server"
 import { getUserSession } from "~/services/session/session.server"
 
 export const meta: MetaFunction = () => {
@@ -26,10 +28,14 @@ export const action = async ({ request }: ActionArgs) => {
   })
   const { data, fieldErrors } = await validateFormData(loginSchema, formData)
   if (fieldErrors) return badRequest({ fieldErrors, data })
-  const result = await login(data)
-  if (!result.success) return badRequest({ data, formError: result.error })
+  const user = await db.user.findUnique({ where: { email: data.email } })
+  if (!user) return badRequest({ formError: "Incorrect email or password" })
+  if (user.archivedAt) return badRequest({ formError: "Incorrect email or password" })
+  const isCorrectPassword = await comparePasswords(data.password, user.password)
+  if (!isCorrectPassword) return badRequest({ formError: "Incorrect email or password" })
+
   const { setUser } = await getUserSession(request)
-  const headers = new Headers([["Set-Cookie", await setUser(result.user.id)]])
+  const headers = new Headers([["Set-Cookie", await setUser(user.id)]])
   return redirect("/timeline", { headers })
 }
 

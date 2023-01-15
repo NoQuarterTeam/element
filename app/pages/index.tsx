@@ -6,15 +6,16 @@ import { redirect } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 
 import { LinkButton } from "~/components/ui/LinkButton"
-import { getUser } from "~/services/auth/auth.server"
+
+import { getUserSession } from "~/services/session/session.server"
 
 export const meta: MetaFunction = () => {
   return { title: "Element" }
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await getUser(request)
-  if (user) return redirect("/timeline")
+  const userId = await getUserSession(request)
+  if (userId) return redirect("/timeline")
   return json(null)
 }
 

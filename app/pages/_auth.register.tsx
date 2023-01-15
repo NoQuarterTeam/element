@@ -4,9 +4,12 @@ import { Link } from "@remix-run/react"
 import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
+import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
-import { register } from "~/services/auth/auth.server"
+import { stripe } from "~/lib/stripe/stripe.server"
+
+import { hashPassword } from "~/services/auth/password.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getUserSession } from "~/services/session/session.server"
 import { createTemplates } from "~/services/timeline/templates.server"
@@ -32,8 +35,15 @@ export const action = async ({ request }: ActionArgs) => {
   const { data, fieldErrors } = await validateFormData(registerSchema, formData)
   if (fieldErrors) return badRequest({ fieldErrors, data })
 
-  const { user, error } = await register(data)
-  if (error || !user) return badRequest({ data, formError: error })
+  const email = data.email.toLowerCase().trim()
+  const existing = await db.user.findFirst({ where: { email } })
+  if (existing) return badRequest({ data, formError: "User with these details already exists" })
+  const password = await hashPassword(data.password)
+  const stripeCustomer = await stripe.customers.create({
+    email,
+    name: data.firstName + " " + data.lastName,
+  })
+  const user = await db.user.create({ data: { ...data, password, stripeCustomerId: stripeCustomer.id } })
   await createTemplates(user.id)
   const { setUser } = await getUserSession(request)
   const { createFlash } = await getFlashSession(request)

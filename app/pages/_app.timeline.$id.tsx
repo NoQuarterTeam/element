@@ -8,7 +8,7 @@ import { taskSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
-import { requireUser } from "~/services/auth/auth.server"
+import { getUser, requireUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 import type { TimelineTask } from "./api+/tasks"
@@ -30,7 +30,7 @@ export enum TaskActionMethods {
   DuplicateTask = "duplicateTask",
 }
 export const action = async ({ request, params }: ActionArgs) => {
-  const user = await requireUser(request)
+  const user = await getUser(request)
   const formData = await request.formData()
   const action = formData.get("_action") as TaskActionMethods | undefined
   const taskId = params.id as string | undefined

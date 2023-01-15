@@ -9,12 +9,12 @@ import dayjs from "dayjs"
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
 import { getMinutesFromTasks, getTotalTaskDuration } from "~/lib/helpers/duration"
-import { requireUser } from "~/services/auth/auth.server"
+import { getUser } from "~/services/auth/auth.server"
 
 const PieChart = React.lazy(() => import("../components/ElementsChart"))
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await requireUser(request)
+  const user = await getUser(request)
   const elements = await db.element.findMany({
     where: {
       creatorId: user.id,

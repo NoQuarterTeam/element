@@ -5,7 +5,7 @@ import { z } from "zod"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
-import { requireUser } from "~/services/auth/auth.server"
+import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export enum ElementActionMethods {
@@ -14,7 +14,7 @@ export enum ElementActionMethods {
   UnarchiveElement = "unarchiveElement",
 }
 export const action = async ({ request, params }: ActionArgs) => {
-  const user = await requireUser(request)
+  const user = await getUser(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ElementActionMethods | undefined
   const elementId = params.id as string | undefined

@@ -7,11 +7,11 @@ import { z } from "zod"
 
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
-import { requireUser } from "~/services/auth/auth.server"
+import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await requireUser(request)
+  const user = await getUser(request)
   const url = new URL(request.url)
   const backParam = url.searchParams.get("back")
   const forwardParam = url.searchParams.get("forward")
@@ -50,7 +50,7 @@ export enum HabitsActionMethods {
   CreateHabit = "createHabit",
 }
 export const action = async ({ request }: ActionArgs) => {
-  const user = await requireUser(request)
+  const user = await getUser(request)
   const formData = await request.formData()
   const { createFlash } = await getFlashSession(request)
   const action = formData.get("_action") as HabitsActionMethods | undefined

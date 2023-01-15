@@ -15,12 +15,12 @@ import { safeReadableColor } from "~/lib/color"
 import { db } from "~/lib/db.server"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { requireUser } from "~/services/auth/auth.server"
+import { getUser } from "~/services/auth/auth.server"
 
 import { TaskActionMethods } from "./_app.timeline.$id"
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await requireUser(request)
+  const user = await getUser(request)
 
   const tasks = await db.task.findMany({
     orderBy: { order: "asc" },

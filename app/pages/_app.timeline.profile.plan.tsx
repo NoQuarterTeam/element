@@ -14,11 +14,11 @@ import { FULL_WEB_URL } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { badRequest } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
-import { requireUser } from "~/services/auth/auth.server"
+import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await requireUser(request)
+  const user = await getUser(request)
   const [taskCount, elementCount, subscription] = await Promise.all([
     !user.stripeSubscriptionId
       ? db.task.count({
@@ -56,7 +56,7 @@ export enum ProfilePlanMethods {
 }
 
 export const action = async ({ request }: ActionArgs) => {
-  const user = await requireUser(request)
+  const user = await getUser(request)
   const { createFlash } = await getFlashSession(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ProfilePlanMethods | undefined

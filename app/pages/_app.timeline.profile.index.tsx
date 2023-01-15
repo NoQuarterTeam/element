@@ -11,7 +11,7 @@ import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { UPLOAD_PATHS } from "~/lib/uploadPaths"
-import { requireUser } from "~/services/auth/auth.server"
+import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getUserSession } from "~/services/session/session.server"
 
@@ -23,7 +23,7 @@ export enum ProfileActionMethods {
 }
 
 export const action = async ({ request }: ActionArgs) => {
-  const user = await requireUser(request)
+  const user = await getUser(request)
   const { createFlash } = await getFlashSession(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ProfileActionMethods | undefined

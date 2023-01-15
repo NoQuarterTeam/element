@@ -6,7 +6,7 @@ import { z } from "zod"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
-import { requireUser } from "~/services/auth/auth.server"
+import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export enum HabitActionMethods {
@@ -16,10 +16,8 @@ export enum HabitActionMethods {
   Edit = "edit",
 }
 export const action = async ({ request, params }: ActionArgs) => {
-  const user = await requireUser(request)
-  if (!user.stripeSubscriptionId) {
-    return redirect("/timeline/profile/plan")
-  }
+  const user = await getUser(request)
+  if (!user.stripeSubscriptionId) return redirect("/timeline/profile/plan")
   const formData = await request.formData()
   const { createFlash } = await getFlashSession(request)
   const action = formData.get("_action") as HabitActionMethods | undefined

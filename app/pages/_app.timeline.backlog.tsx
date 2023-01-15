@@ -20,10 +20,10 @@ import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TaskElement } from "~/pages/api+/elements"
 import { type TimelineTask, TasksActionMethods } from "~/pages/api+/tasks"
-import { requireUser } from "~/services/auth/auth.server"
+import { getUser } from "~/services/auth/auth.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const user = await requireUser(request)
+  const user = await getUser(request)
   const tasks = await db.task.findMany({
     select: {
       id: true,
