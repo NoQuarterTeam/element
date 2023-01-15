@@ -1,6 +1,6 @@
 import * as React from "react"
+import { twMerge } from "tailwind-merge"
 import { type VariantProps, cva } from "class-variance-authority"
-import clsx from "clsx"
 
 import { type ButtonProps, buttonStyles } from "./Button"
 import { Spinner } from "./Spinner"
@@ -31,10 +31,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(f
       ref={ref}
       disabled={disabled || isLoading}
       {...props}
-      className={clsx(
-        buttonStyles({ colorScheme, rounded, disabled, variant }),
-        iconbuttonStyles({ className: props.className, size }),
-      )}
+      className={twMerge(buttonStyles({ colorScheme, rounded, disabled, variant }), iconbuttonStyles({ size }), props.className)}
     >
       <div className="center h-full w-full">{isLoading ? <Spinner /> : icon}</div>
     </button>

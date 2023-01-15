@@ -1,9 +1,10 @@
 import * as React from "react"
+import { twMerge } from "tailwind-merge"
 import type { VariantProps } from "class-variance-authority"
 import { cva } from "class-variance-authority"
-import clsx from "clsx"
 
 import { Spinner } from "./Spinner"
+import clsx from "clsx"
 
 export const buttonStyles = cva("font-semibold flex center border border-transparent transition-colors duration-200", {
   variants: {
@@ -20,8 +21,8 @@ export const buttonStyles = cva("font-semibold flex center border border-transpa
     },
     colorScheme: {
       gray: "text-black dark:text-white",
-      primary: "",
-      red: "",
+      primary: "text-white",
+      red: "text-white",
     },
     disabled: {
       true: "relative opacity-70 pointer-events-none",
@@ -125,19 +126,19 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         type="button"
         disabled={isLoading || !!disabled}
         {...props}
-        className={clsx(
+        className={twMerge(
           buttonStyles({
             size,
             rounded,
-            className: props.className,
             colorScheme,
             disabled: disabled || isLoading,
             variant,
           }),
           buttonSizeStyleProps({ size }),
+          props.className,
         )}
       >
-        <div className={clsx("center", isLoading ? "opacity-0" : "")} aria-hidden={isLoading}>
+        <div className={clsx("center", isLoading && "opacity-0")} aria-hidden={isLoading}>
           {leftIcon && <span className="mr-0 md:mr-1">{leftIcon}</span>}
           {props.children}
         </div>

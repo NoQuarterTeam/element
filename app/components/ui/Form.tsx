@@ -1,7 +1,7 @@
 import * as React from "react"
 import type { FormProps as RemixFormProps } from "@remix-run/react"
 import { Form as RemixForm, useActionData, useTransition } from "@remix-run/react"
-import clsx from "clsx"
+import { twMerge } from "tailwind-merge"
 
 import type { ActionData } from "~/lib/form"
 import { createImageUrl } from "~/lib/s3"
@@ -31,7 +31,7 @@ export function FormFieldLabel(
       <label
         htmlFor={props.name}
         {...props}
-        className={clsx("block text-sm font-medium text-gray-900 dark:text-gray-50", props.className)}
+        className={twMerge("block text-sm font-medium text-gray-900 dark:text-gray-50", props.className)}
       >
         {props.children}
       </label>
@@ -41,7 +41,7 @@ export function FormFieldLabel(
 }
 export function FormFieldError(props: React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>) {
   return (
-    <p {...props} className={clsx("text-sm text-red-400", props.className)}>
+    <p {...props} className={twMerge("text-sm text-red-400", props.className)}>
       {props.children}
     </p>
   )
@@ -62,7 +62,7 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(func
 ) {
   const form = useActionData<ActionData<any>>()
   const errors = form?.fieldErrors?.[props.name]
-  const className = clsx(error || (errors?.length && "border-red-500 focus:border-red-500"), props.className)
+  const className = twMerge(error || (errors?.length && "border-red-500 focus:border-red-500"), props.className)
   const sharedProps = {
     "aria-invalid": error || errors?.length ? true : undefined,
     "aria-errormessage": props.name + "-error",
@@ -99,7 +99,7 @@ export const InlineFormField = React.forwardRef<HTMLInputElement, FormFieldProps
 ) {
   const form = useActionData<ActionData<any>>()
   const errors = form?.fieldErrors?.[props.name]
-  const className = clsx(error || (errors?.length && "border-red-500 focus:border-red-500"), props.className)
+  const className = twMerge(error || (errors?.length && "border-red-500 focus:border-red-500"), props.className)
   const sharedProps = shouldPassProps
     ? {
         "aria-invalid": error || errors?.length ? true : undefined,
@@ -163,11 +163,11 @@ export function ImageField(props: ImageFieldProps) {
           {image ? (
             <img
               src={createImageUrl(image)}
-              className={clsx("h-[200px] w-full object-cover hover:opacity-80", props.className)}
+              className={twMerge("h-[200px] w-full object-cover hover:opacity-80", props.className)}
               alt="preview"
             />
           ) : (
-            <div className={clsx("center h-[200px] w-full", props.className)}>
+            <div className={twMerge("center h-[200px] w-full", props.className)}>
               <p className="text-gray-500">{props.placeholder || "Upload an image"}</p>
             </div>
           )}

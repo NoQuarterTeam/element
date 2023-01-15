@@ -1,10 +1,10 @@
 import * as React from "react"
 import { Menu as HMenu, Transition } from "@headlessui/react"
-import clsx from "clsx"
+import { twMerge } from "tailwind-merge"
 
 export function Menu(props: { className?: string; children: React.ReactNode }) {
   return (
-    <HMenu as="div" className={clsx("relative inline-block text-left", props.className)}>
+    <HMenu as="div" className={twMerge("relative inline-block text-left", props.className)}>
       {props.children}
     </HMenu>
   )
@@ -27,7 +27,7 @@ export function MenuList(props: { className?: string; children: React.ReactNode 
       leaveTo="transform opacity-0 scale-95"
     >
       <HMenu.Items
-        className={clsx(
+        className={twMerge(
           "absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-800 rounded-xs bg-black shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
           props.className,
         )}
@@ -48,7 +48,7 @@ export function MenuItem(props: {
       {({ active }) =>
         props.children({
           isActive: active,
-          className: clsx(active && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100"),
+          className: twMerge(active && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100"),
         })
       }
     </HMenu.Item>

@@ -52,8 +52,12 @@ export default function Login() {
         </div>
 
         <div className="flex justify-between">
-          <Link to="/register">Register</Link>
-          <Link to="/forgot-password">Forgot password?</Link>
+          <Link to="/register" className="hover:opacity-70">
+            Register
+          </Link>
+          <Link to="/forgot-password" className="hover:opacity-70">
+            Forgot password?
+          </Link>
         </div>
       </div>
     </Form>

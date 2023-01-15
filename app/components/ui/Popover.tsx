@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as Popover from "@radix-ui/react-popover"
-import clsx from "clsx"
+import { twMerge } from "tailwind-merge"
 
 export * from "@radix-ui/react-popover"
 
@@ -9,7 +9,7 @@ export const Content = React.forwardRef<HTMLDivElement, Popover.PopoverContentPr
     <Popover.Content
       ref={ref}
       {...props}
-      className={clsx(
+      className={twMerge(
         "w-80 rounded-sm border border-gray-100 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-700",
         props.className,
       )}
@@ -19,5 +19,5 @@ export const Content = React.forwardRef<HTMLDivElement, Popover.PopoverContentPr
   )
 })
 export const Arrow = React.forwardRef<SVGSVGElement, Popover.PopperArrowProps>(function Arrow(props, ref) {
-  return <Popover.Arrow ref={ref} {...props} className={clsx("fill-white dark:fill-gray-700", props.className)} />
+  return <Popover.Arrow ref={ref} {...props} className={twMerge("fill-white dark:fill-gray-700", props.className)} />
 })
