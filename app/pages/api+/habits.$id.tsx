@@ -43,10 +43,10 @@ export const action = async ({ request, params }: ActionArgs) => {
     case HabitActionMethods.ToggleComplete:
       try {
         const toggleSchema = z.object({ date: z.string() })
-        const toggleForm = await validateFormData(toggleSchema, formData)
-        if (toggleForm.fieldErrors) return badRequest(toggleForm)
+        const { data, fieldErrors } = await validateFormData(toggleSchema, formData)
+        if (fieldErrors) return badRequest({ fieldErrors })
         const now = dayjs()
-        const date = dayjs(toggleForm.data.date)
+        const date = dayjs(data.date)
           .set("hour", now.get("hour"))
           .set("minute", now.get("minute"))
           .set("second", now.get("second"))

@@ -16,6 +16,7 @@ const flashStorage = createCookieSessionStorage({
   cookie: {
     name: FLASH_COOKIE_KEY,
     secrets: [FLASH_SESSION_SECRET],
+    secure: IS_PRODUCTION,
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 30,

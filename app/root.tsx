@@ -30,15 +30,22 @@ export const links: LinksFunction = () => {
 
 export const loader = async ({ request }: LoaderArgs) => {
   const { flash, commit } = await getFlashSession(request)
-  const { getTheme } = await getThemeSession(request)
-  return json({ flash, theme: getTheme() }, { headers: { "Set-Cookie": await commit() } })
+  const { getTheme, commit: commitTheme } = await getThemeSession(request)
+  return json(
+    { flash, theme: getTheme() },
+    {
+      headers: [
+        ["Set-Cookie", await commit()],
+        ["Set-Cookie", await commitTheme()],
+      ],
+    },
+  )
 }
 
 const queryClient = new QueryClient()
 
 export default function App() {
   const { flash, theme } = useLoaderData<typeof loader>()
-
   return (
     <Document theme={theme}>
       <Toaster>

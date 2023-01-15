@@ -8,8 +8,8 @@ export const COOKIE_KEY = IS_PRODUCTION ? "element_session" : "element_session_d
 const userStorage = createCookieSessionStorage({
   cookie: {
     name: COOKIE_KEY,
-    secure: IS_PRODUCTION,
     secrets: [SESSION_SECRET],
+    secure: IS_PRODUCTION,
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
