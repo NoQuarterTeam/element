@@ -144,16 +144,20 @@ export default function Dashboard() {
               <p className="text-xl font-medium">Tasks</p>
               <hr />
               <p>Count</p>
-              <PieChart data={pie.map((e) => ({ value: e.taskCount, name: e.name, color: e.color }))} />
+              <React.Suspense>
+                <PieChart data={pie.map((e) => ({ value: e.taskCount, name: e.name, color: e.color }))} />
+              </React.Suspense>
 
               <p>Task duration</p>
-              <PieChart
-                data={pie.map((e) => ({
-                  value: Math.round(e.totalMinutes / 60),
-                  name: e.name,
-                  color: e.color,
-                }))}
-              />
+              <React.Suspense>
+                <PieChart
+                  data={pie.map((e) => ({
+                    value: Math.round(e.totalMinutes / 60),
+                    name: e.name,
+                    color: e.color,
+                  }))}
+                />
+              </React.Suspense>
             </div>
           </div>
           <div className="stack">

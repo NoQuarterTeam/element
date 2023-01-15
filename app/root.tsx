@@ -132,7 +132,7 @@ function Document({ theme, children }: DocumentProps) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="bg-white dark:bg-gray-900">
         {children}
         <ScrollRestoration />
         <Scripts />

@@ -24,7 +24,11 @@ export default function TimelineLayout() {
   const isHydrated = useHydrated()
 
   if (!isHydrated) return <LoadingScreen />
-  return <Outlet />
+  return (
+    <div className="bg-white dark:bg-gray-800">
+      <Outlet />
+    </div>
+  )
 }
 
 export function useMe() {

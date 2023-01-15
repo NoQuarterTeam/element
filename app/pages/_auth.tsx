@@ -1,12 +1,15 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Outlet } from "@remix-run/react"
+import { db } from "~/lib/db.server"
 
 import { getUserSession } from "~/services/session/session.server"
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const userId = await getUserSession(request)
-  if (userId) return redirect("/")
+  const { userId } = await getUserSession(request)
+  if (!userId) return null
+  const user = await db.user.findUnique({ where: { id: userId }, select: { id: true } })
+  if (user) return redirect("/")
   return null
 }
 
