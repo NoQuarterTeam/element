@@ -14,7 +14,7 @@ export const meta: MetaFunction = () => {
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const userId = await getUserSession(request)
+  const { userId } = await getUserSession(request)
   if (userId) return redirect("/timeline")
   return json(null)
 }
