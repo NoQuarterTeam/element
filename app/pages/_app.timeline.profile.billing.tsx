@@ -1,4 +1,3 @@
-import * as c from "@chakra-ui/react"
 import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
@@ -6,9 +5,11 @@ import currencyjs from "currency.js"
 import dayjs from "dayjs"
 import type Stripe from "stripe"
 import { z } from "zod"
+import { Badge } from "~/components/ui/Badge"
 
 import { ButtonGroup } from "~/components/ui/ButtonGroup"
-import { Form, FormButton, FormField } from "~/components/ui/Form"
+import { Form, FormButton, FormField, FormFieldLabel } from "~/components/ui/Form"
+import { Select } from "~/components/ui/Inputs"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { COUNTRIES } from "~/lib/static/countries"
@@ -122,118 +123,94 @@ export default function Billing() {
   const billing = data?.billing
   const invoices = data?.invoices || []
   return (
-    <c.Stack spacing={4}>
-      <c.Text fontSize="lg" fontWeight={500}>
-        Billing
-      </c.Text>
+    <div className="stack">
+      <p className="text-lg font-medium">Billing</p>
       <Form replace method="post">
-        <c.Stack>
-          <c.Text w="100%" fontSize="sm" fontWeight="semibold">
-            Details
-          </c.Text>
-          <c.Flex justify="space-between" flexWrap={{ base: "wrap", md: "nowrap" }}>
-            <c.Text pt={1} w="100%" fontSize="sm">
-              Billing name
-            </c.Text>
-            <c.Box>
-              <FormField defaultValue={billing?.name || ""} name="name" />
-            </c.Box>
-          </c.Flex>
-          <c.Flex justify="space-between" flexWrap={{ base: "wrap", md: "nowrap" }}>
-            <c.Text pt={1} w="100%" fontSize="sm">
-              Billing email
-            </c.Text>
-            <c.Box>
-              <FormField defaultValue={billing?.email || ""} name="email" />
-            </c.Box>
-          </c.Flex>
-          <c.Flex justify="space-between" flexWrap={{ base: "wrap", md: "nowrap" }}>
-            <c.Text pt={1} w="100%" fontSize="sm">
-              Billing address
-            </c.Text>
-            <c.Stack spacing={1}>
+        <div className="stack">
+          <p className="w-full text-sm font-semibold">Details</p>
+          <FormField label="Billing name" defaultValue={billing?.name || ""} name="name" />
+          <FormField label="Billing email" defaultValue={billing?.email || ""} name="email" />
+          <div className="flex-wrap justify-between md:flex-nowrap">
+            <FormFieldLabel htmlFor="address1">Billing address</FormFieldLabel>
+            <div className="stack space-y-1">
               <FormField placeholder="Address 1" defaultValue={billing?.address?.line1 || ""} name="address1" />
               <FormField placeholder="Address 2" defaultValue={billing?.address?.line2 || ""} name="address2" />
-              <c.HStack align="flex-start">
+              <div className="hstack items-start">
                 <FormField placeholder="City" defaultValue={billing?.address?.city || ""} name="city" />
                 <FormField placeholder="State/Province" defaultValue={billing?.address?.state || ""} name="state" />
-              </c.HStack>
-              <c.HStack align="flex-start">
+              </div>
+              <div className="hstack items-start">
                 <FormField
                   placeholder="Country"
                   defaultValue={billing?.address?.country || ""}
                   name="country"
                   input={
-                    <c.Select>
+                    <Select>
                       {COUNTRIES.map((country) => (
                         <option key={country.code} value={country.code}>
                           {country.name}
                         </option>
                       ))}
-                    </c.Select>
+                    </Select>
                   }
                 />
                 <FormField placeholder="Post code/Zip code" defaultValue={billing?.address?.postal_code || ""} name="postCode" />
-              </c.HStack>
-            </c.Stack>
-          </c.Flex>
-          <c.Flex justify="space-between" flexWrap={{ base: "wrap", md: "nowrap" }}>
-            <c.Text pt={1} w="100%" fontSize="sm">
-              Tax ID
-            </c.Text>
-            <c.HStack align="flex-start">
+              </div>
+            </div>
+          </div>
+          <div className="flex-wrap justify-between md:flex-nowrap">
+            <p className="w-full pt-1 text-sm">Tax ID</p>
+            <div className="hstack items-start">
               <FormField
                 name="taxType"
                 placeholder="Tax type"
                 defaultValue={billing?.taxId.type || ""}
                 input={
-                  <c.Select>
+                  <Select>
                     {TAX_TYPES.map(({ type, name }) => (
                       <option key={type} value={type}>
                         {name}
                       </option>
                     ))}
-                  </c.Select>
+                  </Select>
                 }
               />
               <FormField placeholder="Tax ID" defaultValue={billing?.taxId.value || ""} name="taxId" />
-            </c.HStack>
-          </c.Flex>
+            </div>
+          </div>
           <ButtonGroup>
             <FormButton name="_action" value={ProfileBillingMethods.UpdateBilling}>
               Save
             </FormButton>
           </ButtonGroup>
-        </c.Stack>
+        </div>
       </Form>
-      <c.Divider />
-      <c.Text w="100%" fontSize="sm" fontWeight="semibold">
-        Invoices
-      </c.Text>
-      <c.Stack>
+      <hr />
+      <p className="w-full text-sm font-semibold">Invoices</p>
+      <div className="stack">
         {invoices.length === 0 ? (
-          <c.Center h="100px">
-            <c.Text textAlign="center">No invoices yet</c.Text>
-          </c.Center>
+          <div className="center h-24">
+            <p className="text-center">No invoices yet</p>
+          </div>
         ) : (
           invoices.map((invoice) => (
-            <c.Flex key={invoice.id} pt={1} justify="space-between">
-              <c.Text fontSize="sm">{dayjs.unix(invoice.created).format("MMM DD, YYYY")}</c.Text>
-              <c.HStack spacing={4}>
-                <c.Text textAlign="right" fontSize="sm">
-                  {INVOICE_STATUS[invoice.status || "draft"]}
-                </c.Text>
-                <c.Text textAlign="right" fontSize="sm">
-                  €{currencyjs(invoice.total, { fromCents: true }).value}
-                </c.Text>
-                <c.Link textAlign="right" opacity={0.7} fontSize="sm" href={invoice.invoice_pdf || ""} download={true}>
+            <div key={invoice.id} className="flex justify-between pt-1">
+              <p className="text-sm">{dayjs.unix(invoice.created).format("MMM DD, YYYY")}</p>
+              <div className="hstack">
+                <p className="text-right text-sm">
+                  <Badge colorScheme={invoice.status === "open" ? "primary" : "gray"}>
+                    {INVOICE_STATUS[invoice.status || "draft"]}
+                  </Badge>
+                </p>
+                <p className="text-right text-sm">€{currencyjs(invoice.total, { fromCents: true }).value}</p>
+                <a className="text-right text-sm opacity-70 hover:opacity-50" href={invoice.invoice_pdf || ""} download={true}>
                   Download
-                </c.Link>
-              </c.HStack>
-            </c.Flex>
+                </a>
+              </div>
+            </div>
           ))
         )}
-      </c.Stack>
-    </c.Stack>
+      </div>
+    </div>
   )
 }

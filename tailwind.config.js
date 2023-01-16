@@ -20,7 +20,6 @@ const shapes = plugin(function ({ matchUtilities, theme }) {
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  // TODO: Once chakra is removed, need to set dark mode classes ourselves
   darkMode: "class",
   content: ["./app/**/*.{js,ts,jsx,tsx}"],
   theme: {

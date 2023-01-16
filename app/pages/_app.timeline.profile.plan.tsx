@@ -1,14 +1,11 @@
-import * as React from "react"
-import { ButtonGroup } from "@chakra-ui/react"
-import * as c from "@chakra-ui/react"
 import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Outlet, useFetcher, useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
 
-import { FormButton } from "~/components/ui/Form"
-import { Modal } from "~/components/ui/Modal"
+import { Form, FormButton } from "~/components/ui/Form"
+import { Modal, useModal } from "~/components/ui/Modal"
 import { PRICE_ID } from "~/lib/config.server"
 import { FULL_WEB_URL } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
@@ -16,6 +13,11 @@ import { badRequest } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
+import { cn } from "~/lib/tailwind"
+import { Button } from "~/components/ui/Button"
+import { AlertDialog } from "~/components/ui/AlertDialog"
+import { Input } from "~/components/ui/Inputs"
+import { ButtonGroup } from "~/components/ui/ButtonGroup"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
@@ -41,10 +43,8 @@ export const loader = async ({ request }: LoaderArgs) => {
         status: subscription.status,
       }
     : null
-  return json(
-    { taskCount, elementCount, subscription: filteredSubscription },
-    { headers: { "Cache-Control": "max-age=60, s-maxage=360" } },
-  )
+
+  return json({ taskCount, elementCount, subscription: filteredSubscription })
 }
 
 export type ProfilePlan = SerializeFrom<typeof loader>
@@ -75,7 +75,7 @@ export const action = async ({ request }: ActionArgs) => {
           billing_address_collection: "required",
           tax_id_collection: { enabled: true },
           success_url: FULL_WEB_URL + "/timeline/subscribed",
-          cancel_url: FULL_WEB_URL + "/timeline",
+          cancel_url: FULL_WEB_URL + "/timeline/profile/plan",
           automatic_tax: { enabled: true },
           discounts: promoCode ? [{ promotion_code: promoCodeId }] : undefined,
           line_items: [{ price: PRICE_ID, quantity: 1 }],
@@ -118,266 +118,190 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function Plan() {
   const data = useLoaderData<typeof loader>()
-  const joinPlanProps = c.useDisclosure()
-
-  const cancelPlanProps = c.useDisclosure()
-  const cancelRef = React.useRef<HTMLButtonElement>(null)
-
-  const joinPlanFetcher = useFetcher()
-  React.useEffect(() => {
-    if (joinPlanFetcher.type === "actionReload") {
-      joinPlanProps.onClose()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [joinPlanFetcher.type])
+  const joinPlanProps = useModal()
 
   const cancelFetcher = useFetcher()
-  React.useEffect(() => {
-    if (cancelFetcher.type === "actionReload") {
-      cancelPlanProps.onClose()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cancelFetcher.type])
-
-  const reactivateFetcher = useFetcher()
-
-  const borderColor = c.useColorModeValue("gray.100", "gray.600")
 
   const discountedPlanAmount = data?.subscription?.discountPercent ? 4 - (4 * 100) / data.subscription.discountPercent : null
 
   return (
-    <c.Stack spacing={4}>
-      <c.Text fontSize="lg" fontWeight={500}>
-        Plan
-      </c.Text>
+    <div className="stack">
+      <p className="text-lg font-medium">Plan</p>
       <Outlet />
       {data?.subscription ? (
-        <c.Stack>
-          <c.Text fontSize="lg">
+        <div className="stack">
+          <p className="text-lg">
             You are currently on the <b>Pro</b> plan
-          </c.Text>
+          </p>
           {discountedPlanAmount || discountedPlanAmount === 0 ? (
-            <c.Text fontSize="sm">
+            <p className="text-sm">
               A {data?.subscription.discountPercent}% discount is applied to your subscription, you pay €{discountedPlanAmount}{" "}
               per month
-            </c.Text>
+            </p>
           ) : null}
           {data.subscription.isCancelled ? (
-            <c.Text fontSize="sm">
+            <p className="text-sm">
               You have cancelled but still have access to Pro features until{" "}
               <b>{dayjs.unix(data.subscription.endDate).format("DD/MM/YYYY")}</b>
-            </c.Text>
+            </p>
           ) : data.subscription.status === "active" && data.subscription.endDate ? (
-            <c.Text fontSize="sm">
+            <p className="text-sm">
               Your plan will renew on <b>{dayjs.unix(data.subscription.endDate).format("DD/MM/YYYY")}</b>
-            </c.Text>
+            </p>
           ) : data.subscription.status === "past_due" || data.subscription.status === "unpaid" ? (
-            <c.Text fontSize="sm">Your plan requires payment</c.Text>
+            <p className="text-sm">Your plan requires payment</p>
           ) : null}
-        </c.Stack>
+        </div>
       ) : (
-        <c.Stack>
-          <c.Text fontSize="lg">
+        <div className="stack">
+          <p className="text-lg">
             You are currently on the <b>Personal</b> plan
-          </c.Text>
-          <c.Text fontSize="sm">Current usage</c.Text>
-          <c.Flex>
-            <c.Stat>
-              <c.StatLabel>Tasks</c.StatLabel>
-              <c.StatNumber>
-                <c.Text
-                  as="span"
-                  color={(data?.taskCount || 0) >= 1000 ? "red.500" : (data?.taskCount || 0) > 900 ? "primary.500" : undefined}
+          </p>
+          <p className="text-sm">Current usage</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm">Tasks</p>
+              <p className="text-2xl">
+                <span
+                  className={cn(
+                    (data?.elementCount || 0) >= 5
+                      ? "text-red-500"
+                      : (data?.elementCount || 0) > 4
+                      ? "text-primary-500"
+                      : undefined,
+                  )}
                 >
                   {data?.taskCount}{" "}
-                </c.Text>
-                <c.Text as="span" fontWeight="thin" opacity={0.7} fontSize="xs">
-                  / 1000
-                </c.Text>
-              </c.StatNumber>
-            </c.Stat>
-            <c.Stat>
-              <c.StatLabel>Elements</c.StatLabel>
-              <c.StatNumber>
-                <c.Text
-                  as="span"
-                  color={(data?.elementCount || 0) >= 5 ? "red.500" : (data?.elementCount || 0) > 4 ? "primary.500" : undefined}
+                </span>
+                <span className="text-xs font-thin opacity-70">/ 1000</span>
+              </p>
+            </div>
+            <div>
+              <p className="text-sm">Elements</p>
+              <p className="text-2xl">
+                <span
+                  className={cn(
+                    (data?.elementCount || 0) >= 5
+                      ? "text-red-500"
+                      : (data?.elementCount || 0) > 4
+                      ? "text-primary-500"
+                      : undefined,
+                  )}
                 >
                   {data?.elementCount}
-                </c.Text>{" "}
-                <c.Text as="span" fontWeight="thin" opacity={0.7} fontSize="xs">
-                  / 5
-                </c.Text>
-              </c.StatNumber>
-            </c.Stat>
-          </c.Flex>
-        </c.Stack>
+                </span>{" "}
+                <span className="text-xs font-thin opacity-70">/ 5</span>
+              </p>
+            </div>
+          </div>
+        </div>
       )}
 
-      <c.Divider />
+      <hr />
 
-      <c.Box
-        w="100%"
-        fontSize={{ base: "xs", md: "sm" }}
-        borderRight="1px solid"
-        borderBottom="1px solid"
-        borderColor={borderColor}
-      >
-        <c.Flex>
-          <c.Flex flex={3} p={{ base: 1, md: 2 }} borderLeft="1px solid" borderColor="transparent" />
-          <c.Flex flex={2} p={{ base: 1, md: 2 }} borderLeft="1px solid" borderTop="1px solid" borderColor={borderColor}>
-            <c.Stack spacing={{ base: 0, md: 2 }}>
-              <c.Text fontWeight="bold" fontSize="md">
-                Personal
-              </c.Text>
-              <c.Text fontWeight="medium" fontSize="xl">
-                €0
-              </c.Text>
-              <c.Button
-                size={{ base: "xs", md: "sm" }}
-                onClick={cancelPlanProps.onOpen}
-                colorScheme={!data?.subscription || data?.subscription?.isCancelled ? "gray" : "primary"}
-                isDisabled={!data?.subscription || data?.subscription?.isCancelled}
-              >
-                {data?.subscription ? "Downgrade" : "Current plan"}
-              </c.Button>
-              <c.AlertDialog {...cancelPlanProps} motionPreset="slideInBottom" leastDestructiveRef={cancelRef}>
-                <c.AlertDialogOverlay>
-                  <c.AlertDialogContent>
-                    <c.AlertDialogHeader fontSize="lg" fontWeight="bold">
-                      Cancel plan
-                    </c.AlertDialogHeader>
-                    <c.AlertDialogBody>
-                      Are you sure? You will remain on the Pro plan until{" "}
-                      {dayjs.unix(data?.subscription?.endDate || 0).format("DD/MM/YYYY")}
-                    </c.AlertDialogBody>
-                    <c.AlertDialogFooter>
-                      <c.Button ref={cancelRef} onClick={cancelPlanProps.onClose}>
-                        Cancel
-                      </c.Button>
-
-                      <c.Button
-                        colorScheme="red"
-                        type="submit"
-                        ml={3}
-                        isDisabled={cancelFetcher.state !== "idle"}
-                        isLoading={cancelFetcher.state !== "idle"}
-                        onClick={() => {
-                          cancelFetcher.submit({ _action: ProfilePlanMethods.CancelPlan }, { method: "post" })
-                        }}
-                      >
-                        Downgrade
-                      </c.Button>
-                    </c.AlertDialogFooter>
-                  </c.AlertDialogContent>
-                </c.AlertDialogOverlay>
-              </c.AlertDialog>
-            </c.Stack>
-          </c.Flex>
-          <c.Flex flex={2} p={{ base: 1, md: 2 }} borderLeft="1px solid" borderTop="1px solid" borderColor={borderColor}>
-            <c.Stack spacing={{ base: 0, md: 2 }}>
-              <c.Text fontWeight="bold" fontSize="md">
-                Pro
-              </c.Text>
-              <c.Text fontWeight="medium" fontSize="xl" whiteSpace="nowrap">
-                €4{" "}
-                <c.Text as="span" whiteSpace="nowrap" fontWeight="thin" opacity={0.7} fontSize="xs">
-                  per month
-                </c.Text>
-              </c.Text>
+      <div className="w-full border-r border-b border-gray-100 text-xs dark:border-gray-600 md:text-sm">
+        <div className="flex">
+          <div className="flex flex-[3] border-l border-transparent p-1 md:p-2" />
+          <div className="flex flex-[2] border-t border-l border-gray-100 border-l-transparent p-1 dark:border-gray-600 md:p-2">
+            <div className="stack space-y-0 md:space-y-2">
+              <p className="text-md font-bold">Personal</p>
+              <p className="text-xl font-medium">€0</p>
+              <AlertDialog
+                title="Cancel plan"
+                description={`Are you sure? You will remain on the Pro plan until ${dayjs
+                  .unix(data?.subscription?.endDate || 0)
+                  .format("DD/MM/YYYY")}`}
+                triggerButton={
+                  <Button
+                    size="xs"
+                    isLoading={cancelFetcher.state !== "idle"}
+                    colorScheme={!data?.subscription || data?.subscription?.isCancelled ? "gray" : "primary"}
+                    disabled={!data?.subscription || data?.subscription?.isCancelled}
+                  >
+                    {data?.subscription ? "Downgrade" : "Current plan"}
+                  </Button>
+                }
+                confirmButton={
+                  <cancelFetcher.Form method="post" replace>
+                    <Button name="_action" value={ProfilePlanMethods.CancelPlan} colorScheme="red" type="submit">
+                      Downgrade
+                    </Button>
+                  </cancelFetcher.Form>
+                }
+              />
+            </div>
+          </div>
+          <div className="flex flex-[2] border-l border-t border-gray-100 p-1 dark:border-gray-600 md:p-2">
+            <div className="stack space-y-0 md:space-y-2">
+              <p className="text-md font-bold">Pro</p>
+              <p className="whitespace-nowrap text-xl font-medium">
+                €4 <span className="whitespace-nowrap text-xs font-thin opacity-70">per month</span>
+              </p>
 
               {!data?.subscription ? (
-                <c.Button size={{ base: "xs", md: "sm" }} onClick={joinPlanProps.onOpen} colorScheme="primary">
+                <Button size="xs" onClick={joinPlanProps.onOpen} colorScheme="primary">
                   Upgrade
-                </c.Button>
+                </Button>
               ) : data.subscription.isCancelled ? (
-                <c.Button
-                  size={{ base: "xs", md: "sm" }}
-                  onClick={() => reactivateFetcher.submit({ _action: ProfilePlanMethods.ReactivatePlan }, { method: "post" })}
-                  colorScheme="primary"
-                  isLoading={reactivateFetcher.state !== "idle"}
-                  isDisabled={reactivateFetcher.state !== "idle"}
-                >
-                  Reactivate
-                </c.Button>
+                <Form method="post" replace>
+                  <FormButton name="_action" value={ProfilePlanMethods.ReactivatePlan} size="xs" colorScheme="primary">
+                    Reactivate
+                  </FormButton>
+                </Form>
               ) : (
-                <c.Button size={{ base: "xs", md: "sm" }} isDisabled={true}>
+                <Button size="xs" disabled>
                   Current plan
-                </c.Button>
+                </Button>
               )}
-              <Modal title="Join Pro" {...joinPlanProps}>
-                <joinPlanFetcher.Form replace method="post">
-                  <c.Stack>
-                    <c.Input name="promoCode" placeholder="Have a promo code?" />
+              <Modal size="sm" title="Join Pro" {...joinPlanProps}>
+                <Form replace method="post">
+                  <div className="stack p-4">
+                    <Input name="promoCode" placeholder="Have a promo code?" />
                     <ButtonGroup>
-                      <c.Button onClick={joinPlanProps.onClose}>Cancel</c.Button>
+                      <Button onClick={joinPlanProps.onClose}>Cancel</Button>
                       <FormButton name="_action" value={ProfilePlanMethods.JoinPlan}>
                         Join
                       </FormButton>
                     </ButtonGroup>
-                  </c.Stack>
-                </joinPlanFetcher.Form>
+                  </div>
+                </Form>
               </Modal>
-            </c.Stack>
-          </c.Flex>
-        </c.Flex>
-        <c.Flex borderBottom="1px solid" borderLeft="1px solid" borderTop="1px solid" borderColor={borderColor}>
-          <c.Flex p={{ base: 1, md: 2 }} flex={3} fontWeight="semibold">
-            Usage
-          </c.Flex>
-          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor} />
-          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor} />
-        </c.Flex>
-        <c.Flex borderBottom="1px solid" borderColor={borderColor}>
-          <c.Flex p={{ base: 1, md: 2 }} flex={3} opacity={0.7} borderLeft="1px solid" borderColor={borderColor}>
-            Tasks
-          </c.Flex>
-          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
-            1000
-          </c.Flex>
-          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
-            Unlimited
-          </c.Flex>
-        </c.Flex>
-        <c.Flex borderBottom="1px solid" borderColor={borderColor}>
-          <c.Flex p={{ base: 1, md: 2 }} flex={3} opacity={0.7} borderLeft="1px solid" borderColor={borderColor}>
-            Elements
-          </c.Flex>
-          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
-            5
-          </c.Flex>
-          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
-            Unlimited
-          </c.Flex>
-        </c.Flex>
-        <c.Flex borderBottom="1px solid" borderLeft="1px solid" borderColor={borderColor}>
-          <c.Flex p={{ base: 1, md: 2 }} flex={3} fontWeight="semibold">
-            Features
-          </c.Flex>
-          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor} />
-          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor} />
-        </c.Flex>
-        <c.Flex borderBottom="1px solid" borderLeft="1px solid" borderColor={borderColor}>
-          <c.Flex p={{ base: 1, md: 2 }} flex={3} opacity={0.7}>
-            Weather forecast
-          </c.Flex>
-          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
-            ✓
-          </c.Flex>
-          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
-            ✓
-          </c.Flex>
-        </c.Flex>
-        <c.Flex borderLeft="1px solid" borderColor={borderColor}>
-          <c.Flex p={{ base: 1, md: 2 }} flex={3} opacity={0.7}>
-            Habit tracking
-          </c.Flex>
-          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}></c.Flex>
-          <c.Flex p={{ base: 1, md: 2 }} flex={2} borderLeft="1px solid" borderColor={borderColor}>
-            ✓
-          </c.Flex>
-        </c.Flex>
-      </c.Box>
-    </c.Stack>
+            </div>
+          </div>
+        </div>
+        <div className="border-l border-t border-gray-100 dark:border-gray-600">
+          <div className="flex border-b border-gray-100 dark:border-gray-600">
+            <div className="flex flex-[3] p-1 font-semibold md:p-2">Usage</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
+          </div>
+          <div className="flex border-b border-gray-100 dark:border-gray-600">
+            <div className="flex flex-[3]  border-gray-100 p-1 opacity-70 dark:border-gray-600 md:p-2">Tasks</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2 ">1000</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">Unlimited</div>
+          </div>
+          <div className="flex border-b border-gray-100 dark:border-gray-600">
+            <div className="flex flex-[3]  border-gray-100 p-1 opacity-70 dark:border-gray-600 md:p-2">Elements</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">5</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">Unlimited</div>
+          </div>
+          <div className="flex border-b border-gray-100 dark:border-gray-600">
+            <div className="flex flex-[3] p-1 font-semibold md:p-2">Features</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
+          </div>
+          <div className="flex border-b border-gray-100 dark:border-gray-600">
+            <div className="flex flex-[3] p-1 opacity-70 md:p-2">Weather forecast</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
+          </div>
+          <div className="flex">
+            <div className="flex flex-[3] p-1 opacity-70 md:p-2">Habit tracking</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2"></div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

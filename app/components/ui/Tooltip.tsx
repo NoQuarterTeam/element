@@ -12,7 +12,11 @@ export function Tooltip(props: Props) {
     <RTooltip.Root delayDuration={200}>
       <RTooltip.Trigger asChild>{props.children}</RTooltip.Trigger>
       <RTooltip.Portal>
-        <RTooltip.Content className="rounded-sm bg-gray-900 px-1 text-sm text-white shadow-md" side={props.side} sideOffset={5}>
+        <RTooltip.Content
+          className="z-50 rounded-sm bg-gray-900 px-1 text-sm text-white shadow-md"
+          side={props.side}
+          sideOffset={5}
+        >
           {props.label}
           <RTooltip.Arrow className="fill-gray-900" />
         </RTooltip.Content>

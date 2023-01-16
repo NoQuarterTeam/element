@@ -8,7 +8,8 @@ import { getUserSession } from "../session/session.server"
 
 export async function requireUser(request: Request) {
   const { userId } = await getUserSession(request)
-  if (!userId) throw redirect(`/login`)
+  const url = new URL(request.url)
+  if (!userId) throw redirect(`/login${request.method === "GET" ? `?redirectTo=${url.pathname}` : ""}`)
   return userId
 }
 

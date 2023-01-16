@@ -1,6 +1,6 @@
 import type { ActionArgs, MetaFunction } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { Link, useSearchParams } from "@remix-run/react"
 import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
@@ -25,8 +25,10 @@ export const action = async ({ request }: ActionArgs) => {
   const loginSchema = z.object({
     email: z.string().min(3).email("Invalid email"),
     password: z.string().min(8, "Must be at least 8 characters"),
+    redirectTo: z.string().nullable().optional(),
   })
   const { data, fieldErrors } = await validateFormData(loginSchema, formData)
+  const redirectTo = data.redirectTo
   if (fieldErrors) return badRequest({ fieldErrors, data })
   const user = await db.user.findUnique({ where: { email: data.email } })
   if (!user) return badRequest({ formError: "Incorrect email or password" })
@@ -36,14 +38,19 @@ export const action = async ({ request }: ActionArgs) => {
 
   const { setUser } = await getUserSession(request)
   const headers = new Headers([["Set-Cookie", await setUser(user.id)]])
-  return redirect("/timeline", { headers })
+
+  console.log(redirectTo)
+
+  return redirect(redirectTo || "/timeline", { headers })
 }
 
 export default function Login() {
+  const [params] = useSearchParams()
   return (
     <Form method="post" replace>
       <div className="stack">
         <h1 className="text-6xl">Login</h1>
+        <input type="hidden" name="redirectTo" value={params.get("redirectTo") || ""} />
         <FormField required label="Email address" name="email" placeholder="jim@gmail.com" />
         <FormField required label="Password" name="password" type="password" placeholder="********" />
         <div>

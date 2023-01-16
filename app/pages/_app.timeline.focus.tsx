@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons"
+import { RiArrowDownSLine, RiArrowRightSLine } from "react-icons/ri"
 import { Dialog } from "@headlessui/react"
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
@@ -105,7 +105,7 @@ function FocusItem({ task }: { task: FocusTask }) {
                 rounded="full"
                 size="xs"
                 aria-label="show description"
-                icon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                icon={isOpen ? <RiArrowRightSLine /> : <RiArrowDownSLine />}
               />
             </Tooltip>
           )}

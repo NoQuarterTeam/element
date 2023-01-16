@@ -5,12 +5,13 @@ import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
 import { validateFormData } from "~/lib/form"
-import { useToast } from "~/lib/hooks/useToast"
+
 import { badRequest } from "~/lib/remix"
 
 import { db } from "~/lib/db.server"
 import { createToken } from "~/lib/jwt.server"
 import { sendResetPasswordEmail } from "~/services/user/user.mailer.server"
+import { useToast } from "~/components/ui/Toast"
 
 export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData()
@@ -32,7 +33,7 @@ export default function ForgotPassword() {
   const toast = useToast()
   React.useEffect(() => {
     if (type === "actionSubmission") {
-      toast({ description: "Reset link sent to your email", status: "success" })
+      toast({ description: "Reset link sent to your email" })
       if (!inputRef.current) return
       inputRef.current.value = ""
     }
