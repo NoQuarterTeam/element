@@ -9,7 +9,6 @@ export const FLASH_COOKIE_KEY = IS_PRODUCTION ? "element_session_flash" : "eleme
 export enum FlashType {
   Error = "flashError",
   Info = "flashInfo",
-  Success = "flashSuccess",
 }
 
 const flashStorage = createCookieSessionStorage({
@@ -28,7 +27,6 @@ export async function getFlashSession(request: Request) {
   const session = await flashStorage.getSession(request.headers.get("Cookie"))
   const flashError = session.get(FlashType.Error) || null
   const flashInfo = session.get(FlashType.Info) || null
-  const flashSuccess = session.get(FlashType.Success) || null
 
   const commit = () => flashStorage.commitSession(session)
   const createFlash = (type: FlashType, message: string) => {
@@ -36,7 +34,7 @@ export async function getFlashSession(request: Request) {
     return commit()
   }
   return {
-    flash: { flashError, flashInfo, flashSuccess },
+    flash: { flashError, flashInfo },
     createFlash,
     commit,
     session,

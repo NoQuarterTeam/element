@@ -1,28 +1,22 @@
-import * as c from "@chakra-ui/react"
 import { useNavigate } from "@remix-run/react"
+import { Button } from "~/components/ui/Button"
 
 import { Confetti } from "~/components/ui/Confetti"
+import { Modal } from "~/components/ui/Modal"
 
 export default function Subscribed() {
   const navigate = useNavigate()
 
   return (
-    <c.Modal size="lg" isCentered isOpen onClose={() => navigate("/timeline")}>
-      <c.ModalOverlay />
-      <c.ModalContent>
-        <c.ModalBody my={4}>
-          <Confetti />
-          <c.VStack spacing={6}>
-            <c.Heading w="max-content" fontSize="3xl">
-              Welcome to Element Pro!
-            </c.Heading>
-            <c.Text>You can now create unlimited tasks and elements</c.Text>
-            <c.Button colorScheme="primary" onClick={() => navigate("/timeline")}>
-              Let's get started
-            </c.Button>
-          </c.VStack>
-        </c.ModalBody>
-      </c.ModalContent>
-    </c.Modal>
+    <Modal position="center" size="lg" isOpen onClose={() => navigate("/timeline")}>
+      <Confetti />
+      <div className="stack space-y-6">
+        <h1 className="w-max text-3xl">Welcome to Element Pro!</h1>
+        <p>You can now create unlimited tasks and elements</p>
+        <Button colorScheme="primary" onClick={() => navigate("/timeline")}>
+          Let's get started
+        </Button>
+      </div>
+    </Modal>
   )
 }

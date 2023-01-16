@@ -49,7 +49,7 @@ export const action = async ({ request }: ActionArgs) => {
   const { createFlash } = await getFlashSession(request)
   const headers = new Headers([
     ["Set-Cookie", await setUser(user.id)],
-    ["Set-Cookie", await createFlash(FlashType.Success, "Welcome to Element, you're all setup!")],
+    ["Set-Cookie", await createFlash(FlashType.Info, "Welcome to Element, you're all setup!")],
   ])
   return redirect("/timeline", { headers })
 }

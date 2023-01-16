@@ -187,7 +187,7 @@ export function ImageField(props: ImageFieldProps) {
 
 export function FormError({ error }: { error?: string }) {
   const form = useActionData<ActionData<any>>()
-  if (!form?.formError || !error) return null
+  if (!form?.formError && !error) return null
   return <FormFieldError id="form-error">{form?.formError || error}</FormFieldError>
 }
 export const FormButton = React.forwardRef<HTMLButtonElement, ButtonProps>(function _FormButton(props, ref) {

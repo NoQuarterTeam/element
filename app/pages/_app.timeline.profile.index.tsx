@@ -1,8 +1,6 @@
-import * as React from "react"
-import * as c from "@chakra-ui/react"
 import type { ActionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
-import { useFetcher, useSubmit } from "@remix-run/react"
+import { useSubmit } from "@remix-run/react"
 import { z } from "zod"
 
 import { ButtonGroup } from "~/components/ui/ButtonGroup"
@@ -16,6 +14,8 @@ import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getUserSession } from "~/services/session/session.server"
 
 import { useMe } from "./_app"
+import { Button } from "~/components/ui/Button"
+import { AlertDialog } from "~/components/ui/AlertDialog"
 
 export enum ProfileActionMethods {
   DeleteAcccount = "deleteAccount",
@@ -48,7 +48,7 @@ export const action = async ({ request }: ActionArgs) => {
         }
         await db.user.update({ where: { id: user.id }, data })
         return redirect("/timeline/profile", {
-          headers: { "Set-Cookie": await createFlash(FlashType.Success, "Profile updated") },
+          headers: { "Set-Cookie": await createFlash(FlashType.Info, "Profile updated") },
         })
       } catch (e: any) {
         return badRequest(e.message, {
@@ -60,7 +60,10 @@ export const action = async ({ request }: ActionArgs) => {
         await db.user.update({ where: { id: user.id }, data: { archivedAt: new Date() } })
         const { destroy } = await getUserSession(request)
 
-        const headers = new Headers([["Set-Cookie", await destroy()]])
+        const headers = new Headers([
+          ["Set-Cookie", await destroy()],
+          ["Set-Cookie", await createFlash(FlashType.Info, "Acccount deleted")],
+        ])
         return redirect("/", { headers })
       } catch (e: any) {
         return badRequest(e.message, {
@@ -77,20 +80,13 @@ export const action = async ({ request }: ActionArgs) => {
 export default function Account() {
   const logoutSubmit = useSubmit()
   const me = useMe()
-  const formRef = React.useRef<HTMLFormElement>(null)
-
-  const alertProps = c.useDisclosure()
-  const cancelRef = React.useRef<HTMLButtonElement>(null)
-  const destroyAccountFetcher = useFetcher()
 
   return (
-    <c.Stack spacing={4}>
-      <c.Text fontSize="lg" fontWeight={500}>
-        Account
-      </c.Text>
+    <div className="stack">
+      <p className="text-lg font-medium">Account</p>
 
-      <Form ref={formRef} action="?index" method="post" replace>
-        <c.Stack spacing={4}>
+      <Form method="post" replace>
+        <div className="stack">
           <FormField defaultValue={me.email} name="email" label="Email" />
           <FormField defaultValue={me.firstName} name="firstName" label="First name" />
           <FormField defaultValue={me.lastName} name="lastName" label="Last name" />
@@ -107,55 +103,31 @@ export default function Account() {
               Save
             </FormButton>
           </ButtonGroup>
-        </c.Stack>
+        </div>
       </Form>
-      <c.Divider />
-      <c.Box>
-        <c.Button variant="outline" onClick={() => logoutSubmit(null, { method: "post", action: "/logout" })}>
+      <hr />
+      <div>
+        <Button variant="outline" onClick={() => logoutSubmit(null, { method: "post", action: "/logout" })}>
           Log out
-        </c.Button>
-      </c.Box>
-      <c.Divider />
-      <c.Stack>
-        <c.Text fontSize="sm">Danger zone</c.Text>
-        <c.Text fontSize="xs">
+        </Button>
+      </div>
+      <hr />
+      <div className="stack">
+        <p className="text-sm">Danger zone</p>
+        <p className="text-xs">
           Permanently delete your account and all of its contents. This action is not reversible - please continue with caution.
-        </c.Text>
-        <c.Box>
-          <c.Button colorScheme="red" onClick={alertProps.onOpen}>
-            Delete account
-          </c.Button>
-        </c.Box>
-      </c.Stack>
-
-      <c.AlertDialog {...alertProps} motionPreset="slideInBottom" isCentered leastDestructiveRef={cancelRef}>
-        <c.AlertDialogOverlay>
-          <c.AlertDialogContent>
-            <c.AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete account
-            </c.AlertDialogHeader>
-            <c.AlertDialogBody>Are you sure? You can't undo this action afterwards.</c.AlertDialogBody>
-            <c.AlertDialogFooter>
-              <c.Button ref={cancelRef} onClick={alertProps.onClose}>
-                Cancel
-              </c.Button>
-              <destroyAccountFetcher.Form method="post" action="/api/profile" replace>
-                <c.Button
-                  colorScheme="red"
-                  type="submit"
-                  ml={3}
-                  name="_action"
-                  isLoading={destroyAccountFetcher.state !== "idle"}
-                  isDisabled={destroyAccountFetcher.state !== "idle"}
-                  value={ProfileActionMethods.DeleteAcccount}
-                >
-                  Delete
-                </c.Button>
-              </destroyAccountFetcher.Form>
-            </c.AlertDialogFooter>
-          </c.AlertDialogContent>
-        </c.AlertDialogOverlay>
-      </c.AlertDialog>
-    </c.Stack>
+        </p>
+        <AlertDialog
+          triggerButton={<Button colorScheme="red">Delete account</Button>}
+          confirmButton={
+            <Form method="post" replace>
+              <Button name="_action" value={ProfileActionMethods.DeleteAcccount} colorScheme="red" type="submit">
+                Delete account
+              </Button>
+            </Form>
+          }
+        />
+      </div>
+    </div>
   )
 }

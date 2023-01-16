@@ -13,7 +13,7 @@ export const inputStyles = cva(
       },
       size: {
         xs: "text-xs px-2 py-1",
-        sm: "text-sm px-3 pt-[6px]",
+        sm: "text-sm px-3 py-[6px]",
         md: "text-md px-4 py-2",
         lg: "text-lg px-5 py-3",
       },

@@ -13,13 +13,10 @@ export function FlashMessage(props: Props) {
   const toast = useToast()
   React.useEffect(() => {
     if (props.flash.flashError) {
-      toast({ description: props.flash.flashError, status: "error" })
-    }
-    if (props.flash.flashSuccess) {
-      toast({ description: props.flash.flashSuccess, status: "success" })
+      toast({ title: props.flash.flashError, status: "error" })
     }
     if (props.flash.flashInfo) {
-      toast({ description: props.flash.flashInfo, status: "info" })
+      toast({ title: props.flash.flashInfo, status: "info" })
     }
   }, [props.flash])
   return null

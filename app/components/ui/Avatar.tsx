@@ -1,14 +1,15 @@
 import { cva, VariantProps } from "class-variance-authority"
 import * as React from "react"
+import * as RAvatar from "@radix-ui/react-avatar"
 import { cn } from "~/lib/tailwind"
 
-export const avatarStyles = cva("center object-contain rounded-full bg-primary-800 text-xs capitalize", {
+export const avatarStyles = cva("center rounded-full capitalize", {
   variants: {
     size: {
-      xs: "sq-[20px]",
-      sm: "sq-[30px]",
-      md: "sq-[40px]",
-      lg: "sq-[50px]",
+      xs: "sq-[20px] text-xs",
+      sm: "sq-[30px] text-sm",
+      md: "sq-[40px] text-md",
+      lg: "sq-[50px] text-lg",
     },
   },
   defaultVariants: {
@@ -18,21 +19,25 @@ export const avatarStyles = cva("center object-contain rounded-full bg-primary-8
 
 export type AvatarProps = VariantProps<typeof avatarStyles>
 
-interface Props extends AvatarProps, React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  src: string | null | undefined
+interface Props extends AvatarProps, RAvatar.AvatarProps {
   name: string
+  src?: string | null | undefined
 }
 
-export function Avatar(props: Props) {
-  const initials = props.name
+export function Avatar({ size, src, name, ...props }: Props) {
+  const initials = name
     .split(" ")
     .map((n) => n[0])
     .join("")
-  if (!props.src)
-    return (
-      <div className={cn(avatarStyles({ size: props.size }), props.className)}>
-        <p>{initials}</p>
-      </div>
-    )
-  return <img alt="avatar" className={cn(avatarStyles({ size: props.size }), props.className)} src={props.src} />
+  return (
+    <RAvatar.Root className={cn(avatarStyles({ size }), props.className)}>
+      <RAvatar.Image className="h-full w-full rounded-[inherit] object-cover" src={src || undefined} alt="avatar" />
+      <RAvatar.Fallback
+        className="center h-full w-full rounded-[inherit] bg-primary-700 object-cover text-xs font-semibold text-white"
+        delayMs={600}
+      >
+        {initials}
+      </RAvatar.Fallback>
+    </RAvatar.Root>
+  )
 }

@@ -101,7 +101,7 @@ export const action = async ({ request }: ActionArgs) => {
 
         return json(
           { success: true },
-          { headers: { "Set-Cookie": await createFlash(FlashType.Success, "Billing details updated") } },
+          { headers: { "Set-Cookie": await createFlash(FlashType.Info, "Billing details updated") } },
         )
       } catch (e: any) {
         return badRequest(e.message, {

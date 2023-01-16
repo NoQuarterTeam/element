@@ -92,7 +92,7 @@ export const buttonStyles = cva("font-semibold flex center border border-transpa
   },
 })
 
-export const buttonSizeStyleProps = cva("", {
+export const buttonSizeStyles = cva("", {
   variants: {
     size: {
       xs: "min-h-[28px]",
@@ -133,7 +133,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
             disabled: disabled || isLoading,
             variant,
           }),
-          buttonSizeStyleProps({ size }),
+          buttonSizeStyles({ size }),
           props.className,
         )}
       >

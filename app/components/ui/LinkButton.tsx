@@ -1,7 +1,7 @@
 import { type LinkProps, Link } from "@remix-run/react"
 import { cn } from "~/lib/tailwind"
 
-import { type ButtonStyleProps, buttonSizeStyleProps, buttonStyles } from "./Button"
+import { type ButtonStyleProps, buttonSizeStyles, buttonStyles } from "./Button"
 import { Spinner } from "./Spinner"
 
 interface LinkButtonProps extends ButtonStyleProps, LinkProps {
@@ -15,7 +15,7 @@ export function LinkButton({ variant, size, isLoading, leftIcon, disabled, color
       <Link
         style={{ pointerEvents: disabled ? "none" : undefined }}
         {...props}
-        className={cn(buttonStyles({ size, colorScheme, variant, disabled }), buttonSizeStyleProps({ size }), props.className)}
+        className={cn(buttonStyles({ size, colorScheme, variant, disabled }), buttonSizeStyles({ size }), props.className)}
       >
         <div className={cn("center", isLoading && "opacity-0")} aria-hidden={isLoading}>
           {leftIcon && <span className="mr-2">{leftIcon}</span>}
