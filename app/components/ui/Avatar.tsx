@@ -2,7 +2,7 @@ import { cva, VariantProps } from "class-variance-authority"
 import * as React from "react"
 import { cn } from "~/lib/tailwind"
 
-export const avatarStyles = cva("center rounded-full bg-primary-800 text-xs capitalize", {
+export const avatarStyles = cva("center object-contain rounded-full bg-primary-800 text-xs capitalize", {
   variants: {
     size: {
       xs: "sq-[20px]",
@@ -34,5 +34,5 @@ export function Avatar(props: Props) {
         <p>{initials}</p>
       </div>
     )
-  return <img alt="avatar" className={cn(avatarStyles({ size: props.size }), props.className)} />
+  return <img alt="avatar" className={cn(avatarStyles({ size: props.size }), props.className)} src={props.src} />
 }

@@ -41,9 +41,9 @@ export const action = async ({ request }: ActionArgs) => {
         // Dont need to update email address if the same as the current one
         let updateData: Partial<typeof data> = { ...data }
         if (data.email === user.email) delete updateData.email
-        if (data.avatar && data.avatar === "") updateData.avatar = null
-        if (data.email) {
-          const existing = await db.user.findFirst({ where: { email: { equals: data.email as string } } })
+        if (data.avatar === "") updateData.avatar = null
+        if (updateData.email) {
+          const existing = await db.user.findFirst({ where: { email: { equals: updateData.email } } })
           if (existing) return badRequest({ data, formError: "User with these details already exists" })
         }
         await db.user.update({ where: { id: user.id }, data })

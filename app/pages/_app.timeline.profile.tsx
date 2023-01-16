@@ -75,11 +75,11 @@ function TabLink({ children, icon, to }: { to: string; children: string; icon: R
       {({ isActive }) => (
         <span
           className={cn(
-            "flex h-10 items-center justify-start py-1 pl-4 font-normal",
+            "flex h-10 items-center justify-center py-1 px-2 font-normal md:justify-start md:px-4",
             isActive ? "bg-gray-75 dark:bg-gray-700" : "hover:bg-gray-75 dark:hover:bg-gray-700",
           )}
         >
-          <div className={cn("center md:flex", isLoading && "hidden")}>{icon}</div>
+          <div className={cn("center w-[20px] md:flex", isLoading && "hidden")}>{icon}</div>
           <span className="ml-2 hidden text-sm md:block">{children}</span>
           {isLoading && <Spinner className="ml-0 md:ml-2" size="xs" />}
         </span>
