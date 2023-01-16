@@ -1,12 +1,14 @@
 import type * as React from "react"
 import { RiBankCard2Line, RiMap2Line, RiSettings2Line } from "react-icons/ri"
-import * as c from "@chakra-ui/react"
 import { NavLink, Outlet, useNavigate, useTransition } from "@remix-run/react"
 
 import { Modal } from "~/components/ui/Modal"
 import { transformImage } from "~/lib/helpers/image"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useMe } from "~/pages/_app"
+import { Avatar } from "~/components/ui/Avatar"
+import { cn } from "~/lib/tailwind"
+import { Spinner } from "~/components/ui/Spinner"
 
 export default function Profile() {
   const me = useMe()
@@ -15,20 +17,19 @@ export default function Profile() {
 
   return (
     <Modal size="3xl" isOpen={true} onClose={() => navigate("/timeline")}>
-      <div className="flex h-full min-h-[600px] overflow-hidden rounded-md">
+      <div className="flex h-full min-h-[600px] overflow-hidden">
         <div className="h-auto w-12 bg-gray-50 dark:bg-gray-800 md:w-52">
           <div className="px-4 py-2">
-            <p className="xs hidden truncate opacity-80 md:block">{me.email}</p>
+            <p className="hidden truncate text-xs opacity-80 md:block">{me.email}</p>
           </div>
           <div className="stack space-y-1">
             <TabLink
               to="."
               icon={
-                <c.Avatar
+                <Avatar
                   src={me.avatar ? transformImage(me.avatar, "w_30,h_30,g_faces") : undefined}
                   name={me.firstName + " " + me.lastName}
                   size="xs"
-                  boxSize="15px"
                 />
               }
             >
@@ -37,20 +38,20 @@ export default function Profile() {
             <TabLink
               to="settings"
               icon={
-                <c.Box pos="relative">
-                  <c.Box as={RiSettings2Line} boxSize="15px" />
+                <div className="relative">
+                  <RiSettings2Line className="sq-[15px]" />
                   {!featuresSeen.find((u) => ["weather", "habits"].includes(u)) && (
-                    <c.Box boxSize="5px" borderRadius="full" bg="red.500" pos="absolute" top="-3px" right="-3px" />
+                    <div className="absolute -top-[3px] -right-[3px] rounded-full bg-red-500 sq-[5px]" />
                   )}
-                </c.Box>
+                </div>
               }
             >
               Settings
             </TabLink>
-            <TabLink to="plan" icon={<c.Box as={RiMap2Line} boxSize="15px" />}>
+            <TabLink to="plan" icon={<RiMap2Line className="sq-[15px]" />}>
               Plan
             </TabLink>
-            <TabLink to="billing" icon={<c.Box as={RiBankCard2Line} boxSize="15px" />}>
+            <TabLink to="billing" icon={<RiBankCard2Line className="sq-[15px]" />}>
               Billing
             </TabLink>
           </div>
@@ -68,29 +69,20 @@ function TabLink({ children, icon, to }: { to: string; children: string; icon: R
 
   const isLoading =
     transition.type === "normalLoad" && transition.state === "loading" && transition.location.pathname.includes(to)
-  const bg = c.useColorModeValue("gray.100", "gray.700")
+
   return (
-    <NavLink to={to} end={to === "."} style={{ outline: "none" }} prefetch="render">
+    <NavLink to={to} end={to === "."} className="outline-none" prefetch="render">
       {({ isActive }) => (
-        <c.Link
-          as="span"
-          outline="none"
-          bg={isActive ? bg : undefined}
-          _hover={{ bg }}
-          display="flex"
-          justifyContent="flex-start"
-          alignItems="center"
-          pl={4}
-          h="40px"
-          py={1}
-          fontWeight={400}
+        <span
+          className={cn(
+            "flex h-10 items-center justify-start py-1 pl-4 font-normal",
+            isActive ? "bg-gray-75 dark:bg-gray-700" : "hover:bg-gray-75 dark:hover:bg-gray-700",
+          )}
         >
-          <c.Center display={{ base: isLoading ? "none" : "flex", md: "flex" }}>{icon}</c.Center>
-          <c.Text ml={2} fontSize="sm" as="span" display={{ base: "none", md: "block" }}>
-            {children}
-          </c.Text>
-          {isLoading && <c.Spinner ml={{ base: 0, md: 2 }} size="xs" />}
-        </c.Link>
+          <div className={cn("center md:flex", isLoading && "hidden")}>{icon}</div>
+          <span className="ml-2 hidden text-sm md:block">{children}</span>
+          {isLoading && <Spinner className="ml-0 md:ml-2" size="xs" />}
+        </span>
       )}
     </NavLink>
   )

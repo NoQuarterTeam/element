@@ -1,13 +1,14 @@
 import type * as React from "react"
 import { type VariantProps, cva } from "class-variance-authority"
+import { cn } from "~/lib/tailwind"
 
-const spinnerStyles = cva("animate-spin text-white", {
+const spinnerStyles = cva("animate-spin text-black dark:text-white", {
   variants: {
     size: {
-      xs: "h-3 w-3",
-      sm: "h-4 w-4",
-      md: "h-5 w-5",
-      lg: "h-7 w-7",
+      xs: "sq-3",
+      sm: "sq-4",
+      md: "sq-5",
+      lg: "sq-7",
     },
   },
   defaultVariants: {
@@ -22,7 +23,7 @@ export function Spinner({ size, ...props }: SpinnerProps) {
   return (
     <svg
       {...props}
-      className={spinnerStyles({ className: props.className, size })}
+      className={cn(spinnerStyles({ size }), props.className)}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
