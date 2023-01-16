@@ -57,7 +57,6 @@
     "aws-sdk": "2.1295.0",
     "bcrypt": "5.1.0",
     "class-variance-authority": "^0.4.0",
-    "clsx": "^1.2.1",
     "compression": "1.7.4",
     "cookie": "0.5.0",
     "cross-env": "7.0.3",

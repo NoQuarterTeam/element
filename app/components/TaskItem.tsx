@@ -1,7 +1,7 @@
 import * as React from "react"
 import { type Prisma } from "@prisma/client"
 import { Link, useFetcher } from "@remix-run/react"
-import clsx from "clsx"
+import { twMerge } from "tailwind-merge"
 
 import { safeReadableColor } from "~/lib/color"
 import { formatDuration } from "~/lib/helpers/duration"
@@ -67,15 +67,15 @@ function _TaskItem({ task }: Props) {
       <Link to={task.id} onClick={handleClick} prefetch="intent" tabIndex={-1} className="">
         <div className="group/task-item relative w-full cursor-pointer overflow-hidden rounded-md border border-gray-100 bg-white outline-none dark:border-gray-900 dark:bg-gray-700">
           <div
-            className={clsx(
+            className={twMerge(
               "flex h-full w-full flex-col justify-between p-[6px]",
               task.isComplete ? "blur-[1px] group-hover/task-item:blur-0" : "min-h-[60px]",
             )}
           >
-            <div className={clsx(task.isComplete ? "mb-4" : "mb-3")}>
+            <div className={twMerge(task.isComplete ? "mb-4" : "mb-3")}>
               <div className="mb-1 flex justify-between">
                 <p
-                  className={clsx(
+                  className={twMerge(
                     "text-xxs",
                     task.isComplete ? "line-clamp-1" : "line-clamp-2 group-hover/task-item:line-clamp-6",
                   )}
@@ -103,7 +103,7 @@ function _TaskItem({ task }: Props) {
           </div>
           <div
             style={{ backgroundColor: task.element.color }}
-            className={clsx(
+            className={twMerge(
               "absolute bottom-0 left-0 flex h-1 w-full items-center overflow-hidden rounded-sm transition-all group-hover/task-item:h-4 group-hover/task-item:opacity-100",
               task.isComplete ? "opacity-40" : "opacity-100",
             )}

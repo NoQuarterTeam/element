@@ -4,7 +4,6 @@ import type { VariantProps } from "class-variance-authority"
 import { cva } from "class-variance-authority"
 
 import { Spinner } from "./Spinner"
-import clsx from "clsx"
 
 export const buttonStyles = cva("font-semibold flex center border border-transparent transition-colors duration-200", {
   variants: {
@@ -138,7 +137,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
           props.className,
         )}
       >
-        <div className={clsx("center", isLoading && "opacity-0")} aria-hidden={isLoading}>
+        <div className={twMerge("center", isLoading && "opacity-0")} aria-hidden={isLoading}>
           {leftIcon && <span className="mr-0 md:mr-1">{leftIcon}</span>}
           {props.children}
         </div>

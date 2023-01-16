@@ -4,7 +4,7 @@ import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import clsx from "clsx"
+import { twMerge } from "tailwind-merge"
 
 import appStyles from "~/styles/app.css"
 import generatedStyles from "~/styles/tailwind.css"
@@ -109,7 +109,7 @@ interface DocumentProps {
 
 function Document({ theme, children }: DocumentProps) {
   return (
-    <html lang="en" className={clsx(theme)}>
+    <html lang="en" className={twMerge(theme)}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="user-scalable=no, initial-scale=1, width=device-width" />

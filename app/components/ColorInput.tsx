@@ -1,5 +1,5 @@
 import { HexColorPicker } from "react-colorful"
-import clsx from "clsx"
+import { twMerge } from "tailwind-merge"
 
 import { isValidHex, safeReadableColor } from "~/lib/color"
 
@@ -19,7 +19,7 @@ export function ColorInput(props: Props) {
           <input
             name={props.name}
             required
-            className={clsx(
+            className={twMerge(
               "w-full rounded-xs border bg-transparent py-2 text-center text-sm outline-none",
               !isValidHex(props.value) ? "border-red-500" : "border-transparent hover:border-white/70 focus:border-white/70",
             )}

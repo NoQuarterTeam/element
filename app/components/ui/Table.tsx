@@ -2,7 +2,7 @@ import * as React from "react"
 import { CgArrowLongDown, CgArrowLongUp } from "react-icons/cg"
 import { Prisma } from "@prisma/client"
 import { Link as RLink, useSearchParams } from "@remix-run/react"
-import clsx from "clsx"
+import { twMerge } from "tailwind-merge"
 import queryString from "query-string"
 
 import { Button } from "./Button"
@@ -43,7 +43,7 @@ export function Table<T extends DataType>(props: Props<T>) {
       <div className="flex px-4 py-3">
         {columns.map(({ sortKey, header, row, hasNoLink, ...column }: ColumnProps<T>, i: number) => (
           <div
-            className={clsx(
+            className={twMerge(
               "flex flex-1 items-center overflow-hidden",
               i === columns.length - 1 ? "justify-end" : "justify-start",
             )}
@@ -83,7 +83,7 @@ export function Table<T extends DataType>(props: Props<T>) {
           {data.map((item) => (
             <div
               key={item.id}
-              className={clsx(
+              className={twMerge(
                 "flex w-full items-center border-t border-gray-700 px-4",
                 !!props.getRowHref && "cursor-pointer hover:bg-gray-900",
               )}
@@ -124,7 +124,7 @@ function Header({
   children: React.ReactNode
   onClick?: () => void
 }) {
-  const sharedClassName = clsx(
+  const sharedClassName = twMerge(
     "flex items-center min-w-auto text-sm h-auto font-700",
     className,
     isButton ? "cursor-pointer" : "cursor-default",
@@ -152,13 +152,13 @@ export function Column<T extends DataType>(_: ColumnProps<T>) {
 }
 
 function _ColumnField<T>({ isLast, hasNoLink, href, className, ...props }: ColumnProps<T> & { href?: string; isLast?: boolean }) {
-  const sharedClassName = clsx(
+  const sharedClassName = twMerge(
     "flex flex-1 items-center h-[50px] overflow-x-auto text-sm",
     isLast ? "justify-end" : "justify-start",
     className,
   )
   return !hasNoLink && !!href ? (
-    <RLink className={clsx(sharedClassName, "hover:no-underline")} to={href}>
+    <RLink className={twMerge(sharedClassName, "hover:no-underline")} to={href}>
       {typeof props.children === "string" || typeof props.children === "number" ? (
         <p className="truncate">{props.children}</p>
       ) : (

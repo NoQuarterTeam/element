@@ -1,5 +1,5 @@
 import { type LinkProps, Link } from "@remix-run/react"
-import clsx from "clsx"
+import { twMerge } from "tailwind-merge"
 import { twMerge } from "tailwind-merge"
 
 import { type ButtonStyleProps, buttonSizeStyleProps, buttonStyles } from "./Button"
@@ -12,7 +12,7 @@ interface LinkButtonProps extends ButtonStyleProps, LinkProps {
 
 export function LinkButton({ variant, size, isLoading, leftIcon, disabled, colorScheme, ...props }: LinkButtonProps) {
   return (
-    <div className={clsx("inline-block", disabled && "cursor-not-allowed")}>
+    <div className={twMerge("inline-block", disabled && "cursor-not-allowed")}>
       <Link
         style={{ pointerEvents: disabled ? "none" : undefined }}
         {...props}

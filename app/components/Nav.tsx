@@ -13,7 +13,7 @@ import {
 } from "react-icons/ri"
 import { Role } from "@prisma/client"
 import { useFetcher, useNavigate, useSubmit } from "@remix-run/react"
-import clsx from "clsx"
+import { twMerge } from "tailwind-merge"
 
 import { useEventListener } from "~/lib/hooks/useEventListener"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
@@ -72,7 +72,7 @@ export function Nav() {
       </div>
 
       <div
-        className={clsx(
+        className={twMerge(
           "fixed top-0 bottom-0 right-0 flex flex-col items-center justify-between overflow-hidden border-l border-gray-100 bg-white pb-6 pt-4 transition-[width] duration-100 dark:border-gray-900 dark:bg-gray-800",
           navProps.isOpen ? "w-[65px]" : "w-0",
         )}

@@ -15,14 +15,12 @@ export default function Profile() {
 
   return (
     <Modal size="3xl" isOpen={true} onClose={() => navigate("/timeline")}>
-      <c.Flex minH={600} h="100%" overflow="hidden" borderRadius="md">
+      <div className="flex h-full min-h-[600px] overflow-hidden rounded-md">
         <div className="h-auto w-12 bg-gray-50 dark:bg-gray-800 md:w-52">
-          <c.Box px={4} py={2}>
-            <c.Text fontSize="x-small" noOfLines={1} opacity={0.8} display={{ base: "none", md: "block" }}>
-              {me.email}
-            </c.Text>
-          </c.Box>
-          <c.Stack spacing={1}>
+          <div className="px-4 py-2">
+            <p className="xs hidden truncate opacity-80 md:block">{me.email}</p>
+          </div>
+          <div className="stack space-y-1">
             <TabLink
               to="."
               icon={
@@ -55,12 +53,12 @@ export default function Profile() {
             <TabLink to="billing" icon={<c.Box as={RiBankCard2Line} boxSize="15px" />}>
               Billing
             </TabLink>
-          </c.Stack>
+          </div>
         </div>
-        <c.Box p={4} pb={8} maxH={600} w="100%" overflowY="scroll">
+        <div className="max-h-[600px] w-full overflow-scroll p-4 pb-8">
           <Outlet />
-        </c.Box>
-      </c.Flex>
+        </div>
+      </div>
     </Modal>
   )
 }

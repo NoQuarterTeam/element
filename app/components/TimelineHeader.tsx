@@ -4,7 +4,7 @@ import { RiWindyLine } from "react-icons/ri"
 import { TbDroplet, TbLocation } from "react-icons/tb"
 import * as HoverCard from "@radix-ui/react-hover-card"
 import { useQuery } from "@tanstack/react-query"
-import clsx from "clsx"
+import { twMerge } from "tailwind-merge"
 import dayjs from "dayjs"
 
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
@@ -59,7 +59,7 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
 
   return (
     <div
-      className={clsx(
+      className={twMerge(
         "flex w-min border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800",
         isHabitsEnabled ? "h-headerHabit" : "h-header",
       )}

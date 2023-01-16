@@ -4,7 +4,7 @@ import { useInView } from "react-intersection-observer"
 import { Draggable, Droppable } from "@hello-pangea/dnd"
 import { Link } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
-import clsx from "clsx"
+import { twMerge } from "tailwind-merge"
 import dayjs from "dayjs"
 import deepEqual from "deep-equal"
 
@@ -78,7 +78,7 @@ function _Day(props: Props) {
         <div ref={provided.innerRef} {...provided.droppableProps} className="min-h-min">
           {dayjs(props.day).day() === 0 && <div ref={ref} />}
           <div
-            className={clsx(
+            className={twMerge(
               "group/day h-full min-h-screen w-day border-r border-gray-100 pb-2 hover:opacity-100 dark:border-gray-700",
               dayjs(props.day).isSame(dayjs(), "day")
                 ? "bg-primary-100 dark:bg-primary-900/90"
