@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Dialog, Transition } from "@headlessui/react"
-import { twMerge } from "tailwind-merge"
+import { cn } from "~/lib/tailwind"
 
 // import { twMerge } from 'tailwind-merge'
 import { CloseButton } from "./CloseButton"
@@ -39,7 +39,7 @@ export function Drawer({ isOpen, size = "md", onClose, ...props }: DrawerProps) 
           <div className="fixed inset-0 bg-black/50 bg-opacity-75 transition-opacity" />
         </Transition.Child>
         {/* <div className="fixed inset-0 overflow-y-auto">
-          <div className={twMerge("flex min-h-full flex-col items-center p-0 pt-14 sm:p-4")}> */}
+          <div className={cn("flex min-h-full flex-col items-center p-0 pt-14 sm:p-4")}> */}
 
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
@@ -54,7 +54,7 @@ export function Drawer({ isOpen, size = "md", onClose, ...props }: DrawerProps) 
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel
-                  className={twMerge(
+                  className={cn(
                     "pointer-events-auto relative w-screen overflow-hidden bg-white shadow-xl transition-all dark:bg-gray-700",
                     size === "sm" && "max-w-sm",
                     size === "md" && "max-w-md",

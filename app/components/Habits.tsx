@@ -2,7 +2,7 @@ import * as React from "react"
 import { RiAddCircleLine, RiDeleteBin4Line, RiFolder2Line } from "react-icons/ri"
 import { useFetcher } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
-import { twMerge } from "tailwind-merge"
+import { cn } from "~/lib/tailwind"
 import dayjs from "dayjs"
 
 import * as Popover from "~/components/ui/Popover"
@@ -42,7 +42,7 @@ function _Habits({ habits, day, habitEntries }: Props) {
               .map((habit) => (
                 <div
                   key={habit.id}
-                  className={twMerge(
+                  className={cn(
                     "rounded-full",
                     dayHabits.length > 8 ? "sq-[5px]" : dayHabits.length > 5 ? "sq-[7px]" : "sq-[10px]",
                     habitEntries.find((e) => e.habitId === habit.id)

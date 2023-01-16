@@ -2,7 +2,7 @@ import * as React from "react"
 import { BiX } from "react-icons/bi"
 import { CgSearch } from "react-icons/cg"
 import { useSearchParams } from "@remix-run/react"
-import { twMerge } from "tailwind-merge"
+import { cn } from "~/lib/tailwind"
 import queryString from "query-string"
 
 import { IconButton } from "./IconButton"
@@ -44,7 +44,7 @@ export function Search({ placeholder, name = "search", ...props }: InputProps) {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         {...props}
-        className={twMerge("px-14", props.className)}
+        className={cn("px-14", props.className)}
       />
       <div className="center absolute right-2 top-0 h-full">
         {!!isPendingSearch && <IconButton onClick={clearSearch} aria-label="clear search" variant="ghost" icon={<BiX />} />}

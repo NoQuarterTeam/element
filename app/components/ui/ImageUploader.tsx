@@ -1,7 +1,7 @@
 import * as React from "react"
 import type { DropzoneOptions, FileRejection } from "react-dropzone"
 import { useDropzone } from "react-dropzone"
-import { twMerge } from "tailwind-merge"
+import { cn } from "~/lib/tailwind"
 
 import { useS3Upload } from "~/lib/hooks/useS3"
 
@@ -80,7 +80,7 @@ export function ImageUploader({ children, path, onSubmit, dropzoneOptions, class
 
   return (
     <>
-      <div className={inputStyles({ className: twMerge(className) })} {...getRootProps()}>
+      <div className={inputStyles({ className: cn(className) })} {...getRootProps()}>
         <input {...getInputProps()} />
         {children}
       </div>

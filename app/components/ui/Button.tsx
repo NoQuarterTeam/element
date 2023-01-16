@@ -1,5 +1,5 @@
 import * as React from "react"
-import { twMerge } from "tailwind-merge"
+import { cn } from "~/lib/tailwind"
 import type { VariantProps } from "class-variance-authority"
 import { cva } from "class-variance-authority"
 
@@ -125,7 +125,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         type="button"
         disabled={isLoading || !!disabled}
         {...props}
-        className={twMerge(
+        className={cn(
           buttonStyles({
             size,
             rounded,
@@ -137,7 +137,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
           props.className,
         )}
       >
-        <div className={twMerge("center", isLoading && "opacity-0")} aria-hidden={isLoading}>
+        <div className={cn("center", isLoading && "opacity-0")} aria-hidden={isLoading}>
           {leftIcon && <span className="mr-0 md:mr-1">{leftIcon}</span>}
           {props.children}
         </div>

@@ -1,5 +1,5 @@
 import * as React from "react"
-import { twMerge } from "tailwind-merge"
+import { cn } from "~/lib/tailwind"
 import { type VariantProps, cva } from "class-variance-authority"
 
 import { type ButtonProps, buttonStyles } from "./Button"
@@ -31,7 +31,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(f
       ref={ref}
       disabled={disabled || isLoading}
       {...props}
-      className={twMerge(buttonStyles({ colorScheme, rounded, disabled, variant }), iconbuttonStyles({ size }), props.className)}
+      className={cn(buttonStyles({ colorScheme, rounded, disabled, variant }), iconbuttonStyles({ size }), props.className)}
     >
       <div className="center h-full w-full">{isLoading ? <Spinner /> : icon}</div>
     </button>

@@ -9,7 +9,7 @@ import {
   RiMore2Fill,
 } from "react-icons/ri"
 import { useFetcher, useTransition } from "@remix-run/react"
-import { twMerge } from "tailwind-merge"
+import { cn } from "~/lib/tailwind"
 import { matchSorter } from "match-sorter"
 
 import { isValidHex } from "~/lib/color"
@@ -94,7 +94,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
       <div className="flex items-center justify-between pr-2">
         <div className="relative flex flex-1 items-center justify-between">
           <button
-            className={twMerge(
+            className={cn(
               "flex-1 truncate rounded-r-full border-l-4 py-1 pr-14 text-left text-sm outline-none",
               element.archivedAt ? "opacity-50" : "opacity-100",
               isSelected
@@ -108,7 +108,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
           </button>
           {element.children.filter((e) => !e.archivedAt).length > 0 && (
             <IconButton
-              className={twMerge("absolute")}
+              className={cn("absolute")}
               style={{ left: props.depth === 0 ? "10px" : `${10 + props.depth * 15}px` }}
               rounded="full"
               size="xs"
@@ -131,7 +131,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                   {({ isActive }) => (
                     <button
                       onClick={createModalProps.onOpen}
-                      className={twMerge(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
+                      className={cn(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
                     >
                       <RiAddLine className="sq-[12px]" />
                       <span>Create child</span>
@@ -143,7 +143,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                 {({ isActive }) => (
                   <button
                     onClick={updateModalProps.onOpen}
-                    className={twMerge(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
+                    className={cn(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
                   >
                     <RiEdit2Line className="sq-[12px]" />
                     <span>Edit</span>
@@ -160,7 +160,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                           { method: "post", action: `/api/elements/${element.id}` },
                         )
                       }
-                      className={twMerge(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
+                      className={cn(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
                     >
                       <RiEye2Line className="sq-[12px]" />
                       <span>Unarchive</span>
@@ -172,7 +172,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                   {({ isActive }) => (
                     <button
                       onClick={archiveModalProps.onOpen}
-                      className={twMerge(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
+                      className={cn(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
                     >
                       <RiDeleteBinLine className="sq-[12px]" />
                       <span>Archive</span>

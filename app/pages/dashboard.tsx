@@ -3,7 +3,7 @@ import { RiArrowLeftLine } from "react-icons/ri"
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
-import { twMerge } from "tailwind-merge"
+import { cn } from "~/lib/tailwind"
 import dayjs from "dayjs"
 
 import { LinkButton } from "~/components/ui/LinkButton"
@@ -207,7 +207,7 @@ function ElementStat({ element, depth }: Props) {
         </div>
       </div>
       {element.children && element.children.length > 0 && (
-        <div className={twMerge("stack", `pl-${4 * depth}`)}>
+        <div className={cn("stack", `pl-${4 * depth}`)}>
           {element.children?.map((child) => (
             <ElementStat key={child.id} element={child} depth={depth + 1} />
           ))}

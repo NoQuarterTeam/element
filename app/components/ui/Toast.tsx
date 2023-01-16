@@ -2,7 +2,7 @@ import * as React from "react"
 import { RiCloseLine } from "react-icons/ri"
 import * as ToastPrimitive from "@radix-ui/react-toast"
 import { ToastProvider, ToastViewport } from "@radix-ui/react-toast"
-import { twMerge } from "tailwind-merge"
+import { cn } from "~/lib/tailwind"
 
 import { IconButton } from "./IconButton"
 
@@ -27,7 +27,7 @@ export function Toaster(props: { children: React.ReactNode }) {
           <ToastPrimitive.Root
             key={toast.id}
             onOpenChange={(open) => (open ? undefined : setToasts((toasts) => toasts.filter((t) => t.id !== toast.id)))}
-            className={twMerge(
+            className={cn(
               "ToastRoot shadow-black/5a0 relative rounded-sm bg-green-500 p-3 text-white shadow-2xl",
               toast.status === "error" && "bg-red-600",
             )}

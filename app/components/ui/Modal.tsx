@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Dialog, Transition } from "@headlessui/react"
-import { twMerge } from "tailwind-merge"
+import { cn } from "~/lib/tailwind"
 
 import { CloseButton } from "./CloseButton"
 
@@ -41,7 +41,7 @@ export function Modal({ isOpen, size = "xl", onClose, position = "top", ...props
 
         <div className="fixed inset-0 overflow-y-auto">
           <div
-            className={twMerge(
+            className={cn(
               "flex min-h-full flex-col items-center p-0 pt-10 sm:p-4 md:pt-16",
               position === "top" ? "justify-start" : "justify-center",
             )}
@@ -56,7 +56,7 @@ export function Modal({ isOpen, size = "xl", onClose, position = "top", ...props
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel
-                className={twMerge(
+                className={cn(
                   "relative w-full overflow-hidden bg-white shadow-xl transition-all dark:bg-gray-700",
                   size === "sm" && "max-w-sm",
                   size === "md" && "max-w-md",

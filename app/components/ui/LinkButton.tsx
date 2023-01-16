@@ -1,6 +1,6 @@
 import { type LinkProps, Link } from "@remix-run/react"
-import { twMerge } from "tailwind-merge"
-import { twMerge } from "tailwind-merge"
+import { cn } from "~/lib/tailwind"
+import { cn } from "~/lib/tailwind"
 
 import { type ButtonStyleProps, buttonSizeStyleProps, buttonStyles } from "./Button"
 import { Spinner } from "./Spinner"
@@ -12,17 +12,13 @@ interface LinkButtonProps extends ButtonStyleProps, LinkProps {
 
 export function LinkButton({ variant, size, isLoading, leftIcon, disabled, colorScheme, ...props }: LinkButtonProps) {
   return (
-    <div className={twMerge("inline-block", disabled && "cursor-not-allowed")}>
+    <div className={cn("inline-block", disabled && "cursor-not-allowed")}>
       <Link
         style={{ pointerEvents: disabled ? "none" : undefined }}
         {...props}
-        className={twMerge(
-          buttonStyles({ size, colorScheme, variant, disabled }),
-          buttonSizeStyleProps({ size }),
-          props.className,
-        )}
+        className={cn(buttonStyles({ size, colorScheme, variant, disabled }), buttonSizeStyleProps({ size }), props.className)}
       >
-        <div className={twMerge("center", isLoading && "opacity-0")} aria-hidden={isLoading}>
+        <div className={cn("center", isLoading && "opacity-0")} aria-hidden={isLoading}>
           {leftIcon && <span className="mr-2">{leftIcon}</span>}
           {props.children}
         </div>

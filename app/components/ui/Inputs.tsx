@@ -1,5 +1,5 @@
 import type * as React from "react"
-import { twMerge } from "tailwind-merge"
+import { cn } from "~/lib/tailwind"
 import { type VariantProps, cva } from "class-variance-authority"
 
 export const inputStyles = cva(
@@ -55,7 +55,7 @@ export function Input({ size, variant, ...props }: InputProps) {
       type="text"
       id={props.name}
       {...props}
-      className={twMerge(inputStyles({ variant, size }), inputSizeStyles({ size }), props.className)}
+      className={cn(inputStyles({ variant, size }), inputSizeStyles({ size }), props.className)}
     />
   )
 }
@@ -66,7 +66,7 @@ export interface TextareaProps
   name?: string
 }
 export function Textarea({ variant, size, ...props }: TextareaProps) {
-  return <textarea id={props.name} {...props} className={twMerge(inputStyles({ variant, size }), props.className)} />
+  return <textarea id={props.name} {...props} className={cn(inputStyles({ variant, size }), props.className)} />
 }
 
 export interface SelectProps
@@ -77,11 +77,7 @@ export interface SelectProps
 }
 export function Select({ variant, size, ...props }: SelectProps) {
   return (
-    <select
-      id={props.name}
-      {...props}
-      className={twMerge(inputStyles({ variant, size }), inputSizeStyles({ size }), props.className)}
-    >
+    <select id={props.name} {...props} className={cn(inputStyles({ variant, size }), inputSizeStyles({ size }), props.className)}>
       {props.children}
     </select>
   )
@@ -92,7 +88,7 @@ export function Checkbox(props: React.DetailedHTMLProps<React.InputHTMLAttribute
     <input
       type="checkbox"
       {...props}
-      className={twMerge(
+      className={cn(
         "cursor-pointer border-none bg-black/10 text-primary-500 outline-none transition-all checked:bg-primary-500 hover:bg-black/20 hover:text-primary-600 focus:ring-primary-300 dark:border-none dark:bg-white/20 dark:checked:bg-primary-500 dark:hover:bg-white/30 dark:focus:ring-primary-300",
         props.className,
       )}
