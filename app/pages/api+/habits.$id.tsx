@@ -52,24 +52,18 @@ export const action = async ({ request, params }: ActionArgs) => {
           .set("second", now.get("second"))
           .set("millisecond", now.get("millisecond"))
           .toDate()
-        const gt = dayjs(date).startOf("d").toDate()
-        const lte = dayjs(date).endOf("d").toDate()
+        const gte = dayjs(data.date).startOf("d").toDate()
+        const lte = dayjs(data.date).endOf("d").toDate()
 
         const entries = await db.habitEntry.findMany({
           select: { id: true },
-          where: {
-            creatorId: { equals: user.id },
-            habitId: { equals: id },
-            createdAt: { gt, lte },
-          },
+          where: { creatorId: { equals: user.id }, habitId: { equals: id }, createdAt: { gte, lte } },
         })
 
         if (entries.length > 0) {
           await db.habitEntry.deleteMany({ where: { id: { in: entries.map((e) => e.id) } } })
         } else {
-          await db.habitEntry.create({
-            data: { creatorId: user.id, habitId: id, createdAt: date },
-          })
+          await db.habitEntry.create({ data: { creatorId: user.id, habitId: id, createdAt: date } })
         }
         return json({ success: true })
       } catch (e: any) {
