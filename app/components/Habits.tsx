@@ -275,7 +275,7 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
           defaultChecked={!!entry}
           onChange={() => {
             habitEntryFetcher.submit(
-              { _action: HabitActionMethods.ToggleComplete, date: dayjs(day).format() },
+              { _action: HabitActionMethods.ToggleComplete, date: dayjs(day).startOf("d").add(12, "h").format() },
               { action: `/api/habits/${habit.id}`, method: "post" },
             )
             const res = client.getQueryData<TimelineHabitResponse>(["habits"])
