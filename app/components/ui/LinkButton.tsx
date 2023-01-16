@@ -1,6 +1,5 @@
 import { type LinkProps, Link } from "@remix-run/react"
 import { cn } from "~/lib/tailwind"
-import { cn } from "~/lib/tailwind"
 
 import { type ButtonStyleProps, buttonSizeStyleProps, buttonStyles } from "./Button"
 import { Spinner } from "./Spinner"

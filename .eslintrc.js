@@ -10,7 +10,7 @@ module.exports = {
 
   parser: "@typescript-eslint/parser",
 
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "tailwindcss"],
 
   extends: [
     "plugin:@typescript-eslint/recommended",
@@ -33,10 +33,7 @@ module.exports = {
     "@typescript-eslint/no-angle-bracket-type-assertion": OFF,
     "@typescript-eslint/no-empty-interface": OFF,
     "@typescript-eslint/no-explicit-any": OFF,
-    "@typescript-eslint/no-unused-vars": [
-      ERROR,
-      { args: "none", argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
-    ],
+    "@typescript-eslint/no-unused-vars": [ERROR, { args: "none", argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
     "@typescript-eslint/no-use-before-define": OFF,
     "@typescript-eslint/no-var-requires": OFF,
     "@typescript-eslint/prefer-interface": OFF,
