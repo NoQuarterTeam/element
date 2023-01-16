@@ -49,7 +49,8 @@ function _TaskItem({ task }: Props) {
       event.preventDefault()
       // Delete
       deleteFetcher.submit({ _action: TaskActionMethods.DeleteTask }, { action: `/timeline/${task.id}`, method: "post" })
-      requestAnimationFrame(() => removeTask(task))
+      await new Promise((res) => setTimeout(res, 100))
+      removeTask(task)
     } else if (event.altKey) {
       event.preventDefault()
       // Toggle complete

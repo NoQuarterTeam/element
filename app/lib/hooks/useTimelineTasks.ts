@@ -29,6 +29,7 @@ export function useTimelineTasks() {
     },
     addTask: (task: TimelineTask) => {
       const existingTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
+      if (existingTasks.find((t) => t.id === task.id)) return
       client.setQueryData(["tasks"], [...existingTasks, task])
     },
     removeTask: (task: TimelineTask) => {
