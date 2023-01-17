@@ -80,7 +80,7 @@ export function ImageUploader({ children, path, onSubmit, dropzoneOptions, class
 
   return (
     <>
-      <div className={inputStyles({ className: cn(className) })} {...getRootProps()}>
+      <div className={cn(inputStyles(), className)} {...getRootProps()}>
         <input {...getInputProps()} />
         {children}
       </div>

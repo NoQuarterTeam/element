@@ -92,7 +92,7 @@ export default function Account() {
           <FormField defaultValue={me.lastName} name="lastName" label="Last name" />
           <ImageField
             defaultValue={me.avatar}
-            className="hidden sq-[100px] xl:flex"
+            className="hidden text-center sq-24 xl:flex"
             label="Avatar"
             name="avatar"
             path={UPLOAD_PATHS.userAvatar(me.id)}

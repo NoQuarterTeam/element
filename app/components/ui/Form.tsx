@@ -158,17 +158,13 @@ export function ImageField(props: ImageFieldProps) {
           {props.label}
         </FormFieldLabel>
       )}
-      <div>
+      <div className={cn("h-[200px] w-full cursor-pointer object-cover hover:opacity-80", props.className)}>
         <ImageUploader onSubmit={setImage} path={props.path}>
           {image ? (
-            <img
-              src={createImageUrl(image)}
-              className={cn("h-[200px] w-full object-cover hover:opacity-80", props.className)}
-              alt="preview"
-            />
+            <img src={createImageUrl(image)} className="h-full w-full" alt="preview" />
           ) : (
-            <div className={cn("center h-[200px] w-full", props.className)}>
-              <p className="text-gray-500">{props.placeholder || "Upload an image"}</p>
+            <div className="center h-full w-full">
+              <p className="text-center text-gray-500">{props.placeholder || "Upload an image"}</p>
             </div>
           )}
         </ImageUploader>
