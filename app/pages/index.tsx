@@ -90,14 +90,14 @@ export default function HomeLayout() {
                 <div>
                   <MenuItem>
                     {({ className }) => (
-                      <Link to="#register" className={className}>
+                      <Link to="/register" className={className}>
                         Register
                       </Link>
                     )}
                   </MenuItem>
                   <MenuItem>
                     {({ className }) => (
-                      <Link to="#register" className={className}>
+                      <Link to="/login" className={className}>
                         Login
                       </Link>
                     )}
