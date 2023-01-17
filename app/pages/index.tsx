@@ -143,21 +143,18 @@ export default function HomeLayout() {
             <div className="w-full border-r border-b border-gray-100 text-xs dark:border-gray-600 md:text-sm">
               <div className="flex">
                 <div className="flex flex-[3] border-l border-transparent p-1 md:p-2" />
-                <div className="flex flex-[2] border-t border-l border-gray-100 border-l-transparent p-1 dark:border-gray-600 md:p-2">
+                <div className="flex flex-[2] border-t border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">
                   <div className="stack space-y-0 md:space-y-2">
                     <p className="text-md font-bold">Personal</p>
-                    <p className="text-xl font-medium">€0</p>
+                    <p className="text-6xl font-bold">€0</p>
                   </div>
                 </div>
                 <div className="flex flex-[2] border-l border-t border-gray-100 p-1 dark:border-gray-600 md:p-2">
                   <div className="stack space-y-0 md:space-y-2">
                     <p className="text-md font-bold">Pro</p>
-                    <p className="whitespace-nowrap text-xl font-medium">
+                    <p className="whitespace-nowrap text-6xl font-bold">
                       €4 <span className="whitespace-nowrap text-xs font-thin opacity-70">per month</span>
                     </p>
-                    <LinkButton size="md" colorScheme="primary" to="/register">
-                      Join now
-                    </LinkButton>
                   </div>
                 </div>
               </div>
@@ -193,6 +190,11 @@ export default function HomeLayout() {
                   <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
                 </div>
               </div>
+            </div>
+            <div className="center">
+              <LinkButton size="md" colorScheme="primary" to="/register">
+                Join now
+              </LinkButton>
             </div>
           </div>
         </div>
