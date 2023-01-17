@@ -64,41 +64,45 @@ export default function HomeLayout() {
               <MenuButton>
                 <IconButton
                   size="md"
-                  rounded-full
+                  rounded="full"
                   aria-label={`Toggle open menu`}
                   icon={<RiMenuLine className="sq-[22px]" />}
                   variant="ghost"
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem>
-                  {({ className }) => (
-                    <Link to="#why" className={className}>
-                      Why
-                    </Link>
-                  )}
-                </MenuItem>
-                <MenuItem>
-                  {({ className }) => (
-                    <Link to="#pricing" className={className}>
-                      Pricing
-                    </Link>
-                  )}
-                </MenuItem>
-                <MenuItem>
-                  {({ className }) => (
-                    <Link to="#register" className={className}>
-                      Register
-                    </Link>
-                  )}
-                </MenuItem>
-                <MenuItem>
-                  {({ className }) => (
-                    <Link to="#register" className={className}>
-                      Login
-                    </Link>
-                  )}
-                </MenuItem>
+                <div>
+                  <MenuItem>
+                    {({ className }) => (
+                      <Link to="#why" className={className}>
+                        Why
+                      </Link>
+                    )}
+                  </MenuItem>
+                  <MenuItem>
+                    {({ className }) => (
+                      <Link to="#pricing" className={className}>
+                        Pricing
+                      </Link>
+                    )}
+                  </MenuItem>
+                </div>
+                <div>
+                  <MenuItem>
+                    {({ className }) => (
+                      <Link to="#register" className={className}>
+                        Register
+                      </Link>
+                    )}
+                  </MenuItem>
+                  <MenuItem>
+                    {({ className }) => (
+                      <Link to="#register" className={className}>
+                        Login
+                      </Link>
+                    )}
+                  </MenuItem>
+                </div>
               </MenuList>
             </Menu>
           </div>
