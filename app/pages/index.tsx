@@ -1,13 +1,15 @@
 import { RiMenuLine, RiMoonLine, RiSunLine } from "react-icons/ri"
-import * as c from "@chakra-ui/react"
 import type { LoaderArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 
 import { LinkButton } from "~/components/ui/LinkButton"
-
+import { Menu, MenuButton, MenuList, MenuItem } from "~/components/ui/Menu"
+import { IconButton } from "~/components/ui/IconButton"
 import { getUserSession } from "~/services/session/session.server"
+import { useTheme } from "~/lib/theme"
+import { Limiter } from "~/components/ui/Limiter"
 
 export const meta: MetaFunction = () => {
   return { title: "Element" }
@@ -20,42 +22,32 @@ export const loader = async ({ request }: LoaderArgs) => {
 }
 
 export default function HomeLayout() {
-  const { colorMode, toggleColorMode } = c.useColorMode()
-  const isDark = colorMode === "dark"
-  const navBorderColor = c.useColorModeValue("gray.50", "gray.700")
-  const boxShadow = c.useColorModeValue("lg", "dark-lg")
-  const pricingBorderColor = c.useColorModeValue("gray.100", "gray.600")
-  const footerBg = c.useColorModeValue("gray.50", "gray.900")
+  const theme = useTheme()
+  
   return (
-    <c.Box>
-      <c.Box borderBottom="1px solid" borderColor={navBorderColor}>
-        <Limiter>
-          <c.Flex align="center" justify="space-between" py={5}>
-            <c.HStack spacing={6}>
+    <div>
+      <div className="border-b border-solid border-gray-50 dark:border-gray-700">
+        <div className="my-0 mx-auto max-w-[1200px] bg-gray-50 dark:bg-gray-900">
+          <div className="flex justify-between py-5 align-middle">
+            <div className="hstack space-x-6">
               <Link to="/">
-                <c.HStack>
-                  <c.Image src="/logo.png" boxSize="30px" />
-                  <c.Text fontWeight="bold" fontSize="xl">
-                    Element
-                  </c.Text>
-                </c.HStack>
+                <div className="hstack">
+                  <img alt="element logo" src="/logo.png" className="sq-[30px]" />
+                  <p className="text-xl font-bold">Element</p>
+                </div>
               </Link>
-              <c.HStack spacing={6} display={{ base: "none", md: "flex" }}>
-                <c.Link as={Link} to="#why">
-                  Why
-                </c.Link>
-                <c.Link as={Link} to="#pricing">
-                  Pricing
-                </c.Link>
-              </c.HStack>
-            </c.HStack>
-            <c.HStack display={{ base: "none", md: "flex" }}>
-              <c.IconButton
-                borderRadius="full"
-                aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+              <div className="hstack spacing-x-6 hidden md:flex">
+                <Link to="#why">Why</Link>
+                <Link to="#pricing">Pricing</Link>
+              </div>
+            </div>
+            <div className="hstack  hidden md:flex">
+              <IconButton
+                rounded-full
+                aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
                 variant="ghost"
-                onClick={toggleColorMode}
-                icon={<c.Box as={isDark ? RiSunLine : RiMoonLine} boxSize="18px" />}
+                // onClick={toggleColorMode}
+                icon={theme === "dark" ? <RiSunLine className="sq-[18px]" /> : <RiMoonLine className="sq-[18px]" />}
               />
               <LinkButton size="md" variant="ghost" to="/login">
                 Login
@@ -63,190 +55,125 @@ export default function HomeLayout() {
               <LinkButton size="md" colorScheme="primary" to="/register">
                 Join now
               </LinkButton>
-            </c.HStack>
-            <c.Menu>
-              <c.MenuButton
-                display={{ base: "flex", md: "none" }}
-                as={c.IconButton}
-                size="md"
-                borderRadius="full"
-                icon={<c.Box as={RiMenuLine} boxSize="22px" />}
-                variant="ghost"
-              />
-              <c.MenuList>
-                <c.MenuItem as={Link} to="#why">
-                  Why
-                </c.MenuItem>
-                <c.MenuItem as={Link} to="#pricing">
-                  Pricing
-                </c.MenuItem>
-                <c.MenuDivider />
-                <c.MenuItem as={Link} to="/register">
-                  Register
-                </c.MenuItem>
-                <c.MenuItem as={Link} to="/register">
-                  Login
-                </c.MenuItem>
-              </c.MenuList>
-            </c.Menu>
-          </c.Flex>
-        </Limiter>
-      </c.Box>
-      <Limiter py={20}>
-        <c.Stack spacing={20}>
-          <c.Center flexDir="column">
-            <c.VStack pb={12} maxW="500px" textAlign="center" spacing={6}>
-              <c.Heading as="h1" fontSize="5xl">
-                A better way to plan your life
-              </c.Heading>
-              <c.Heading as="h2" fontSize="lg" fontWeight="normal">
-                Plan your day consciously and stay in your element.
-              </c.Heading>
+            </div>
+            <Menu className="flex md:hidden">
+              <MenuButton>
+                <IconButton
+                  size="md"
+                  rounded-full
+                  aria-label={`Toggle open menu`}                  
+                  icon={<RiMenuLine className="sq-[22px]" />}
+                  variant="ghost"
+                />
+              </MenuButton>
+              <MenuList>
+                <MenuItem>{() => <Link to="#why">Why</Link>}</MenuItem>
+                <MenuItem>{() => <Link to="#pricing">Pricing</Link>}</MenuItem>
+                <MenuItem>{() => <Link to="#register">Register</Link>}</MenuItem>
+                <MenuItem>{() => <Link to="#register">Login</Link>}</MenuItem>
+              </MenuList>
+            </Menu>
+          </div>
+        </div>
+      </div>
+      <Limiter className="py-20">
+        <div className="stack space-y-20">
+          <div className="center flex-col">
+            <div className=" vstack max-w-[500px] space-y-6 pb-12 text-center">
+              <h1 className="text-5xl">A better way to plan your life</h1>
+              <h2 className="text-lg font-normal">Plan your day consciously and stay in your element.</h2>
               <LinkButton to="/register" size="lg" colorScheme="primary">
                 Join now for free
               </LinkButton>
-            </c.VStack>
+            </div>
 
-            <c.Box boxShadow={boxShadow} overflow="hidden" borderRadius="lg">
-              <c.Image src={isDark ? "/demo-dark.png" : "/demo.png"} w="100%" maxW="800px" objectFit="contain" />
-            </c.Box>
-          </c.Center>
+            <div className="overflow-hidden rounded-lg shadow-lg dark:shadow-2xl">
+              <img
+                alt="demo"
+                src={theme === "dark" ? "/demo-dark.png" : "/demo.png"}
+                className="w-[100%] max-w-[800px] object-contain"
+              />
+            </div>
+          </div>
 
-          <c.VStack spacing={6} pt={10} id="why">
-            <c.VStack>
-              <c.Heading as="h3">Why</c.Heading>
-              <c.Text fontSize="lg">Just another task planner?</c.Text>
-            </c.VStack>
-
-            <c.Text textAlign="center" w="100%" maxW="800px">
+          <div className="vstack spacing-y-6 pt-10" id="why">
+            <div className="vstack">
+              <h3>Why</h3>
+              <p className="text-lg">Just another task planner?</p>
+            </div>
+            <p className="w-[100%] max-w-[800px] text-center">
               Task planners don't give a good enough overview of your day/week. Most aren't built to handle your calendar events.
               With a built in habit tracker, Element helps you stay on track with your goals and aids you in creating a healthier
               work-life balance.
-            </c.Text>
-          </c.VStack>
-          <c.Stack spacing={6} pt={10} id="pricing">
-            <c.VStack>
-              <c.Heading as="h3">Pricing</c.Heading>
-              <c.Text fontSize="lg">Start for free, or as low as €4 a month.</c.Text>
-            </c.VStack>
-            <c.VStack flexDir="column" spacing={8}>
-              <c.Box
-                w="100%"
-                maxW="800px"
-                fontSize={{ base: "sm", md: "md" }}
-                borderRight="1px solid"
-                borderBottom="1px solid"
-                borderColor={pricingBorderColor}
-              >
-                <c.Flex>
-                  <c.Flex flex={3} p={{ base: 2, md: 3 }} borderLeft="1px solid" borderColor="transparent" />
-                  <c.Flex
-                    flex={2}
-                    p={{ base: 2, md: 3 }}
-                    borderLeft="1px solid"
-                    borderTop="1px solid"
-                    borderColor={pricingBorderColor}
-                  >
-                    <c.Stack spacing={{ base: 0, md: 2 }}>
-                      <c.Text fontWeight="bold" fontSize="md">
-                        Personal
-                      </c.Text>
-                      <c.Text fontWeight="bold" fontSize="5xl">
-                        €0
-                      </c.Text>
-                    </c.Stack>
-                  </c.Flex>
-                  <c.Flex
-                    flex={2}
-                    p={{ base: 2, md: 3 }}
-                    borderLeft="1px solid"
-                    borderTop="1px solid"
-                    borderColor={pricingBorderColor}
-                  >
-                    <c.Stack spacing={{ base: 0, md: 2 }}>
-                      <c.Text fontWeight="bold" fontSize="md">
-                        Pro
-                      </c.Text>
-                      <c.Text fontWeight="bold" fontSize="5xl" whiteSpace="nowrap">
-                        €4{" "}
-                        <c.Text as="span" whiteSpace="nowrap" fontWeight="thin" fontSize="sm">
-                          per month
-                        </c.Text>
-                      </c.Text>
-                    </c.Stack>
-                  </c.Flex>
-                </c.Flex>
-                <c.Flex borderBottom="1px solid" borderLeft="1px solid" borderTop="1px solid" borderColor={pricingBorderColor}>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={3} fontWeight="semibold">
-                    Usage
-                  </c.Flex>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor} />
-                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor} />
-                </c.Flex>
-                <c.Flex borderBottom="1px solid" borderColor={pricingBorderColor}>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={3} opacity={0.7} borderLeft="1px solid" borderColor={pricingBorderColor}>
-                    Tasks
-                  </c.Flex>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
-                    1000
-                  </c.Flex>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
-                    Unlimited
-                  </c.Flex>
-                </c.Flex>
-                <c.Flex borderBottom="1px solid" borderColor={pricingBorderColor}>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={3} opacity={0.7} borderLeft="1px solid" borderColor={pricingBorderColor}>
-                    Elements
-                  </c.Flex>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
-                    5
-                  </c.Flex>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
-                    Unlimited
-                  </c.Flex>
-                </c.Flex>
-                <c.Flex borderBottom="1px solid" borderLeft="1px solid" borderColor={pricingBorderColor}>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={3} fontWeight="semibold">
-                    Features
-                  </c.Flex>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor} />
-                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor} />
-                </c.Flex>
-                <c.Flex borderBottom="1px solid" borderLeft="1px solid" borderColor={pricingBorderColor}>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={3} opacity={0.7}>
-                    Weather forecast
-                  </c.Flex>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
-                    ✓
-                  </c.Flex>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
-                    ✓
-                  </c.Flex>
-                </c.Flex>
-                <c.Flex borderLeft="1px solid" borderColor={pricingBorderColor}>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={3} opacity={0.7}>
-                    Habit tracking
-                  </c.Flex>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}></c.Flex>
-                  <c.Flex p={{ base: 2, md: 3 }} flex={2} borderLeft="1px solid" borderColor={pricingBorderColor}>
-                    ✓
-                  </c.Flex>
-                </c.Flex>
-              </c.Box>
+            </p>
+          </div>
+          <div className="stack spacing-y-6 pt-10"  id="pricing">
+            <div className="vstack">
+              <h3>Pricing</h3>
+              <p className="text-lg">Start for free, or as low as €4 a month.</p>
+            </div>
+            <div className="w-full border-r border-b border-gray-100 text-xs dark:border-gray-600 md:text-sm">
+        <div className="flex">
+          <div className="flex flex-[3] border-l border-transparent p-1 md:p-2" />
+          <div className="flex flex-[2] border-t border-l border-gray-100 border-l-transparent p-1 dark:border-gray-600 md:p-2">
+            <div className="stack space-y-0 md:space-y-2">
+              <p className="text-md font-bold">Personal</p>
+              <p className="text-xl font-medium">€0</p>            
+            </div>
+          </div>
+          <div className="flex flex-[2] border-l border-t border-gray-100 p-1 dark:border-gray-600 md:p-2">
+            <div className="stack space-y-0 md:space-y-2">
+              <p className="text-md font-bold">Pro</p>
+              <p className="whitespace-nowrap text-xl font-medium">
+                €4 <span className="whitespace-nowrap text-xs font-thin opacity-70">per month</span>
+              </p>
               <LinkButton size="md" colorScheme="primary" to="/register">
                 Join now
               </LinkButton>
-            </c.VStack>
-          </c.Stack>
-        </c.Stack>
+            </div>
+          </div>
+        </div>
+        <div className="border-l border-t border-gray-100 dark:border-gray-600">
+          <div className="flex border-b border-gray-100 dark:border-gray-600">
+            <div className="flex flex-[3] p-1 font-semibold md:p-2">Usage</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
+          </div>
+          <div className="flex border-b border-gray-100 dark:border-gray-600">
+            <div className="flex flex-[3]  border-gray-100 p-1 opacity-70 dark:border-gray-600 md:p-2">Tasks</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2 ">1000</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">Unlimited</div>
+          </div>
+          <div className="flex border-b border-gray-100 dark:border-gray-600">
+            <div className="flex flex-[3]  border-gray-100 p-1 opacity-70 dark:border-gray-600 md:p-2">Elements</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">5</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">Unlimited</div>
+          </div>
+          <div className="flex border-b border-gray-100 dark:border-gray-600">
+            <div className="flex flex-[3] p-1 font-semibold md:p-2">Features</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
+          </div>
+          <div className="flex border-b border-gray-100 dark:border-gray-600">
+            <div className="flex flex-[3] p-1 opacity-70 md:p-2">Weather forecast</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
+          </div>
+          <div className="flex">
+            <div className="flex flex-[3] p-1 opacity-70 md:p-2">Habit tracking</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2"></div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
+          </div>
+        </div>
+      </div>
+          </div>
+        </div>
       </Limiter>
-      <c.Box h="300px" bg={footerBg} py={10}>
+      <div className="h-[300px] bg-gray-50 dark:bg-gray-900 py-10">
         <Limiter></Limiter>
-      </c.Box>
-    </c.Box>
+      </div>
+    </div>
   )
 }
 
-function Limiter(props: c.BoxProps) {
-  return <c.Box maxW="1200px" px={6} m="0 auto" {...props} />
-}
+
