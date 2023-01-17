@@ -9,7 +9,7 @@ import dayjs from "dayjs"
 import { Button } from "~/components/ui/Button"
 import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Drawer } from "~/components/ui/Drawer"
-import { FormButton, FormFieldError, FormFieldLabel, InlineFormField } from "~/components/ui/Form"
+import { FormButton, InlineFormField } from "~/components/ui/Form"
 import { IconButton } from "~/components/ui/IconButton"
 import { Checkbox, Input, Textarea } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
@@ -99,16 +99,15 @@ function BacklogTaskForm({ task, ...createModalProps }: { task?: BacklogTask } &
   return (
     <Modal {...createModalProps}>
       <taskFetcher.Form method="post" replace action={task ? `/timeline/${task.id}` : "/api/tasks"}>
+        <input
+          className="w-full border-none bg-transparent py-3 pl-4 pr-8 text-2xl text-gray-900 focus:outline-none dark:text-gray-100 md:py-4 md:text-4xl"
+          required
+          name="name"
+          placeholder="Name"
+          defaultValue={task?.name}
+          autoFocus
+        />
         <div className="stack p-4 pt-0">
-          <input
-            className="-ml-4 min-h-[60px] w-[95%] border-none bg-transparent pl-4 pr-2 text-2xl text-gray-900 focus:outline-none dark:text-gray-100 md:min-h-[70px] md:text-4xl"
-            required
-            name="name"
-            placeholder="Name"
-            defaultValue={task?.name}
-            autoFocus
-          />
-
           <input type="hidden" name="elementId" value={element?.value} />
           <InlineFormField
             required
@@ -129,11 +128,12 @@ function BacklogTaskForm({ task, ...createModalProps }: { task?: BacklogTask } &
               />
             }
           />
-          <div>
-            <div className="flex flex-col space-x-0 md:flex-row md:space-x-3">
-              <FormFieldLabel htmlFor="durationHours" className="min-w-[80px] text-sm md:w-[100px]">
-                Duration
-              </FormFieldLabel>
+          <InlineFormField
+            name="durationHours"
+            label="Duration"
+            shouldPassProps={false}
+            error={taskFetcher.data?.fieldErrors?.durationHours?.[0] || taskFetcher.data?.fieldErrors?.durationMinutes?.[0]}
+            input={
               <div className="hstack">
                 <div className="hstack space-x-1">
                   <Input
@@ -157,11 +157,8 @@ function BacklogTaskForm({ task, ...createModalProps }: { task?: BacklogTask } &
                   <p className="text-xs opacity-80">Minutes</p>
                 </div>
               </div>
-            </div>
-            <FormFieldError>
-              {taskFetcher.data?.fieldErrors?.durationHours?.[0] || taskFetcher.data?.fieldErrors?.durationMinutes?.[0]}
-            </FormFieldError>
-          </div>
+            }
+          />
           <InlineFormField
             name="description"
             defaultValue={task?.description}

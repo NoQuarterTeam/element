@@ -35,8 +35,8 @@ function _Habits({ habits, day, habitEntries }: Props) {
 
   return (
     <Popover.Root>
-      <Popover.Trigger className="center w-full rounded-full px-2 py-[7px] hover:bg-black/10 dark:hover:bg-gray-700">
-        <div className="hstack center space-x-[3px]">
+      <Popover.Trigger className="center w-full rounded-full px-2 py-1.5 hover:bg-black/10 dark:hover:bg-gray-700">
+        <div className="hstack center space-x-0.5">
           {dayHabits.length === 0 ? (
             <RiAddCircleLine className="sq-3" />
           ) : (
@@ -46,7 +46,7 @@ function _Habits({ habits, day, habitEntries }: Props) {
                   key={habit.id}
                   className={cn(
                     "rounded-full",
-                    dayHabits.length > 8 ? "sq-[5px]" : dayHabits.length > 5 ? "sq-[7px]" : "sq-[10px]",
+                    dayHabits.length > 8 ? "sq-1.5" : dayHabits.length > 5 ? "sq-2" : "sq-2.5",
                     habitEntries.find((e) => e.habitId === habit.id)
                       ? "bg-green-400 dark:bg-green-600"
                       : "bg-red-300 dark:bg-red-800",
@@ -206,7 +206,7 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
                   variant="ghost"
                   aria-label="archive habit"
                   size="xs"
-                  icon={<RiFolder2Line className="sq-[14px]" />}
+                  icon={<RiFolder2Line className="sq-3.5" />}
                 />
               </Popover.Trigger>
             </Tooltip>
@@ -244,7 +244,7 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
                   variant="ghost"
                   aria-label="delete habit"
                   size="xs"
-                  icon={<RiDeleteBin4Line className="sq-[14px]" />}
+                  icon={<RiDeleteBin4Line className="sq-3.5" />}
                 />
               </Popover.Trigger>
             </Tooltip>

@@ -27,16 +27,14 @@ export function FormFieldLabel(
   },
 ) {
   return (
-    <div className="flex">
-      <label
-        htmlFor={props.name}
-        {...props}
-        className={cn("block text-sm font-medium text-gray-900 dark:text-gray-50", props.className)}
-      >
-        {props.children}
-      </label>
+    <label
+      htmlFor={props.name}
+      {...props}
+      className={cn("flex text-sm font-medium text-gray-900 dark:text-gray-50", props.className)}
+    >
+      {props.children}
       {props.required && <span className="text-red-500">*</span>}
-    </div>
+    </label>
   )
 }
 export function FormFieldError(props: React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>) {
@@ -117,8 +115,8 @@ export const InlineFormField = React.forwardRef<HTMLInputElement, FormFieldProps
     <div className="w-full">
       <div className="flex flex-col space-x-0 md:flex-row md:space-x-3">
         {label && (
-          <div className="min-w-[100px]">
-            <FormFieldLabel name={props.name} required={props.required}>
+          <div className="w-min-content">
+            <FormFieldLabel name={props.name} required={props.required} className="w-24">
               {label}
             </FormFieldLabel>
           </div>
@@ -158,7 +156,7 @@ export function ImageField(props: ImageFieldProps) {
           {props.label}
         </FormFieldLabel>
       )}
-      <div className={cn("h-[200px] w-full cursor-pointer object-cover hover:opacity-80", props.className)}>
+      <div className={cn("h-48 w-full cursor-pointer object-cover hover:opacity-80", props.className)}>
         <ImageUploader onSubmit={setImage} path={props.path}>
           {image ? (
             <img src={createImageUrl(image)} className="h-full w-full" alt="preview" />

@@ -68,8 +68,8 @@ function _TaskItem({ task }: Props) {
         <div className="group/task-item relative w-full cursor-pointer overflow-hidden rounded-md border border-gray-100 bg-white outline-none dark:border-gray-900 dark:bg-gray-700">
           <div
             className={cn(
-              "flex h-full w-full flex-col justify-between p-[6px]",
-              task.isComplete ? "blur-[1px] group-hover/task-item:blur-0" : "min-h-[60px]",
+              "flex h-full w-full flex-col justify-between p-1.5",
+              task.isComplete ? "blur-px group-hover/task-item:blur-0" : "min-h-[60px]",
             )}
           >
             <div className={cn(task.isComplete ? "mb-4" : "mb-3")}>

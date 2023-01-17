@@ -130,7 +130,7 @@ export default function Elements() {
       title={`Elements ${elementIds.length > 0 ? `· ${elementIds.length} selected` : ""}`}
       size="md"
     >
-      <div className="relative min-h-screen overflow-y-scroll pb-[200px]">
+      <div className="relative min-h-screen overflow-y-scroll pb-48">
         <div className="flex items-center justify-between space-x-2 pr-3 pb-4 pl-4 pt-1">
           <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" variant="outline" />
           <Button colorScheme="primary" leftIcon={<RiAddLine />} onClick={createModalProps.onOpen}>
@@ -170,7 +170,7 @@ export default function Elements() {
           </Modal>
         </div>
 
-        <div className="stack space-y-[1px]">
+        <div className="stack space-y-px">
           {matchedMyElements.map((element) => (
             <ElementItem key={element.id} {...{ element }} search={search} depth={0} isArchivedShown={achiveProps.isOpen} />
           ))}

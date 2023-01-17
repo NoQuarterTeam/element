@@ -14,7 +14,7 @@ export const inputStyles = cva(
       },
       size: {
         xs: "text-xs px-2 py-1",
-        sm: "text-sm px-3 py-[6px]",
+        sm: "text-sm px-3 py-1.5",
         md: "text-md px-4 py-2",
         lg: "text-lg px-5 py-3",
       },
@@ -29,10 +29,10 @@ export const inputStyles = cva(
 export const inputSizeStyles = cva("", {
   variants: {
     size: {
-      xs: "h-[30px]",
-      sm: "h-[36px]",
-      md: "h-[44px]",
-      lg: "h-[50px]",
+      xs: "h-7",
+      sm: "h-9",
+      md: "h-11",
+      lg: "h-12",
     },
   },
   defaultVariants: {

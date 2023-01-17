@@ -12,7 +12,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, RSwitch.SwitchProps>(f
         "group",
         "radix-state-checked:bg-primary-600",
         "radix-state-unchecked:bg-gray-200 dark:radix-state-unchecked:bg-gray-800",
-        "relative inline-flex h-[24px] w-[44px] flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out",
+        "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out",
         "disabled:cursor-not-allowed",
         "focus:outline-none focus-visible:ring focus-visible:ring-primary-500 focus-visible:ring-opacity-75",
       )}
@@ -21,7 +21,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, RSwitch.SwitchProps>(f
         className={cn(
           "group-radix-state-checked:translate-x-5",
           "group-radix-state-unchecked:translate-x-0",
-          "pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out",
+          "pointer-events-none inline-block transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out sq-5",
         )}
       />
     </RSwitch.Root>

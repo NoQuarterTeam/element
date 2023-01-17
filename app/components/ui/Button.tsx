@@ -96,10 +96,10 @@ export const buttonStyles = cva("font-semibold flex center border border-transpa
 export const buttonSizeStyles = cva("", {
   variants: {
     size: {
-      xs: "min-h-[28px]",
-      sm: "min-h-[36px]",
-      md: "min-h-[42px]",
-      lg: "min-h-[50px]",
+      xs: "h-7",
+      sm: "h-9",
+      md: "h-11",
+      lg: "h-12",
     },
   },
   defaultVariants: {

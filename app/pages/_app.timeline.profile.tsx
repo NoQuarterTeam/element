@@ -39,19 +39,19 @@ export default function Profile() {
               to="settings"
               icon={
                 <div className="relative">
-                  <RiSettings2Line className="sq-[15px]" />
+                  <RiSettings2Line className="sq-4" />
                   {!featuresSeen.find((u) => ["weather", "habits"].includes(u)) && (
-                    <div className="absolute -top-[3px] -right-[3px] rounded-full bg-red-500 sq-[5px]" />
+                    <div className="absolute -top-[3px] -right-[3px] rounded-full bg-red-500 sq-1.5" />
                   )}
                 </div>
               }
             >
               Settings
             </TabLink>
-            <TabLink to="plan" icon={<RiMap2Line className="sq-[15px]" />}>
+            <TabLink to="plan" icon={<RiMap2Line className="sq-4" />}>
               Plan
             </TabLink>
-            <TabLink to="billing" icon={<RiBankCard2Line className="sq-[15px]" />}>
+            <TabLink to="billing" icon={<RiBankCard2Line className="sq-4" />}>
               Billing
             </TabLink>
           </div>
@@ -79,7 +79,7 @@ function TabLink({ children, icon, to }: { to: string; children: string; icon: R
             isActive ? "bg-gray-75 dark:bg-gray-700" : "hover:bg-gray-75 dark:hover:bg-gray-700",
           )}
         >
-          <div className={cn("center w-[20px] md:flex", isLoading && "hidden")}>{icon}</div>
+          <div className={cn("center w-5 md:flex", isLoading && "hidden")}>{icon}</div>
           <span className="ml-2 hidden text-sm md:block">{children}</span>
           {isLoading && <Spinner className="ml-0 md:ml-2" size="xs" />}
         </span>

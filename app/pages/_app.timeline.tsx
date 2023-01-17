@@ -137,7 +137,7 @@ function _Timeline() {
                 rounded="full"
                 onClick={() => navigate("new")}
                 aria-label="Create task"
-                icon={<RiAddCircleLine className="sq-[20px]" />}
+                icon={<RiAddCircleLine className="sq-5" />}
               />
             </Tooltip>
             <Tooltip label="Jump to today">
@@ -146,7 +146,7 @@ function _Timeline() {
                 rounded="full"
                 onClick={handleJumpToToday}
                 aria-label="Jump to today"
-                icon={<RiCalendarEventLine className="sq-[18px]" />}
+                icon={<RiCalendarEventLine className="sq-4" />}
               />
             </Tooltip>
           </div>

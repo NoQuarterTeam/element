@@ -92,7 +92,7 @@ function FocusItem({ task }: { task: FocusTask }) {
   }, [updateFetcher.type, updateFetcher.data])
   const { isOpen, onToggle } = useDisclosure()
   return (
-    <div className="w-full max-w-[500px] rounded-sm border border-gray-200 dark:border-gray-600">
+    <div className="w-full max-w-lg rounded-sm border border-gray-200 dark:border-gray-600">
       <div className="flex items-start justify-between p-2">
         <p>{task.name}</p>
 

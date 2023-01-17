@@ -62,11 +62,11 @@ export function Nav() {
   const elementIds = useSelectedElements((s) => s.elementIds)
   return (
     <>
-      <div className="absolute top-4 right-0 flex w-[65px] justify-center">
+      <div className="absolute top-4 right-0 flex w-16 justify-center">
         <IconButton
           rounded="full"
           variant="ghost"
-          icon={<FiChevronsLeft className="sq-[18px]" />}
+          icon={<FiChevronsLeft className="sq-4" />}
           aria-label="close sidebar"
           onClick={navProps.onToggle}
         />
@@ -75,13 +75,13 @@ export function Nav() {
       <div
         className={cn(
           "fixed top-0 bottom-0 right-0 flex flex-col items-center justify-between overflow-hidden border-l border-gray-100 bg-white pb-6 pt-4 transition-[width] duration-100 dark:border-gray-900 dark:bg-gray-800",
-          navProps.isOpen ? "w-[65px]" : "w-0",
+          navProps.isOpen ? "w-16" : "w-0",
         )}
       >
         <div className="vstack space-y-1">
           <IconButton
             rounded="full"
-            icon={<FiChevronsRight className="sq-[18px]" />}
+            icon={<FiChevronsRight className="sq-4" />}
             aria-label="close nav"
             variant="ghost"
             onClick={navProps.onToggle}
@@ -94,10 +94,8 @@ export function Nav() {
               onClick={() => navigate("backlog")}
               icon={
                 <div className="relative">
-                  <RiTimeLine className="sq-[18px]" />
-                  {!featuresSeen.includes("backlog") && (
-                    <div className="absolute top-0 right-0 rounded-full bg-red-500 sq-[5px]" />
-                  )}
+                  <RiTimeLine className="sq-4" />
+                  {!featuresSeen.includes("backlog") && <div className="absolute top-0 right-0 rounded-full bg-red-500 sq-1.5" />}
                 </div>
               }
             />
@@ -110,8 +108,8 @@ export function Nav() {
               onClick={() => navigate("elements")}
               icon={
                 <div className="relative">
-                  <RiBookLine className="sq-[18px]" />
-                  {elementIds.length > 0 && <div className="absolute -top-1 -right-1 rounded-full bg-primary-500 sq-[10px]" />}
+                  <RiBookLine className="sq-4" />
+                  {elementIds.length > 0 && <div className="absolute -top-1 -right-1 rounded-full bg-primary-500 sq-2.5" />}
                 </div>
               }
             />
@@ -126,8 +124,8 @@ export function Nav() {
               }}
               icon={
                 <div className="relative">
-                  <RiFocus3Line className="sq-[18px]" />
-                  {!featuresSeen.includes("focus") && <div className="absolute top-0 right-0 rounded-full bg-red-500 sq-[5px]" />}
+                  <RiFocus3Line className="sq-4" />
+                  {!featuresSeen.includes("focus") && <div className="absolute top-0 right-0 rounded-full bg-red-500 sq-1.5" />}
                 </div>
               }
             />
@@ -141,7 +139,7 @@ export function Nav() {
               variant="ghost"
               aria-label="open dashboard"
               onClick={() => navigate("/dashboard")}
-              icon={<RiBarChartLine className="sq-[18px]" />}
+              icon={<RiBarChartLine className="sq-4" />}
             />
           </Tooltip> */}
           <Tooltip side="left" label="Profile">
@@ -152,9 +150,9 @@ export function Nav() {
               onClick={() => navigate("profile")}
               icon={
                 <div className="relative">
-                  <RiUser3Line className="sq-[18px]" />
+                  <RiUser3Line className="sq-4" />
                   {(!featuresSeen.includes("backlog") || !featuresSeen.includes("habits")) && (
-                    <div className="absolute top-0 right-0 rounded-full bg-red-500 sq-[5px]" />
+                    <div className="absolute top-0 right-0 rounded-full bg-red-500 sq-1.5" />
                   )}
                 </div>
               }
@@ -168,7 +166,7 @@ export function Nav() {
                 rounded="full"
                 aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
                 variant="ghost"
-                icon={theme === "dark" ? <RiSunLine className="sq-[18px]" /> : <RiMoonLine className="sq-[18px]" />}
+                icon={theme === "dark" ? <RiSunLine className="sq-4" /> : <RiMoonLine className="sq-4" />}
               />
             </Tooltip>
           </themeFetcher.Form>
@@ -179,7 +177,7 @@ export function Nav() {
               onClick={shortcutModalProps.onOpen}
               aria-label="Shortcuts"
               variant="ghost"
-              icon={<RiQuestionLine className="sq-[18px]" />}
+              icon={<RiQuestionLine className="sq-4" />}
             />
           </Tooltip>
           <Tooltip side="left" label="Give feedback">
@@ -188,7 +186,7 @@ export function Nav() {
               onClick={() => navigate("feedback")}
               aria-label="Give feedback"
               variant="ghost"
-              icon={<BiMessage className="sq-[18px]" />}
+              icon={<BiMessage className="sq-4" />}
             />
           </Tooltip>
           {me.role === Role.ADMIN && (
@@ -198,7 +196,7 @@ export function Nav() {
                 onClick={() => navigate("/admin")}
                 aria-label="Admin"
                 variant="ghost"
-                icon={<RiDashboard3Line className="sq-[18px]" />}
+                icon={<RiDashboard3Line className="sq-4" />}
               />
             </Tooltip>
           )}
@@ -209,7 +207,7 @@ export function Nav() {
               variant="ghost"
               aria-label="logout"
               onClick={() => logoutSubmit(null, { method: "post", action: "/logout" })}
-              icon={<RiLogoutCircleRLine className="sq-[18px]" />}
+              icon={<RiLogoutCircleRLine className="sq-4" />}
             />
           </Tooltip>
         </div>

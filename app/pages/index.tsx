@@ -33,7 +33,7 @@ export default function HomeLayout() {
             <div className="hstack space-x-6">
               <Link to="/">
                 <div className="hstack">
-                  <img alt="element logo" src="/logo.png" className="sq-[30px]" />
+                  <img alt="element logo" src="/logo.png" className="sq-8" />
                   <p className="text-xl font-bold">Element</p>
                 </div>
               </Link>
@@ -50,7 +50,7 @@ export default function HomeLayout() {
                   type="submit"
                   aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
                   variant="ghost"
-                  icon={theme === "dark" ? <RiSunLine className="sq-[18px]" /> : <RiMoonLine className="sq-[18px]" />}
+                  icon={theme === "dark" ? <RiSunLine className="sq-4" /> : <RiMoonLine className="sq-4" />}
                 />
               </themeFetcher.Form>
               <LinkButton size="md" variant="ghost" to="/login">
@@ -66,7 +66,7 @@ export default function HomeLayout() {
                   size="md"
                   rounded="full"
                   aria-label={`Toggle open menu`}
-                  icon={<RiMenuLine className="sq-[22px]" />}
+                  icon={<RiMenuLine className="sq-5" />}
                   variant="ghost"
                 />
               </MenuButton>
@@ -111,7 +111,7 @@ export default function HomeLayout() {
       <Limiter className="py-20">
         <div className="stack space-y-20">
           <div className="center flex-col">
-            <div className=" vstack max-w-[500px] space-y-6 pb-12 text-center">
+            <div className="vstack max-w-md space-y-6 pb-12 text-center">
               <h1 className="text-5xl">A better way to plan your life</h1>
               <h2 className="text-lg font-normal">Plan your day consciously and stay in your element.</h2>
               <LinkButton to="/register" size="lg" colorScheme="primary">
@@ -123,7 +123,7 @@ export default function HomeLayout() {
               <img
                 alt="demo"
                 src={theme === "dark" ? "/demo-dark.png" : "/demo.png"}
-                className="w-[100%] max-w-[800px] object-contain"
+                className="w-full max-w-3xl object-contain"
               />
             </div>
           </div>
@@ -133,7 +133,7 @@ export default function HomeLayout() {
               <h3>Why</h3>
               <p className="text-lg">Just another task planner?</p>
             </div>
-            <p className="w-[100%] max-w-[800px] text-center">
+            <p className="w-full max-w-3xl text-center">
               Task planners don't give a good enough overview of your day/week. Most aren't built to handle your calendar events.
               With a built in habit tracker, Element helps you stay on track with your goals and aids you in creating a healthier
               work-life balance.

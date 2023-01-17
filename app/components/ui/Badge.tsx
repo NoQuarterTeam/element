@@ -11,8 +11,8 @@ export const badgeProps = cva("rounded-xs font-semibold uppercase", {
       red: "bg-red-300/40 dark:bg-red-300/20 text-red-900 dark:text-red-200 dark:color-red-200",
     },
     size: {
-      xs: "text-xxs px-1 py-[1px]",
-      sm: "text-xs px-1 py-[2px]",
+      xs: "text-xxs px-1 py-px",
+      sm: "text-xs px-1 py-0.5",
       md: "text-xs px-2 py-1",
       lg: "text-lg px-2 py-1",
     },

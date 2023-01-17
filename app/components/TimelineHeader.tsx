@@ -64,7 +64,7 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
         isHabitsEnabled ? "h-headerHabit" : "h-header",
       )}
     >
-      <img className="absolute top-5 left-5 sq-[32px]" src="/logo.png" alt="logo" />
+      <img className="absolute top-5 left-5 sq-8" src="/logo.png" alt="logo" />
       {months.map(({ month, year }) => (
         <div key={`${month}${year}`}>
           <div className="sticky left-12 flex w-max items-center pt-4 pl-4">
@@ -113,7 +113,7 @@ function _HeaderDay(props: {
   )
   return (
     <div className="vstack w-day space-y-1 px-2" key={props.day}>
-      <div className="h-[34px] overflow-hidden">
+      <div className="h-9 overflow-hidden">
         {props.isWeatherEnabled && props.weather && (
           <HoverCard.Root openDelay={0} closeDelay={50}>
             <HoverCard.Trigger asChild>
@@ -122,7 +122,7 @@ function _HeaderDay(props: {
 
                 <img
                   src={`https://openweathermap.org/img/wn/${props.weather.icon}@2x.png`}
-                  className="object-cover sq-[32px]"
+                  className="object-cover sq-8"
                   alt="weather icon"
                 />
               </div>
@@ -139,25 +139,25 @@ function _HeaderDay(props: {
                 </p>
                 <div className="p-2">
                   <div className="grid grid-cols-2 gap-2">
-                    <WeatherStat icon={<BsThermometerHalf className="sq-[14px]" />} label="Temp">
+                    <WeatherStat icon={<BsThermometerHalf className="sq-3.5" />} label="Temp">
                       <div className="flex h-full flex-col justify-between">
                         <p className="text-2xl">{props.weather.temp.max}°</p>
                         <p className="text-xs">Min: {props.weather.temp.min}°</p>
                       </div>
                     </WeatherStat>
-                    <WeatherStat icon={<BsSunrise className="sq-[14px]" />} label="Sunrise">
+                    <WeatherStat icon={<BsSunrise className="sq-3.5" />} label="Sunrise">
                       <div className="flex h-full flex-col justify-between">
                         <p className="text-2xl">{dayjs(props.weather.sunrise).format("HH:mm")}</p>
                         <p className="text-xs">Sunset: {dayjs(props.weather.sunset).format("HH:mm")}</p>
                       </div>
                     </WeatherStat>
-                    <WeatherStat icon={<TbDroplet className="sq-[14px]" />} label="Rain">
+                    <WeatherStat icon={<TbDroplet className="sq-3.5" />} label="Rain">
                       <div className="flex h-full flex-col justify-between">
                         <p className="text-2xl">{props.weather.rain} mm</p>
                         <p className="text-xs">Chance: {props.weather.chanceOfRain}%</p>
                       </div>
                     </WeatherStat>
-                    <WeatherStat icon={<RiWindyLine className="sq-[14px]" />} label="Wind">
+                    <WeatherStat icon={<RiWindyLine className="sq-3.5" />} label="Wind">
                       <div className="flex h-full flex-col justify-between">
                         <div>
                           <div className="hstack">
@@ -166,7 +166,7 @@ function _HeaderDay(props: {
                               <span className="text-lg">km/h</span>
                             </p>
                             <TbLocation
-                              className="opacity-60 sq-[16px]"
+                              className="opacity-60 sq-4"
                               style={{ transform: `rotate(${135 + props.weather.windDirection}deg)` }}
                             />
                           </div>
@@ -185,7 +185,7 @@ function _HeaderDay(props: {
           </HoverCard.Root>
         )}
       </div>
-      <div className="vstack space-y-[2px]">
+      <div className="vstack space-y-0.5">
         <p className="text-center text-sm">{dayjs(props.day).format("ddd Do")}</p>
         {props.isHabitsEnabled && props.habits && (
           <Habits day={dayjs(props.day).format("YYYY-MM-DD")} habits={props.habits} habitEntries={habitEntries} />
@@ -197,12 +197,12 @@ function _HeaderDay(props: {
 
 function WeatherStat({ icon, children, label }: { icon: React.ReactNode; children: React.ReactNode; label: string }) {
   return (
-    <div className="min-w-[130px] rounded-md border border-gray-100 p-2 dark:border-gray-600">
+    <div className="w-32 rounded-md border border-gray-100 p-2 dark:border-gray-600">
       <div className="hstack space-x-1 opacity-60">
         {icon}
         <p className="text-sm">{label}</p>
       </div>
-      <div className="h-[65px]">{children}</div>
+      <div className="h-16">{children}</div>
     </div>
   )
 }

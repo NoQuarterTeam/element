@@ -26,7 +26,7 @@ module.exports = {
     extend: {
       spacing: {
         nav: "72px",
-        header: "120px",
+        header: "124px",
         headerHabit: "143px",
         day: "98px",
       },

@@ -105,19 +105,19 @@ export default function Feedback() {
           <ButtonGroup>
             <Button className="sq-24" onClick={() => setType("ISSUE")}>
               <div className="vstack">
-                <RiBug2Line className="sq-[18px]" />
+                <RiBug2Line className="sq-4" />
                 <p>Issue</p>
               </div>
             </Button>
             <Button className="sq-24" onClick={() => setType("IDEA")}>
               <div className="vstack">
-                <RiLightbulbLine className="sq-[18px]" />
+                <RiLightbulbLine className="sq-4" />
                 <p>Idea</p>
               </div>
             </Button>
             <Button className="sq-24" onClick={() => setType("OTHER")}>
               <div className="vstack">
-                <BiMessage className="sq-[18px]" />
+                <BiMessage className="sq-4" />
 
                 <p>Other</p>
               </div>

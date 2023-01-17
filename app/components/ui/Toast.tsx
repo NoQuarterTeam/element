@@ -29,7 +29,6 @@ export function Toaster(props: { children: React.ReactNode }) {
             key={toast.id}
             onOpenChange={(open) => (open ? undefined : setToasts((toasts) => toasts.filter((t) => t.id !== toast.id)))}
             className={cn(
-              "z-50 w-auto rounded-sm shadow-xl md:w-full md:max-w-sm",
               "radix-state-open:animate-toast-slide-in-right",
               "radix-state-closed:animate-toast-hide",
               "radix-swipe-direction-right:radix-swipe-end:animate-toast-swipe-out-x",
@@ -37,8 +36,7 @@ export function Toaster(props: { children: React.ReactNode }) {
               "radix-swipe-direction-down:radix-swipe-end:animate-toast-swipe-out-y",
               "radix-swipe-direction-down:translate-y-radix-toast-swipe-move-y",
               "radix-swipe-cancel:translate-x-0 radix-swipe-cancel:duration-200 radix-swipe-cancel:ease-[ease]",
-              "focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75",
-              "border border-gray-75 dark:border-gray-900",
+              "z-50 w-auto rounded-sm border border-gray-75 shadow-xl focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75 dark:border-gray-900 md:w-full md:max-w-sm",
               toast.status === "info" && "bg-white dark:bg-gray-800",
               toast.status === "error" && "bg-red-500 dark:bg-red-700",
               toast.status === "warning" && "bg-orange-500 dark:bg-orange-700",
@@ -65,7 +63,7 @@ export function Toaster(props: { children: React.ReactNode }) {
             </div>
           </ToastPrimitive.Root>
         ))}
-        <ToastViewport className="fixed bottom-0 right-0 z-[90] flex w-[400px] max-w-[100vw] flex-col space-y-4 p-4 outline-none" />
+        <ToastViewport className="fixed bottom-0 right-0 z-[500] flex w-96 max-w-full flex-col space-y-4 p-4 outline-none" />
       </ToastContext.Provider>
     </ToastProvider>
   )

@@ -7,10 +7,10 @@ import { cn } from "~/lib/tailwind"
 export const avatarStyles = cva("center rounded-full capitalize", {
   variants: {
     size: {
-      xs: "sq-[20px] text-xs",
-      sm: "sq-[30px] text-sm",
-      md: "sq-[40px] text-md",
-      lg: "sq-[50px] text-lg",
+      xs: "sq-5 text-xs",
+      sm: "sq-8 text-sm",
+      md: "sq-10 text-md",
+      lg: "sq-12 text-lg",
     },
   },
   defaultVariants: {

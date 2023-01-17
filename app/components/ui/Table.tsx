@@ -151,7 +151,7 @@ export function Column<T extends DataType>(_: ColumnProps<T>) {
 
 function _ColumnField<T>({ isLast, hasNoLink, href, className, ...props }: ColumnProps<T> & { href?: string; isLast?: boolean }) {
   const sharedClassName = cn(
-    "flex flex-1 items-center h-[50px] overflow-x-auto text-sm",
+    "flex flex-1 items-center h-12 overflow-x-auto text-sm",
     isLast ? "justify-end" : "justify-start",
     className,
   )

@@ -285,7 +285,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
         </Modal>
       </div>
       {matchedChildren.length > 0 && expandProps.isOpen ? (
-        <div className="stack mt-[1px] space-y-[1px]">
+        <div className="stack mt-px space-y-px">
           {matchedChildren.map((child) => (
             <ElementItem
               search={search}

@@ -9,10 +9,10 @@ import { Spinner } from "./Spinner"
 export const iconbuttonStyles = cva("px-0", {
   variants: {
     size: {
-      xs: "min-h-[24px] min-w-[24px]",
-      sm: "min-h-[32px] min-w-[32px]",
-      md: "min-h-[40px] min-w-[40px]",
-      lg: "min-h-[48px] min-w-[48px]",
+      xs: "sq-6",
+      sm: "sq-8",
+      md: "sq-10",
+      lg: "sq-12",
     },
   },
   defaultVariants: {

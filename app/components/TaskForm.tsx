@@ -17,7 +17,7 @@ import { TasksActionMethods } from "~/pages/api+/tasks"
 
 import { Button } from "./ui/Button"
 import { ButtonGroup } from "./ui/ButtonGroup"
-import { FormButton, FormError, FormFieldError, FormFieldLabel, InlineFormField } from "./ui/Form"
+import { FormButton, FormError, InlineFormField } from "./ui/Form"
 import { Checkbox, Input, Textarea } from "./ui/Inputs"
 import { Modal } from "./ui/Modal"
 import { useDisclosure } from "~/lib/hooks/useDisclosure"
@@ -136,21 +136,22 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
         <div className="fixed inset-0 bg-black/50" />
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full flex-col items-center justify-start p-0 sm:p-4">
-            <Dialog.Panel className="mt-10 w-full max-w-xl overflow-hidden bg-white p-4 pt-2 text-left shadow-xl transition-all dark:bg-gray-700">
+            <Dialog.Panel className="mt-10 w-full max-w-xl overflow-hidden bg-white text-left shadow-xl transition-all dark:bg-gray-700">
               <createUpdateFetcher.Form replace method="post" action={task ? `/timeline/${task.id}` : "/api/tasks"}>
-                <div className="stack space-y-1 md:space-y-3">
-                  <div className="flex w-full items-start justify-between">
-                    <input
-                      className="-ml-4 min-h-[60px] w-[95%] border-none bg-transparent pl-4 pr-2 text-2xl text-gray-900 focus:outline-none dark:text-gray-100 md:min-h-[70px] md:text-4xl"
-                      required
-                      name="name"
-                      placeholder="Name"
-                      defaultValue={task?.name}
-                      autoFocus
-                    />
-
-                    <Checkbox defaultChecked={task?.isComplete} name="isComplete" className="mt-2 sq-6" />
+                <div className="flex w-full items-start justify-between">
+                  <input
+                    className="w-full border-none bg-transparent py-3 pl-4 pr-8 text-2xl text-gray-900 focus:outline-none dark:text-gray-100 md:py-4 md:text-4xl"
+                    required
+                    name="name"
+                    placeholder="Name"
+                    defaultValue={task?.name}
+                    autoFocus
+                  />
+                  <div className="p-3 sm:p-4">
+                    <Checkbox defaultChecked={task?.isComplete} name="isComplete" className="sq-6" />
                   </div>
+                </div>
+                <div className="stack space-y-1 p-4 pt-0 md:space-y-3">
                   <input type="hidden" name="elementId" value={element?.value} />
 
                   <div className="flex w-full items-end md:items-start">
@@ -192,11 +193,15 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     error={createUpdateFetcher.data?.fieldErrors?.date?.[0]}
                   />
 
-                  <div>
-                    <div className="flex flex-col space-x-0 md:flex-row md:space-x-3">
-                      <FormFieldLabel htmlFor="durationHours" className="min-w-[80px] text-sm md:w-[100px]">
-                        Duration
-                      </FormFieldLabel>
+                  <InlineFormField
+                    name="durationHours"
+                    label="Duration"
+                    shouldPassProps={false}
+                    error={
+                      createUpdateFetcher.data?.fieldErrors?.durationHours?.[0] ||
+                      createUpdateFetcher.data?.fieldErrors?.durationMinutes?.[0]
+                    }
+                    input={
                       <div className="hstack">
                         <div className="hstack space-x-1">
                           <Input
@@ -220,12 +225,8 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                           <p className="text-xs opacity-80">Minutes</p>
                         </div>
                       </div>
-                    </div>
-                    <FormFieldError>
-                      {createUpdateFetcher.data?.fieldErrors?.durationHours?.[0] ||
-                        createUpdateFetcher.data?.fieldErrors?.durationMinutes?.[0]}
-                    </FormFieldError>
-                  </div>
+                    }
+                  />
                   <InlineFormField
                     pattern="^([01]\d|2[0-3]):?([0-5]\d)$"
                     type="time"
@@ -319,7 +320,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     <HexColorPicker color={color} onChange={setColor} />
                   </div>
                   <div className="center w-full justify-start md:justify-center">
-                    <div className="center h-full w-full max-w-[200px] rounded-lg p-4 px-6" style={{ background: color }}>
+                    <div className="center h-full w-full rounded-lg p-4 px-6" style={{ background: color }}>
                       <p className="w-full text-center" style={{ color: safeReadableColor(color) }}>
                         {color}
                       </p>
