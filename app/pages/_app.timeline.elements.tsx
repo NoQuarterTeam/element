@@ -13,7 +13,8 @@ import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Drawer } from "~/components/ui/Drawer"
 import { Form, FormButton, FormError, InlineFormField } from "~/components/ui/Form"
 import { Input } from "~/components/ui/Inputs"
-import { Modal, useModal } from "~/components/ui/Modal"
+import { Modal } from "~/components/ui/Modal"
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { useToast } from "~/components/ui/Toast"
 import { isValidHex, randomHexColor } from "~/lib/color"
 import { db } from "~/lib/db.server"
@@ -103,9 +104,9 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function Elements() {
   const elements = useLoaderData<typeof loader>()
   const [search, setSearch] = React.useState("")
-  const achiveProps = useModal()
+  const achiveProps = useDisclosure()
   const [color, setColor] = React.useState(randomHexColor())
-  const createModalProps = useModal()
+  const createModalProps = useDisclosure()
   const createFetcher = useTransition()
   React.useEffect(() => {
     if (createFetcher.type === "actionReload") {

@@ -1,14 +1,14 @@
 import * as React from "react"
 
-import { useModal } from "~/components/ui/Modal"
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
 
 export function useStoredDisclosure(key: string, args?: { defaultIsOpen?: boolean }) {
-  const modalProps = useModal({
+  const disclosureProps = useDisclosure({
     defaultIsOpen: localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key) || "false") : args?.defaultIsOpen,
   })
 
   React.useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(modalProps.isOpen))
-  }, [key, modalProps.isOpen])
-  return modalProps
+    localStorage.setItem(key, JSON.stringify(disclosureProps.isOpen))
+  }, [key, disclosureProps.isOpen])
+  return disclosureProps
 }

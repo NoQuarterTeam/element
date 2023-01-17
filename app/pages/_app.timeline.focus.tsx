@@ -9,7 +9,7 @@ import dayjs from "dayjs"
 import { CloseButton } from "~/components/ui/CloseButton"
 import { IconButton } from "~/components/ui/IconButton"
 import { Checkbox } from "~/components/ui/Inputs"
-import { useModal } from "~/components/ui/Modal"
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { Tooltip } from "~/components/ui/Tooltip"
 import { safeReadableColor } from "~/lib/color"
 import { db } from "~/lib/db.server"
@@ -66,7 +66,7 @@ export default function Focus() {
             <div className="vstack space-y-6 py-20">
               {tasks.length === 0 ? (
                 <div className="vstack">
-                  <img src="/logo.png" className="sq-[100px]" alt="logo" />
+                  <img src="/logo.png" className="sq-24" alt="logo" />
                   <p className="text-center text-3xl">Looks like you're done for the day!</p>
                 </div>
               ) : (
@@ -90,7 +90,7 @@ function FocusItem({ task }: { task: FocusTask }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateFetcher.type, updateFetcher.data])
-  const { isOpen, onToggle } = useModal()
+  const { isOpen, onToggle } = useDisclosure()
   return (
     <div className="w-full max-w-[500px] rounded-sm border border-gray-200 dark:border-gray-600">
       <div className="flex items-start justify-between p-2">

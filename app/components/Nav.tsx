@@ -24,11 +24,12 @@ import { useMe } from "~/pages/_app"
 import { useTheme } from "../lib/theme"
 import { ShortcutsInfo } from "./ShortcutsInfo"
 import { IconButton } from "./ui/IconButton"
-import { Modal, useModal } from "./ui/Modal"
+import { Modal } from "./ui/Modal"
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { Tooltip } from "./ui/Tooltip"
 
 export function Nav() {
-  const shortcutModalProps = useModal()
+  const shortcutModalProps = useDisclosure()
   const themeFetcher = useFetcher()
   const navProps = useStoredDisclosure("element.nav", { defaultIsOpen: true })
   const me = useMe()

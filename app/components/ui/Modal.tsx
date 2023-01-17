@@ -5,15 +5,6 @@ import { cn } from "~/lib/tailwind"
 
 import { CloseButton } from "./CloseButton"
 
-export function useModal({ defaultIsOpen = false }: { defaultIsOpen?: boolean } | undefined = {}) {
-  const [isOpen, setIsOpen] = React.useState(defaultIsOpen)
-  const onOpen = () => setIsOpen(true)
-  const onClose = () => setIsOpen(false)
-  const onToggle = () => setIsOpen((o) => !o)
-
-  return { isOpen, onOpen, onClose, onToggle }
-}
-
 export interface ModalProps {
   isOpen: boolean
   onOpen?: () => void

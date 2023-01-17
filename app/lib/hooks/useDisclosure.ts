@@ -6,7 +6,7 @@ export function useDisclosure({ defaultIsOpen = false }: { defaultIsOpen?: boole
   const onClose = () => setIsOpen(false)
   const onToggle = () => setIsOpen((o) => !o)
 
-  return { isOpen, onOpen, onClose, onToggle }
+  return { isOpen, onOpen, onClose, onToggle, onSetIsOpen: setIsOpen }
 }
 
 export type DisclosureProps = ReturnType<typeof useDisclosure>

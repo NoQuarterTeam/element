@@ -66,7 +66,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
   return (
     <Document theme="dark">
       <div className="vstack h-screen justify-center p-20">
-        <img alt="logo" src="/logo.png" className="sq-[100px]" />
+        <img alt="logo" src="/logo.png" className="sq-24" />
         <h1>Oops, there was an error.</h1>
         <p>{error.message}</p>
       </div>
@@ -92,7 +92,7 @@ export function CatchBoundary() {
   return (
     <Document theme="dark">
       <div className="vstack h-screen justify-center p-20">
-        <img alt="logo" src="/logo.png" className="sq-[100px]" />
+        <img alt="logo" src="/logo.png" className="sq-24" />
         <h1>
           {caught.status}: {caught.statusText}
         </h1>

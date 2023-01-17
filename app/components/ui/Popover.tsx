@@ -20,5 +20,11 @@ export const Content = React.forwardRef<HTMLDivElement, Popover.PopoverContentPr
   )
 })
 export const Arrow = React.forwardRef<SVGSVGElement, Popover.PopperArrowProps>(function Arrow(props, ref) {
-  return <Popover.Arrow ref={ref} {...props} className={cn("fill-white dark:fill-gray-700", props.className)} />
+  return (
+    <Popover.Arrow
+      ref={ref}
+      {...props}
+      className={cn("fill-white text-white  dark:fill-gray-700 dark:text-gray-700", props.className)}
+    />
+  )
 })

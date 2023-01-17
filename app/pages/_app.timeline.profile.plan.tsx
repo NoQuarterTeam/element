@@ -9,7 +9,8 @@ import { Button } from "~/components/ui/Button"
 import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Form, FormButton } from "~/components/ui/Form"
 import { Input } from "~/components/ui/Inputs"
-import { Modal, useModal } from "~/components/ui/Modal"
+import { Modal } from "~/components/ui/Modal"
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { PRICE_ID } from "~/lib/config.server"
 import { FULL_WEB_URL } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
@@ -118,7 +119,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function Plan() {
   const data = useLoaderData<typeof loader>()
-  const joinPlanProps = useModal()
+  const joinPlanProps = useDisclosure()
 
   const cancelFetcher = useFetcher()
 

@@ -103,19 +103,19 @@ export default function Feedback() {
       ) : (
         <div className="vstack py-3">
           <ButtonGroup>
-            <Button className="sq-[100px]" onClick={() => setType("ISSUE")}>
+            <Button className="sq-24" onClick={() => setType("ISSUE")}>
               <div className="vstack">
                 <RiBug2Line className="sq-[18px]" />
                 <p>Issue</p>
               </div>
             </Button>
-            <Button className="sq-[100px]" onClick={() => setType("IDEA")}>
+            <Button className="sq-24" onClick={() => setType("IDEA")}>
               <div className="vstack">
                 <RiLightbulbLine className="sq-[18px]" />
                 <p>Idea</p>
               </div>
             </Button>
-            <Button className="sq-[100px]" onClick={() => setType("OTHER")}>
+            <Button className="sq-24" onClick={() => setType("OTHER")}>
               <div className="vstack">
                 <BiMessage className="sq-[18px]" />
 

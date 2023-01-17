@@ -16,6 +16,7 @@ import { FormButton, FormError, FormField } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
 import { Checkbox } from "./ui/Inputs"
 import { Tooltip } from "./ui/Tooltip"
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
 
 interface Props {
   habits: TimelineHabit[]
@@ -25,6 +26,7 @@ interface Props {
 export const Habits = React.memo(_Habits)
 
 function _Habits({ habits, day, habitEntries }: Props) {
+  const newFormProps = useDisclosure()
   const dayHabits = habits.filter(
     (h) =>
       dayjs(h.startDate).isBefore(dayjs(day).endOf("d")) &&
@@ -36,7 +38,7 @@ function _Habits({ habits, day, habitEntries }: Props) {
       <Popover.Trigger className="center w-full rounded-full px-2 py-[7px] hover:bg-black/10 dark:hover:bg-gray-700">
         <div className="hstack center space-x-[3px]">
           {dayHabits.length === 0 ? (
-            <RiAddCircleLine className="sq-[12px]" />
+            <RiAddCircleLine className="sq-3" />
           ) : (
             dayHabits
               .map((habit) => (
@@ -73,10 +75,12 @@ function _Habits({ habits, day, habitEntries }: Props) {
             )}
           </div>
           <div className="flex justify-end border-t border-gray-100 py-2 px-3 dark:border-gray-600">
-            <Popover.Root>
+            <Popover.Root open={newFormProps.isOpen} onOpenChange={newFormProps.onSetIsOpen}>
               <Popover.Anchor>
                 <Popover.Trigger asChild>
-                  <Button variant="ghost">New habit</Button>
+                  <Button variant="ghost" onClick={newFormProps.onOpen}>
+                    New habit
+                  </Button>
                 </Popover.Trigger>
               </Popover.Anchor>
 
@@ -86,11 +90,11 @@ function _Habits({ habits, day, habitEntries }: Props) {
                   <div className="relative flex items-center justify-between border-b border-gray-100 py-2 pl-3 pr-2 dark:border-gray-600">
                     <p>New habit</p>
                     <Popover.Close asChild>
-                      <CloseButton onClick={close} />
+                      <CloseButton onClick={newFormProps.onClose} />
                     </Popover.Close>
                   </div>
                   <div className="py-2 px-3">
-                    <HabitForm onClose={close} day={day} />
+                    <HabitForm onClose={newFormProps.onClose} day={day} />
                   </div>
                 </Popover.Content>
               </Popover.Portal>

@@ -26,8 +26,9 @@ import { ButtonGroup } from "./ui/ButtonGroup"
 import { Form, FormButton, FormError, InlineFormField } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
 import { Menu, MenuButton, MenuItem, MenuList } from "./ui/Menu"
-import { Modal, useModal } from "./ui/Modal"
+import { Modal } from "./ui/Modal"
 import { useToast } from "./ui/Toast"
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
 
 const MAX_DEPTH = 2
 
@@ -44,7 +45,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
 
   const [newColor, setNewColor] = React.useState(element.color)
   const [editColor, setEditColor] = React.useState(element.color)
-  const createModalProps = useModal()
+  const createModalProps = useDisclosure()
   const transition = useTransition()
   React.useEffect(() => {
     if (transition.type === "actionReload") {
@@ -52,7 +53,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
     }
   }, [transition.type, createModalProps])
 
-  const updateModalProps = useModal()
+  const updateModalProps = useDisclosure()
   const updateFetcher = useFetcher()
   React.useEffect(() => {
     if (updateFetcher.type === "actionReload" && updateFetcher.data?.element) {
@@ -61,7 +62,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
     }
   }, [updateFetcher.data, updateFetcher.type, refetch])
 
-  const archiveModalProps = useModal()
+  const archiveModalProps = useDisclosure()
   const archiveFetcher = useFetcher()
   React.useEffect(() => {
     if (archiveFetcher.type === "actionReload" && archiveFetcher.data?.success) {
@@ -131,7 +132,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                   <MenuItem>
                     {({ className }) => (
                       <button onClick={createModalProps.onOpen} className={className}>
-                        <RiAddLine className="sq-[12px]" />
+                        <RiAddLine className="sq-3" />
                         <span>Create child</span>
                       </button>
                     )}
@@ -140,7 +141,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                 <MenuItem>
                   {({ className }) => (
                     <button onClick={updateModalProps.onOpen} className={className}>
-                      <RiEdit2Line className="sq-[12px]" />
+                      <RiEdit2Line className="sq-3" />
                       <span>Edit</span>
                     </button>
                   )}
@@ -157,7 +158,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                         }
                         className={className}
                       >
-                        <RiEye2Line className="sq-[12px]" />
+                        <RiEye2Line className="sq-3" />
                         <span>Unarchive</span>
                       </button>
                     )}
@@ -166,7 +167,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                   <MenuItem>
                     {({ className }) => (
                       <button onClick={archiveModalProps.onOpen} className={className}>
-                        <RiDeleteBinLine className="sq-[12px]" />
+                        <RiDeleteBinLine className="sq-3" />
                         <span>Archive</span>
                       </button>
                     )}

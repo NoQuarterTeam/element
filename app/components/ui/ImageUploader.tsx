@@ -9,7 +9,8 @@ import { BrandButton } from "./BrandButton"
 import { Button } from "./Button"
 import { ButtonGroup } from "./ButtonGroup"
 import { inputStyles } from "./Inputs"
-import { Modal, useModal } from "./Modal"
+import { Modal } from "./Modal"
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { useToast } from "./Toast"
 
 interface Props {
@@ -21,7 +22,7 @@ interface Props {
 }
 
 export function ImageUploader({ children, path, onSubmit, dropzoneOptions, className }: Props) {
-  const modalProps = useModal()
+  const modalProps = useDisclosure()
   const toast = useToast()
   const [image, setImage] = React.useState<{ file: File; preview: string } | null>(null)
 

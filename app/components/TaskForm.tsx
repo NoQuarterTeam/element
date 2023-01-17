@@ -19,7 +19,8 @@ import { Button } from "./ui/Button"
 import { ButtonGroup } from "./ui/ButtonGroup"
 import { FormButton, FormError, FormFieldError, FormFieldLabel, InlineFormField } from "./ui/Form"
 import { Checkbox, Input, Textarea } from "./ui/Inputs"
-import { Modal, useModal } from "./ui/Modal"
+import { Modal } from "./ui/Modal"
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { Singleselect } from "./ui/ReactSelect"
 
 type FieldErrors = {
@@ -109,7 +110,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
   const [element, setElement] = React.useState(
     task?.element ? { value: task.element.id, label: task.element.name, color: task.element.color } : undefined,
   )
-  const elementModalProps = useModal()
+  const elementModalProps = useDisclosure()
 
   const client = useQueryClient()
   const createElementFetcher = useFetcher()
