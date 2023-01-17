@@ -60,10 +60,11 @@ export default function HomeLayout() {
                 Join now
               </LinkButton>
             </div>
-            <Menu className="flex md:hidden">
+            <Menu>
               <MenuButton>
                 <IconButton
                   size="md"
+                  className="flex md:hidden"
                   rounded="full"
                   aria-label={`Toggle open menu`}
                   icon={<RiMenuLine className="sq-[22px]" />}
