@@ -202,7 +202,7 @@ export default function Plan() {
       <div className="w-full border-r border-b border-gray-100 text-xs dark:border-gray-600 md:text-sm">
         <div className="flex">
           <div className="flex flex-[3] border-l border-transparent p-1 md:p-2" />
-          <div className="flex flex-[2] border-t border-l border-gray-100 border-l-transparent p-1 dark:border-gray-600 md:p-2">
+          <div className="flex flex-[2] border-t border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">
             <div className="stack space-y-0 md:space-y-2">
               <p className="text-md font-bold">Personal</p>
               <p className="text-xl font-medium">€0</p>
