@@ -2,7 +2,7 @@ import { RiMenuLine, RiMoonLine, RiSunLine } from "react-icons/ri"
 import type { LoaderArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { Link, useFetcher } from "@remix-run/react"
 
 import { LinkButton } from "~/components/ui/LinkButton"
 import { Menu, MenuButton, MenuList, MenuItem } from "~/components/ui/Menu"
@@ -23,11 +23,12 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function HomeLayout() {
   const theme = useTheme()
-  
+  const themeFetcher = useFetcher()
+
   return (
     <div>
       <div className="border-b border-solid border-gray-50 dark:border-gray-700">
-        <div className="my-0 mx-auto max-w-[1200px] bg-gray-50 dark:bg-gray-900">
+        <Limiter>
           <div className="flex justify-between py-5 align-middle">
             <div className="hstack space-x-6">
               <Link to="/">
@@ -41,14 +42,17 @@ export default function HomeLayout() {
                 <Link to="#pricing">Pricing</Link>
               </div>
             </div>
-            <div className="hstack  hidden md:flex">
-              <IconButton
-                rounded-full
-                aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-                variant="ghost"
-                // onClick={toggleColorMode}
-                icon={theme === "dark" ? <RiSunLine className="sq-[18px]" /> : <RiMoonLine className="sq-[18px]" />}
-              />
+            <div className="hstack hidden md:flex">
+              <themeFetcher.Form action="/api/theme" method="post" replace>
+                <input type="hidden" name="theme" value={theme === "dark" ? "light" : "dark"} />
+                <IconButton
+                  rounded="full"
+                  type="submit"
+                  aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                  variant="ghost"
+                  icon={theme === "dark" ? <RiSunLine className="sq-[18px]" /> : <RiMoonLine className="sq-[18px]" />}
+                />
+              </themeFetcher.Form>
               <LinkButton size="md" variant="ghost" to="/login">
                 Login
               </LinkButton>
@@ -61,20 +65,44 @@ export default function HomeLayout() {
                 <IconButton
                   size="md"
                   rounded-full
-                  aria-label={`Toggle open menu`}                  
+                  aria-label={`Toggle open menu`}
                   icon={<RiMenuLine className="sq-[22px]" />}
                   variant="ghost"
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem>{() => <Link to="#why">Why</Link>}</MenuItem>
-                <MenuItem>{() => <Link to="#pricing">Pricing</Link>}</MenuItem>
-                <MenuItem>{() => <Link to="#register">Register</Link>}</MenuItem>
-                <MenuItem>{() => <Link to="#register">Login</Link>}</MenuItem>
+                <MenuItem>
+                  {({ className }) => (
+                    <Link to="#why" className={className}>
+                      Why
+                    </Link>
+                  )}
+                </MenuItem>
+                <MenuItem>
+                  {({ className }) => (
+                    <Link to="#pricing" className={className}>
+                      Pricing
+                    </Link>
+                  )}
+                </MenuItem>
+                <MenuItem>
+                  {({ className }) => (
+                    <Link to="#register" className={className}>
+                      Register
+                    </Link>
+                  )}
+                </MenuItem>
+                <MenuItem>
+                  {({ className }) => (
+                    <Link to="#register" className={className}>
+                      Login
+                    </Link>
+                  )}
+                </MenuItem>
               </MenuList>
             </Menu>
           </div>
-        </div>
+        </Limiter>
       </div>
       <Limiter className="py-20">
         <div className="stack space-y-20">
@@ -107,73 +135,71 @@ export default function HomeLayout() {
               work-life balance.
             </p>
           </div>
-          <div className="stack spacing-y-6 pt-10"  id="pricing">
+          <div className="stack spacing-y-6 pt-10" id="pricing">
             <div className="vstack">
               <h3>Pricing</h3>
               <p className="text-lg">Start for free, or as low as €4 a month.</p>
             </div>
             <div className="w-full border-r border-b border-gray-100 text-xs dark:border-gray-600 md:text-sm">
-        <div className="flex">
-          <div className="flex flex-[3] border-l border-transparent p-1 md:p-2" />
-          <div className="flex flex-[2] border-t border-l border-gray-100 border-l-transparent p-1 dark:border-gray-600 md:p-2">
-            <div className="stack space-y-0 md:space-y-2">
-              <p className="text-md font-bold">Personal</p>
-              <p className="text-xl font-medium">€0</p>            
+              <div className="flex">
+                <div className="flex flex-[3] border-l border-transparent p-1 md:p-2" />
+                <div className="flex flex-[2] border-t border-l border-gray-100 border-l-transparent p-1 dark:border-gray-600 md:p-2">
+                  <div className="stack space-y-0 md:space-y-2">
+                    <p className="text-md font-bold">Personal</p>
+                    <p className="text-xl font-medium">€0</p>
+                  </div>
+                </div>
+                <div className="flex flex-[2] border-l border-t border-gray-100 p-1 dark:border-gray-600 md:p-2">
+                  <div className="stack space-y-0 md:space-y-2">
+                    <p className="text-md font-bold">Pro</p>
+                    <p className="whitespace-nowrap text-xl font-medium">
+                      €4 <span className="whitespace-nowrap text-xs font-thin opacity-70">per month</span>
+                    </p>
+                    <LinkButton size="md" colorScheme="primary" to="/register">
+                      Join now
+                    </LinkButton>
+                  </div>
+                </div>
+              </div>
+              <div className="border-l border-t border-gray-100 dark:border-gray-600">
+                <div className="flex border-b border-gray-100 dark:border-gray-600">
+                  <div className="flex flex-[3] p-1 font-semibold md:p-2">Usage</div>
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
+                </div>
+                <div className="flex border-b border-gray-100 dark:border-gray-600">
+                  <div className="flex flex-[3]  border-gray-100 p-1 opacity-70 dark:border-gray-600 md:p-2">Tasks</div>
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2 ">1000</div>
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">Unlimited</div>
+                </div>
+                <div className="flex border-b border-gray-100 dark:border-gray-600">
+                  <div className="flex flex-[3]  border-gray-100 p-1 opacity-70 dark:border-gray-600 md:p-2">Elements</div>
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">5</div>
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">Unlimited</div>
+                </div>
+                <div className="flex border-b border-gray-100 dark:border-gray-600">
+                  <div className="flex flex-[3] p-1 font-semibold md:p-2">Features</div>
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
+                </div>
+                <div className="flex border-b border-gray-100 dark:border-gray-600">
+                  <div className="flex flex-[3] p-1 opacity-70 md:p-2">Weather forecast</div>
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
+                </div>
+                <div className="flex">
+                  <div className="flex flex-[3] p-1 opacity-70 md:p-2">Habit tracking</div>
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2"></div>
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="flex flex-[2] border-l border-t border-gray-100 p-1 dark:border-gray-600 md:p-2">
-            <div className="stack space-y-0 md:space-y-2">
-              <p className="text-md font-bold">Pro</p>
-              <p className="whitespace-nowrap text-xl font-medium">
-                €4 <span className="whitespace-nowrap text-xs font-thin opacity-70">per month</span>
-              </p>
-              <LinkButton size="md" colorScheme="primary" to="/register">
-                Join now
-              </LinkButton>
-            </div>
-          </div>
-        </div>
-        <div className="border-l border-t border-gray-100 dark:border-gray-600">
-          <div className="flex border-b border-gray-100 dark:border-gray-600">
-            <div className="flex flex-[3] p-1 font-semibold md:p-2">Usage</div>
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
-          </div>
-          <div className="flex border-b border-gray-100 dark:border-gray-600">
-            <div className="flex flex-[3]  border-gray-100 p-1 opacity-70 dark:border-gray-600 md:p-2">Tasks</div>
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2 ">1000</div>
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">Unlimited</div>
-          </div>
-          <div className="flex border-b border-gray-100 dark:border-gray-600">
-            <div className="flex flex-[3]  border-gray-100 p-1 opacity-70 dark:border-gray-600 md:p-2">Elements</div>
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">5</div>
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">Unlimited</div>
-          </div>
-          <div className="flex border-b border-gray-100 dark:border-gray-600">
-            <div className="flex flex-[3] p-1 font-semibold md:p-2">Features</div>
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
-          </div>
-          <div className="flex border-b border-gray-100 dark:border-gray-600">
-            <div className="flex flex-[3] p-1 opacity-70 md:p-2">Weather forecast</div>
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
-          </div>
-          <div className="flex">
-            <div className="flex flex-[3] p-1 opacity-70 md:p-2">Habit tracking</div>
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2"></div>
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
-          </div>
-        </div>
-      </div>
           </div>
         </div>
       </Limiter>
-      <div className="h-[300px] bg-gray-50 dark:bg-gray-900 py-10">
+      <div className="h-[300px] bg-gray-50 py-10 dark:bg-gray-900">
         <Limiter></Limiter>
       </div>
     </div>
   )
 }
-
-

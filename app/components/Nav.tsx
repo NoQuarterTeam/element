@@ -167,7 +167,6 @@ export function Nav() {
                 rounded="full"
                 aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
                 variant="ghost"
-                // onClick={toggleColorMode}
                 icon={theme === "dark" ? <RiSunLine className="sq-[18px]" /> : <RiMoonLine className="sq-[18px]" />}
               />
             </Tooltip>
