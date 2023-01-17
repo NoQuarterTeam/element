@@ -17,7 +17,6 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "generate": "prisma generate",
-    "gen:theme-typings": "chakra-cli tokens /app/lib/theme/index.ts",
     "hooks": "stripe listen --forward-to localhost:3000/api/stripe/webhook --events customer.subscription.created,customer.subscription.updated,customer.subscription.deleted",
     "lint:fix": "eslint --config .eslintrc.commit.js --fix --cache --ext .ts,.tsx app",
     "lint": "eslint --config .eslintrc.js --ext .ts,.tsx app",
