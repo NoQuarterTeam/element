@@ -1,9 +1,9 @@
 import * as React from "react"
 import type { DropzoneOptions, FileRejection } from "react-dropzone"
 import { useDropzone } from "react-dropzone"
-import { cn } from "~/lib/tailwind"
 
 import { useS3Upload } from "~/lib/hooks/useS3"
+import { cn } from "~/lib/tailwind"
 
 import { BrandButton } from "./BrandButton"
 import { Button } from "./Button"

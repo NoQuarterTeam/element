@@ -2,13 +2,13 @@ import type * as React from "react"
 import { RiBankCard2Line, RiMap2Line, RiSettings2Line } from "react-icons/ri"
 import { NavLink, Outlet, useNavigate, useTransition } from "@remix-run/react"
 
+import { Avatar } from "~/components/ui/Avatar"
 import { Modal } from "~/components/ui/Modal"
+import { Spinner } from "~/components/ui/Spinner"
 import { transformImage } from "~/lib/helpers/image"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
-import { useMe } from "~/pages/_app"
-import { Avatar } from "~/components/ui/Avatar"
 import { cn } from "~/lib/tailwind"
-import { Spinner } from "~/components/ui/Spinner"
+import { useMe } from "~/pages/_app"
 
 export default function Profile() {
   const me = useMe()

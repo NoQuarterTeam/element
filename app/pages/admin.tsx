@@ -1,5 +1,5 @@
-import { RiArrowLeftLine } from "react-icons/ri"
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
+import { RiArrowLeftLine } from "react-icons/ri"
 import { Role } from "@prisma/client"
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
@@ -7,10 +7,10 @@ import { redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
 
+import { Badge } from "~/components/ui/Badge"
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
 import { getUser } from "~/services/auth/auth.server"
-import { Badge } from "~/components/ui/Badge"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
@@ -56,12 +56,10 @@ export default function Admin() {
         </LinkButton>
       </div>
       <h2>Admin</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         <div className="space-y-6">
           <div>
-            <h4 className="text-lg">
-              Users
-            </h4>
+            <h4 className="text-lg">Users</h4>
             <p className="text-3xl">{users.length}</p>
           </div>
           <div>
@@ -76,25 +74,21 @@ export default function Admin() {
         </div>
         <div className="space-y-6">
           <div>
-            <h4 className="text-lg">
-              Tasks
-            </h4>
+            <h4 className="text-lg">Tasks</h4>
             <p className="text-3xl">{taskCountTotal.toLocaleString()}</p>
           </div>
           <div className="stack">
             <p>This month</p>
             <p className="text-3xl">{taskCountThisMonth}</p>
             <div className="hstack">
-               {percentageChange < 0 ? <IoMdArrowDropdown className="sq-8" /> : <IoMdArrowDropup className="sq-8" />}              
+              {percentageChange < 0 ? <IoMdArrowDropdown className="sq-8" /> : <IoMdArrowDropup className="sq-8" />}
               {Math.abs(percentageChange)}%
             </div>
           </div>
         </div>
         <div className="space-y-6">
           <div>
-          <h4 className="text-lg">
-              Feedback
-            </h4>
+            <h4 className="text-lg">Feedback</h4>
           </div>
           <div>
             {feedback.map((feedback) => (

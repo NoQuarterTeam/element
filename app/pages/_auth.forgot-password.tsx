@@ -4,14 +4,12 @@ import { Link, useTransition } from "@remix-run/react"
 import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
-import { validateFormData } from "~/lib/form"
-
-import { badRequest } from "~/lib/remix"
-
-import { db } from "~/lib/db.server"
-import { createToken } from "~/lib/jwt.server"
-import { sendResetPasswordEmail } from "~/services/user/user.mailer.server"
 import { useToast } from "~/components/ui/Toast"
+import { db } from "~/lib/db.server"
+import { validateFormData } from "~/lib/form"
+import { createToken } from "~/lib/jwt.server"
+import { badRequest } from "~/lib/remix"
+import { sendResetPasswordEmail } from "~/services/user/user.mailer.server"
 
 export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData()

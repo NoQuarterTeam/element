@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client"
+import { type Prisma } from "@prisma/client"
 import { redirect } from "@remix-run/node"
 
 import { db } from "~/lib/db.server"

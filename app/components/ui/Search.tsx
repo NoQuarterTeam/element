@@ -2,8 +2,9 @@ import * as React from "react"
 import { BiX } from "react-icons/bi"
 import { CgSearch } from "react-icons/cg"
 import { useSearchParams } from "@remix-run/react"
-import { cn } from "~/lib/tailwind"
 import queryString from "query-string"
+
+import { cn } from "~/lib/tailwind"
 
 import { IconButton } from "./IconButton"
 import { type InputProps, Input } from "./Inputs"

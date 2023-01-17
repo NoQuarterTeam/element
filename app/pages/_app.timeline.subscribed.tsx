@@ -1,6 +1,6 @@
 import { useNavigate } from "@remix-run/react"
-import { Button } from "~/components/ui/Button"
 
+import { Button } from "~/components/ui/Button"
 import { Confetti } from "~/components/ui/Confetti"
 import { Modal } from "~/components/ui/Modal"
 

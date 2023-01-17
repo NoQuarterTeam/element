@@ -1,7 +1,9 @@
+import * as React from "react"
 import { Transition } from "@headlessui/react"
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
-import * as React from "react"
+
 import { cn } from "~/lib/tailwind"
+
 import { Button } from "./Button"
 
 interface Props {

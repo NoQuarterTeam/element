@@ -3,12 +3,12 @@ import { RiArrowLeftLine } from "react-icons/ri"
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
-import { cn } from "~/lib/tailwind"
 import dayjs from "dayjs"
 
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
 import { getMinutesFromTasks, getTotalTaskDuration } from "~/lib/helpers/duration"
+import { cn } from "~/lib/tailwind"
 import { getUser } from "~/services/auth/auth.server"
 
 const PieChart = React.lazy(() => import("../components/ElementsChart"))

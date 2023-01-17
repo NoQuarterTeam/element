@@ -1,5 +1,6 @@
-import { cva, VariantProps } from "class-variance-authority"
-import * as React from "react"
+import type * as React from "react"
+import { type VariantProps, cva } from "class-variance-authority"
+
 import { cn } from "~/lib/tailwind"
 
 export const badgeProps = cva("rounded-xs font-semibold uppercase", {

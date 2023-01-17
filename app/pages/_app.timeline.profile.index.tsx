@@ -3,6 +3,8 @@ import { redirect } from "@remix-run/node"
 import { useSubmit } from "@remix-run/react"
 import { z } from "zod"
 
+import { AlertDialog } from "~/components/ui/AlertDialog"
+import { Button } from "~/components/ui/Button"
 import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Form, FormButton, FormError, FormField, ImageField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
@@ -14,8 +16,6 @@ import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getUserSession } from "~/services/session/session.server"
 
 import { useMe } from "./_app"
-import { Button } from "~/components/ui/Button"
-import { AlertDialog } from "~/components/ui/AlertDialog"
 
 export enum ProfileActionMethods {
   DeleteAcccount = "deleteAccount",

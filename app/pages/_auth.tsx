@@ -1,8 +1,8 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Outlet } from "@remix-run/react"
-import { db } from "~/lib/db.server"
 
+import { db } from "~/lib/db.server"
 import { getUserSession } from "~/services/session/session.server"
 
 export const loader = async ({ request }: LoaderArgs) => {

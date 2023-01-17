@@ -1,6 +1,7 @@
-import { cva, VariantProps } from "class-variance-authority"
 import * as React from "react"
 import * as RAvatar from "@radix-ui/react-avatar"
+import { type VariantProps, cva } from "class-variance-authority"
+
 import { cn } from "~/lib/tailwind"
 
 export const avatarStyles = cva("center rounded-full capitalize", {

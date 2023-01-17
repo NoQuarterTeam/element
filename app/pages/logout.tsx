@@ -1,7 +1,7 @@
 import type { ActionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 
-import { getFlashSession, FlashType } from "~/services/session/flash.server"
+import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getUserSession } from "~/services/session/session.server"
 
 export const action = async ({ request }: ActionArgs) => {

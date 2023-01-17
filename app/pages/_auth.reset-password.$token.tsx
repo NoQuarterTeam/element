@@ -8,7 +8,6 @@ import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { decryptToken } from "~/lib/jwt.server"
 import { badRequest } from "~/lib/remix"
-
 import { hashPassword } from "~/services/auth/password.server"
 import { sendPasswordChangedEmail } from "~/services/user/user.mailer.server"
 

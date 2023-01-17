@@ -1,5 +1,6 @@
 import type * as React from "react"
 import { type VariantProps, cva } from "class-variance-authority"
+
 import { cn } from "~/lib/tailwind"
 
 const spinnerStyles = cva("animate-spin text-black dark:text-white", {

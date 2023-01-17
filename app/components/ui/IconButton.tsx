@@ -1,6 +1,7 @@
 import * as React from "react"
-import { cn } from "~/lib/tailwind"
 import { type VariantProps, cva } from "class-variance-authority"
+
+import { cn } from "~/lib/tailwind"
 
 import { type ButtonProps, buttonStyles } from "./Button"
 import { Spinner } from "./Spinner"

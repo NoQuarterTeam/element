@@ -5,8 +5,6 @@ import { Outlet, useNavigate } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
-import styles from "suneditor/dist/css/suneditor.min.css"
-
 import { Day, DAY_WIDTH } from "~/components/Day"
 import { DropContainer } from "~/components/DropContainer"
 import { Nav } from "~/components/Nav"
@@ -25,10 +23,6 @@ import { SCROLL_DAYS_BACK, useTimelineScroll } from "~/lib/hooks/useTimelineScro
 import type { TimelineTask } from "./api+/tasks"
 
 dayjs.extend(advancedFormat)
-
-export function links() {
-  return [{ rel: "stylesheet", href: styles }]
-}
 
 const Timeline = React.memo(_Timeline)
 export default Timeline

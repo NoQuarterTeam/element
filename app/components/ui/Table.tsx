@@ -2,8 +2,9 @@ import * as React from "react"
 import { CgArrowLongDown, CgArrowLongUp } from "react-icons/cg"
 import { Prisma } from "@prisma/client"
 import { Link as RLink, useSearchParams } from "@remix-run/react"
-import { cn } from "~/lib/tailwind"
 import queryString from "query-string"
+
+import { cn } from "~/lib/tailwind"
 
 import { Button } from "./Button"
 import { NoData } from "./NoData"

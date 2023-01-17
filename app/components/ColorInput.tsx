@@ -1,7 +1,7 @@
 import { HexColorPicker } from "react-colorful"
-import { cn } from "~/lib/tailwind"
 
 import { isValidHex, safeReadableColor } from "~/lib/color"
+import { cn } from "~/lib/tailwind"
 
 interface Props {
   name: string

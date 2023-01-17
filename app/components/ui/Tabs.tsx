@@ -1,4 +1,5 @@
 import { type NavLinkProps, NavLink as RNavLink } from "@remix-run/react"
+
 import { cn } from "~/lib/tailwind"
 
 export function TabLink(props: NavLinkProps) {

@@ -1,14 +1,13 @@
 import * as React from "react"
-
 import Cookies from "js-cookie"
 
+import { Badge } from "~/components/ui/Badge"
+import { Switch } from "~/components/ui/Switch"
+import { useToast } from "~/components/ui/Toast"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 
 import { useMe } from "./_app"
-import { Badge } from "~/components/ui/Badge"
-import { Switch } from "~/components/ui/Switch"
-import { useToast } from "~/components/ui/Toast"
 export const USER_LOCATION_COOKIE_KEY = "element.user.location"
 
 export default function Settings() {

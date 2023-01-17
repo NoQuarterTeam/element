@@ -1,11 +1,11 @@
 import * as React from "react"
 import { type Prisma } from "@prisma/client"
 import { Link, useFetcher } from "@remix-run/react"
-import { cn } from "~/lib/tailwind"
 
 import { safeReadableColor } from "~/lib/color"
 import { formatDuration } from "~/lib/helpers/duration"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
+import { cn } from "~/lib/tailwind"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TimelineTask } from "~/pages/api+/tasks"
 
