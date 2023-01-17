@@ -1,5 +1,5 @@
 import { RiArrowLeftLine } from "react-icons/ri"
-import * as c from "@chakra-ui/react"
+import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 import { Role } from "@prisma/client"
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
@@ -10,6 +10,7 @@ import dayjs from "dayjs"
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
 import { getUser } from "~/services/auth/auth.server"
+import { Badge } from "~/components/ui/Badge"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
@@ -48,64 +49,64 @@ export default function Admin() {
   const { users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback } = useLoaderData<typeof loader>()
   const percentageChange = Math.round((taskCountThisMonth / (tastCountLastMonth || 1) - 1) * 100)
   return (
-    <c.Stack p={6}>
-      <c.Box>
-        <LinkButton to="/timeline" variant="ghost" leftIcon={<c.Box as={RiArrowLeftLine} />}>
+    <div className="p-6">
+      <div>
+        <LinkButton to="/timeline" variant="ghost" leftIcon={<RiArrowLeftLine />}>
           Back to timeline
         </LinkButton>
-      </c.Box>
-      <c.Heading>Admin</c.Heading>
-      <c.SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-        <c.Stack spacing={6}>
-          <c.Box>
-            <c.Heading as="h4" fontSize="lg">
+      </div>
+      <h2>Admin</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="space-y-6">
+          <div>
+            <h4 className="text-lg">
               Users
-            </c.Heading>
-            <c.Text fontSize="3xl">{users.length}</c.Text>
-          </c.Box>
-          <c.Box>
+            </h4>
+            <p className="text-3xl">{users.length}</p>
+          </div>
+          <div>
             {users.map((user) => (
-              <c.HStack fontSize="sm" key={user.id}>
-                <c.Text>{user.firstName}</c.Text>
-                <c.Text>{user.email}</c.Text>
-                {user.stripeSubscriptionId && <c.Badge colorScheme="primary">Pro</c.Badge>}
-              </c.HStack>
+              <div className="stack text-sm" key={user.id}>
+                <p>{user.firstName}</p>
+                <p>{user.email}</p>
+                {user.stripeSubscriptionId && <Badge colorScheme="primary">Pro</Badge>}
+              </div>
             ))}
-          </c.Box>
-        </c.Stack>
-        <c.Stack spacing={6}>
-          <c.Box>
-            <c.Heading as="h4" fontSize="lg">
+          </div>
+        </div>
+        <div className="space-y-6">
+          <div>
+            <h4 className="text-lg">
               Tasks
-            </c.Heading>
-            <c.Text fontSize="3xl">{taskCountTotal.toLocaleString()}</c.Text>
-          </c.Box>
-          <c.Stat>
-            <c.StatLabel>This month</c.StatLabel>
-            <c.StatNumber>{taskCountThisMonth}</c.StatNumber>
-            <c.StatHelpText>
-              <c.StatArrow type={percentageChange < 0 ? "decrease" : "increase"} />
+            </h4>
+            <p className="text-3xl">{taskCountTotal.toLocaleString()}</p>
+          </div>
+          <div className="stack">
+            <p>This month</p>
+            <p className="text-3xl">{taskCountThisMonth}</p>
+            <div className="hstack">
+               {percentageChange < 0 ? <IoMdArrowDropdown className="sq-8" /> : <IoMdArrowDropup className="sq-8" />}              
               {Math.abs(percentageChange)}%
-            </c.StatHelpText>
-          </c.Stat>
-        </c.Stack>
-        <c.Stack spacing={6}>
-          <c.Box>
-            <c.Heading as="h4" fontSize="lg">
+            </div>
+          </div>
+        </div>
+        <div className="space-y-6">
+          <div>
+          <h4 className="text-lg">
               Feedback
-            </c.Heading>
-          </c.Box>
-          <c.Box>
+            </h4>
+          </div>
+          <div>
             {feedback.map((feedback) => (
-              <c.HStack fontSize="sm" key={feedback.id}>
-                <c.Text>{feedback.content}</c.Text>
-                <c.Text>{feedback.type}</c.Text>
-                <c.Text>{feedback.creator.email}</c.Text>
-              </c.HStack>
+              <div className="stack text-sm" key={feedback.id}>
+                <p>{feedback.content}</p>
+                <p>{feedback.type}</p>
+                <p>{feedback.creator.email}</p>
+              </div>
             ))}
-          </c.Box>
-        </c.Stack>
-      </c.SimpleGrid>
-    </c.Stack>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
