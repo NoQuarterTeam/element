@@ -126,60 +126,53 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
             </MenuButton>
 
             <MenuList>
-              {props.depth < MAX_DEPTH && (
-                <MenuItem>
-                  {({ isActive }) => (
-                    <button
-                      onClick={createModalProps.onOpen}
-                      className={cn(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
-                    >
-                      <RiAddLine className="sq-[12px]" />
-                      <span>Create child</span>
-                    </button>
-                  )}
-                </MenuItem>
-              )}
-              <MenuItem>
-                {({ isActive }) => (
-                  <button
-                    onClick={updateModalProps.onOpen}
-                    className={cn(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
-                  >
-                    <RiEdit2Line className="sq-[12px]" />
-                    <span>Edit</span>
-                  </button>
+              <div>
+                {props.depth < MAX_DEPTH && (
+                  <MenuItem>
+                    {({ className }) => (
+                      <button onClick={createModalProps.onOpen} className={className}>
+                        <RiAddLine className="sq-[12px]" />
+                        <span>Create child</span>
+                      </button>
+                    )}
+                  </MenuItem>
                 )}
-              </MenuItem>
-              {element.archivedAt ? (
                 <MenuItem>
-                  {({ isActive }) => (
-                    <button
-                      onClick={() =>
-                        unarchiveFetcher.submit(
-                          { _action: ElementActionMethods.UnarchiveElement },
-                          { method: "post", action: `/api/elements/${element.id}` },
-                        )
-                      }
-                      className={cn(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
-                    >
-                      <RiEye2Line className="sq-[12px]" />
-                      <span>Unarchive</span>
+                  {({ className }) => (
+                    <button onClick={updateModalProps.onOpen} className={className}>
+                      <RiEdit2Line className="sq-[12px]" />
+                      <span>Edit</span>
                     </button>
                   )}
                 </MenuItem>
-              ) : (
-                <MenuItem>
-                  {({ isActive }) => (
-                    <button
-                      onClick={archiveModalProps.onOpen}
-                      className={cn(isActive && "bg-gray-800", "hstack w-full px-4 py-2 text-left text-sm text-gray-100")}
-                    >
-                      <RiDeleteBinLine className="sq-[12px]" />
-                      <span>Archive</span>
-                    </button>
-                  )}
-                </MenuItem>
-              )}
+                {element.archivedAt ? (
+                  <MenuItem>
+                    {({ className }) => (
+                      <button
+                        onClick={() =>
+                          unarchiveFetcher.submit(
+                            { _action: ElementActionMethods.UnarchiveElement },
+                            { method: "post", action: `/api/elements/${element.id}` },
+                          )
+                        }
+                        className={className}
+                      >
+                        <RiEye2Line className="sq-[12px]" />
+                        <span>Unarchive</span>
+                      </button>
+                    )}
+                  </MenuItem>
+                ) : (
+                  <MenuItem>
+                    {({ className }) => (
+                      <button onClick={archiveModalProps.onOpen} className={className}>
+                        <RiDeleteBinLine className="sq-[12px]" />
+                        <span>Archive</span>
+                      </button>
+                    )}
+                  </MenuItem>
+                )}
+              </div>
             </MenuList>
           </Menu>
         </div>
