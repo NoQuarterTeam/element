@@ -1,10 +1,10 @@
 import type { ActionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { badRequest } from "remix-utils"
 import type Stripe from "stripe"
 
 import { STRIPE_WEBHOOK_SECRET } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
+import { badRequest } from "~/lib/remix"
 import type { StripeEventType } from "~/lib/stripe/stripe.events.server"
 import { stripe } from "~/lib/stripe/stripe.server"
 

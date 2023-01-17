@@ -3,8 +3,8 @@ import { json } from "@remix-run/node"
 import { type ShouldRevalidateFunction, useRouteLoaderData } from "@remix-run/react"
 import { useLoaderData } from "@remix-run/react"
 import { Outlet } from "@remix-run/react"
-import { useHydrated } from "remix-utils"
 
+import { useHydrated } from "~/components/ui/ClientOnly"
 import { LoadingScreen } from "~/components/ui/LoadingScreen"
 import { getUser } from "~/services/auth/auth.server"
 

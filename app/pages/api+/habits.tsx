@@ -2,11 +2,11 @@ import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import dayjs from "dayjs"
-import { badRequest } from "remix-utils"
 import { z } from "zod"
 
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
+import { badRequest } from "~/lib/remix"
 import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
