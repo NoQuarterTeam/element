@@ -1,0 +1,14 @@
+-- CreateTable
+CREATE TABLE "Todo" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "name" TEXT NOT NULL,
+    "isComplete" BOOLEAN NOT NULL DEFAULT false,
+    "taskId" UUID NOT NULL,
+    "createdAt" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Todo_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "Todo" ADD CONSTRAINT "Todo_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task"("id") ON DELETE CASCADE ON UPDATE CASCADE;

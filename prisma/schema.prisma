@@ -49,10 +49,21 @@ model Task {
   creator         User      @relation(fields: [creatorId], references: [id])
   elementId       String    @db.Uuid
   element         Element   @relation(fields: [elementId], references: [id], onDelete: Cascade)
+  todos           Todo[]
 
   @@index([date])
   @@index([elementId])
   @@index([creatorId])
+}
+
+model Todo {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  isComplete Boolean  @default(false)
+  taskId     String   @db.Uuid
+  task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
 }
 
 model Element {

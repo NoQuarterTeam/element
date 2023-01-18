@@ -65,9 +65,9 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(func
     "aria-invalid": error || errors?.length ? true : undefined,
     "aria-errormessage": props.name + "-error",
     id: props.name,
-    ref,
     defaultValue: form?.data?.[props.name],
     ...props,
+    ref,
     name: props.name,
     className,
   }
