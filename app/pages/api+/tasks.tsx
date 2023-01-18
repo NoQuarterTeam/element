@@ -66,8 +66,8 @@ export const action = async ({ request }: ActionArgs) => {
         return acc
       }, [])
 
-  const todos = (toFormDataArray(formData, "todos") as unknown as { title: string; isComplete?: string }[]).map((t) => ({
-    title: t.title,
+  const todos = (toFormDataArray(formData, "todos") as unknown as { name: string; isComplete?: string }[]).map((t) => ({
+    name: t.name,
     isComplete: !!t.isComplete,
   }))
 

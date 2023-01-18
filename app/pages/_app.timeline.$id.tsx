@@ -50,10 +50,14 @@ const toFormDataArray = (formData: FormData, field: string) =>
 export const action = async ({ request, params }: ActionArgs) => {
   const user = await getUser(request)
   const formData = await request.formData()
+  console.log("formData", formData)
   const action = formData.get("_action") as TaskActionMethods | undefined
   const taskId = params.id as string | undefined
   if (!taskId) return badRequest("Task ID is required")
-  const task = await db.task.findFirst({ where: { id: taskId, creatorId: { equals: user.id } } })
+  const task = await db.task.findFirst({
+    where: { id: taskId, creatorId: { equals: user.id } },
+    include: { todos: { select: { id: true } } },
+  })
   if (!task) return badRequest("Task not found")
   const { createFlash } = await getFlashSession(request)
   switch (action) {
@@ -62,7 +66,7 @@ export const action = async ({ request, params }: ActionArgs) => {
         // const todos = queryString.parse(somethingInHereFromRequest)
 
         const todos = toFormDataArray(formData, "todos").map((t) => ({
-          name: t.name,
+          name: t.name as string,
           isComplete: !!t.isComplete,
         }))
 
@@ -92,8 +96,8 @@ export const action = async ({ request, params }: ActionArgs) => {
             description: data.description,
             isComplete,
             todos: {
+              deleteMany: task.todos.map((todo) => ({ id: { equals: todo.id } })) || [],
               createMany: { data: todos },
-              deleteMany: { taskId: { equals: task.id }, id: { notIn: todos.map((t) => t.id) } },
             },
           },
         })
