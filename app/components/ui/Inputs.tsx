@@ -1,4 +1,4 @@
-import type * as React from "react"
+import * as React from "react"
 import { type VariantProps, cva } from "class-variance-authority"
 
 import { cn } from "~/lib/tailwind"
@@ -50,16 +50,17 @@ export interface InputProps
     InputSizeStyleProps {
   name?: string
 }
-export function Input({ size, variant, ...props }: InputProps) {
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(function _Input({ size, variant, ...props }, ref) {
   return (
     <input
       type="text"
+      ref={ref}
       id={props.name}
       {...props}
       className={cn(inputStyles({ variant, size }), inputSizeStyles({ size }), props.className)}
     />
   )
-}
+})
 
 export interface TextareaProps
   extends React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>,
@@ -90,7 +91,7 @@ export function Checkbox(props: React.DetailedHTMLProps<React.InputHTMLAttribute
       type="checkbox"
       {...props}
       className={cn(
-        "cursor-pointer border-none bg-black/10 text-primary-500 outline-none transition-all checked:bg-primary-500 hover:bg-black/20 hover:text-primary-600 focus:ring-primary-300 dark:border-none dark:bg-white/20 dark:checked:bg-primary-500 dark:hover:bg-white/30 dark:focus:ring-primary-300",
+        "cursor-pointer border-none bg-black/10 text-primary-500 outline-none transition-all checked:bg-primary-500 hover:bg-black/20 hover:text-primary-600 focus:ring-primary-300 dark:border-none dark:bg-white/20 dark:checked:bg-primary-500 dark:hover:bg-white/30 dark:hover:checked:bg-primary-600 dark:focus:ring-primary-300 ",
         props.className,
       )}
     />

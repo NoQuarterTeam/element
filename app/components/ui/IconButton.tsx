@@ -30,6 +30,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(f
   return (
     <button
       ref={ref}
+      type="button"
       disabled={disabled || isLoading}
       {...props}
       className={cn(buttonStyles({ colorScheme, rounded, disabled, variant }), iconbuttonStyles({ size }), props.className)}
