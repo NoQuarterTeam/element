@@ -22,6 +22,8 @@ import { Checkbox, Input, Textarea } from "./ui/Inputs"
 import { Modal } from "./ui/Modal"
 import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { Singleselect } from "./ui/ReactSelect"
+import { IconButton } from "./ui/IconButton"
+import { BiPlus, BiTrash } from "react-icons/bi"
 
 type FieldErrors = {
   [Property in keyof TimelineTask]: string[]
@@ -36,6 +38,20 @@ type CreateUpdateRes = {
   fieldErrors?: FieldErrors
 }
 export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
+  const existingTodos = [
+    {
+      id: 1,
+      title: "Todo 1",
+      isComplete: false,
+    },
+    {
+      id: 2,
+      title: "Todo 2",
+      isComplete: true,
+    },
+  ]
+
+  const [todos, setTodos] = React.useState(existingTodos)
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const day = searchParams.get("day") || undefined
@@ -129,6 +145,11 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createElementFetcher.data, createElementFetcher.type])
+
+  const itemsRef = React.useRef<(HTMLInputElement | null)[]>([])
+  React.useEffect(() => {
+    itemsRef.current = itemsRef.current.slice(0, todos.length)
+  }, [todos])
 
   return (
     <>
@@ -239,8 +260,70 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     name="description"
                     defaultValue={task?.description}
                     label="Description"
-                    input={<Textarea rows={8} />}
+                    input={<Textarea rows={4} />}
                     error={createUpdateFetcher.data?.fieldErrors?.description?.[0]}
+                  />
+                  <InlineFormField
+                    name="todos"
+                    label="Todos"
+                    shouldPassProps={false}
+                    input={
+                      <div className="w-full">
+                        {todos.map((todo, i) => (
+                          <div key={todo.id} className="flex items-center space-x-1">
+                            <Checkbox name={`todos[${i}].isComplete`} defaultChecked={todos[i]?.isComplete} />
+                            <Input
+                              id={`todo-${todo.id}`}
+                              ref={(el) => (itemsRef.current[i] = el)}
+                              name={`todos[${i}].title`}
+                              defaultValue={todos[i]?.title}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault()
+                                  const newTodos = [...todos]
+                                  newTodos.splice(i + 1, 0, { id: new Date().getMilliseconds(), title: "", isComplete: false })
+                                  setTodos(newTodos)
+                                  requestAnimationFrame(() => {
+                                    const nextInput = itemsRef.current?.[i + 1]
+                                    nextInput?.focus()
+                                  })
+                                }
+                                if (e.key === "ArrowUp") {
+                                  const nextInput = itemsRef.current?.[i - 1]
+                                  nextInput?.select()
+                                }
+                                if (e.key === "ArrowDown") {
+                                  const nextInput = itemsRef.current?.[i + 1]
+                                  nextInput?.select()
+                                }
+                                if (e.key === "Backspace" && !e.currentTarget.value) {
+                                  e.preventDefault()
+                                  setTodos((c) => c.filter((t) => t.id !== todo.id))
+                                  requestAnimationFrame(() => {
+                                    const nextInput = itemsRef.current?.[i - 1]
+                                    nextInput?.focus()
+                                  })
+                                }
+                              }}
+                            />
+
+                            <IconButton
+                              variant="ghost"
+                              icon={<BiTrash />}
+                              aria-label="remove todo"
+                              onClick={() => setTodos((t) => t.filter((t) => t.id !== todo.id))}
+                            />
+                          </div>
+                        ))}
+                        <IconButton
+                          icon={<BiPlus />}
+                          aria-label="add todo"
+                          onClick={() =>
+                            setTodos((c) => [...c, { id: new Date().getMilliseconds(), title: "", isComplete: false }])
+                          }
+                        />
+                      </div>
+                    }
                   />
 
                   <FormError error={createUpdateFetcher.data?.formError} />

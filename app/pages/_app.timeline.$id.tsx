@@ -10,7 +10,7 @@ import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { getUser, requireUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
-
+// import queryString from "query-string"
 import type { TimelineTask } from "./api+/tasks"
 
 export const loader = async ({ request, params }: LoaderArgs) => {
@@ -29,6 +29,22 @@ export enum TaskActionMethods {
   AddToBacklog = "addToBacklog",
   DuplicateTask = "duplicateTask",
 }
+
+const toFormDataArray = <T extends Record<string, unknown>[]>(formData: FormData, entityName: string) =>
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  [...formData.entries()] // TypeScript is unhappy with this, not sure why. It should work 🤷‍♂️
+    .filter(([key]) => key.startsWith(entityName))
+    .reduce((acc: T, [key, value]) => {
+      const [prefix, name] = key.split(".")
+      const id = Number(prefix.charAt(prefix.lastIndexOf("[") + 1))
+      acc[id] = {
+        ...acc[id],
+        [name]: value,
+      }
+      return acc
+    }, [])
+
 export const action = async ({ request, params }: ActionArgs) => {
   const user = await getUser(request)
   const formData = await request.formData()
@@ -41,6 +57,15 @@ export const action = async ({ request, params }: ActionArgs) => {
   switch (action) {
     case TaskActionMethods.UpdateTask:
       try {
+        // const todos = queryString.parse(somethingInHereFromRequest)
+
+        const todos = (toFormDataArray(formData, "todos") as unknown as { title: string; isComplete?: string }[]).map((t) => ({
+          title: t.title,
+          isComplete: !!t.isComplete,
+        }))
+
+        console.log({ todos })
+
         const updateSchema = z.object({
           name: z.string().optional(),
           date: z.string().optional(),
