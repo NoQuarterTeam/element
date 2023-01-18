@@ -9,7 +9,7 @@ import dayjs from "dayjs"
 import { randomHexColor, safeReadableColor } from "~/lib/color"
 import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { TaskActionMethods } from "~/pages/_app.timeline.$id"
+import { TaskActionMethods, TaskDetail } from "~/pages/_app.timeline.$id"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
 import type { TaskElement } from "~/pages/api+/elements"
 import type { TimelineTask } from "~/pages/api+/tasks"
@@ -30,27 +30,14 @@ type FieldErrors = {
 } & { elementId: string[] }
 
 interface FormProps {
-  task?: TimelineTask
+  task?: TaskDetail
 }
 type CreateUpdateRes = {
-  task?: TimelineTask
+  task?: TaskDetail
   formError?: string
   fieldErrors?: FieldErrors
 }
 export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
-  // const existingTodos = [
-  //   {
-  //     id: 1,
-  //     title: "Todo 1",
-  //     isComplete: false,
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Todo 2",
-  //     isComplete: true,
-  //   },
-  // ]
-
   const [todos, setTodos] = React.useState(task?.todos || [])
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -275,13 +262,17 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                             <Input
                               id={`todo-${todo.id}`}
                               ref={(el) => (itemsRef.current[i] = el)}
-                              name={`todos[${i}].title`}
-                              defaultValue={todos[i]?.title}
+                              name={`todos[${i}].name`}
+                              defaultValue={todos[i]?.name}
                               onKeyDown={(e) => {
                                 if (e.key === "Enter") {
                                   e.preventDefault()
                                   const newTodos = [...todos]
-                                  newTodos.splice(i + 1, 0, { id: new Date().toISOString(), title: "", isComplete: false })
+                                  newTodos.splice(i + 1, 0, {
+                                    id: new Date().getMilliseconds().toString(),
+                                    name: "",
+                                    isComplete: false,
+                                  })
                                   setTodos(newTodos)
                                   requestAnimationFrame(() => {
                                     const nextInput = itemsRef.current?.[i + 1]
@@ -318,7 +309,9 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                         <IconButton
                           icon={<BiPlus />}
                           aria-label="add todo"
-                          onClick={() => setTodos((c) => [...c, { id: new Date().toISOString(), title: "", isComplete: false }])}
+                          onClick={() =>
+                            setTodos((c) => [...c, { id: new Date().getMilliseconds().toString(), name: "", isComplete: false }])
+                          }
                         />
                       </div>
                     }

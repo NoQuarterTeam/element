@@ -49,7 +49,7 @@ model Task {
   creatorId       String    @db.Uuid
   creator         User      @relation(fields: [creatorId], references: [id])
   elementId       String    @db.Uuid
-  element         Element   @relation(fields: [elementId], references: [id], onDelete: Cascade)
+  element         Element   @relation(fields: [elementId], references: [id], onDelete: Cascade)  
 
   @@index([date])
   @@index([elementId])
@@ -57,13 +57,13 @@ model Task {
 }
 
 model Todo {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title String
-  isComplete  Boolean  @default(false)
-  createdAt   DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime @default(now()) @updatedAt @db.Timestamptz(6)
-  taskId      String   @db.Uuid
-  tastk       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  isComplete Boolean  @default(false)
+  taskId     String   @db.Uuid
+  task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
 }
 
 model Element {

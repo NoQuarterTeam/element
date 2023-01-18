@@ -45,6 +45,7 @@ export function Search({ placeholder, name = "search", ...props }: InputProps) {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         {...props}
+        ref={undefined}
         className={cn("px-14", props.className)}
       />
       <div className="center absolute right-2 top-0 h-full">

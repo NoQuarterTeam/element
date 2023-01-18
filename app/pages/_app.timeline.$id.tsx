@@ -1,4 +1,4 @@
-import { type ActionArgs, type LoaderArgs, json, redirect } from "@remix-run/node"
+import { type ActionArgs, type LoaderArgs, json, redirect, SerializeFrom } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
 import { z } from "zod"
@@ -11,16 +11,20 @@ import { badRequest } from "~/lib/remix"
 import { getUser, requireUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 // import queryString from "query-string"
-import type { TimelineTask } from "./api+/tasks"
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireUser(request)
   const id = params.id
   if (!id) redirect("/timeline")
-  const task = await db.task.findUnique({ where: { id }, select: taskSelectFields })
+  const task = await db.task.findUnique({
+    where: { id },
+    select: { ...taskSelectFields, todos: { orderBy: { createdAt: "asc" }, select: { id: true, isComplete: true, name: true } } },
+  })
   if (!task) redirect("/timeline")
   return json(task)
 }
+
+export type TaskDetail = SerializeFrom<typeof loader>
 
 export enum TaskActionMethods {
   UpdateTask = "updateTask",
@@ -30,12 +34,10 @@ export enum TaskActionMethods {
   DuplicateTask = "duplicateTask",
 }
 
-const toFormDataArray = <T extends Record<string, unknown>[]>(formData: FormData, entityName: string) =>
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  [...formData.entries()] // TypeScript is unhappy with this, not sure why. It should work 🤷‍♂️
-    .filter(([key]) => key.startsWith(entityName))
-    .reduce((acc: T, [key, value]) => {
+const toFormDataArray = (formData: FormData, field: string) =>
+  Object.entries(formData)
+    .filter(([key]) => key.startsWith(field))
+    .reduce((acc, [key, value]) => {
       const [prefix, name] = key.split(".")
       const id = Number(prefix.charAt(prefix.lastIndexOf("[") + 1))
       acc[id] = {
@@ -43,7 +45,7 @@ const toFormDataArray = <T extends Record<string, unknown>[]>(formData: FormData
         [name]: value,
       }
       return acc
-    }, [])
+    }, [] as Array<Record<string, string | undefined>>)
 
 export const action = async ({ request, params }: ActionArgs) => {
   const user = await getUser(request)
@@ -59,11 +61,12 @@ export const action = async ({ request, params }: ActionArgs) => {
       try {
         // const todos = queryString.parse(somethingInHereFromRequest)
 
-        const todos = (toFormDataArray(formData, "todos") as unknown as { title: string; isComplete?: string }[]).map((t) => ({
-          title: t.title,
+        const todos = toFormDataArray(formData, "todos").map((t) => ({
+          name: t.name,
           isComplete: !!t.isComplete,
         }))
 
+        console.log({ todos })
         const updateSchema = z.object({
           name: z.string().optional(),
           date: z.string().optional(),
@@ -159,6 +162,6 @@ export const action = async ({ request, params }: ActionArgs) => {
 }
 
 export default function TaskModal() {
-  const task = useLoaderData<TimelineTask>()
+  const task = useLoaderData<typeof loader>()
   return <TaskForm task={task} />
 }
