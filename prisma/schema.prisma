@@ -42,6 +42,7 @@ model Task {
   startTime       String?
   durationHours   Int?
   durationMinutes Int?
+  todos           Todo[]
   order           Int       @default(50)
   createdAt       DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt       DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
@@ -53,6 +54,16 @@ model Task {
   @@index([date])
   @@index([elementId])
   @@index([creatorId])
+}
+
+model Todo {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title String
+  isComplete  Boolean  @default(false)
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  taskId      String   @db.Uuid
+  tastk       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
 }
 
 model Element {

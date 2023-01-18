@@ -38,20 +38,20 @@ type CreateUpdateRes = {
   fieldErrors?: FieldErrors
 }
 export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
-  const existingTodos = [
-    {
-      id: 1,
-      title: "Todo 1",
-      isComplete: false,
-    },
-    {
-      id: 2,
-      title: "Todo 2",
-      isComplete: true,
-    },
-  ]
+  // const existingTodos = [
+  //   {
+  //     id: 1,
+  //     title: "Todo 1",
+  //     isComplete: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Todo 2",
+  //     isComplete: true,
+  //   },
+  // ]
 
-  const [todos, setTodos] = React.useState(existingTodos)
+  const [todos, setTodos] = React.useState(task?.todos || [])
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const day = searchParams.get("day") || undefined
@@ -281,7 +281,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                                 if (e.key === "Enter") {
                                   e.preventDefault()
                                   const newTodos = [...todos]
-                                  newTodos.splice(i + 1, 0, { id: new Date().getMilliseconds(), title: "", isComplete: false })
+                                  newTodos.splice(i + 1, 0, { id: new Date().toISOString(), title: "", isComplete: false })
                                   setTodos(newTodos)
                                   requestAnimationFrame(() => {
                                     const nextInput = itemsRef.current?.[i + 1]
@@ -318,9 +318,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                         <IconButton
                           icon={<BiPlus />}
                           aria-label="add todo"
-                          onClick={() =>
-                            setTodos((c) => [...c, { id: new Date().getMilliseconds(), title: "", isComplete: false }])
-                          }
+                          onClick={() => setTodos((c) => [...c, { id: new Date().toISOString(), title: "", isComplete: false }])}
                         />
                       </div>
                     }

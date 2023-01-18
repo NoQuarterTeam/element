@@ -64,8 +64,6 @@ export const action = async ({ request, params }: ActionArgs) => {
           isComplete: !!t.isComplete,
         }))
 
-        console.log({ todos })
-
         const updateSchema = z.object({
           name: z.string().optional(),
           date: z.string().optional(),
@@ -90,6 +88,10 @@ export const action = async ({ request, params }: ActionArgs) => {
             elementId: data.elementId,
             description: data.description,
             isComplete,
+            todos: {
+              createMany: { data: todos },
+              deleteMany: { taskId: { equals: task.id }, id: { notIn: todos.map((t) => t.id) } },
+            },
           },
         })
         return json({ task: updatedTask })

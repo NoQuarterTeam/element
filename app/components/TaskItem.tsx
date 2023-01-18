@@ -21,6 +21,7 @@ export const taskSelectFields = {
   order: true,
   startTime: true,
   element: { select: { id: true, color: true, name: true } },
+  todos: { select: { id: true, title: true, isComplete: true } },
 } satisfies Prisma.TaskSelect
 
 interface Props {

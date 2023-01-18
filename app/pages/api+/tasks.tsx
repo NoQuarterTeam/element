@@ -51,6 +51,26 @@ export const action = async ({ request }: ActionArgs) => {
   const { createFlash } = await getFlashSession(request)
   const action = formData.get("_action") as TasksActionMethods | undefined
 
+  console.log("formData", formData)
+
+  const toFormDataArray = <T extends Record<string, unknown>[]>(formData: FormData, entityName: string) =>
+    [...formData.entries()] // TypeScript is unhappy with this, not sure why. It should work 🤷‍♂️
+      .filter(([key]) => key.startsWith(entityName))
+      .reduce((acc: T, [key, value]) => {
+        const [prefix, name] = key.split(".")
+        const id = Number(prefix.charAt(prefix.lastIndexOf("[") + 1))
+        acc[id] = {
+          ...acc[id],
+          [name]: value,
+        }
+        return acc
+      }, [])
+
+  const todos = (toFormDataArray(formData, "todos") as unknown as { title: string; isComplete?: string }[]).map((t) => ({
+    title: t.title,
+    isComplete: !!t.isComplete,
+  }))
+
   switch (action) {
     case TasksActionMethods.AddTask:
       try {
@@ -76,6 +96,7 @@ export const action = async ({ request }: ActionArgs) => {
         const isComplete = formData.has("isComplete")
         const newForm = await validateFormData(createSchema, formData)
         if (newForm.fieldErrors) return badRequest(newForm)
+
         const newTask = await db.task.create({
           select: taskSelectFields,
           data: {
@@ -88,6 +109,7 @@ export const action = async ({ request }: ActionArgs) => {
             description: newForm.data.description || null,
             element: { connect: { id: newForm.data.elementId } },
             creator: { connect: { id: user.id } },
+            todos: { createMany: { data: todos } },
           },
         })
         return json({ task: newTask })
@@ -106,7 +128,10 @@ export const action = async ({ request }: ActionArgs) => {
           tasks.map((task) =>
             db.task.update({
               where: { id: task.id },
-              data: { order: task.order, date: dayjs(task.date).startOf("d").add(12, "h").toDate() },
+              data: {
+                order: task.order,
+                date: dayjs(task.date).startOf("d").add(12, "h").toDate(),
+              },
             }),
           ),
         )
