@@ -1,6 +1,5 @@
 import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import { Outlet, useFetcher, useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
 
