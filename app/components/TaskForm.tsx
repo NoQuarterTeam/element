@@ -255,9 +255,9 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     label="Todos"
                     shouldPassProps={false}
                     input={
-                      <div className="w-full">
+                      <div className="stack w-full space-y-2">
                         {todos.map((todo, i) => (
-                          <div key={todo.id} className="flex items-center space-x-1">
+                          <div key={todo.id} className="flex items-center space-x-2">
                             <Checkbox name={`todos[${i}].isComplete`} defaultChecked={todos[i]?.isComplete} />
                             <Input
                               id={`todo-${todo.id}`}
@@ -306,13 +306,21 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                             />
                           </div>
                         ))}
-                        <IconButton
-                          icon={<BiPlus />}
-                          aria-label="add todo"
-                          onClick={() =>
-                            setTodos((c) => [...c, { id: new Date().getMilliseconds().toString(), name: "", isComplete: false }])
-                          }
-                        />
+                        <div className="pt-2">
+                          <Button
+                            variant="ghost"
+                            aria-label="add todo"
+                            leftIcon={<BiPlus />}
+                            onClick={() =>
+                              setTodos((c) => [
+                                ...c,
+                                { id: new Date().getMilliseconds().toString(), name: "", isComplete: false },
+                              ])
+                            }
+                          >
+                            <span className="hidden md:block">Add Todo</span>
+                          </Button>
+                        </div>
                       </div>
                     }
                   />
