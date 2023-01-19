@@ -16,7 +16,7 @@ import { FULL_WEB_URL } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { badRequest } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
-import { cn } from "~/lib/tailwind"
+import { join } from "~/lib/tailwind"
 import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
@@ -164,7 +164,7 @@ export default function Plan() {
               <p className="text-sm">Tasks</p>
               <p className="text-2xl">
                 <span
-                  className={cn(
+                  className={join(
                     (data?.elementCount || 0) >= 5
                       ? "text-red-500"
                       : (data?.elementCount || 0) > 4
@@ -181,7 +181,7 @@ export default function Plan() {
               <p className="text-sm">Elements</p>
               <p className="text-2xl">
                 <span
-                  className={cn(
+                  className={join(
                     (data?.elementCount || 0) >= 5
                       ? "text-red-500"
                       : (data?.elementCount || 0) > 4

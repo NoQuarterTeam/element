@@ -1,7 +1,7 @@
 import type * as React from "react"
 import { type VariantProps, cva } from "class-variance-authority"
 
-import { cn } from "~/lib/tailwind"
+import { merge } from "~/lib/tailwind"
 
 const spinnerStyles = cva("animate-spin text-black dark:text-white", {
   variants: {
@@ -24,7 +24,7 @@ export function Spinner({ size, ...props }: SpinnerProps) {
   return (
     <svg
       {...props}
-      className={cn(spinnerStyles({ size }), props.className)}
+      className={merge(spinnerStyles({ size }), props.className)}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

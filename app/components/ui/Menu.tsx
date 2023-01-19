@@ -1,11 +1,11 @@
 import * as React from "react"
 import { Menu as HMenu, Transition } from "@headlessui/react"
 
-import { cn } from "~/lib/tailwind"
+import { join, merge } from "~/lib/tailwind"
 
 export function Menu(props: { className?: string; children: React.ReactNode }) {
   return (
-    <HMenu as="div" className={cn("relative inline-block text-left", props.className)}>
+    <HMenu as="div" className={merge("relative inline-block text-left", props.className)}>
       {props.children}
     </HMenu>
   )
@@ -28,7 +28,7 @@ export function MenuList(props: { className?: string; children: React.ReactNode 
       leaveTo="transform opacity-0 scale-95"
     >
       <HMenu.Items
-        className={cn(
+        className={merge(
           "absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-75 rounded-xs bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:divide-gray-800 dark:bg-black",
           props.className,
         )}
@@ -49,7 +49,7 @@ export function MenuItem(props: {
       {({ active }) =>
         props.children({
           isActive: active,
-          className: cn(
+          className: join(
             active && "bg-gray-75 dark:bg-gray-800",
             "hstack w-full px-4 py-2 text-left text-sm text-gray-900 dark:text-gray-100",
           ),

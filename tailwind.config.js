@@ -25,6 +25,7 @@ module.exports = {
   theme: {
     extend: {
       spacing: {
+        full: "100%",
         nav: "72px",
         header: "124px",
         headerHabit: "143px",

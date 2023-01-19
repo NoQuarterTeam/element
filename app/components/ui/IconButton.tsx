@@ -1,7 +1,7 @@
 import * as React from "react"
 import { type VariantProps, cva } from "class-variance-authority"
 
-import { cn } from "~/lib/tailwind"
+import { merge } from "~/lib/tailwind"
 
 import { type ButtonProps, buttonStyles } from "./Button"
 import { Spinner } from "./Spinner"
@@ -33,7 +33,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(f
       type="button"
       disabled={disabled || isLoading}
       {...props}
-      className={cn(buttonStyles({ colorScheme, rounded, disabled, variant }), iconbuttonStyles({ size }), props.className)}
+      className={merge(buttonStyles({ colorScheme, rounded, disabled, variant }), iconbuttonStyles({ size }), props.className)}
     >
       <div className="center h-full w-full">{isLoading ? <Spinner /> : icon}</div>
     </button>

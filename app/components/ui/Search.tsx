@@ -4,7 +4,7 @@ import { CgSearch } from "react-icons/cg"
 import { useSearchParams } from "@remix-run/react"
 import queryString from "query-string"
 
-import { cn } from "~/lib/tailwind"
+import { merge } from "~/lib/tailwind"
 
 import { IconButton } from "./IconButton"
 import { type InputProps, Input } from "./Inputs"
@@ -46,7 +46,7 @@ export function Search({ placeholder, name = "search", ...props }: InputProps) {
         onChange={(e) => setSearch(e.target.value)}
         {...props}
         ref={undefined}
-        className={cn("px-14", props.className)}
+        className={merge("px-14", props.className)}
       />
       <div className="center absolute right-2 top-0 h-full">
         {!!isPendingSearch && <IconButton onClick={clearSearch} aria-label="clear search" variant="ghost" icon={<BiX />} />}

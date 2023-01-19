@@ -4,7 +4,7 @@ import { Prisma } from "@prisma/client"
 import { Link as RLink, useSearchParams } from "@remix-run/react"
 import queryString from "query-string"
 
-import { cn } from "~/lib/tailwind"
+import { join, merge } from "~/lib/tailwind"
 
 import { Button } from "./Button"
 import { NoData } from "./NoData"
@@ -44,7 +44,10 @@ export function Table<T extends DataType>(props: Props<T>) {
       <div className="flex px-4 py-3">
         {columns.map(({ sortKey, header, row, hasNoLink, ...column }: ColumnProps<T>, i: number) => (
           <div
-            className={cn("flex flex-1 items-center overflow-hidden", i === columns.length - 1 ? "justify-end" : "justify-start")}
+            className={join(
+              "flex flex-1 items-center overflow-hidden",
+              i === columns.length - 1 ? "justify-end" : "justify-start",
+            )}
             key={i.toString()}
             {...column}
           >
@@ -81,7 +84,7 @@ export function Table<T extends DataType>(props: Props<T>) {
           {data.map((item) => (
             <div
               key={item.id}
-              className={cn(
+              className={join(
                 "flex w-full items-center border-t border-gray-700 px-4",
                 !!props.getRowHref && "cursor-pointer hover:bg-gray-900",
               )}
@@ -122,7 +125,7 @@ function Header({
   children: React.ReactNode
   onClick?: () => void
 }) {
-  const sharedClassName = cn(
+  const sharedClassName = join(
     "flex items-center min-w-auto text-sm h-auto font-700",
     className,
     isButton ? "cursor-pointer" : "cursor-default",
@@ -150,13 +153,13 @@ export function Column<T extends DataType>(_: ColumnProps<T>) {
 }
 
 function _ColumnField<T>({ isLast, hasNoLink, href, className, ...props }: ColumnProps<T> & { href?: string; isLast?: boolean }) {
-  const sharedClassName = cn(
+  const sharedClassName = merge(
     "flex flex-1 items-center h-12 overflow-x-auto text-sm",
     isLast ? "justify-end" : "justify-start",
     className,
   )
   return !hasNoLink && !!href ? (
-    <RLink className={cn(sharedClassName, "hover:no-underline")} to={href}>
+    <RLink className={merge(sharedClassName, "hover:no-underline")} to={href}>
       {typeof props.children === "string" || typeof props.children === "number" ? (
         <p className="truncate">{props.children}</p>
       ) : (

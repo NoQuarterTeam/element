@@ -15,7 +15,7 @@ import { isValidHex } from "~/lib/color"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { cn } from "~/lib/tailwind"
+import { join } from "~/lib/tailwind"
 import type { SidebarElement } from "~/pages/_app.timeline.elements"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
 import { ElementActionMethods } from "~/pages/api+/elements.$id"
@@ -95,7 +95,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
       <div className="flex items-center justify-between pr-2">
         <div className="relative flex flex-1 items-center justify-between">
           <button
-            className={cn(
+            className={join(
               "flex-1 truncate rounded-r-full border-l-4 py-1 pr-14 text-left text-sm outline-none",
               element.archivedAt ? "opacity-50" : "opacity-100",
               isSelected
@@ -109,7 +109,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
           </button>
           {element.children.filter((e) => !e.archivedAt).length > 0 && (
             <IconButton
-              className={cn("absolute")}
+              className={join("absolute")}
               style={{ left: props.depth === 0 ? "10px" : `${10 + props.depth * 15}px` }}
               rounded="full"
               size="xs"

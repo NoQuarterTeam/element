@@ -1,7 +1,7 @@
 import * as React from "react"
 import * as Popover from "@radix-ui/react-popover"
 
-import { cn } from "~/lib/tailwind"
+import { merge } from "~/lib/tailwind"
 
 export * from "@radix-ui/react-popover"
 
@@ -10,7 +10,7 @@ export const Content = React.forwardRef<HTMLDivElement, Popover.PopoverContentPr
     <Popover.Content
       ref={ref}
       {...props}
-      className={cn(
+      className={merge(
         "z-[100] w-80 rounded-sm border border-gray-100 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-700",
         props.className,
       )}
@@ -24,7 +24,7 @@ export const Arrow = React.forwardRef<SVGSVGElement, Popover.PopperArrowProps>(f
     <Popover.Arrow
       ref={ref}
       {...props}
-      className={cn("fill-white text-white  dark:fill-gray-700 dark:text-gray-700", props.className)}
+      className={merge("fill-white text-white  dark:fill-gray-700 dark:text-gray-700", props.className)}
     />
   )
 })

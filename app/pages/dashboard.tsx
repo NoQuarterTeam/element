@@ -8,7 +8,7 @@ import dayjs from "dayjs"
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
 import { getMinutesFromTasks, getTotalTaskDuration } from "~/lib/helpers/duration"
-import { cn } from "~/lib/tailwind"
+import { merge } from "~/lib/tailwind"
 import { getUser } from "~/services/auth/auth.server"
 
 const PieChart = React.lazy(() => import("../components/ElementsChart"))
@@ -207,7 +207,7 @@ function ElementStat({ element, depth }: Props) {
         </div>
       </div>
       {element.children && element.children.length > 0 && (
-        <div className={cn("stack", `pl-${4 * depth}`)}>
+        <div className={merge("stack", `pl-${4 * depth}`)}>
           {element.children?.map((child) => (
             <ElementStat key={child.id} element={child} depth={depth + 1} />
           ))}

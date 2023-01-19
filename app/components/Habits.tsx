@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
 import * as Popover from "~/components/ui/Popover"
-import { cn } from "~/lib/tailwind"
+import { merge } from "~/lib/tailwind"
 import type { TimelineHabit, TimelineHabitEntry, TimelineHabitResponse } from "~/pages/api+/habits"
 import { HabitsActionMethods } from "~/pages/api+/habits"
 import { HabitActionMethods } from "~/pages/api+/habits.$id"
@@ -44,7 +44,7 @@ function _Habits({ habits, day, habitEntries }: Props) {
               .map((habit) => (
                 <div
                   key={habit.id}
-                  className={cn(
+                  className={merge(
                     "rounded-full",
                     dayHabits.length > 8 ? "sq-1.5" : dayHabits.length > 5 ? "sq-2" : "sq-2.5",
                     habitEntries.find((e) => e.habitId === habit.id)
