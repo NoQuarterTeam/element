@@ -2,7 +2,6 @@ import { createCookieSessionStorage } from "@remix-run/node"
 
 import { IS_PRODUCTION } from "~/lib/config"
 import { FLASH_SESSION_SECRET } from "~/lib/config.server"
-import type { Await } from "~/lib/helpers/types"
 
 export const FLASH_COOKIE_KEY = IS_PRODUCTION ? "element_session_flash" : "element_session_dev_flash"
 
@@ -40,5 +39,3 @@ export async function getFlashSession(request: Request) {
     session,
   }
 }
-
-export type FlashSession = Await<typeof getFlashSession>
