@@ -1,7 +1,5 @@
 import { z } from "zod"
 
-import { IS_PRODUCTION } from "./config"
-
 // Only use on the server
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]),
@@ -38,4 +36,4 @@ export const {
 } = envSchema.parse(process.env)
 
 // WEB URL
-export const FULL_WEB_URL = `${IS_PRODUCTION ? "https://" : "http://"}${WEB_URL}`
+export const FULL_WEB_URL = `${APP_ENV !== "development" ? "https://" : "http://"}${WEB_URL}`
