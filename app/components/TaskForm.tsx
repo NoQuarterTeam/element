@@ -310,9 +310,11 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                                 }
                                 if (e.key === "Backspace" && !e.currentTarget.value) {
                                   e.preventDefault()
+                                  // if current input was first select second input, else select prev
+                                  const isFirstInput = i === 0
                                   setTodos((c) => c.filter((t) => t.id !== todo.id))
                                   requestAnimationFrame(() => {
-                                    const nextInput = itemsRef.current?.[i - 1]
+                                    const nextInput = itemsRef.current?.[isFirstInput ? 0 : i - 1]
                                     nextInput?.focus()
                                   })
                                 }
