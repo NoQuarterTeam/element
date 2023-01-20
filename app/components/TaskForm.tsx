@@ -332,9 +332,9 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
 
                         {todos.length === 0 && (
                           <Button
-                            variant="ghost"
+                            variant="outline"
+                            className="w-full"
                             aria-label="add todo"
-                            leftIcon={<BiPlus />}
                             onClick={() => {
                               setTodos((c) => [
                                 ...c,
@@ -346,7 +346,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                               })
                             }}
                           >
-                            <span className="hidden md:block">Add Todo</span>
+                            <BiPlus />
                           </Button>
                         )}
                       </div>
