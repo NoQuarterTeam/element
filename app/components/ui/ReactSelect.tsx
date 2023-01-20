@@ -22,7 +22,7 @@ const classNames: ClassNamesConfig<Option> = {
       "text-md block w-full border px-4 text-black dark:text-white placeholder-gray-500 transition-colors focus:border-primary-500 focus:bg-transparent focus:ring-transparent rounded-xs focus:ring-primary-500 ring-0 focus:ring-1",
       state.isFocused
         ? "border-primary-500 hover:border-primary-500 ring-primary-500"
-        : "bg-transparent border-black/30 hover:border-black/60 dark:border-white/5 dark:hover:border-white/10",
+        : "bg-transparent border-gray-100 hover:border-gray-200 dark:border-white/10 dark:hover:border-white/20",
     ),
   menu: () => "left-0 shadow-lg w-full react-menu",
   control: () => join("w-full pt-0 react-control"),

@@ -9,7 +9,7 @@ export const inputStyles = cva(
     variants: {
       variant: {
         solid: "border-transparent bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10",
-        outline: "bg-transparent border-black/30 hover:border-black/60 dark:border-white/5 dark:hover:border-white/10",
+        outline: "bg-transparent border-black/10 hover:border-black/40 dark:border-white/10 dark:hover:border-white/20",
         ghost: "border-transparent bg-transparent hover:border-black/10 dark:hover:border-white/10",
       },
       size: {
