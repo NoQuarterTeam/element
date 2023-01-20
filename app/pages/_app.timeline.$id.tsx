@@ -49,13 +49,6 @@ export const action = async ({ request, params }: ActionArgs) => {
   switch (action) {
     case TaskActionMethods.UpdateTask:
       try {
-        // const todos = queryString.parse(somethingInHereFromRequest)
-
-        const todos = getFormDataArray(formData, "todos").map((t) => ({
-          name: t.name as string,
-          isComplete: !!t.isComplete,
-        }))
-
         const updateSchema = z.object({
           name: z.string().optional(),
           date: z.string().optional(),
@@ -67,8 +60,11 @@ export const action = async ({ request, params }: ActionArgs) => {
         })
         const isComplete = formData.has("isComplete") && formData.get("isComplete") !== "false"
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
-
         if (fieldErrors) return badRequest({ fieldErrors, data })
+        const todos = getFormDataArray(formData, "todos").map((t) => ({
+          name: t.name as string,
+          isComplete: !!t.isComplete,
+        }))
         const updatedTask = await db.task.update({
           select: taskSelectFields,
           where: { id: taskId },

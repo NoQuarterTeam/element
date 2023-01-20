@@ -51,11 +51,6 @@ export const action = async ({ request }: ActionArgs) => {
   const { createFlash } = await getFlashSession(request)
   const action = formData.get("_action") as TasksActionMethods | undefined
 
-  const todos = getFormDataArray(formData, "todos").map((t) => ({
-    name: t.name as string,
-    isComplete: !!t.isComplete,
-  }))
-
   switch (action) {
     case TasksActionMethods.AddTask:
       try {
@@ -81,6 +76,11 @@ export const action = async ({ request }: ActionArgs) => {
         const isComplete = formData.has("isComplete")
         const newForm = await validateFormData(createSchema, formData)
         if (newForm.fieldErrors) return badRequest(newForm)
+
+        const todos = getFormDataArray(formData, "todos").map((t) => ({
+          name: t.name as string,
+          isComplete: !!t.isComplete,
+        }))
 
         const newTask = await db.task.create({
           select: taskSelectFields,
