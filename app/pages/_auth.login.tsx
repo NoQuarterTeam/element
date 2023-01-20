@@ -37,9 +37,6 @@ export const action = async ({ request }: ActionArgs) => {
 
   const { setUser } = await getUserSession(request)
   const headers = new Headers([["Set-Cookie", await setUser(user.id)]])
-
-  console.log(redirectTo)
-
   return redirect(redirectTo || "/timeline", { headers })
 }
 

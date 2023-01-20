@@ -76,42 +76,40 @@ function _TaskItem({ task }: Props) {
             )}
           >
             <div className={join(task.isComplete ? "mb-4" : "mb-2")}>
-              <div className="flex items-start justify-between">
-                <div>
-                  <p
-                    className={join(
-                      "text-xxs",
-                      task.isComplete ? "line-clamp-1" : "line-clamp-2 group-hover/task-item:line-clamp-6",
-                    )}
-                  >
-                    {task.name}
-                  </p>
-                  {!task.isComplete && task.todos.length > 0 && (
-                    <svg className="-rotate-90" width="12" height="12">
-                      <circle
-                        strokeWidth="2"
-                        className="stroke-gray-75 dark:stroke-white/20"
-                        fill="transparent"
-                        r={TODO_RADIUS}
-                        cx="6"
-                        cy="6"
-                      />
-                      <circle
-                        style={{ stroke: task.element.color }}
-                        strokeWidth="2"
-                        fill="transparent"
-                        strokeDasharray={`${TODO_RADIUS * 2 * Math.PI} ${TODO_RADIUS * 2 * Math.PI}`}
-                        strokeDashoffset={
-                          TODO_RADIUS * 2 * Math.PI -
-                          (task.todos.filter((t) => t.isComplete).length / task.todos.length) * TODO_RADIUS * 2 * Math.PI
-                        }
-                        r={TODO_RADIUS}
-                        cx="6"
-                        cy="6"
-                      />
-                    </svg>
+              <div>
+                <p
+                  className={join(
+                    "mb-1 text-xxs",
+                    task.isComplete ? "line-clamp-1" : "line-clamp-2 group-hover/task-item:line-clamp-6",
                   )}
-                </div>
+                >
+                  {task.name}
+                </p>
+                {!task.isComplete && task.todos.length > 0 && (
+                  <svg className="-rotate-90" width="12" height="12">
+                    <circle
+                      strokeWidth="2"
+                      className="stroke-gray-75 dark:stroke-white/20"
+                      fill="transparent"
+                      r={TODO_RADIUS}
+                      cx="6"
+                      cy="6"
+                    />
+                    <circle
+                      style={{ stroke: task.element.color }}
+                      strokeWidth="2"
+                      fill="transparent"
+                      strokeDasharray={`${TODO_RADIUS * 2 * Math.PI} ${TODO_RADIUS * 2 * Math.PI}`}
+                      strokeDashoffset={
+                        TODO_RADIUS * 2 * Math.PI -
+                        (task.todos.filter((t) => t.isComplete).length / task.todos.length) * TODO_RADIUS * 2 * Math.PI
+                      }
+                      r={TODO_RADIUS}
+                      cx="6"
+                      cy="6"
+                    />
+                  </svg>
+                )}
 
                 {!task.isComplete && task.description && (
                   <div className="absolute top-1 right-1 opacity-70 circle-1.5" style={{ background: task.element.color }} />
