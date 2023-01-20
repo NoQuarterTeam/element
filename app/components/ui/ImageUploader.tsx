@@ -3,7 +3,7 @@ import type { DropzoneOptions, FileRejection } from "react-dropzone"
 import { useDropzone } from "react-dropzone"
 
 import { useS3Upload } from "~/lib/hooks/useS3"
-import { cn } from "~/lib/tailwind"
+import { merge } from "~/lib/tailwind"
 
 import { BrandButton } from "./BrandButton"
 import { Button } from "./Button"
@@ -81,7 +81,7 @@ export function ImageUploader({ children, path, onSubmit, dropzoneOptions, class
 
   return (
     <>
-      <div className={cn(inputStyles(), className)} {...getRootProps()}>
+      <div className={merge(inputStyles(), className)} {...getRootProps()}>
         <input {...getInputProps()} />
         {children}
       </div>

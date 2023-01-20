@@ -2,7 +2,7 @@ import * as React from "react"
 import type { VariantProps } from "class-variance-authority"
 import { cva } from "class-variance-authority"
 
-import { cn } from "~/lib/tailwind"
+import { join, merge } from "~/lib/tailwind"
 
 import { Spinner } from "./Spinner"
 
@@ -126,7 +126,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         type="button"
         disabled={isLoading || !!disabled}
         {...props}
-        className={cn(
+        className={merge(
           buttonStyles({
             size,
             rounded,
@@ -138,7 +138,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
           props.className,
         )}
       >
-        <div className={cn("center", isLoading && "opacity-0")} aria-hidden={isLoading}>
+        <div className={join("center", isLoading && "opacity-0")} aria-hidden={isLoading}>
           {leftIcon && <span className="mr-0 md:mr-1">{leftIcon}</span>}
           {props.children}
         </div>

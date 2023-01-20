@@ -35,14 +35,14 @@ export enum TaskActionMethods {
 }
 
 const toFormDataArray = (formData: FormData, field: string) =>
-  Object.entries(formData)
+  [...formData.entries()]
     .filter(([key]) => key.startsWith(field))
     .reduce((acc, [key, value]) => {
       const [prefix, name] = key.split(".")
       const id = Number(prefix.charAt(prefix.lastIndexOf("[") + 1))
       acc[id] = {
         ...acc[id],
-        [name]: value,
+        [name]: value as string | undefined,
       }
       return acc
     }, [] as Array<Record<string, string | undefined>>)
@@ -50,7 +50,6 @@ const toFormDataArray = (formData: FormData, field: string) =>
 export const action = async ({ request, params }: ActionArgs) => {
   const user = await getUser(request)
   const formData = await request.formData()
-  console.log("formData", formData)
   const action = formData.get("_action") as TaskActionMethods | undefined
   const taskId = params.id as string | undefined
   if (!taskId) return badRequest("Task ID is required")
@@ -65,6 +64,11 @@ export const action = async ({ request, params }: ActionArgs) => {
       try {
         // const todos = queryString.parse(somethingInHereFromRequest)
 
+        const todos = toFormDataArray(formData, "todos").map((t) => ({
+          name: t.name as string,
+          isComplete: !!t.isComplete,
+        }))
+
         const updateSchema = z.object({
           name: z.string().optional(),
           date: z.string().optional(),
@@ -76,11 +80,7 @@ export const action = async ({ request, params }: ActionArgs) => {
         })
         const isComplete = formData.has("isComplete") && formData.get("isComplete") !== "false"
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
-        const todos = toFormDataArray(formData, "todos").map((t) => ({
-          name: t.name as string,
-          isComplete: !!t.isComplete,
-        }))
-        console.log({ todos })
+
         if (fieldErrors) return badRequest({ fieldErrors, data })
         const updatedTask = await db.task.update({
           select: taskSelectFields,

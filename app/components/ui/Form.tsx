@@ -4,7 +4,7 @@ import { Form as RemixForm, useActionData, useTransition } from "@remix-run/reac
 
 import type { ActionData } from "~/lib/form"
 import { createImageUrl } from "~/lib/s3"
-import { cn } from "~/lib/tailwind"
+import { merge } from "~/lib/tailwind"
 
 import { BrandButton } from "./BrandButton"
 import { type ButtonProps } from "./Button"
@@ -30,7 +30,7 @@ export function FormFieldLabel(
     <label
       htmlFor={props.name}
       {...props}
-      className={cn("flex text-sm font-medium text-gray-900 dark:text-gray-50", props.className)}
+      className={merge("flex text-sm font-medium text-gray-900 dark:text-gray-50", props.className)}
     >
       {props.children}
       {props.required && <span className="text-red-500">*</span>}
@@ -39,7 +39,7 @@ export function FormFieldLabel(
 }
 export function FormFieldError(props: React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>) {
   return (
-    <p {...props} className={cn("text-sm text-red-400", props.className)}>
+    <p {...props} className={merge("text-sm text-red-400", props.className)}>
       {props.children}
     </p>
   )
@@ -60,7 +60,7 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(func
 ) {
   const form = useActionData<ActionData<any>>()
   const errors = form?.fieldErrors?.[props.name]
-  const className = cn(error || (errors?.length && "border-red-500 focus:border-red-500"), props.className)
+  const className = merge(error || (errors?.length && "border-red-500 focus:border-red-500"), props.className)
   const sharedProps = {
     "aria-invalid": error || errors?.length ? true : undefined,
     "aria-errormessage": props.name + "-error",
@@ -97,7 +97,7 @@ export const InlineFormField = React.forwardRef<HTMLInputElement, FormFieldProps
 ) {
   const form = useActionData<ActionData<any>>()
   const errors = form?.fieldErrors?.[props.name]
-  const className = cn(error || (errors?.length && "border-red-500 focus:border-red-500"), props.className)
+  const className = merge(error || (errors?.length && "border-red-500 focus:border-red-500"), props.className)
   const sharedProps = shouldPassProps
     ? {
         "aria-invalid": error || errors?.length ? true : undefined,
@@ -156,8 +156,12 @@ export function ImageField(props: ImageFieldProps) {
           {props.label}
         </FormFieldLabel>
       )}
-      <div className={cn("h-48 w-full cursor-pointer object-cover hover:opacity-80", props.className)}>
-        <ImageUploader onSubmit={setImage} path={props.path}>
+      <div>
+        <ImageUploader
+          onSubmit={setImage}
+          path={props.path}
+          className={merge("h-48 w-full cursor-pointer object-cover hover:opacity-80", props.className)}
+        >
           {image ? (
             <img src={createImageUrl(image)} className="h-full w-full" alt="preview" />
           ) : (

@@ -1,7 +1,7 @@
 import * as React from "react"
 import { type VariantProps, cva } from "class-variance-authority"
 
-import { cn } from "~/lib/tailwind"
+import { merge } from "~/lib/tailwind"
 
 export const inputStyles = cva(
   "text-md block w-full border text-black dark:text-white placeholder-gray-500 transition-colors focus:border-primary-500 focus:bg-transparent focus:ring-transparent rounded-xs focus:ring-primary-500 ring-0 focus:ring-2",
@@ -57,7 +57,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function _In
       ref={ref}
       id={props.name}
       {...props}
-      className={cn(inputStyles({ variant, size }), inputSizeStyles({ size }), props.className)}
+      className={merge(inputStyles({ variant, size }), inputSizeStyles({ size }), props.className)}
     />
   )
 })
@@ -68,7 +68,7 @@ export interface TextareaProps
   name?: string
 }
 export function Textarea({ variant, size, ...props }: TextareaProps) {
-  return <textarea id={props.name} {...props} className={cn(inputStyles({ variant, size }), props.className)} />
+  return <textarea id={props.name} {...props} className={merge(inputStyles({ variant, size }), props.className)} />
 }
 
 export interface SelectProps
@@ -79,7 +79,11 @@ export interface SelectProps
 }
 export function Select({ variant, size, ...props }: SelectProps) {
   return (
-    <select id={props.name} {...props} className={cn(inputStyles({ variant, size }), inputSizeStyles({ size }), props.className)}>
+    <select
+      id={props.name}
+      {...props}
+      className={merge(inputStyles({ variant, size }), inputSizeStyles({ size }), props.className)}
+    >
       {props.children}
     </select>
   )
@@ -90,7 +94,7 @@ export function Checkbox(props: React.DetailedHTMLProps<React.InputHTMLAttribute
     <input
       type="checkbox"
       {...props}
-      className={cn(
+      className={merge(
         "cursor-pointer border-none bg-black/10 text-primary-500 outline-none transition-all checked:bg-primary-500 hover:bg-black/20 hover:text-primary-600 focus:ring-primary-300 dark:border-none dark:bg-white/20 dark:checked:bg-primary-500 dark:hover:bg-white/30 dark:hover:checked:bg-primary-600 dark:focus:ring-primary-300 ",
         props.className,
       )}

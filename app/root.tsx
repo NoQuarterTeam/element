@@ -5,7 +5,7 @@ import { json } from "@remix-run/node"
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
-import { cn } from "~/lib/tailwind"
+import { join } from "~/lib/tailwind"
 import appStyles from "~/styles/app.css"
 import generatedStyles from "~/styles/tailwind.css"
 import toastStyles from "~/styles/toast.css"
@@ -109,7 +109,7 @@ interface DocumentProps {
 
 function Document({ theme, children }: DocumentProps) {
   return (
-    <html lang="en" className={cn(theme)}>
+    <html lang="en" className={join(theme)}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="user-scalable=no, initial-scale=1, width=device-width" />

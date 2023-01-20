@@ -2,7 +2,7 @@ import * as React from "react"
 import * as RAvatar from "@radix-ui/react-avatar"
 import { type VariantProps, cva } from "class-variance-authority"
 
-import { cn } from "~/lib/tailwind"
+import { merge } from "~/lib/tailwind"
 
 export const avatarStyles = cva("center rounded-full capitalize", {
   variants: {
@@ -31,7 +31,7 @@ export function Avatar({ size, src, name, ...props }: Props) {
     .map((n) => n[0])
     .join("")
   return (
-    <RAvatar.Root className={cn(avatarStyles({ size }), props.className)}>
+    <RAvatar.Root className={merge(avatarStyles({ size }), props.className)}>
       <RAvatar.Image className="h-full w-full rounded-[inherit] object-cover" src={src || undefined} alt="avatar" />
       <RAvatar.Fallback
         className="center h-full w-full rounded-[inherit] bg-primary-700 object-cover text-xs font-semibold text-white"

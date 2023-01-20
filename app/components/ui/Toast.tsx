@@ -2,7 +2,7 @@ import * as React from "react"
 import * as ToastPrimitive from "@radix-ui/react-toast"
 import { ToastProvider, ToastViewport } from "@radix-ui/react-toast"
 
-import { cn } from "~/lib/tailwind"
+import { join } from "~/lib/tailwind"
 
 import { CloseButton } from "./CloseButton"
 
@@ -28,7 +28,7 @@ export function Toaster(props: { children: React.ReactNode }) {
           <ToastPrimitive.Root
             key={toast.id}
             onOpenChange={(open) => (open ? undefined : setToasts((toasts) => toasts.filter((t) => t.id !== toast.id)))}
-            className={cn(
+            className={join(
               "radix-state-open:animate-toast-slide-in-right",
               "radix-state-closed:animate-toast-hide",
               "radix-swipe-direction-right:radix-swipe-end:animate-toast-swipe-out-x",

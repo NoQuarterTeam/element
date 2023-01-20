@@ -2,7 +2,7 @@ import * as React from "react"
 import { Transition } from "@headlessui/react"
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
 
-import { cn } from "~/lib/tailwind"
+import { join } from "~/lib/tailwind"
 
 import { Button } from "./Button"
 
@@ -44,7 +44,7 @@ export function AlertDialog(props: Props) {
           >
             <AlertDialogPrimitive.Content
               forceMount
-              className={cn(
+              className={join(
                 "max-w-md rounded-xs bg-white p-4 shadow-lg focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75 dark:bg-gray-900 md:w-full",
               )}
             >

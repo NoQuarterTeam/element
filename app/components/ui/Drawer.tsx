@@ -1,9 +1,9 @@
 import * as React from "react"
 import { Dialog, Transition } from "@headlessui/react"
 
-import { cn } from "~/lib/tailwind"
+import { join } from "~/lib/tailwind"
 
-// import { twMerge } from 'tailwind-merge'
+// import { twMerge } from 'tailwind-join'
 import { CloseButton } from "./CloseButton"
 
 export function useDrawer({ defaultIsOpen = false }: { defaultIsOpen?: boolean } | undefined = {}) {
@@ -55,7 +55,7 @@ export function Drawer({ isOpen, size = "md", onClose, ...props }: DrawerProps) 
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel
-                  className={cn(
+                  className={join(
                     "pointer-events-auto relative w-screen overflow-hidden bg-white shadow-xl transition-all dark:bg-gray-700",
                     size === "sm" && "max-w-sm",
                     size === "md" && "max-w-md",

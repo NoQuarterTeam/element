@@ -7,7 +7,7 @@ import { Modal } from "~/components/ui/Modal"
 import { Spinner } from "~/components/ui/Spinner"
 import { transformImage } from "~/lib/helpers/image"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
-import { cn } from "~/lib/tailwind"
+import { join } from "~/lib/tailwind"
 import { useMe } from "~/pages/_app"
 
 export default function Profile() {
@@ -74,12 +74,12 @@ function TabLink({ children, icon, to }: { to: string; children: string; icon: R
     <NavLink to={to} end={to === "."} className="outline-none" prefetch="render">
       {({ isActive }) => (
         <span
-          className={cn(
+          className={join(
             "flex h-10 items-center justify-center py-1 px-2 font-normal md:justify-start md:px-4",
             isActive ? "bg-gray-75 dark:bg-gray-700" : "hover:bg-gray-75 dark:hover:bg-gray-700",
           )}
         >
-          <div className={cn("center w-5 md:flex", isLoading && "hidden")}>{icon}</div>
+          <div className={join("center w-5 md:flex", isLoading && "hidden")}>{icon}</div>
           <span className="ml-2 hidden text-sm md:block">{children}</span>
           {isLoading && <Spinner className="ml-0 md:ml-2" size="xs" />}
         </span>

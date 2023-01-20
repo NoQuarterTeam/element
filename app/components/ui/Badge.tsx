@@ -1,7 +1,7 @@
 import type * as React from "react"
 import { type VariantProps, cva } from "class-variance-authority"
 
-import { cn } from "~/lib/tailwind"
+import { merge } from "~/lib/tailwind"
 
 export const badgeProps = cva("rounded-xs font-semibold uppercase", {
   variants: {
@@ -29,7 +29,7 @@ interface Props extends BadgeStyleProps, React.DetailedHTMLProps<React.HTMLAttri
 
 export function Badge({ size, colorScheme, ...props }: Props) {
   return (
-    <div {...props} className={cn(badgeProps({ size, colorScheme }), props.className)}>
+    <div {...props} className={merge(badgeProps({ size, colorScheme }), props.className)}>
       {props.children}
     </div>
   )

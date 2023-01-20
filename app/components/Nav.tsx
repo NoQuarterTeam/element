@@ -18,7 +18,7 @@ import { useEventListener } from "~/lib/hooks/useEventListener"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
-import { cn } from "~/lib/tailwind"
+import { join } from "~/lib/tailwind"
 import { useMe } from "~/pages/_app"
 
 import { useTheme } from "../lib/theme"
@@ -73,7 +73,7 @@ export function Nav() {
       </div>
 
       <div
-        className={cn(
+        className={join(
           "fixed top-0 bottom-0 right-0 flex flex-col items-center justify-between overflow-hidden border-l border-gray-100 bg-white pb-6 pt-4 transition-[width] duration-100 dark:border-gray-900 dark:bg-gray-800",
           navProps.isOpen ? "w-16" : "w-0",
         )}
