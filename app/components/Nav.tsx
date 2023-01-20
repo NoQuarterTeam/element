@@ -14,6 +14,7 @@ import {
 import { Role } from "@prisma/client"
 import { useFetcher, useNavigate, useSubmit } from "@remix-run/react"
 
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { useEventListener } from "~/lib/hooks/useEventListener"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
@@ -25,7 +26,6 @@ import { useTheme } from "../lib/theme"
 import { ShortcutsInfo } from "./ShortcutsInfo"
 import { IconButton } from "./ui/IconButton"
 import { Modal } from "./ui/Modal"
-import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { Tooltip } from "./ui/Tooltip"
 
 export function Nav() {

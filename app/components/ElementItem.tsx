@@ -12,6 +12,7 @@ import { useFetcher, useTransition } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
 
 import { isValidHex } from "~/lib/color"
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
@@ -28,7 +29,6 @@ import { IconButton } from "./ui/IconButton"
 import { Menu, MenuButton, MenuItem, MenuList } from "./ui/Menu"
 import { Modal } from "./ui/Modal"
 import { useToast } from "./ui/Toast"
-import { useDisclosure } from "~/lib/hooks/useDisclosure"
 
 const MAX_DEPTH = 2
 

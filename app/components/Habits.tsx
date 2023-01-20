@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
 import * as Popover from "~/components/ui/Popover"
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { merge } from "~/lib/tailwind"
 import type { TimelineHabit, TimelineHabitEntry, TimelineHabitResponse } from "~/pages/api+/habits"
 import { HabitsActionMethods } from "~/pages/api+/habits"
@@ -16,7 +17,6 @@ import { FormButton, FormError, FormField } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
 import { Checkbox } from "./ui/Inputs"
 import { Tooltip } from "./ui/Tooltip"
-import { useDisclosure } from "~/lib/hooks/useDisclosure"
 
 interface Props {
   habits: TimelineHabit[]
