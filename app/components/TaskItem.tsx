@@ -21,12 +21,14 @@ export const taskSelectFields = {
   order: true,
   startTime: true,
   element: { select: { id: true, color: true, name: true } },
-  todos: { select: { id: true, name: true, isComplete: true } },
+  todos: { select: { isComplete: true } },
 } satisfies Prisma.TaskSelect
 
 interface Props {
   task: TimelineTask
 }
+
+const TODO_RADIUS = 5
 
 function _TaskItem({ task }: Props) {
   const { removeTask, updateTask, addTask } = useTimelineTasks()
@@ -73,21 +75,46 @@ function _TaskItem({ task }: Props) {
               task.isComplete ? "blur-[1px] group-hover/task-item:blur-0" : "min-h-[60px]",
             )}
           >
-            <div className={join(task.isComplete ? "mb-4" : "mb-3")}>
-              <div className="mb-1 flex justify-between">
-                <p
-                  className={join(
-                    "text-xxs",
-                    task.isComplete ? "line-clamp-1" : "line-clamp-2 group-hover/task-item:line-clamp-6",
+            <div className={join(task.isComplete ? "mb-4" : "mb-2")}>
+              <div className="flex items-start justify-between">
+                <div>
+                  <p
+                    className={join(
+                      "text-xxs",
+                      task.isComplete ? "line-clamp-1" : "line-clamp-2 group-hover/task-item:line-clamp-6",
+                    )}
+                  >
+                    {task.name}
+                  </p>
+                  {!task.isComplete && task.todos.length > 0 && (
+                    <svg className="-rotate-90" width="12" height="12">
+                      <circle
+                        strokeWidth="2"
+                        className="stroke-gray-75 dark:stroke-white/20"
+                        fill="transparent"
+                        r={TODO_RADIUS}
+                        cx="6"
+                        cy="6"
+                      />
+                      <circle
+                        style={{ stroke: task.element.color }}
+                        strokeWidth="2"
+                        fill="transparent"
+                        strokeDasharray={`${TODO_RADIUS * 2 * Math.PI} ${TODO_RADIUS * 2 * Math.PI}`}
+                        strokeDashoffset={
+                          TODO_RADIUS * 2 * Math.PI -
+                          (task.todos.filter((t) => t.isComplete).length / task.todos.length) * TODO_RADIUS * 2 * Math.PI
+                        }
+                        r={TODO_RADIUS}
+                        cx="6"
+                        cy="6"
+                      />
+                    </svg>
                   )}
-                >
-                  {task.name}
-                </p>
+                </div>
+
                 {!task.isComplete && task.description && (
-                  <div
-                    className="h-0 w-0 rounded-sm border-t-8 border-l-8 border-l-transparent"
-                    style={{ borderTopColor: task.element.color }}
-                  />
+                  <div className="absolute top-1 right-1 opacity-70 circle-1.5" style={{ background: task.element.color }} />
                 )}
               </div>
             </div>
