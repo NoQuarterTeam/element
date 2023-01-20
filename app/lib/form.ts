@@ -45,3 +45,16 @@ export function shallowEqual(object1: Record<string, string | number | null>, ob
   }
   return true
 }
+
+export const getFormDataArray = (formData: FormData, field: string) =>
+  [...formData.entries()]
+    .filter(([key]) => key.startsWith(field))
+    .reduce((acc, [key, value]) => {
+      const [prefix, name] = key.split(".")
+      const id = Number(prefix.charAt(prefix.lastIndexOf("[") + 1))
+      acc[id] = {
+        ...acc[id],
+        [name]: value as string | undefined,
+      }
+      return acc
+    }, [] as Array<Record<string, string | undefined>>)

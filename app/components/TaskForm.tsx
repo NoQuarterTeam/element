@@ -22,8 +22,8 @@ import { Checkbox, Input, Textarea } from "./ui/Inputs"
 import { Modal } from "./ui/Modal"
 import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { Singleselect } from "./ui/ReactSelect"
-import { IconButton } from "./ui/IconButton"
-import { BiPlus, BiTrash } from "react-icons/bi"
+import { BiPlus } from "react-icons/bi"
+import { join } from "~/lib/tailwind"
 
 type FieldErrors = {
   [Property in keyof TimelineTask]: string[]
@@ -255,35 +255,56 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     label="Todos"
                     shouldPassProps={false}
                     input={
-                      <div className="stack w-full space-y-2">
+                      <div className="stack w-full space-y-1">
                         {todos.map((todo, i) => (
-                          <div key={todo.id} className="flex items-center space-x-2">
-                            <Checkbox name={`todos[${i}].isComplete`} defaultChecked={todos[i]?.isComplete} />
+                          <div key={todo.id} className="hstack">
+                            <Checkbox className="peer" name={`todos[${i}].isComplete`} defaultChecked={todos[i]?.isComplete} />
                             <Input
                               id={`todo-${todo.id}`}
+                              // variant="ghost"
                               ref={(el) => (itemsRef.current[i] = el)}
                               name={`todos[${i}].name`}
                               defaultValue={todos[i]?.name}
+                              className={join(
+                                "peer-checked:text-black/40 peer-checked:line-through dark:peer-checked:text-white/40",
+                              )}
                               onKeyDown={(e) => {
-                                if (e.key === "Enter") {
+                                if (e.key === "Enter" && e.metaKey) {
                                   e.preventDefault()
-                                  const newTodos = [...todos]
-                                  newTodos.splice(i + 1, 0, {
-                                    id: new Date().getMilliseconds().toString(),
-                                    name: "",
-                                    isComplete: false,
-                                  })
-                                  setTodos(newTodos)
-                                  requestAnimationFrame(() => {
-                                    const nextInput = itemsRef.current?.[i + 1]
-                                    nextInput?.focus()
-                                  })
+                                  // toggle current checkbox
+                                  const checkbox = e.currentTarget.previousSibling as HTMLInputElement
+                                  checkbox.checked = !checkbox.checked
+                                } else if (e.key === "Enter") {
+                                  e.preventDefault()
+                                  // if value is empty remove input
+                                  if (!e.currentTarget.value) {
+                                    // get previous input
+                                    const prevInput = itemsRef.current?.[i - 1]
+                                    prevInput?.select()
+                                    const newTodos = [...todos]
+                                    newTodos.splice(i, 1)
+                                    setTodos(newTodos)
+                                  } else {
+                                    const newTodos = [...todos]
+                                    newTodos.splice(i + 1, 0, {
+                                      id: new Date().getMilliseconds().toString(),
+                                      name: "",
+                                      isComplete: false,
+                                    })
+                                    setTodos(newTodos)
+                                    requestAnimationFrame(() => {
+                                      const nextInput = itemsRef.current?.[i + 1]
+                                      nextInput?.focus()
+                                    })
+                                  }
                                 }
                                 if (e.key === "ArrowUp") {
+                                  e.preventDefault()
                                   const nextInput = itemsRef.current?.[i - 1]
                                   nextInput?.select()
                                 }
                                 if (e.key === "ArrowDown") {
+                                  e.preventDefault()
                                   const nextInput = itemsRef.current?.[i + 1]
                                   nextInput?.select()
                                 }
@@ -298,29 +319,34 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                               }}
                             />
 
-                            <IconButton
+                            {/* <IconButton
                               variant="ghost"
                               icon={<BiTrash />}
                               aria-label="remove todo"
                               onClick={() => setTodos((t) => t.filter((t) => t.id !== todo.id))}
-                            />
+                            /> */}
                           </div>
                         ))}
-                        <div className="pt-2">
+
+                        {todos.length === 0 && (
                           <Button
                             variant="ghost"
                             aria-label="add todo"
                             leftIcon={<BiPlus />}
-                            onClick={() =>
+                            onClick={() => {
                               setTodos((c) => [
                                 ...c,
                                 { id: new Date().getMilliseconds().toString(), name: "", isComplete: false },
                               ])
-                            }
+                              requestAnimationFrame(() => {
+                                const lastInput = itemsRef.current?.[itemsRef.current.length - 1]
+                                lastInput?.focus()
+                              })
+                            }}
                           >
                             <span className="hidden md:block">Add Todo</span>
                           </Button>
-                        </div>
+                        )}
                       </div>
                     }
                   />

@@ -6,7 +6,7 @@ import { z } from "zod"
 import { TaskForm } from "~/components/TaskForm"
 import { taskSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
-import { validateFormData } from "~/lib/form"
+import { getFormDataArray, validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { getUser, requireUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
@@ -34,19 +34,6 @@ export enum TaskActionMethods {
   DuplicateTask = "duplicateTask",
 }
 
-const toFormDataArray = (formData: FormData, field: string) =>
-  [...formData.entries()]
-    .filter(([key]) => key.startsWith(field))
-    .reduce((acc, [key, value]) => {
-      const [prefix, name] = key.split(".")
-      const id = Number(prefix.charAt(prefix.lastIndexOf("[") + 1))
-      acc[id] = {
-        ...acc[id],
-        [name]: value as string | undefined,
-      }
-      return acc
-    }, [] as Array<Record<string, string | undefined>>)
-
 export const action = async ({ request, params }: ActionArgs) => {
   const user = await getUser(request)
   const formData = await request.formData()
@@ -64,7 +51,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       try {
         // const todos = queryString.parse(somethingInHereFromRequest)
 
-        const todos = toFormDataArray(formData, "todos").map((t) => ({
+        const todos = getFormDataArray(formData, "todos").map((t) => ({
           name: t.name as string,
           isComplete: !!t.isComplete,
         }))
@@ -95,7 +82,7 @@ export const action = async ({ request, params }: ActionArgs) => {
             description: data.description,
             isComplete,
             todos: {
-              deleteMany: task.todos.map((todo) => ({ id: { equals: todo.id } })) || [],
+              deleteMany: {},
               createMany: { data: todos },
             },
           },

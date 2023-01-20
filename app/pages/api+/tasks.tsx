@@ -6,7 +6,7 @@ import { z } from "zod"
 
 import { taskSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
-import { validateFormData } from "~/lib/form"
+import { getFormDataArray, validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
@@ -51,23 +51,8 @@ export const action = async ({ request }: ActionArgs) => {
   const { createFlash } = await getFlashSession(request)
   const action = formData.get("_action") as TasksActionMethods | undefined
 
-  console.log("formData", formData)
-
-  const toFormDataArray = <T extends Record<string, unknown>[]>(formData: FormData, entityName: string) =>
-    [...formData.entries()] // TypeScript is unhappy with this, not sure why. It should work 🤷‍♂️
-      .filter(([key]) => key.startsWith(entityName))
-      .reduce((acc: T, [key, value]) => {
-        const [prefix, name] = key.split(".")
-        const id = Number(prefix.charAt(prefix.lastIndexOf("[") + 1))
-        acc[id] = {
-          ...acc[id],
-          [name]: value,
-        }
-        return acc
-      }, [])
-
-  const todos = (toFormDataArray(formData, "todos") as unknown as { name: string; isComplete?: string }[]).map((t) => ({
-    name: t.name,
+  const todos = getFormDataArray(formData, "todos").map((t) => ({
+    name: t.name as string,
     isComplete: !!t.isComplete,
   }))
 
