@@ -2,7 +2,7 @@ import { Kbd } from "./ui/Kbd"
 
 export function ShortcutsInfo() {
   return (
-    <div>
+    <div className="p-4">
       <p className="font-medium">On timeline</p>
       <div className="flex items-center justify-between">
         <p>
