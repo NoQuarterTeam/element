@@ -62,9 +62,9 @@ export default function Admin() {
             <h4 className="text-lg">Users</h4>
             <p className="text-3xl">{users.length}</p>
           </div>
-          <div>
+          <div className="stack">
             {users.map((user) => (
-              <div className="stack text-sm" key={user.id}>
+              <div className="text-sm" key={user.id}>
                 <p>{user.firstName}</p>
                 <p>{user.email}</p>
                 {user.stripeSubscriptionId && <Badge colorScheme="primary">Pro</Badge>}
