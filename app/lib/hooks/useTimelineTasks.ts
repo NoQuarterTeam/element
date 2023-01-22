@@ -4,11 +4,11 @@ import type { TimelineTask } from "~/pages/api+/tasks"
 
 import type { ReorderTask } from "../helpers/timeline"
 import { selectedUrlElements, useSelectedElements } from "./useSelectedElements"
-import { useTimelineDates } from "./useTimelineDates"
+import { useTimelineTaskDates } from "./useTimelineTaskDates"
 
 export function useTimelineTasks() {
   const client = useQueryClient()
-  const { back, forward } = useTimelineDates((s) => ({ back: s.dateBack, forward: s.dateForward }))
+  const { back, forward } = useTimelineTaskDates((s) => ({ back: s.dateBack, forward: s.dateForward }))
   const elementIds = useSelectedElements((s) => s.elementIds)
   return {
     refetch: async () => {

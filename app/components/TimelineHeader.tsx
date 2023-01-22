@@ -8,7 +8,7 @@ import dayjs from "dayjs"
 
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
 import { useFeatures } from "~/lib/hooks/useFeatures"
-import { DATE_BACK } from "~/lib/hooks/useTimelineDates"
+import { DATE_BACK } from "~/lib/hooks/useTimelineTaskDates"
 import { merge } from "~/lib/tailwind"
 import { useMe } from "~/pages/_app"
 import type { TimelineHabitResponse } from "~/pages/api+/habits"

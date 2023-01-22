@@ -9,7 +9,7 @@ import deepEqual from "deep-equal"
 
 import { getTotalTaskDuration } from "~/lib/helpers/duration"
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
-import { useTimelineDates } from "~/lib/hooks/useTimelineDates"
+import { useTimelineTaskDates } from "~/lib/hooks/useTimelineTaskDates"
 import { join } from "~/lib/tailwind"
 import type { TimelineHabitResponse } from "~/pages/api+/habits"
 import type { TimelineTask } from "~/pages/api+/tasks"
@@ -28,7 +28,7 @@ export const DAY_WIDTH = 98
 function _Day(props: Props) {
   const client = useQueryClient()
   const elementIds = useSelectedElements((s) => s.elementIds)
-  const { setDate, dateBack, dateForward } = useTimelineDates()
+  const { setDate, dateBack, dateForward } = useTimelineTaskDates()
   const { ref } = useInView({
     triggerOnce: true,
     onChange: async (inView) => {

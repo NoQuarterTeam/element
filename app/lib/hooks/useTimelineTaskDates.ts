@@ -6,7 +6,7 @@ dayjs.extend(weekday)
 export const DATE_BACK = dayjs().startOf("w").subtract(1, "w").format("YYYY-MM-DD")
 export const DATE_FORWARD = dayjs().endOf("w").add(2, "w").add(1, "d").format("YYYY-MM-DD")
 
-export const useTimelineDates = create<{
+export const useTimelineTaskDates = create<{
   dateBack: string
   dateForward: string
   setDate: (date: string) => void

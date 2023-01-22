@@ -3,7 +3,7 @@ import { create } from "zustand"
 export const SCROLL_DAYS_FORWARD = 60
 export const SCROLL_DAYS_BACK = 30
 
-export const useTimelineScroll = create<{
+export const useTimelineScrollDays = create<{
   daysForward: number
   daysBack: number
   setDaysForward: (number: number) => void

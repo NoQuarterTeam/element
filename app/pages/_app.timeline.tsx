@@ -18,8 +18,8 @@ import { isMobile } from "~/lib/helpers/utils"
 import { useEventListener } from "~/lib/hooks/useEventListener"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
-import { DATE_BACK, DATE_FORWARD, useTimelineDates } from "~/lib/hooks/useTimelineDates"
-import { SCROLL_DAYS_BACK, useTimelineScroll } from "~/lib/hooks/useTimelineScroll"
+import { DATE_BACK, DATE_FORWARD, useTimelineTaskDates } from "~/lib/hooks/useTimelineTaskDates"
+import { SCROLL_DAYS_BACK, useTimelineScrollDays } from "~/lib/hooks/useTimelineScrollDays"
 
 import type { TimelineTask } from "./api+/tasks"
 
@@ -36,8 +36,8 @@ function _Timeline() {
   }, [])
 
   const navigate = useNavigate()
-  const bigDays = useTimelineScroll()
-  const { dateBack, dateForward } = useTimelineDates()
+  const timelineScrollDays = useTimelineScrollDays()
+  const { dateBack, dateForward } = useTimelineTaskDates()
 
   const client = useQueryClient()
 
@@ -91,21 +91,26 @@ function _Timeline() {
       const scrollTo = SCROLL_DAYS_BACK * DAY_WIDTH
       timelineRef.current?.scrollTo(scrollTo, 0)
     },
-    [bigDays.daysBack],
+    [timelineScrollDays.daysBack],
   )
 
   const handleJumpToToday = () => {
-    const scrollTo = isMobile ? bigDays.daysBack * DAY_WIDTH : (bigDays.daysBack - 3) * DAY_WIDTH
+    const scrollTo = isMobile ? timelineScrollDays.daysBack * DAY_WIDTH : (timelineScrollDays.daysBack - 3) * DAY_WIDTH
     timelineRef.current?.scrollTo(scrollTo, 0)
   }
 
   const days = React.useMemo(
-    () => getDays(dayjs().subtract(bigDays.daysBack, "day"), bigDays.daysBack + bigDays.daysForward),
-    [bigDays.daysBack, bigDays.daysForward],
+    () =>
+      getDays(dayjs().subtract(timelineScrollDays.daysBack, "day"), timelineScrollDays.daysBack + timelineScrollDays.daysForward),
+    [timelineScrollDays.daysBack, timelineScrollDays.daysForward],
   )
   const months = React.useMemo(
-    () => getMonths(dayjs().subtract(bigDays.daysBack, "day"), bigDays.daysBack + bigDays.daysForward),
-    [bigDays.daysBack, bigDays.daysForward],
+    () =>
+      getMonths(
+        dayjs().subtract(timelineScrollDays.daysBack, "day"),
+        timelineScrollDays.daysBack + timelineScrollDays.daysForward,
+      ),
+    [timelineScrollDays.daysBack, timelineScrollDays.daysForward],
   )
 
   useEventListener("keydown", (event: KeyboardEvent) => {
@@ -161,7 +166,7 @@ function _Timeline() {
 const TimelineContent = React.memo(_TimelineContent)
 function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
   const dropTasks = React.useMemo(() => props.tasks.map((t) => ({ id: t.id, date: t.date, order: t.order })), [props.tasks])
-  const { daysForward, setDaysForward } = useTimelineScroll()
+  const { daysForward, setDaysForward } = useTimelineScrollDays()
   // const { ref: leftRef } = useInView({
   //   onChange: (inView) => {
   //     if (inView) {
