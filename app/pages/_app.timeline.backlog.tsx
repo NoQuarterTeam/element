@@ -197,7 +197,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
 
   const deleteFetcher = useFetcher()
   return (
-    <div className="rounded-sm border-t border-gray-50 dark:border-gray-600">
+    <div className="rounded-sm border border-gray-50 dark:border-gray-600">
       <div className="flex items-start justify-between p-2">
         <p>{task.name}</p>
 

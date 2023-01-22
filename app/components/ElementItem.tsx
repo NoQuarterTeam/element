@@ -123,7 +123,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
         <div>
           <Menu>
             <MenuButton>
-              <IconButton aria-label="more" variant="ghost" rounded="full" icon={<RiMore2Fill className="sq-4" />} />
+              <IconButton aria-label="more" size="xs" variant="ghost" rounded="full" icon={<RiMore2Fill className="sq-4" />} />
             </MenuButton>
 
             <MenuList>
