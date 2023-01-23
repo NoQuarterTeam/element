@@ -251,6 +251,13 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     error={createUpdateFetcher.data?.fieldErrors?.description?.[0]}
                   />
                   <InlineFormField
+                    name="isImportant"
+                    defaultChecked={task?.isImportant}
+                    label="Is Important"
+                    input={<Checkbox defaultChecked={task?.isImportant} name="isImportant" className="sq-6" />}
+                    error={createUpdateFetcher.data?.fieldErrors?.isImportant?.[0]}
+                  />
+                  <InlineFormField
                     name="todos"
                     label="Todos"
                     shouldPassProps={false}

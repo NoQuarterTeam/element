@@ -10,7 +10,6 @@ import { getFormDataArray, validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { getUser, requireUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
-// import queryString from "query-string"
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireUser(request)
@@ -44,6 +43,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     where: { id: taskId, creatorId: { equals: user.id } },
     include: { todos: { select: { id: true } } },
   })
+
   if (!task) return badRequest("Task not found")
   const { createFlash } = await getFlashSession(request)
   switch (action) {
@@ -59,12 +59,22 @@ export const action = async ({ request, params }: ActionArgs) => {
           elementId: z.string().uuid().optional(),
         })
         const isComplete = formData.has("isComplete") && formData.get("isComplete") !== "false"
+        const isImportant = formData.has("isImportant") && formData.get("isImportant") !== "false"
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
         const todos = getFormDataArray(formData, "todos").map((t) => ({
           name: t.name as string,
           isComplete: !!t.isComplete,
         }))
+
+        const importantTasks = await db.task.findMany({
+          where: {
+            startTime: data.startTime ? { lte: data.startTime } : undefined,
+            isImportant: { equals: true },
+            date: { lte: dayjs(data.date).startOf("d").add(12, "h").toDate() },
+          },
+        })
+
         const updatedTask = await db.task.update({
           select: taskSelectFields,
           where: { id: taskId },
@@ -77,13 +87,22 @@ export const action = async ({ request, params }: ActionArgs) => {
             elementId: data.elementId,
             description: data.description,
             isComplete,
+            isImportant,
             todos: {
               deleteMany: {},
               createMany: { data: todos },
             },
           },
         })
-        return json({ task: updatedTask })
+        const showNotImportantToast = !task.isImportant && isComplete && importantTasks.length > 0
+        return json(
+          { task: updatedTask },
+          {
+            headers: showNotImportantToast
+              ? { "Set-Cookie": await createFlash(FlashType.Info, "You still have some important more tasks to be completed!") }
+              : undefined,
+          },
+        )
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating task") },

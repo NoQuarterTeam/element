@@ -42,6 +42,7 @@ model Task {
   startTime       String?
   durationHours   Int?
   durationMinutes Int?
+  isImportant     Boolean   @default(false)
   todos           Todo[]
   order           Int       @default(50)
   createdAt       DateTime  @default(now()) @db.Timestamptz(6)
@@ -49,7 +50,7 @@ model Task {
   creatorId       String    @db.Uuid
   creator         User      @relation(fields: [creatorId], references: [id])
   elementId       String    @db.Uuid
-  element         Element   @relation(fields: [elementId], references: [id], onDelete: Cascade)  
+  element         Element   @relation(fields: [elementId], references: [id], onDelete: Cascade)
 
   @@index([date])
   @@index([elementId])

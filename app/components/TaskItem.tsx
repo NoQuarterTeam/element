@@ -18,6 +18,7 @@ export const taskSelectFields = {
   durationMinutes: true,
   date: true,
   isComplete: true,
+  isImportant: true,
   order: true,
   startTime: true,
   element: { select: { id: true, color: true, name: true } },
@@ -66,9 +67,13 @@ function _TaskItem({ task }: Props) {
   }
 
   return (
-    <div className="z-[1] w-day p-2 pb-0" tabIndex={-1}>
+    <div className="z-[1] w-day  p-2 pb-0" tabIndex={-1}>
       <Link to={task.id} onClick={handleClick} prefetch="intent" tabIndex={-1} className="">
-        <div className="group/task-item relative w-full cursor-pointer overflow-hidden rounded-md border border-gray-100 bg-white outline-none dark:border-gray-900 dark:bg-gray-700">
+        <div
+          className={`group/task-item relative w-full cursor-pointer overflow-hidden rounded-md border border-gray-100  bg-${
+            task.isImportant && !task.isComplete ? "primary-500" : "white"
+          } outline-none dark:border-gray-900 dark:bg-${task.isImportant && !task.isComplete ? "primary-500" : "gray-700"} `}
+        >
           <div
             className={join(
               "flex h-full w-full flex-col justify-between p-1.5",
