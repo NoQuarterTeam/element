@@ -13,7 +13,7 @@ export function Tooltip(props: Props) {
       <RTooltip.Trigger asChild>{props.children}</RTooltip.Trigger>
       <RTooltip.Portal>
         <RTooltip.Content
-          className="z-50 rounded-sm bg-gray-900 px-1 text-sm text-white shadow-md dark:bg-gray-600"
+          className="z-[1000] rounded-sm bg-gray-900 px-1 text-sm text-white shadow-md dark:bg-gray-600"
           side={props.side}
           sideOffset={5}
         >
