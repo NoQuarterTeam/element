@@ -50,8 +50,8 @@ export function MenuItem(props: {
         props.children({
           isActive: active,
           className: join(
-            active && "bg-gray-75 dark:bg-gray-800",
             "hstack w-full px-4 py-2 text-left text-sm text-gray-900 dark:text-gray-100",
+            active && "bg-gray-75 dark:bg-gray-800",
           ),
         })
       }

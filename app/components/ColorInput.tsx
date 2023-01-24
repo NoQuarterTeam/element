@@ -12,7 +12,9 @@ interface Props {
 export function ColorInput(props: Props) {
   return (
     <div className="grid w-full grid-cols-1 gap-1 md:grid-cols-2">
-      <HexColorPicker color={props.value} onChange={props.setValue} />
+      <div>
+        <HexColorPicker color={props.value} onChange={props.setValue} />
+      </div>
 
       <div className="center justify-start md:justify-center">
         <div className="center h-full w-full max-w-xs rounded-lg p-4 px-6" style={{ background: props.value }}>

@@ -6,6 +6,7 @@ import type { ReorderTask } from "../helpers/timeline"
 import { selectedUrlElements, useSelectedElements } from "./useSelectedElements"
 import { useTimelineTaskDates } from "./useTimelineTaskDates"
 
+export const TASK_CACHE_KEY = "tasks"
 export function useTimelineTasks() {
   const client = useQueryClient()
   const { back, forward } = useTimelineTaskDates((s) => ({ back: s.dateBack, forward: s.dateForward }))
@@ -18,36 +19,36 @@ export function useTimelineTasks() {
           if (!res.ok) throw new Error("Failed to fetch tasks")
           return res.json() as Promise<TimelineTask[]>
         })
-        client.setQueryData(["tasks"], res)
+        client.setQueryData([TASK_CACHE_KEY], res)
       } catch (error) {
         console.log(error)
       }
     },
     setTasks: (tasks: TimelineTask[]) => {
-      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
-      client.setQueryData(["tasks"], [...existingTasks, ...tasks])
+      const existingTasks = client.getQueryData<TimelineTask[]>([TASK_CACHE_KEY]) || []
+      client.setQueryData([TASK_CACHE_KEY], [...existingTasks, ...tasks])
     },
     addTask: (task: TimelineTask) => {
-      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
+      const existingTasks = client.getQueryData<TimelineTask[]>([TASK_CACHE_KEY]) || []
       if (existingTasks.find((t) => t.id === task.id)) return
-      client.setQueryData(["tasks"], [...existingTasks, task])
+      client.setQueryData([TASK_CACHE_KEY], [...existingTasks, task])
     },
     removeTask: (task: TimelineTask) => {
-      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
+      const existingTasks = client.getQueryData<TimelineTask[]>([TASK_CACHE_KEY]) || []
       client.setQueryData(
-        ["tasks"],
+        [TASK_CACHE_KEY],
         existingTasks.filter((t) => t.id !== task.id),
       )
     },
     updateTask: (task: TimelineTask) => {
-      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
+      const existingTasks = client.getQueryData<TimelineTask[]>([TASK_CACHE_KEY]) || []
       client.setQueryData(
-        ["tasks"],
+        [TASK_CACHE_KEY],
         existingTasks.map((t) => (t.id === task.id ? task : t)),
       )
     },
     updateOrder: (orderedTasks: ReorderTask[]) => {
-      const existingTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
+      const existingTasks = client.getQueryData<TimelineTask[]>([TASK_CACHE_KEY]) || []
       const newTasks = existingTasks
         .map((t) => {
           const task = orderedTasks.find((o) => o.id === t.id)
@@ -55,7 +56,7 @@ export function useTimelineTasks() {
           return t
         })
         .sort((a, b) => a.order - b.order)
-      client.setQueryData(["tasks"], newTasks)
+      client.setQueryData([TASK_CACHE_KEY], newTasks)
     },
   }
 }

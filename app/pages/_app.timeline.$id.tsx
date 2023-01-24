@@ -39,10 +39,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   const action = formData.get("_action") as TaskActionMethods | undefined
   const taskId = params.id as string | undefined
   if (!taskId) return badRequest("Task ID is required")
-  const task = await db.task.findFirst({
-    where: { id: taskId, creatorId: { equals: user.id } },
-    include: { todos: { select: { id: true } } },
-  })
+  const task = await db.task.findFirst({ where: { id: taskId, creatorId: { equals: user.id } } })
 
   if (!task) return badRequest("Task not found")
   const { createFlash } = await getFlashSession(request)
@@ -60,20 +57,17 @@ export const action = async ({ request, params }: ActionArgs) => {
         })
         const isComplete = formData.has("isComplete") && formData.get("isComplete") !== "false"
         const isImportant = formData.has("isImportant") && formData.get("isImportant") !== "false"
+        const hasTodos = formData.has("hasTodos")
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
-        if (fieldErrors) return badRequest({ fieldErrors, data })
-        const todos = getFormDataArray(formData, "todos").map((t) => ({
-          name: t.name as string,
-          isComplete: !!t.isComplete,
-        }))
 
-        const importantTasks = await db.task.findMany({
-          where: {
-            startTime: data.startTime ? { lte: data.startTime } : undefined,
-            isImportant: { equals: true },
-            date: { lte: dayjs(data.date).startOf("d").add(12, "h").toDate() },
-          },
-        })
+        if (fieldErrors) return badRequest({ fieldErrors, data })
+
+        const todos =
+          hasTodos &&
+          getFormDataArray(formData, "todos").map((t) => ({
+            name: t.name as string,
+            isComplete: !!t.isComplete,
+          }))
 
         const updatedTask = await db.task.update({
           select: taskSelectFields,
@@ -88,21 +82,10 @@ export const action = async ({ request, params }: ActionArgs) => {
             description: data.description,
             isComplete,
             isImportant,
-            todos: {
-              deleteMany: {},
-              createMany: { data: todos },
-            },
+            todos: todos ? { deleteMany: {}, createMany: { data: todos } } : undefined,
           },
         })
-        const showNotImportantToast = !task.isImportant && isComplete && importantTasks.length > 0
-        return json(
-          { task: updatedTask },
-          {
-            headers: showNotImportantToast
-              ? { "Set-Cookie": await createFlash(FlashType.Info, "You still have some important more tasks to be completed!") }
-              : undefined,
-          },
-        )
+        return json({ task: updatedTask })
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating task") },
@@ -123,11 +106,17 @@ export const action = async ({ request, params }: ActionArgs) => {
       }
     case TaskActionMethods.DuplicateTask:
       try {
-        const taskToDupe = await db.task.findUniqueOrThrow({ where: { id: taskId } })
+        const taskToDupe = await db.task.findUniqueOrThrow({
+          where: { id: taskId },
+          include: { todos: true },
+        })
         const newTask = await db.task.create({
           select: taskSelectFields,
           data: {
             ...taskToDupe,
+            createdAt: undefined,
+            updatedAt: undefined,
+            todos: { createMany: { data: taskToDupe.todos.map((t) => ({ name: t.name, isComplete: t.isComplete })) } },
             id: undefined,
           },
         })

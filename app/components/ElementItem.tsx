@@ -226,7 +226,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
           >
             <div className="stack p-4">
               <InlineFormField
-                error={updateFetcher.data?.fieldErrors?.name?.[0]}
+                errors={updateFetcher.data?.fieldErrors?.name}
                 autoFocus
                 defaultValue={element.name}
                 name="name"
@@ -236,7 +236,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
               <InlineFormField
                 name="color"
                 required
-                error={updateFetcher.data?.fieldErrors?.color?.[0]}
+                errors={updateFetcher.data?.fieldErrors?.color}
                 label="Color"
                 shouldPassProps={false}
                 input={<ColorInput name="color" value={editColor} setValue={setEditColor} />}

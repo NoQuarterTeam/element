@@ -4,7 +4,7 @@ import { type VariantProps, cva } from "class-variance-authority"
 import { merge } from "~/lib/tailwind"
 
 export const inputStyles = cva(
-  "text-md block w-full border text-black dark:text-white placeholder-gray-500 transition-colors focus:border-primary-500 focus:bg-transparent focus:ring-transparent rounded-xs focus:ring-primary-500 ring-0 focus:ring-2",
+  "text-base block w-full border text-black dark:text-white placeholder-gray-500 transition-colors focus:border-primary-500 focus:bg-transparent focus:ring-transparent rounded-xs focus:ring-primary-500 ring-0 focus:ring-2",
   {
     variants: {
       variant: {
@@ -67,8 +67,45 @@ export interface TextareaProps
     InputStyleProps {
   name?: string
 }
+const paddingMap = {
+  xs: 4,
+  sm: 6,
+  md: 8,
+  lg: 12,
+} as const
+
+const lineHeightMap = {
+  xs: 16,
+  sm: 20,
+  md: 24,
+  lg: 28,
+}
 export function Textarea({ variant, size, ...props }: TextareaProps) {
-  return <textarea id={props.name} {...props} className={merge(inputStyles({ variant, size }), props.className)} />
+  const ref = React.useRef<HTMLTextAreaElement>(null)
+  // Dealing with Textarea Height
+  const calcHeight = (value: string) => {
+    if (!ref.current) return
+    const numberOfLineBreaks = (value.match(/\n/g) || []).length
+    const lineHeight = lineHeightMap[size || "sm"]
+    // min-height + lines x line-height + padding + border
+    const newHeight = lineHeight + numberOfLineBreaks * lineHeight + paddingMap[size || "sm"] * 2 + 2
+    ref.current.style.height = `${newHeight}px`
+  }
+
+  React.useEffect(() => {
+    if (!ref.current) return
+    calcHeight(ref.current.value)
+  }, [])
+
+  return (
+    <textarea
+      ref={ref}
+      id={props.name}
+      {...props}
+      onChange={(e) => calcHeight(e.currentTarget.value)}
+      className={merge(inputStyles({ variant, size }), "resize-none", props.className)}
+    />
+  )
 }
 
 export interface SelectProps
@@ -89,13 +126,34 @@ export function Select({ variant, size, ...props }: SelectProps) {
   )
 }
 
-export function Checkbox(props: React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>) {
+export const checkboxSizeStyles = cva("", {
+  variants: {
+    size: {
+      xs: "sq-5",
+      sm: "sq-7",
+      md: "sq-9",
+      lg: "sq-11",
+    },
+  },
+  defaultVariants: {
+    size: "sm",
+  },
+})
+export type CheckboxSizeStyleProps = VariantProps<typeof checkboxSizeStyles>
+
+export function Checkbox({
+  size,
+  ...props
+}: Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "size"> &
+  CheckboxSizeStyleProps) {
   return (
     <input
       type="checkbox"
       {...props}
       className={merge(
-        "cursor-pointer border-none bg-black/10 text-primary-500 outline-none transition-all checked:bg-primary-500 hover:bg-black/20 hover:text-primary-600 focus:ring-primary-300 dark:border-none dark:bg-white/20 dark:checked:bg-primary-500 dark:hover:bg-white/30 dark:hover:checked:bg-primary-600 dark:focus:ring-primary-300 ",
+        inputStyles({ variant: "outline", size }),
+        checkboxSizeStyles({ size }),
+        "cursor-pointer text-primary-500 transition-all checked:bg-primary-500 hover:text-primary-600 focus:ring-primary-300  dark:checked:bg-primary-500  dark:hover:checked:bg-primary-600 dark:focus:ring-primary-300 ",
         props.className,
       )}
     />

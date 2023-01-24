@@ -88,6 +88,7 @@ export const buttonStyles = cva("font-semibold flex center border border-transpa
   ],
   defaultVariants: {
     variant: "solid",
+    rounded: "xs",
     size: "sm",
     colorScheme: "gray",
   },

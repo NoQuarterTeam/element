@@ -22,6 +22,7 @@ import { DATE_BACK, DATE_FORWARD, useTimelineTaskDates } from "~/lib/hooks/useTi
 import { SCROLL_DAYS_BACK, useTimelineScrollDays } from "~/lib/hooks/useTimelineScrollDays"
 
 import type { TimelineTask } from "./api+/tasks"
+import { TASK_CACHE_KEY } from "~/lib/hooks/useTimelineTasks"
 
 dayjs.extend(advancedFormat)
 
@@ -47,7 +48,7 @@ function _Timeline() {
     isLoading,
     isFetching,
   } = useQuery(
-    ["tasks"],
+    [TASK_CACHE_KEY],
     async () => {
       const response = await fetch(`/api/tasks?back=${DATE_BACK}&forward=${DATE_FORWARD}`)
       if (!response.ok) throw new Error("Failed to load tasks")
@@ -60,7 +61,7 @@ function _Timeline() {
     async function UpdateAfterSelectElements() {
       // when changing
       const res = await client.fetchQuery<TimelineTask[]>(
-        ["tasks", { back: dateBack, forward: dateForward, elementIds }],
+        [TASK_CACHE_KEY, { back: dateBack, forward: dateForward, elementIds }],
         async () => {
           const response = await fetch(
             `/api/tasks?back=${dateBack}&forward=${dateForward}${
@@ -71,7 +72,7 @@ function _Timeline() {
           return response.json() as Promise<TimelineTask[]>
         },
       )
-      client.setQueryData(["tasks"], [...res])
+      client.setQueryData([TASK_CACHE_KEY], [...res])
     }
     UpdateAfterSelectElements()
   }, [elementIds])

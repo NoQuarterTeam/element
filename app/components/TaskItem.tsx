@@ -8,6 +8,7 @@ import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { join } from "~/lib/tailwind"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TimelineTask } from "~/pages/api+/tasks"
+import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 
 export const taskSelectFields = {
   id: true,
@@ -37,12 +38,12 @@ function _TaskItem({ task }: Props) {
   const deleteFetcher = useFetcher()
   const toggleCompleteFetcher = useFetcher()
 
-  const dupeFetcher = useFetcher()
-  React.useEffect(() => {
-    if (dupeFetcher.type === "actionReload" && dupeFetcher.data?.task) {
-      addTask(dupeFetcher.data.task)
-    }
-  }, [dupeFetcher.data, dupeFetcher.type, addTask])
+  const dupeFetcher = useFetcherSubmit<{ task: TimelineTask }>({
+    onSuccess: ({ task: dupeTask }) => {
+      if (!dupeTask) return
+      addTask(dupeTask)
+    },
+  })
 
   const handleClick = async (event: React.MouseEvent<any, MouseEvent>) => {
     if (event.metaKey) {
@@ -70,9 +71,12 @@ function _TaskItem({ task }: Props) {
     <div className="z-[1] w-day  p-2 pb-0" tabIndex={-1}>
       <Link to={task.id} onClick={handleClick} prefetch="intent" tabIndex={-1} className="">
         <div
-          className={`group/task-item relative w-full cursor-pointer overflow-hidden rounded-md border border-gray-100  bg-${
-            task.isImportant && !task.isComplete ? "primary-500" : "white"
-          } outline-none dark:border-gray-900 dark:bg-${task.isImportant && !task.isComplete ? "primary-500" : "gray-700"} `}
+          className={join(
+            "group/task-item relative w-full cursor-pointer overflow-hidden rounded-md border border-gray-100 bg-white outline-none dark:border-gray-900 dark:bg-gray-700",
+            task.isImportant &&
+              !task.isComplete &&
+              "border-primary-400 shadow-[0px_0px_0px_1px_#fb923c] shadow-primary-400 dark:border-orange-400",
+          )}
         >
           <div
             className={join(

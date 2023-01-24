@@ -113,7 +113,7 @@ function BacklogTaskForm({ task, ...createModalProps }: { task?: BacklogTask } &
             required
             label="Element"
             name="element"
-            error={taskFetcher.data?.fieldErrors?.elementId?.[0]}
+            errors={taskFetcher.data?.fieldErrors?.elementId}
             input={
               <Singleselect
                 value={element}
@@ -132,7 +132,7 @@ function BacklogTaskForm({ task, ...createModalProps }: { task?: BacklogTask } &
             name="durationHours"
             label="Duration"
             shouldPassProps={false}
-            error={taskFetcher.data?.fieldErrors?.durationHours?.[0] || taskFetcher.data?.fieldErrors?.durationMinutes?.[0]}
+            errors={taskFetcher.data?.fieldErrors?.durationHours || taskFetcher.data?.fieldErrors?.durationMinutes}
             input={
               <div className="hstack">
                 <div className="hstack space-x-1">
@@ -164,7 +164,7 @@ function BacklogTaskForm({ task, ...createModalProps }: { task?: BacklogTask } &
             defaultValue={task?.description}
             label="Description"
             input={<Textarea rows={6} />}
-            error={taskFetcher.data?.fieldErrors?.description?.[0]}
+            errors={taskFetcher.data?.fieldErrors?.description}
           />
           <ButtonGroup>
             <Button variant="ghost" onClick={createModalProps.onClose}>
@@ -242,7 +242,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
           <BacklogTaskForm task={task} {...editModalProps} />
 
           <updateFetcher.Form action={`/timeline/${task.id}`} replace method="post">
-            <input type="hidden" name="date" value={dayjs().format()} />
+            <input type="hidden" name="date" value={dayjs().startOf("d").add(12, "h").format()} />
             <Tooltip label="Add to timeline">
               <IconButton
                 variant="outline"

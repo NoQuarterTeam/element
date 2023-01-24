@@ -19,9 +19,9 @@ interface Props extends StateManagerProps<Option, true, GroupBase<Option>> {
 const classNames: ClassNamesConfig<Option> = {
   container: (state) =>
     join(
-      "text-md block w-full border px-4 text-black dark:text-white placeholder-gray-500 transition-colors focus:border-primary-500 focus:bg-transparent focus:ring-transparent rounded-xs focus:ring-primary-500 ring-0 focus:ring-1",
+      "text-md block w-full border px-4 text-black dark:text-white placeholder-gray-500 transition-colors  rounded-xs",
       state.isFocused
-        ? "border-primary-500 hover:border-primary-500 ring-primary-500"
+        ? "border-primary-500 hover:border-primary-500 ring-primary-500 focus:ring-primary-500 ring-0 focus:ring-2 focus:border-primary-500 focus:bg-transparent focus:ring-transparent"
         : "bg-transparent border-gray-100 hover:border-gray-200 dark:border-white/10 dark:hover:border-white/20",
     ),
   menu: () => "left-0 shadow-lg w-full react-menu",
@@ -53,9 +53,10 @@ export function Multiselect(props: Props) {
           blurInputOnSelect={false}
           closeMenuOnSelect={false}
           isMulti={true}
+          name={props.name}
           classNames={classNames}
-          instanceId="react-multi-select"
-          inputId="react-multi-select"
+          instanceId={props.name}
+          inputId={props.name}
           {...props}
         />
       )}
@@ -72,11 +73,12 @@ export function Singleselect(props: SingleProps) {
       {() => (
         <Select
           unstyled
-          blurInputOnSelect={true}
+          // blurInputOnSelect={true}
           closeMenuOnSelect={true}
+          name={props.name}
           classNames={classNames}
-          instanceId="react-single-select"
-          inputId="react-single-select"
+          instanceId={props.name}
+          inputId={props.name}
           {...props}
         />
       )}
@@ -92,8 +94,9 @@ export function CreatableSelect(props: Props) {
           unstyled
           blurInputOnSelect={false}
           closeMenuOnSelect={false}
-          instanceId="react-create-select"
-          inputId="react-create-select"
+          name={props.name}
+          instanceId={props.name}
+          inputId={props.name}
           isMulti={true}
           classNames={classNames}
           {...props}

@@ -1,13 +1,13 @@
 import * as React from "react"
-import { HexColorPicker } from "react-colorful"
-import { BiPlus } from "react-icons/bi"
+import { BiDotsVertical, BiPlus } from "react-icons/bi"
+import { HiOutlineExclamation } from "react-icons/hi"
 import { RiAddLine, RiDeleteBinLine, RiFileCopyLine, RiTimeLine } from "react-icons/ri"
 import { Dialog } from "@headlessui/react"
-import { useFetcher, useNavigate, useSearchParams } from "@remix-run/react"
+import { useNavigate, useSearchParams } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
-import { randomHexColor, safeReadableColor } from "~/lib/color"
+import { randomHexColor } from "~/lib/color"
 import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
@@ -24,6 +24,10 @@ import { FormButton, FormError, InlineFormField } from "./ui/Form"
 import { Checkbox, Input, Textarea } from "./ui/Inputs"
 import { Modal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
+import { Menu, MenuButton, MenuItem, MenuList } from "./ui/Menu"
+import { IconButton } from "./ui/IconButton"
+import { Element } from "@prisma/client"
+import { ColorInput } from "./ColorInput"
 
 type FieldErrors = {
   [Property in keyof TimelineTask]: string[]
@@ -43,22 +47,20 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
   const navigate = useNavigate()
   const day = searchParams.get("day") || undefined
   const { addTask, updateTask, removeTask } = useTimelineTasks()
-
+  const [isImportant, setIsImportant] = React.useState(task?.isImportant || false)
   const [color, setColor] = React.useState(randomHexColor())
 
-  const createUpdateFetcher = useFetcher<CreateUpdateRes>()
-  React.useEffect(() => {
-    if (!createUpdateFetcher.data) return
-    if (createUpdateFetcher.type === "actionReload" && createUpdateFetcher.data.task) {
-      navigate("/timeline")
+  const createUpdateFetcher = useFetcherSubmit<CreateUpdateRes>({
+    onSuccess: ({ task: createUpdateTask }) => {
+      if (!createUpdateTask) return
       if (task) {
-        updateTask(createUpdateFetcher.data.task)
+        updateTask(createUpdateTask)
       } else {
-        addTask(createUpdateFetcher.data.task)
+        addTask(createUpdateTask)
       }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createUpdateFetcher.type, createUpdateFetcher.data, task])
+      requestAnimationFrame(() => navigate("/timeline"))
+    },
+  })
 
   const deleteSubmit = useFetcherSubmit<{ success: boolean }>({
     onSuccess: (data) => {
@@ -73,32 +75,29 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
     deleteSubmit.submit({ _action: TaskActionMethods.DeleteTask }, { method: "delete", action: `/timeline/${task.id}` })
   }
 
-  const duplicateSubmit = useFetcher()
+  const duplicateSubmit = useFetcherSubmit<{ task: TimelineTask }>({
+    onSuccess: ({ task: dupeTask }) => {
+      if (!dupeTask) return
+      addTask(dupeTask)
+      requestAnimationFrame(() => navigate("/timeline"))
+    },
+  })
   const handleDuplicate = () => {
     if (!task) return
     duplicateSubmit.submit({ _action: TaskActionMethods.DuplicateTask }, { method: "post", action: `/timeline/${task.id}` })
   }
-  const addToBacklogSubmit = useFetcher()
+
+  const addToBacklogSubmit = useFetcherSubmit<{ task: TimelineTask }>({
+    onSuccess: ({ task: backlogTask }) => {
+      if (!backlogTask) return
+      removeTask(backlogTask)
+      requestAnimationFrame(() => navigate("/timeline"))
+    },
+  })
   const handleToBacklog = () => {
     if (!task) return
     addToBacklogSubmit.submit({ _action: TaskActionMethods.AddToBacklog }, { method: "post", action: `/timeline/${task.id}` })
   }
-  React.useEffect(() => {
-    if (!task) return
-    if (addToBacklogSubmit.type === "actionReload" && addToBacklogSubmit.data?.task) {
-      navigate("/timeline")
-      removeTask(task)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [task, addToBacklogSubmit.data, addToBacklogSubmit.type])
-
-  React.useEffect(() => {
-    if (duplicateSubmit.type === "actionReload" && duplicateSubmit.data?.task) {
-      navigate("/timeline")
-      addTask(duplicateSubmit.data.task)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [duplicateSubmit.data, addTask, duplicateSubmit.type])
 
   const { data: elements } = useQuery(
     ["task-elements"],
@@ -116,22 +115,19 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
   const elementModalProps = useDisclosure()
 
   const client = useQueryClient()
-  const createElementFetcher = useFetcher()
-
-  React.useEffect(() => {
-    if (createElementFetcher.type === "actionReload" && createElementFetcher.data?.element) {
+  const createElementFetcher = useFetcherSubmit<{ element: Element }>({
+    onSuccess: ({ element: createdElement }) => {
+      if (!createdElement) return
       const taskElements = client.getQueryData<Element[]>(["task-elements"])
-      client.setQueryData(["task-elements"], [createElementFetcher.data.element, ...(taskElements || [])])
+      client.setQueryData(["task-elements"], [createdElement, ...(taskElements || [])])
       elementModalProps.onClose()
       setElement({
-        label: createElementFetcher.data.element.name,
-        value: createElementFetcher.data.element.id,
-        color: createElementFetcher.data.element.color,
+        label: createdElement.name,
+        value: createdElement.id,
+        color: createdElement.color,
       })
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createElementFetcher.data, createElementFetcher.type])
+    },
+  })
 
   const itemsRef = React.useRef<(HTMLInputElement | null)[]>([])
   React.useEffect(() => {
@@ -148,18 +144,29 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
               <createUpdateFetcher.Form replace method="post" action={task ? `/timeline/${task.id}` : "/api/tasks"}>
                 <div className="flex w-full items-start justify-between">
                   <input
-                    className="w-full border-none bg-transparent py-3 pl-4 pr-8 text-2xl text-gray-900 focus:outline-none dark:text-gray-100 md:py-4 md:text-4xl"
+                    className="w-full border-none bg-transparent pl-3 pt-3 pb-1 text-2xl text-gray-900 focus:outline-none dark:text-gray-100 md:pt-5 md:pl-5 md:text-4xl"
                     required
                     name="name"
                     placeholder="Name"
                     defaultValue={task?.name}
                     autoFocus
                   />
-                  <div className="p-3 sm:p-4">
-                    <Checkbox defaultChecked={task?.isComplete} name="isComplete" className="sq-6" />
+                  <div className="flex justify-end space-x-1 p-3 md:p-5">
+                    <Button
+                      colorScheme={isImportant ? "primary" : "gray"}
+                      variant={isImportant ? "solid" : "outline"}
+                      onClick={() => setIsImportant(!isImportant)}
+                      leftIcon={<HiOutlineExclamation />}
+                      size="xs"
+                    >
+                      <span className="hidden md:block">Important</span>
+                    </Button>
+
+                    <input type="hidden" name="isImportant" value={isImportant ? "true" : "false"} />
+                    <Checkbox defaultChecked={task?.isComplete} name="isComplete" />
                   </div>
                 </div>
-                <div className="stack space-y-1 p-4 pt-0 md:space-y-3">
+                <div className="stack space-y-1 p-3 pt-0 md:space-y-3 md:p-5 md:pt-0">
                   <input type="hidden" name="elementId" value={element?.value} />
 
                   <div className="flex w-full items-end md:items-start">
@@ -167,7 +174,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                       required
                       label="Element"
                       name="element"
-                      error={createUpdateFetcher.data?.fieldErrors?.elementId?.[0]}
+                      errors={createUpdateFetcher.data?.fieldErrors?.elementId}
                       input={
                         <Singleselect
                           value={element}
@@ -198,16 +205,16 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     required
                     defaultValue={day || (task ? dayjs(task.date).format("YYYY-MM-DD") : dayjs().format("YYYY-MM-DD"))}
                     label="Date"
-                    error={createUpdateFetcher.data?.fieldErrors?.date?.[0]}
+                    errors={createUpdateFetcher.data?.fieldErrors?.date}
                   />
 
                   <InlineFormField
                     name="durationHours"
                     label="Duration"
                     shouldPassProps={false}
-                    error={
-                      createUpdateFetcher.data?.fieldErrors?.durationHours?.[0] ||
-                      createUpdateFetcher.data?.fieldErrors?.durationMinutes?.[0]
+                    errors={
+                      createUpdateFetcher.data?.fieldErrors?.durationHours ||
+                      createUpdateFetcher.data?.fieldErrors?.durationMinutes
                     }
                     input={
                       <div className="hstack">
@@ -241,21 +248,14 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     name="startTime"
                     defaultValue={task?.startTime}
                     label="Start time"
-                    error={createUpdateFetcher.data?.fieldErrors?.startTime?.[0]}
+                    errors={createUpdateFetcher.data?.fieldErrors?.startTime}
                   />
                   <InlineFormField
                     name="description"
                     defaultValue={task?.description}
                     label="Description"
-                    input={<Textarea rows={4} />}
-                    error={createUpdateFetcher.data?.fieldErrors?.description?.[0]}
-                  />
-                  <InlineFormField
-                    name="isImportant"
-                    defaultChecked={task?.isImportant}
-                    label="Is Important"
-                    input={<Checkbox defaultChecked={task?.isImportant} name="isImportant" className="sq-6" />}
-                    error={createUpdateFetcher.data?.fieldErrors?.isImportant?.[0]}
+                    input={<Textarea />}
+                    errors={createUpdateFetcher.data?.fieldErrors?.description}
                   />
                   <InlineFormField
                     name="todos"
@@ -263,12 +263,12 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     shouldPassProps={false}
                     input={
                       <div className="stack w-full space-y-1">
+                        <input type="hidden" name="hasTodos" value="true" />
                         {todos.map((todo, i) => (
                           <div key={todo.id} className="hstack">
                             <Checkbox className="peer" name={`todos[${i}].isComplete`} defaultChecked={todos[i]?.isComplete} />
                             <Input
                               id={`todo-${todo.id}`}
-                              // variant="ghost"
                               ref={(el) => (itemsRef.current[i] = el)}
                               name={`todos[${i}].name`}
                               defaultValue={todos[i]?.name}
@@ -327,13 +327,6 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                                 }
                               }}
                             />
-
-                            {/* <IconButton
-                              variant="ghost"
-                              icon={<BiTrash />}
-                              aria-label="remove todo"
-                              onClick={() => setTodos((t) => t.filter((t) => t.id !== todo.id))}
-                            /> */}
                           </div>
                         ))}
 
@@ -362,52 +355,58 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
 
                   <FormError error={createUpdateFetcher.data?.formError} />
 
-                  <ButtonGroup>
-                    <Button variant="ghost" onClick={() => navigate("/timeline")}>
-                      Cancel
-                    </Button>
-                    <FormButton
-                      name="_action"
-                      value={task ? TaskActionMethods.UpdateTask : TasksActionMethods.AddTask}
-                      isLoading={createUpdateFetcher.state !== "idle"}
-                    >
-                      {task ? "Update" : "Create"}
-                    </FormButton>
-                  </ButtonGroup>
-                  {task && (
-                    <>
-                      <hr />
-                      <div className="center">
-                        <div className="hstack space-x-0">
-                          <Button
-                            variant="ghost"
-                            leftIcon={<RiDeleteBinLine />}
-                            colorScheme="red"
-                            onClick={handleDelete}
-                            isLoading={deleteSubmit.state !== "idle"}
-                          >
-                            <span className="hidden md:block">Delete</span>
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            leftIcon={<RiFileCopyLine />}
-                            onClick={handleDuplicate}
-                            isLoading={duplicateSubmit.state !== "idle"}
-                          >
-                            <span className="hidden md:block">Duplicate</span>
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            leftIcon={<RiTimeLine />}
-                            onClick={handleToBacklog}
-                            isLoading={addToBacklogSubmit.state !== "idle"}
-                          >
-                            <span className="hidden md:block">Add to backlog</span>
-                          </Button>
-                        </div>
-                      </div>
-                    </>
-                  )}
+                  <div className="flex justify-between pt-4">
+                    {task ? (
+                      <Menu>
+                        <MenuButton>
+                          <IconButton variant="outline" aria-label="task actions" icon={<BiDotsVertical />} />
+                        </MenuButton>
+
+                        <MenuList className="left-0 bottom-full mb-2">
+                          <div>
+                            <MenuItem>
+                              {({ className }) => (
+                                <button type="button" className={className} onClick={handleDuplicate}>
+                                  <RiFileCopyLine />
+                                  <span className="hidden md:block">Duplicate</span>
+                                </button>
+                              )}
+                            </MenuItem>
+                            <MenuItem>
+                              {({ className }) => (
+                                <button type="button" className={className} onClick={handleToBacklog}>
+                                  <RiTimeLine />
+                                  <span className="hidden md:block">Add to backlog</span>
+                                </button>
+                              )}
+                            </MenuItem>
+                          </div>
+                          <MenuItem>
+                            {({ className }) => (
+                              <button type="button" className={className} onClick={handleDelete}>
+                                <RiDeleteBinLine className="fill-red-500" />
+                                <span className="hidden md:block">Delete</span>
+                              </button>
+                            )}
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
+                    ) : (
+                      <div />
+                    )}
+                    <ButtonGroup>
+                      <Button variant="ghost" onClick={() => navigate("/timeline")}>
+                        Cancel
+                      </Button>
+                      <FormButton
+                        name="_action"
+                        value={task ? TaskActionMethods.UpdateTask : TasksActionMethods.AddTask}
+                        isLoading={createUpdateFetcher.state !== "idle"}
+                      >
+                        {task ? "Update" : "Create"}
+                      </FormButton>
+                    </ButtonGroup>
+                  </div>
                 </div>
               </createUpdateFetcher.Form>
             </Dialog.Panel>
@@ -423,28 +422,16 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
               label="Name"
               size="sm"
               required
-              error={createElementFetcher.data?.fieldErrors?.name?.[0]}
+              errors={createElementFetcher.data?.fieldErrors?.name}
             />
-            <input type="hidden" name="color" value={color} />
+
             <InlineFormField
               name="color"
               required
-              error={createElementFetcher.data?.fieldErrors?.color?.[0]}
+              errors={createElementFetcher.data?.fieldErrors?.color}
               label="Color"
-              input={
-                <div className="grid w-full grid-cols-1 gap-1 md:grid-cols-2">
-                  <div className="flex w-full">
-                    <HexColorPicker color={color} onChange={setColor} />
-                  </div>
-                  <div className="center w-full justify-start md:justify-center">
-                    <div className="center h-full w-full rounded-lg p-4 px-6" style={{ background: color }}>
-                      <p className="w-full text-center" style={{ color: safeReadableColor(color) }}>
-                        {color}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              }
+              shouldPassProps={false}
+              input={<ColorInput name="color" value={color} setValue={setColor} />}
             />
 
             <ButtonGroup>
