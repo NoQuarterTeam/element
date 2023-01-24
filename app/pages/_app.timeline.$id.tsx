@@ -55,8 +55,6 @@ export const action = async ({ request, params }: ActionArgs) => {
           startTime: z.string().nullable().optional(),
           elementId: z.string().uuid().optional(),
         })
-        const isComplete = formData.has("isComplete") && formData.get("isComplete") !== "false"
-        const isImportant = formData.has("isImportant") && formData.get("isImportant") !== "false"
         const hasTodos = formData.has("hasTodos")
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
 
@@ -80,8 +78,8 @@ export const action = async ({ request, params }: ActionArgs) => {
             name: data.name,
             elementId: data.elementId,
             description: data.description,
-            isComplete,
-            isImportant,
+            isComplete: formData.has("isComplete") ? formData.get("isComplete") !== "false" : undefined,
+            isImportant: formData.has("isImportant") ? formData.get("isImportant") === "true" : undefined,
             todos: todos ? { deleteMany: {}, createMany: { data: todos } } : undefined,
           },
         })

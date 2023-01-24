@@ -73,8 +73,8 @@ export const action = async ({ request }: ActionArgs) => {
             .nullable(),
           startTime: z.string().optional().nullable(),
         })
+
         const isComplete = formData.has("isComplete")
-        const isImportant = formData.has("isImportant")
         const newForm = await validateFormData(createSchema, formData)
         if (newForm.fieldErrors) return badRequest(newForm)
 
@@ -87,7 +87,7 @@ export const action = async ({ request }: ActionArgs) => {
           select: taskSelectFields,
           data: {
             isComplete,
-            isImportant,
+            isImportant: formData.get("isImportant") === "true",
             durationHours: newForm.data.durationHours || null,
             durationMinutes: newForm.data.durationMinutes || null,
             startTime: newForm.data.startTime || null,
