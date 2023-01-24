@@ -75,7 +75,7 @@ function _TaskItem({ task }: Props) {
             "group/task-item relative w-full cursor-pointer overflow-hidden rounded-md border border-gray-100 bg-white outline-none dark:border-gray-900 dark:bg-gray-700",
             task.isImportant &&
               !task.isComplete &&
-              "border-primary-400 shadow-[0px_0px_0px_1px_#fb923c] shadow-primary-400 dark:border-orange-400",
+              "border-primary-400 shadow-[0_0_0_1px_black] shadow-primary-400 dark:border-primary-400",
           )}
         >
           <div
