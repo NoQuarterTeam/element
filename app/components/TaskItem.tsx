@@ -4,11 +4,11 @@ import { Link, useFetcher } from "@remix-run/react"
 
 import { safeReadableColor } from "~/lib/color"
 import { formatDuration } from "~/lib/helpers/duration"
+import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { join } from "~/lib/tailwind"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TimelineTask } from "~/pages/api+/tasks"
-import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 
 export const taskSelectFields = {
   id: true,
