@@ -276,7 +276,6 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
 
         <Checkbox
           className="ml-1"
-          size="xs"
           defaultChecked={!!entry}
           onChange={() => {
             habitEntryFetcher.submit(

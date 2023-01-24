@@ -111,7 +111,6 @@ function FocusItem({ task }: { task: FocusTask }) {
           )}
 
           <Checkbox
-            className="sq-4"
             defaultChecked={task.isComplete}
             onChange={() =>
               updateFetcher.submit(
