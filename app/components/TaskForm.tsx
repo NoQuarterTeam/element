@@ -163,7 +163,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     </Button>
 
                     <input type="hidden" name="isImportant" value={isImportant ? "true" : "false"} />
-                    <Checkbox defaultChecked={task?.isComplete} name="isComplete" />
+                    <Checkbox defaultChecked={task?.isComplete} name="isComplete" size="md" />
                   </div>
                 </div>
                 <div className="stack space-y-1 p-3 pt-0 md:space-y-3 md:p-5 md:pt-0">
