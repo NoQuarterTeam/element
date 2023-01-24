@@ -82,22 +82,9 @@ export const action = async ({ request }: ActionArgs) => {
           isComplete: !!t.isComplete,
         }))
 
-        const nextOrderTask = await db.task.findFirst({
-          select: { order: true },
-          where: {
-            creatorId: { equals: user.id },
-            date: {
-              gte: dayjs(newForm.data.date).startOf("d").add(12, "h").toDate(),
-              lt: dayjs(newForm.data.date).endOf("d").toDate(),
-            },
-          },
-          orderBy: { order: "desc" },
-        })
-
         const newTask = await db.task.create({
           select: taskSelectFields,
           data: {
-            order: nextOrderTask ? nextOrderTask.order + 1 : 50,
             isComplete: formData.has("isComplete") ? formData.get("isComplete") !== "false" : false,
             isImportant: formData.get("isImportant") === "true",
             durationHours: newForm.data.durationHours || null,
