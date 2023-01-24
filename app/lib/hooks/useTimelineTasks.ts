@@ -31,7 +31,10 @@ export function useTimelineTasks() {
     addTask: (task: TimelineTask) => {
       const existingTasks = client.getQueryData<TimelineTask[]>([TASK_CACHE_KEY]) || []
       if (existingTasks.find((t) => t.id === task.id)) return
-      client.setQueryData([TASK_CACHE_KEY], [...existingTasks, task])
+      client.setQueryData(
+        [TASK_CACHE_KEY],
+        [...existingTasks, task].sort((a, b) => a.order - b.order),
+      )
     },
     removeTask: (task: TimelineTask) => {
       const existingTasks = client.getQueryData<TimelineTask[]>([TASK_CACHE_KEY]) || []

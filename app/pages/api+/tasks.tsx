@@ -74,7 +74,6 @@ export const action = async ({ request }: ActionArgs) => {
           startTime: z.string().optional().nullable(),
         })
 
-        const isComplete = formData.has("isComplete")
         const newForm = await validateFormData(createSchema, formData)
         if (newForm.fieldErrors) return badRequest(newForm)
 
@@ -83,10 +82,23 @@ export const action = async ({ request }: ActionArgs) => {
           isComplete: !!t.isComplete,
         }))
 
+        const nextOrderTask = await db.task.findFirst({
+          select: { order: true },
+          where: {
+            creatorId: { equals: user.id },
+            date: {
+              gte: dayjs(newForm.data.date).startOf("d").add(12, "h").toDate(),
+              lt: dayjs(newForm.data.date).endOf("d").toDate(),
+            },
+          },
+          orderBy: { order: "desc" },
+        })
+
         const newTask = await db.task.create({
           select: taskSelectFields,
           data: {
-            isComplete,
+            order: nextOrderTask ? nextOrderTask.order + 1 : 50,
+            isComplete: formData.has("isComplete") ? formData.get("isComplete") !== "false" : false,
             isImportant: formData.get("isImportant") === "true",
             durationHours: newForm.data.durationHours || null,
             durationMinutes: newForm.data.durationMinutes || null,
