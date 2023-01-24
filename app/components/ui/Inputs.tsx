@@ -129,10 +129,9 @@ export function Select({ variant, size, ...props }: SelectProps) {
 export const checkboxSizeStyles = cva("", {
   variants: {
     size: {
-      xs: "sq-5",
-      sm: "sq-7",
-      md: "sq-9",
-      lg: "sq-11",
+      sm: "sq-5",
+      md: "sq-7",
+      lg: "sq-9",
     },
   },
   defaultVariants: {
@@ -142,7 +141,7 @@ export const checkboxSizeStyles = cva("", {
 export type CheckboxSizeStyleProps = VariantProps<typeof checkboxSizeStyles>
 
 export function Checkbox({
-  size,
+  size = "sm",
   ...props
 }: Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "size"> &
   CheckboxSizeStyleProps) {
@@ -151,7 +150,7 @@ export function Checkbox({
       type="checkbox"
       {...props}
       className={merge(
-        inputStyles({ variant: "outline", size }),
+        inputStyles({ variant: "outline", size: "xs" }),
         checkboxSizeStyles({ size }),
         "cursor-pointer text-primary-500 transition-all checked:bg-primary-500 hover:text-primary-600 focus:ring-primary-300  dark:checked:bg-primary-500  dark:hover:checked:bg-primary-600 dark:focus:ring-primary-300 ",
         props.className,
