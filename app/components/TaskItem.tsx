@@ -20,6 +20,7 @@ export const taskSelectFields = {
   date: true,
   isComplete: true,
   isImportant: true,
+  repeat: true,
   order: true,
   startTime: true,
   element: { select: { id: true, color: true, name: true } },

@@ -3,7 +3,7 @@ import { BiDotsVertical, BiPlus } from "react-icons/bi"
 import { HiOutlineExclamation } from "react-icons/hi"
 import { RiAddLine, RiDeleteBinLine, RiFileCopyLine, RiTimeLine } from "react-icons/ri"
 import { Dialog } from "@headlessui/react"
-import { type Element } from "@prisma/client"
+import { TaskRepeat, type Element } from "@prisma/client"
 import { useNavigate, useSearchParams } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
@@ -24,7 +24,7 @@ import { Button } from "./ui/Button"
 import { ButtonGroup } from "./ui/ButtonGroup"
 import { FormButton, FormError, InlineFormField } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
-import { Checkbox, Input, Textarea } from "./ui/Inputs"
+import { Checkbox, Input, Select, Textarea } from "./ui/Inputs"
 import { Menu, MenuButton, MenuItem, MenuList } from "./ui/Menu"
 import { Modal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
@@ -49,6 +49,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
   const { addTask, updateTask, removeTask } = useTimelineTasks()
   const [isImportant, setIsImportant] = React.useState(task?.isImportant || false)
   const [color, setColor] = React.useState(randomHexColor())
+  const [repeat, setRepeat] = React.useState<TaskRepeat | undefined>(task?.repeat || undefined)
 
   const createUpdateFetcher = useFetcherSubmit<CreateUpdateRes>({
     onSuccess: ({ task: createUpdateTask }) => {
@@ -239,6 +240,35 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                           />
                           <p className="text-xs opacity-80">Minutes</p>
                         </div>
+                      </div>
+                    }
+                  />
+
+                  <InlineFormField
+                    name="repeat"
+                    label="Repeat"
+                    shouldPassProps={false}
+                    errors={createUpdateFetcher.data?.fieldErrors?.repeat}
+                    input={
+                      <div className="grid w-full grid-cols-2 gap-1">
+                        <Select
+                          id="repeat"
+                          name="repeat"
+                          value={repeat}
+                          onChange={(e) => setRepeat(e.target.value as TaskRepeat)}
+                        >
+                          <option value="0">None</option>
+                          <option value="1">Daily</option>
+                          <option value="2">Weekly</option>
+                          <option value="3">Monthly</option>
+                          <option value="4">Yearly</option>
+                        </Select>
+
+                        {!task && repeat ? (
+                          <Input type="date" placeholder="End date" id="repeatEndDate" name="repeatEndDate" />
+                        ) : (
+                          <div />
+                        )}
                       </div>
                     }
                   />

@@ -33,24 +33,35 @@ model User {
   feedbacks            Feedback[]
 }
 
+enum TaskRepeat {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
 model Task {
-  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name            String
   description     String?
   date            DateTime?
-  isComplete      Boolean   @default(false)
+  isComplete      Boolean     @default(false)
+  repeat          TaskRepeat?
   startTime       String?
   durationHours   Int?
   durationMinutes Int?
-  isImportant     Boolean   @default(false)
+  isImportant     Boolean     @default(false)
+  order           Int         @default(50)
   todos           Todo[]
-  order           Int       @default(50)
-  createdAt       DateTime  @default(now()) @db.Timestamptz(6)
-  updatedAt       DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
-  creatorId       String    @db.Uuid
-  creator         User      @relation(fields: [creatorId], references: [id])
-  elementId       String    @db.Uuid
-  element         Element   @relation(fields: [elementId], references: [id], onDelete: Cascade)
+  repeatChildren  Task[]      @relation(name: "RepeatChildren")
+  repeatParentId  String?     @db.Uuid
+  repeatParent    Task?       @relation(name: "RepeatChildren", fields: [repeatParentId], references: [id], onDelete: SetNull)
+  creatorId       String      @db.Uuid
+  creator         User        @relation(fields: [creatorId], references: [id])
+  elementId       String      @db.Uuid
+  element         Element     @relation(fields: [elementId], references: [id], onDelete: Cascade)
+  createdAt       DateTime    @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
 
   @@index([date])
   @@index([elementId])
