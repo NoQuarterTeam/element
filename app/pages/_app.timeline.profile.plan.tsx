@@ -13,6 +13,7 @@ import { PRICE_ID } from "~/lib/config.server"
 import { FULL_WEB_URL } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { useDisclosure } from "~/lib/hooks/useDisclosure"
+import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "~/lib/product"
 import { badRequest } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { join } from "~/lib/tailwind"
@@ -164,16 +165,16 @@ export default function Plan() {
               <p className="text-2xl">
                 <span
                   className={join(
-                    (data?.elementCount || 0) >= 5
+                    (data?.taskCount || 0) >= MAX_FREE_TASKS
                       ? "text-red-500"
-                      : (data?.elementCount || 0) > 4
+                      : (data?.taskCount || 0) > MAX_FREE_TASKS * 0.75
                       ? "text-primary-500"
                       : undefined,
                   )}
                 >
                   {data?.taskCount}{" "}
                 </span>
-                <span className="text-xs font-thin opacity-70">/ 1000</span>
+                <span className="text-xs font-thin opacity-70">/ {MAX_FREE_TASKS}</span>
               </p>
             </div>
             <div>
@@ -181,9 +182,9 @@ export default function Plan() {
               <p className="text-2xl">
                 <span
                   className={join(
-                    (data?.elementCount || 0) >= 5
+                    (data?.elementCount || 0) >= MAX_FREE_ELEMENTS
                       ? "text-red-500"
-                      : (data?.elementCount || 0) > 4
+                      : (data?.elementCount || 0) > MAX_FREE_ELEMENTS * 0.75
                       ? "text-primary-500"
                       : undefined,
                   )}
@@ -277,12 +278,12 @@ export default function Plan() {
           </div>
           <div className="flex border-b border-gray-100 dark:border-gray-600">
             <div className="flex flex-[3]  border-gray-100 p-1 opacity-70 dark:border-gray-600 md:p-2">Tasks</div>
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2 ">1000</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2 ">{MAX_FREE_TASKS}</div>
             <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">Unlimited</div>
           </div>
           <div className="flex border-b border-gray-100 dark:border-gray-600">
             <div className="flex flex-[3]  border-gray-100 p-1 opacity-70 dark:border-gray-600 md:p-2">Elements</div>
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">5</div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">{MAX_FREE_ELEMENTS}</div>
             <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">Unlimited</div>
           </div>
           <div className="flex border-b border-gray-100 dark:border-gray-600">

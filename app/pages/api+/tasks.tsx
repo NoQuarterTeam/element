@@ -7,6 +7,7 @@ import { z } from "zod"
 import { taskSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
 import { getFormDataArray, validateFormData } from "~/lib/form"
+import { MAX_FREE_TASKS } from "~/lib/product"
 import { badRequest } from "~/lib/remix"
 import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
@@ -56,7 +57,7 @@ export const action = async ({ request }: ActionArgs) => {
       try {
         if (!user.stripeSubscriptionId) {
           const taskCount = await db.task.count({ where: { creatorId: { equals: user.id } } })
-          if (taskCount >= 1000) return redirect("/timeline/profile/plan/limit-task")
+          if (taskCount >= MAX_FREE_TASKS) return redirect("/timeline/profile/plan/limit-task")
         }
         const createSchema = z.object({
           name: z.string(),
