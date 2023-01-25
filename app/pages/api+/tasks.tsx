@@ -74,7 +74,6 @@ export const action = async ({ request }: ActionArgs) => {
           startTime: z.string().optional().nullable(),
         })
 
-        const isComplete = formData.has("isComplete")
         const newForm = await validateFormData(createSchema, formData)
         if (newForm.fieldErrors) return badRequest(newForm)
 
@@ -86,7 +85,7 @@ export const action = async ({ request }: ActionArgs) => {
         const newTask = await db.task.create({
           select: taskSelectFields,
           data: {
-            isComplete,
+            isComplete: formData.has("isComplete") ? formData.get("isComplete") !== "false" : false,
             isImportant: formData.get("isImportant") === "true",
             durationHours: newForm.data.durationHours || null,
             durationMinutes: newForm.data.durationMinutes || null,
