@@ -1,4 +1,4 @@
-import { Task, TaskRepeat } from "@prisma/client"
+import { type Task, TaskRepeat } from "@prisma/client"
 import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import dayjs from "dayjs"

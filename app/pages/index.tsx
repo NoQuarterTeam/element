@@ -8,9 +8,9 @@ import { IconButton } from "~/components/ui/IconButton"
 import { Limiter } from "~/components/ui/Limiter"
 import { LinkButton } from "~/components/ui/LinkButton"
 import { Menu, MenuButton, MenuItem, MenuList } from "~/components/ui/Menu"
+import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "~/lib/product"
 import { useTheme } from "~/lib/theme"
 import { getUserSession } from "~/services/session/session.server"
-import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "~/lib/product"
 
 export const meta: MetaFunction = () => {
   return { title: "Element" }

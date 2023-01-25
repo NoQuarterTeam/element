@@ -3,12 +3,13 @@ import { BiDotsVertical, BiPlus } from "react-icons/bi"
 import { HiOutlineExclamation } from "react-icons/hi"
 import { RiAddLine, RiDeleteBinLine, RiFileCopyLine, RiTimeLine } from "react-icons/ri"
 import { Dialog } from "@headlessui/react"
-import { TaskRepeat, type Element } from "@prisma/client"
+import { type Element, TaskRepeat } from "@prisma/client"
 import { useNavigate, useSearchParams } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
 import { randomHexColor } from "~/lib/color"
+import { getRepeatingDatesBetween } from "~/lib/helpers/repeating"
 import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
@@ -28,7 +29,6 @@ import { Checkbox, Input, Select, Textarea } from "./ui/Inputs"
 import { Menu, MenuButton, MenuItem, MenuList } from "./ui/Menu"
 import { Modal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
-import { getRepeatingDatesBetween } from "~/lib/helpers/repeating"
 
 type FieldErrors = {
   [Property in keyof TimelineTask]: string[]

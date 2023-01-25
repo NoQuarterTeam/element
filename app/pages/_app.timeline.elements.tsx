@@ -20,11 +20,11 @@ import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
+import { MAX_FREE_ELEMENTS } from "~/lib/product"
 import { badRequest } from "~/lib/remix"
 import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getSidebarElements } from "~/services/timeline/sidebar.server"
-import { MAX_FREE_ELEMENTS } from "~/lib/product"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
