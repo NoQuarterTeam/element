@@ -145,8 +145,14 @@ export const action = async ({ request, params }: ActionArgs) => {
       }
     case TaskActionMethods.DeleteTask:
       try {
+        const shouldDeleteFuture = formData.get("shouldDeleteFuture") === "true"
+        const task = await db.task.findUniqueOrThrow({ where: { id: taskId } })
         await db.$transaction(async (transaction) => {
-          await transaction.task.deleteMany({ where: { repeatParentId: { equals: taskId } } })
+          if (shouldDeleteFuture && task.date) {
+            await transaction.task.deleteMany({
+              where: { repeatParentId: { equals: task.repeat ? task.id : task.repeatParentId }, date: { gt: task.date } },
+            })
+          }
           await transaction.task.delete({ where: { id: taskId } })
         })
 

@@ -9,6 +9,10 @@ import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { join } from "~/lib/tailwind"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TimelineTask } from "~/pages/api+/tasks"
+import { Modal } from "./ui/Modal"
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
+import { ButtonGroup } from "./ui/ButtonGroup"
+import { Button } from "./ui/Button"
 
 export const taskSelectFields = {
   id: true,
@@ -21,6 +25,7 @@ export const taskSelectFields = {
   isComplete: true,
   isImportant: true,
   repeat: true,
+  repeatParentId: true,
   order: true,
   startTime: true,
   element: { select: { id: true, color: true, name: true } },
@@ -54,12 +59,10 @@ function _TaskItem({ task }: Props) {
     } else if (event.shiftKey) {
       event.preventDefault()
       // Delete
-      deleteFetcher.submit({ _action: TaskActionMethods.DeleteTask }, { action: `/timeline/${task.id}`, method: "post" })
-      await new Promise((res) => setTimeout(res, 100))
-      if (task.repeat) {
-        refetch()
+      if (task.repeat || task.repeatParentId) {
+        deleteModalProps.onOpen()
       } else {
-        removeTask(task)
+        handleDelete(false)
       }
     } else if (event.altKey) {
       event.preventDefault()
@@ -71,6 +74,21 @@ function _TaskItem({ task }: Props) {
       )
     }
   }
+
+  const handleDelete = async (shouldDeleteFuture: boolean) => {
+    deleteFetcher.submit(
+      { _action: TaskActionMethods.DeleteTask, shouldDeleteFuture: shouldDeleteFuture ? "true" : "false" },
+      { action: `/timeline/${task.id}`, method: "post" },
+    )
+    await new Promise((res) => setTimeout(res, 100))
+    if (shouldDeleteFuture) {
+      refetch()
+    } else {
+      removeTask(task)
+    }
+  }
+
+  const deleteModalProps = useDisclosure()
 
   return (
     <div className="z-[1] w-day  p-2 pb-0" tabIndex={-1}>
@@ -141,6 +159,24 @@ function _TaskItem({ task }: Props) {
               </div>
             )}
           </div>
+          {(task.repeat || task.repeatParentId) && (
+            <Modal {...deleteModalProps} size="md" title="Deleting task">
+              <div className="stack p-4">
+                <p>Do you want to only delete this task or all future tasks as well?</p>
+                <div className="flex items-center justify-between">
+                  <Button variant="ghost" onClick={deleteModalProps.onClose}>
+                    Cancel
+                  </Button>
+                  <ButtonGroup>
+                    <Button onClick={() => handleDelete(false)}>Delete this task</Button>
+                    <Button colorScheme="red" onClick={() => handleDelete(true)}>
+                      Delete all future
+                    </Button>
+                  </ButtonGroup>
+                </div>
+              </div>
+            </Modal>
+          )}
           <div
             style={{ backgroundColor: task.element.color }}
             className={join(

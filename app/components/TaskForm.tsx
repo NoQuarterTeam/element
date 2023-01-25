@@ -1,5 +1,5 @@
 import * as React from "react"
-import { BiDotsVertical, BiPlus } from "react-icons/bi"
+import { BiPlus } from "react-icons/bi"
 import { HiOutlineExclamation } from "react-icons/hi"
 import { RiAddLine, RiDeleteBinLine, RiFileCopyLine, RiTimeLine } from "react-icons/ri"
 import { Dialog } from "@headlessui/react"
@@ -26,9 +26,9 @@ import { ButtonGroup } from "./ui/ButtonGroup"
 import { FormButton, FormError, InlineFormField } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
 import { Checkbox, Input, Select, Textarea } from "./ui/Inputs"
-import { Menu, MenuButton, MenuItem, MenuList } from "./ui/Menu"
 import { Modal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
+import { Tooltip } from "./ui/Tooltip"
 
 type FieldErrors = {
   [Property in keyof TimelineTask]: string[]
@@ -74,7 +74,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
   const deleteSubmit = useFetcherSubmit<{ success: boolean }>({
     onSuccess: (data) => {
       if (data.success && task) {
-        if (task.repeat) {
+        if (task.repeat || task.repeatParentId) {
           refetch()
         } else {
           removeTask(task)
@@ -83,9 +83,12 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
       }
     },
   })
-  const handleDelete = () => {
+  const handleDelete = (shouldDeleteFuture: boolean) => {
     if (!task) return
-    deleteSubmit.submit({ _action: TaskActionMethods.DeleteTask }, { method: "delete", action: `/timeline/${task.id}` })
+    deleteSubmit.submit(
+      { _action: TaskActionMethods.DeleteTask, shouldDeleteFuture: shouldDeleteFuture ? "true" : "false" },
+      { method: "delete", action: `/timeline/${task.id}` },
+    )
   }
 
   const duplicateSubmit = useFetcherSubmit<{ task: TimelineTask }>({
@@ -426,55 +429,47 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                   <div className="flex justify-between pt-4">
                     {task ? (
                       <>
-                        <Menu>
-                          <MenuButton>
-                            <IconButton variant="outline" aria-label="task actions" icon={<BiDotsVertical />} />
-                          </MenuButton>
+                        <div className="hstack">
+                          <Tooltip label="Delete">
+                            <IconButton
+                              variant="outline"
+                              icon={<RiDeleteBinLine className="fill-red-500" />}
+                              aria-label="delete task"
+                              onClick={task.repeat || task.repeatParentId ? deleteModalProps.onOpen : () => handleDelete(false)}
+                            />
+                          </Tooltip>
+                          <Tooltip label="Add to backlog">
+                            <IconButton
+                              variant="outline"
+                              icon={<RiTimeLine />}
+                              aria-label="Add to backlog"
+                              onClick={handleToBacklog}
+                            />
+                          </Tooltip>
+                          <Tooltip label="Duplicate">
+                            <IconButton
+                              variant="outline"
+                              icon={<RiFileCopyLine />}
+                              aria-label="duplicate task"
+                              onClick={handleDuplicate}
+                            />
+                          </Tooltip>
+                        </div>
 
-                          <MenuList className="left-0 bottom-full mb-2">
-                            <div>
-                              <MenuItem>
-                                {({ className }) => (
-                                  <button type="button" className={className} onClick={handleDuplicate}>
-                                    <RiFileCopyLine />
-                                    <span className="hidden md:block">Duplicate</span>
-                                  </button>
-                                )}
-                              </MenuItem>
-                              <MenuItem>
-                                {({ className }) => (
-                                  <button type="button" className={className} onClick={handleToBacklog}>
-                                    <RiTimeLine />
-                                    <span className="hidden md:block">Add to backlog</span>
-                                  </button>
-                                )}
-                              </MenuItem>
-                            </div>
-                            <MenuItem>
-                              {({ className }) => (
-                                <button
-                                  type="button"
-                                  className={className}
-                                  onClick={task.repeat ? deleteModalProps.onOpen : handleDelete}
-                                >
-                                  <RiDeleteBinLine className="fill-red-500" />
-                                  <span className="hidden md:block">Delete</span>
-                                </button>
-                              )}
-                            </MenuItem>
-                          </MenuList>
-                        </Menu>
-                        <Modal {...deleteModalProps} title="Are you sure?">
+                        <Modal {...deleteModalProps} size="md" title="Deleting task">
                           <div className="stack p-4">
-                            <p>This will delete all tasks that were created from this repeated task</p>
-                            <ButtonGroup>
+                            <p>Do you want to only delete this task or all future tasks as well?</p>
+                            <div className="flex items-center justify-between">
                               <Button variant="ghost" onClick={deleteModalProps.onClose}>
                                 Cancel
                               </Button>
-                              <Button colorScheme="red" onClick={handleDelete}>
-                                Delete
-                              </Button>
-                            </ButtonGroup>
+                              <ButtonGroup>
+                                <Button onClick={() => handleDelete(false)}>Delete this task</Button>
+                                <Button colorScheme="red" onClick={() => handleDelete(true)}>
+                                  Delete all future
+                                </Button>
+                              </ButtonGroup>
+                            </div>
                           </div>
                         </Modal>
                       </>
@@ -500,7 +495,7 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
           </div>
         </div>
       </Dialog>
-      <Modal title="Create an Element" {...elementModalProps}>
+      <Modal title="Create an Element" size="lg" {...elementModalProps}>
         <createElementFetcher.Form replace method="post" action="/timeline/elements">
           <div className="stack p-4">
             <InlineFormField
