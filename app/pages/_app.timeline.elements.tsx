@@ -24,6 +24,7 @@ import { badRequest } from "~/lib/remix"
 import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getSidebarElements } from "~/services/timeline/sidebar.server"
+import { MAX_FREE_ELEMENTS } from "~/lib/product"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
@@ -50,7 +51,7 @@ export const action = async ({ request, params }: ActionArgs) => {
           const elementCount = await db.element.count({
             where: { archivedAt: { equals: null }, creatorId: { equals: user.id } },
           })
-          if (elementCount >= 5) return redirect("/timeline/profile/plan/limit-element")
+          if (elementCount >= MAX_FREE_ELEMENTS) return redirect("/timeline/profile/plan/limit-element")
         }
         const createSchema = z.object({
           name: z.string().min(1),

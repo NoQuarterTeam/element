@@ -10,6 +10,7 @@ import { LinkButton } from "~/components/ui/LinkButton"
 import { Menu, MenuButton, MenuItem, MenuList } from "~/components/ui/Menu"
 import { useTheme } from "~/lib/theme"
 import { getUserSession } from "~/services/session/session.server"
+import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "~/lib/product"
 
 export const meta: MetaFunction = () => {
   return { title: "Element" }
@@ -170,12 +171,14 @@ export default function HomeLayout() {
                 </div>
                 <div className="flex border-b border-gray-100 dark:border-gray-600">
                   <div className="flex flex-[3]  border-gray-100 p-1 opacity-70 dark:border-gray-600 md:p-2">Tasks</div>
-                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2 ">1000</div>
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2 ">{MAX_FREE_TASKS}</div>
                   <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">Unlimited</div>
                 </div>
                 <div className="flex border-b border-gray-100 dark:border-gray-600">
                   <div className="flex flex-[3]  border-gray-100 p-1 opacity-70 dark:border-gray-600 md:p-2">Elements</div>
-                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">5</div>
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">
+                    {MAX_FREE_ELEMENTS}
+                  </div>
                   <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">Unlimited</div>
                 </div>
                 <div className="flex border-b border-gray-100 dark:border-gray-600">
