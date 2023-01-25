@@ -28,6 +28,7 @@ import { Checkbox, Input, Select, Textarea } from "./ui/Inputs"
 import { Menu, MenuButton, MenuItem, MenuList } from "./ui/Menu"
 import { Modal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
+import { getRepeatingDatesBetween } from "~/lib/helpers/repeating"
 
 type FieldErrors = {
   [Property in keyof TimelineTask]: string[]
@@ -46,10 +47,12 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const day = searchParams.get("day") || undefined
-  const { addTask, updateTask, removeTask } = useTimelineTasks()
+  const { addTask, updateTask, removeTask, refetch } = useTimelineTasks()
   const [isImportant, setIsImportant] = React.useState(task?.isImportant || false)
   const [color, setColor] = React.useState(randomHexColor())
   const [repeat, setRepeat] = React.useState<TaskRepeat | undefined>(task?.repeat || undefined)
+  const [repeatEndDate, setRepeatEndDate] = React.useState<string>(dayjs().add(1, "week").format("YYYY-MM-DD"))
+  const [date, setDate] = React.useState(day || (task ? dayjs(task.date).format("YYYY-MM-DD") : dayjs().format("YYYY-MM-DD")))
 
   const createUpdateFetcher = useFetcherSubmit<CreateUpdateRes>({
     onSuccess: ({ task: createUpdateTask }) => {
@@ -57,16 +60,25 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
       if (task) {
         updateTask(createUpdateTask)
       } else {
-        addTask(createUpdateTask)
+        if (repeat) {
+          refetch()
+        } else {
+          addTask(createUpdateTask)
+        }
       }
       requestAnimationFrame(() => navigate("/timeline"))
     },
   })
 
+  const deleteModalProps = useDisclosure()
   const deleteSubmit = useFetcherSubmit<{ success: boolean }>({
     onSuccess: (data) => {
       if (data.success && task) {
-        removeTask(task)
+        if (task.repeat) {
+          refetch()
+        } else {
+          removeTask(task)
+        }
         navigate("/timeline")
       }
     },
@@ -204,7 +216,8 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     type="date"
                     name="date"
                     required
-                    defaultValue={day || (task ? dayjs(task.date).format("YYYY-MM-DD") : dayjs().format("YYYY-MM-DD"))}
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
                     label="Date"
                     errors={createUpdateFetcher.data?.fieldErrors?.date}
                   />
@@ -245,34 +258,6 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                   />
 
                   <InlineFormField
-                    name="repeat"
-                    label="Repeat"
-                    shouldPassProps={false}
-                    errors={createUpdateFetcher.data?.fieldErrors?.repeat}
-                    input={
-                      <div className="grid w-full grid-cols-2 gap-1">
-                        <Select
-                          id="repeat"
-                          name="repeat"
-                          value={repeat}
-                          onChange={(e) => setRepeat(e.target.value as TaskRepeat)}
-                        >
-                          <option value="0">None</option>
-                          <option value="1">Daily</option>
-                          <option value="2">Weekly</option>
-                          <option value="3">Monthly</option>
-                          <option value="4">Yearly</option>
-                        </Select>
-
-                        {!task && repeat ? (
-                          <Input type="date" placeholder="End date" id="repeatEndDate" name="repeatEndDate" />
-                        ) : (
-                          <div />
-                        )}
-                      </div>
-                    }
-                  />
-                  <InlineFormField
                     pattern="^([01]\d|2[0-3]):?([0-5]\d)$"
                     type="time"
                     name="startTime"
@@ -280,6 +265,59 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
                     label="Start time"
                     errors={createUpdateFetcher.data?.fieldErrors?.startTime}
                   />
+
+                  {!task && (
+                    <InlineFormField
+                      name="repeat"
+                      label="Repeat"
+                      shouldPassProps={false}
+                      errors={
+                        createUpdateFetcher.data?.fieldErrors?.repeat || createUpdateFetcher.data?.fieldErrors?.repeatEndDate
+                      }
+                      input={
+                        <div className="stack w-full">
+                          <Select
+                            id="repeat"
+                            name="repeat"
+                            value={repeat || ""}
+                            onChange={(e) => setRepeat(e.target.value as TaskRepeat)}
+                          >
+                            <option value="">Doesn't repeat</option>
+                            {Object.keys(TaskRepeat).map((key) => (
+                              <option key={key} value={key}>
+                                {key.toLowerCase()[0].toUpperCase() + key.toLowerCase().slice(1)}
+                              </option>
+                            ))}
+                          </Select>
+
+                          {!task && repeat ? (
+                            <label className="flex items-center" htmlFor="repeatEndDate">
+                              <div className="mr-2 flex min-w-[80px] flex-col">
+                                <span className="whitespace-nowrap text-sm">End date</span>
+                                <span className="text-xxs opacity-70">
+                                  Creating{" "}
+                                  {1 +
+                                    getRepeatingDatesBetween(dayjs(date).toDate(), dayjs(repeatEndDate).toDate(), repeat).length}
+                                </span>
+                              </div>
+
+                              <Input
+                                autoFocus
+                                required
+                                max={dayjs().add(1, "year").format("YYYY-MM-DD")}
+                                value={repeatEndDate}
+                                onChange={(e) => setRepeatEndDate(e.target.value)}
+                                name="repeatEndDate"
+                                type="date"
+                              />
+                            </label>
+                          ) : (
+                            <div />
+                          )}
+                        </div>
+                      }
+                    />
+                  )}
                   <InlineFormField
                     name="description"
                     defaultValue={task?.description}
@@ -387,40 +425,59 @@ export const TaskForm = React.memo(function _TaskForm({ task }: FormProps) {
 
                   <div className="flex justify-between pt-4">
                     {task ? (
-                      <Menu>
-                        <MenuButton>
-                          <IconButton variant="outline" aria-label="task actions" icon={<BiDotsVertical />} />
-                        </MenuButton>
+                      <>
+                        <Menu>
+                          <MenuButton>
+                            <IconButton variant="outline" aria-label="task actions" icon={<BiDotsVertical />} />
+                          </MenuButton>
 
-                        <MenuList className="left-0 bottom-full mb-2">
-                          <div>
+                          <MenuList className="left-0 bottom-full mb-2">
+                            <div>
+                              <MenuItem>
+                                {({ className }) => (
+                                  <button type="button" className={className} onClick={handleDuplicate}>
+                                    <RiFileCopyLine />
+                                    <span className="hidden md:block">Duplicate</span>
+                                  </button>
+                                )}
+                              </MenuItem>
+                              <MenuItem>
+                                {({ className }) => (
+                                  <button type="button" className={className} onClick={handleToBacklog}>
+                                    <RiTimeLine />
+                                    <span className="hidden md:block">Add to backlog</span>
+                                  </button>
+                                )}
+                              </MenuItem>
+                            </div>
                             <MenuItem>
                               {({ className }) => (
-                                <button type="button" className={className} onClick={handleDuplicate}>
-                                  <RiFileCopyLine />
-                                  <span className="hidden md:block">Duplicate</span>
+                                <button
+                                  type="button"
+                                  className={className}
+                                  onClick={task.repeat ? deleteModalProps.onOpen : handleDelete}
+                                >
+                                  <RiDeleteBinLine className="fill-red-500" />
+                                  <span className="hidden md:block">Delete</span>
                                 </button>
                               )}
                             </MenuItem>
-                            <MenuItem>
-                              {({ className }) => (
-                                <button type="button" className={className} onClick={handleToBacklog}>
-                                  <RiTimeLine />
-                                  <span className="hidden md:block">Add to backlog</span>
-                                </button>
-                              )}
-                            </MenuItem>
+                          </MenuList>
+                        </Menu>
+                        <Modal {...deleteModalProps} title="Are you sure?">
+                          <div className="stack p-4">
+                            <p>This will delete all tasks that were created from this repeated task</p>
+                            <ButtonGroup>
+                              <Button variant="ghost" onClick={deleteModalProps.onClose}>
+                                Cancel
+                              </Button>
+                              <Button colorScheme="red" onClick={handleDelete}>
+                                Delete
+                              </Button>
+                            </ButtonGroup>
                           </div>
-                          <MenuItem>
-                            {({ className }) => (
-                              <button type="button" className={className} onClick={handleDelete}>
-                                <RiDeleteBinLine className="fill-red-500" />
-                                <span className="hidden md:block">Delete</span>
-                              </button>
-                            )}
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
+                        </Modal>
+                      </>
                     ) : (
                       <div />
                     )}

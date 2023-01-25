@@ -34,7 +34,7 @@ interface Props {
 const TODO_RADIUS = 5
 
 function _TaskItem({ task }: Props) {
-  const { removeTask, updateTask, addTask } = useTimelineTasks()
+  const { removeTask, updateTask, addTask, refetch } = useTimelineTasks()
 
   const deleteFetcher = useFetcher()
   const toggleCompleteFetcher = useFetcher()
@@ -56,7 +56,11 @@ function _TaskItem({ task }: Props) {
       // Delete
       deleteFetcher.submit({ _action: TaskActionMethods.DeleteTask }, { action: `/timeline/${task.id}`, method: "post" })
       await new Promise((res) => setTimeout(res, 100))
-      removeTask(task)
+      if (task.repeat) {
+        refetch()
+      } else {
+        removeTask(task)
+      }
     } else if (event.altKey) {
       event.preventDefault()
       // Toggle complete

@@ -58,7 +58,7 @@ export default function Backlog() {
 
   return (
     <Drawer isOpen={true} size="md" onClose={() => navigate("/timeline")} title="Backlog">
-      <div className="relative min-h-screen overflow-y-scroll px-4 pb-40">
+      <div className="relative h-screen overflow-scroll px-4 pb-40">
         <div className="items-center justify-between">
           <Button colorScheme="primary" leftIcon={<RiAddLine />} onClick={createModalProps.onOpen}>
             Add
@@ -66,7 +66,7 @@ export default function Backlog() {
 
           <BacklogTaskForm {...createModalProps} />
         </div>
-        <div className="stack pt-2">
+        <div className="stack overflow-scroll pt-2">
           {tasks.length === 0 ? (
             <div className="center">
               <p className="py-4">No tasks in the backlog!</p>

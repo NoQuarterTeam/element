@@ -1,4 +1,4 @@
-import type { Task } from "@prisma/client"
+import { Task, TaskRepeat } from "@prisma/client"
 import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import dayjs from "dayjs"
@@ -7,6 +7,7 @@ import { z } from "zod"
 import { taskSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
 import { getFormDataArray, validateFormData } from "~/lib/form"
+import { getRepeatingDatesBetween } from "~/lib/helpers/repeating"
 import { MAX_FREE_TASKS } from "~/lib/product"
 import { badRequest } from "~/lib/remix"
 import { getUser } from "~/services/auth/auth.server"
@@ -59,45 +60,101 @@ export const action = async ({ request }: ActionArgs) => {
           const taskCount = await db.task.count({ where: { creatorId: { equals: user.id } } })
           if (taskCount >= MAX_FREE_TASKS) return redirect("/timeline/profile/plan/limit-task")
         }
-        const createSchema = z.object({
-          name: z.string(),
-          elementId: z.string().uuid(),
-          date: z.string().optional().nullable(),
-          description: z.string().optional().nullable(),
-          durationHours: z
-            .preprocess((d) => (d ? Number(d) : undefined), z.number())
-            .optional()
-            .nullable(),
-          durationMinutes: z
-            .preprocess((d) => (d ? Number(d) : undefined), z.number())
-            .optional()
-            .nullable(),
-          startTime: z.string().optional().nullable(),
-        })
+        const createSchema = z
+          .object({
+            name: z.string(),
+            elementId: z.string().uuid(),
+            date: z
+              .preprocess((d) => (d ? dayjs(d as any).toDate() : undefined), z.date(), {
+                errorMap: () => ({ message: "Invalid date" }),
+              })
+              .nullable()
+              .optional(),
+            description: z.string().optional().nullable(),
+            repeat: z
+              .nativeEnum(TaskRepeat, { errorMap: () => ({ message: "Incorrect repeat value" }) })
+              .optional()
+              .nullable(),
+            repeatEndDate: z
+              .preprocess((d) => (d ? dayjs(d as any).toDate() : undefined), z.date())
+              .optional()
+              .nullable(),
+            durationHours: z
+              .preprocess((d) => (d ? Number(d) : undefined), z.number())
+              .optional()
+              .nullable(),
+            durationMinutes: z
+              .preprocess((d) => (d ? Number(d) : undefined), z.number())
+              .optional()
+              .nullable(),
+            startTime: z.string().optional().nullable(),
+          })
+          .superRefine((data, ctx) => {
+            if (!!data.repeat && !data.repeatEndDate)
+              return ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "End date is required when repeating tasks",
+                path: ["repeatEndDate"],
+              })
+            if (!!data.repeat && !data.date)
+              return ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Date is required when repeating tasks",
+                path: ["date"],
+              })
+          })
 
-        const newForm = await validateFormData(createSchema, formData)
-        if (newForm.fieldErrors) return badRequest(newForm)
+        const { data, fieldErrors } = await validateFormData(createSchema, formData)
+        if (fieldErrors) return badRequest({ data, fieldErrors })
 
         const todos = getFormDataArray(formData, "todos").map((t) => ({
           name: t.name as string,
           isComplete: !!t.isComplete,
         }))
 
-        const newTask = await db.task.create({
-          select: taskSelectFields,
-          data: {
-            isComplete: formData.has("isComplete") ? formData.get("isComplete") !== "false" : false,
-            isImportant: formData.get("isImportant") === "true",
-            durationHours: newForm.data.durationHours || null,
-            durationMinutes: newForm.data.durationMinutes || null,
-            startTime: newForm.data.startTime || null,
-            date: newForm.data.date ? dayjs(newForm.data.date).add(12, "h").toDate() : null,
-            name: newForm.data.name,
-            description: newForm.data.description || null,
-            element: { connect: { id: newForm.data.elementId } },
-            creator: { connect: { id: user.id } },
-            todos: { createMany: { data: todos } },
-          },
+        const newTask = await db.$transaction(async (transaction) => {
+          const task = await transaction.task.create({
+            select: { ...taskSelectFields, todos: { select: { ...taskSelectFields.todos.select, name: true } } },
+            data: {
+              repeat: data.repeat || null,
+              isComplete: formData.has("isComplete") ? formData.get("isComplete") !== "false" : false,
+              isImportant: formData.get("isImportant") === "true",
+              durationHours: data.durationHours || null,
+              durationMinutes: data.durationMinutes || null,
+              startTime: data.startTime || null,
+              date: data.date ? dayjs(data.date).startOf("d").add(12, "h").toDate() : null,
+              name: data.name,
+              description: data.description || null,
+              element: { connect: { id: data.elementId } },
+              creator: { connect: { id: user.id } },
+              todos: { createMany: { data: todos } },
+            },
+          })
+          if (task.date && data.repeat && data.repeatEndDate) {
+            const repeatEndDate = dayjs(data.repeatEndDate).startOf("d").add(12, "h").toDate()
+            const dates = getRepeatingDatesBetween(task.date, repeatEndDate, data.repeat)
+            await Promise.all(
+              dates.map((date) =>
+                transaction.task.create({
+                  data: {
+                    repeatParent: { connect: { id: task.id } },
+                    isComplete: false,
+                    isImportant: task.isImportant,
+                    durationHours: task.durationHours,
+                    durationMinutes: task.durationMinutes,
+                    startTime: task.startTime,
+                    date,
+                    creator: { connect: { id: user.id } },
+                    name: task.name,
+                    description: task.description,
+                    element: { connect: { id: task.element.id } },
+                    todos: { createMany: { data: task.todos.map((t) => ({ name: t.name, isComplete: t.isComplete })) } },
+                  },
+                }),
+              ),
+            )
+          }
+          return task
         })
         return json({ task: newTask })
       } catch (e: any) {

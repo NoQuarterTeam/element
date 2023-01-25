@@ -48,7 +48,12 @@ export const action = async ({ request, params }: ActionArgs) => {
       try {
         const updateSchema = z.object({
           name: z.string().optional(),
-          date: z.string().optional(),
+          date: z
+            .preprocess((d) => (d ? dayjs(d as any).toDate() : undefined), z.date(), {
+              errorMap: () => ({ message: "Invalid date" }),
+            })
+            .nullable()
+            .optional(),
           description: z.string().nullable().optional(),
           durationHours: z.preprocess(Number, z.number()).nullable().optional(),
           durationMinutes: z.preprocess(Number, z.number()).nullable().optional(),
@@ -112,6 +117,7 @@ export const action = async ({ request, params }: ActionArgs) => {
           select: taskSelectFields,
           data: {
             ...taskToDupe,
+            repeat: null,
             createdAt: undefined,
             updatedAt: undefined,
             todos: { createMany: { data: taskToDupe.todos.map((t) => ({ name: t.name, isComplete: t.isComplete })) } },
@@ -139,7 +145,11 @@ export const action = async ({ request, params }: ActionArgs) => {
       }
     case TaskActionMethods.DeleteTask:
       try {
-        await db.task.delete({ where: { id: taskId } })
+        await db.$transaction(async (transaction) => {
+          await transaction.task.deleteMany({ where: { repeatParentId: { equals: taskId } } })
+          await transaction.task.delete({ where: { id: taskId } })
+        })
+
         return json({ success: true })
       } catch (e: any) {
         return badRequest(e.message, {
