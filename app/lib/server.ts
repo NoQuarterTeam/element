@@ -1,10 +1,9 @@
+import { createMetronomeGetLoadContext, registerMetronome } from "@metronome-sh/express"
 import { createRequestHandler } from "@remix-run/express"
 import compression from "compression"
 import express from "express"
 import morgan from "morgan"
 import path from "path"
-
-import { createMetronomeGetLoadContext, registerMetronome } from "@metronome-sh/express"
 
 const MODE = process.env.NODE_ENV
 const BUILD_DIR = path.join(process.cwd(), "build")

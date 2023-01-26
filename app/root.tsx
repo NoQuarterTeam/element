@@ -1,9 +1,21 @@
 import * as React from "react"
+import { MetronomeLinks } from "@metronome-sh/react"
 import * as Tooltip from "@radix-ui/react-tooltip"
 import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from "@remix-run/react"
+import {
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useCatch,
+  useLoaderData,
+  useLocation,
+} from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import * as Fathom from "fathom-client"
 
 import { join } from "~/lib/tailwind"
 import appStyles from "~/styles/app.css"
@@ -15,7 +27,6 @@ import { Toaster } from "./components/ui/Toast"
 import { type Theme } from "./lib/theme"
 import { getFlashSession } from "./services/session/flash.server"
 import { getThemeSession } from "./services/session/theme.server"
-import { MetronomeLinks } from "@metronome-sh/react"
 
 export const meta: MetaFunction = () => {
   return { title: "Element" }
@@ -47,6 +58,20 @@ const queryClient = new QueryClient()
 
 export default function App() {
   const { flash, theme } = useLoaderData<typeof loader>()
+  const fathomLoaded = React.useRef(false)
+  const location = useLocation()
+
+  React.useEffect(
+    function setupFathom() {
+      if (!fathomLoaded.current) {
+        Fathom.load("CUPSLVZQ", { includedDomains: ["element.noquarter.co"] })
+        fathomLoaded.current = true
+      } else {
+        Fathom.trackPageview()
+      }
+    },
+    [location],
+  )
   return (
     <Document theme={theme}>
       <Toaster>
