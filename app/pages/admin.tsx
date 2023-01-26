@@ -110,6 +110,7 @@ export default function Admin() {
           </div>
         </div>
         <div className="stack">
+          <h4 className="text-lg">Latest 5 users</h4>
           <div className="grid grid-cols-5 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
             <p>Name</p>
             <p>Email</p>
@@ -133,27 +134,29 @@ export default function Admin() {
           </div>
         </div>
 
-        <div className="center">
-          <ClientOnly fallback={<div className="h-[450px]" />}>
-            {() => (
-              <LineChart
-                width={1000}
-                height={450}
-                data={usersAgg.map((stat) => ({ date: dayjs(stat.date).format("DD-MM-YYYY"), Users: stat.count }))}
-              >
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Line dot={false} type="monotone" dataKey="Users" stroke="orange" strokeWidth={3} />
-                <Tooltip wrapperClassName="dark:!bg-black !border-none !outline-none" />
-              </LineChart>
-            )}
-          </ClientOnly>
+        <div>
+          <h4 className="text-lg">All users</h4>
+          <div className="center">
+            <ClientOnly fallback={<div className="h-[450px]" />}>
+              {() => (
+                <LineChart
+                  width={1000}
+                  height={450}
+                  data={usersAgg.map((stat) => ({ date: dayjs(stat.date).format("DD-MM-YYYY"), Users: stat.count }))}
+                >
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Line dot={false} type="monotone" dataKey="Users" stroke="orange" strokeWidth={3} />
+                  <Tooltip wrapperClassName="dark:!bg-black !border-none !outline-none" />
+                </LineChart>
+              )}
+            </ClientOnly>
+          </div>
         </div>
 
         <div className="stack">
-          <div>
-            <h4 className="text-lg">Feedback</h4>
-          </div>
+          <h4 className="text-lg">Feedback</h4>
+
           <div className="stack">
             {feedback.map((feedback) => (
               <div className="grid grid-cols-4 border border-gray-100  p-4 text-sm dark:border-gray-700" key={feedback.id}>
