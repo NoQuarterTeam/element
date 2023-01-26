@@ -6,14 +6,14 @@ import { json } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
-import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts"
+import { Line, LineChart, Tooltip, XAxis, YAxis } from "recharts"
 
 import { Badge } from "~/components/ui/Badge"
+import { ClientOnly } from "~/components/ui/ClientOnly"
 import { Limiter } from "~/components/ui/Limiter"
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
 import { getUser } from "~/services/auth/auth.server"
-import { ClientOnly } from "~/components/ui/ClientOnly"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
