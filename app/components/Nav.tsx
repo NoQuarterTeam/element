@@ -151,7 +151,7 @@ export function Nav() {
               icon={
                 <div className="relative">
                   <RiUser3Line className="sq-4" />
-                  {(!featuresSeen.includes("backlog") || !featuresSeen.includes("habits")) && (
+                  {(!featuresSeen.includes("weather") || !featuresSeen.includes("habits")) && (
                     <div className="absolute top-0 right-0 rounded-full bg-red-500 sq-1.5" />
                   )}
                 </div>
