@@ -3,22 +3,22 @@ import dayjs from "dayjs"
 
 export const getRepeatingDatesBetween = (startDate: Date, endDate: Date, repeat: TaskRepeat) => {
   const dates = []
-  if (dayjs(endDate).isBefore(dayjs(startDate))) return []
-  const repeatPeriod =
-    repeat === "DAILY"
-      ? "day"
-      : repeat === "MONTHLY"
-      ? "month"
-      : repeat === "WEEKLY"
-      ? "week"
-      : repeat === "YEARLY"
-      ? "year"
-      : "d"
-
+  if (dayjs(endDate).endOf("d").isBefore(dayjs(startDate))) return []
+  const repeatPeriod = repeat === "DAILY" ? "day" : repeat === "MONTHLY" ? "month" : repeat === "WEEKLY" ? "week" : "year"
+  let count = 1
   let currentDate = dayjs(startDate).add(1, repeatPeriod).toDate()
-  while (dayjs(currentDate).isBefore(dayjs(endDate)) || dayjs(currentDate).isSame(dayjs(endDate), "date")) {
+  while (dayjs(currentDate).isBefore(dayjs(endDate).endOf("d"))) {
     dates.push(currentDate)
-    currentDate = dayjs(currentDate).add(1, repeatPeriod).toDate()
+    count++
+    currentDate = dayjs(startDate).add(count, repeatPeriod).toDate()
   }
   return dates
 }
+
+console.log(
+  getRepeatingDatesBetween(
+    dayjs("2021-01-05").startOf("d").add(12, "h").toDate(),
+    dayjs("2021-01-10").startOf("d").add(12, "h").toDate(),
+    "DAILY",
+  ),
+)
