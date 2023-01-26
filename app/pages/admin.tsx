@@ -6,17 +6,20 @@ import { json } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
+import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts"
 
 import { Badge } from "~/components/ui/Badge"
 import { Limiter } from "~/components/ui/Limiter"
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
 import { getUser } from "~/services/auth/auth.server"
+import { ClientOnly } from "~/components/ui/ClientOnly"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
   if (user.role !== Role.ADMIN) throw redirect("/")
-  const [users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback] = await Promise.all([
+  const firstUser = await db.user.findFirst({ orderBy: { createdAt: "asc" }, select: { createdAt: true } })
+  const [users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg] = await Promise.all([
     db.user.findMany({
       where: { role: Role.USER },
       orderBy: { createdAt: "desc" },
@@ -48,13 +51,31 @@ export const loader = async ({ request }: LoaderArgs) => {
       take: 20,
       orderBy: { createdAt: "desc" },
     }),
+    db.$queryRaw<{ date: string; count: number }[]>`
+      WITH series AS (
+        SELECT generate_series(
+          date_trunc('month', ${
+            firstUser ? dayjs(firstUser.createdAt).subtract(1, "month").format("YYYY-MM-DD") : dayjs().subtract(1, "year")
+          }::date),
+          date_trunc('month', ${dayjs().format("YYYY-MM-DD")}::date),
+          '1 month'::interval
+        ) AS date
+      )
+      SELECT series.date, COUNT("User".id)::int
+        FROM series
+        LEFT JOIN "User"
+          ON date_trunc('month', "User"."createdAt"::date) <= series.date
+        GROUP BY date
+        ORDER BY date ASC
+    `,
   ])
-  return json({ users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback })
+  return json({ users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg })
 }
 
 export default function Admin() {
-  const { users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback } = useLoaderData<typeof loader>()
+  const { users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg } = useLoaderData<typeof loader>()
   const percentageChange = Math.round((taskCountThisMonth / (tastCountLastMonth || 1) - 1) * 100)
+
   return (
     <Limiter>
       <div className="space-y-6 p-6">
@@ -109,6 +130,23 @@ export default function Admin() {
               </div>
             ))}
           </div>
+        </div>
+
+        <div className="center">
+          <ClientOnly fallback={<div className="h-[450px]" />}>
+            {() => (
+              <LineChart
+                width={1000}
+                height={450}
+                data={usersAgg.map((stat) => ({ date: dayjs(stat.date).format("DD-MM-YYYY"), Users: stat.count }))}
+              >
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Line dot={false} type="monotone" dataKey="Users" stroke="orange" strokeWidth={3} />
+                <Tooltip wrapperClassName="dark:!bg-black !border-none !outline-none" />
+              </LineChart>
+            )}
+          </ClientOnly>
         </div>
 
         <div className="stack">
