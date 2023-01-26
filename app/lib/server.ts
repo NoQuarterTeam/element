@@ -4,9 +4,17 @@ import express from "express"
 import morgan from "morgan"
 import path from "path"
 
+import { createMetronomeGetLoadContext, registerMetronome } from "@metronome-sh/express"
+
 const MODE = process.env.NODE_ENV
 const BUILD_DIR = path.join(process.cwd(), "build")
 const port = process.env.PORT || 3000
+
+const buildWithMetronome = registerMetronome(require(BUILD_DIR))
+
+const metronomeGetLoadContext = createMetronomeGetLoadContext(buildWithMetronome, {
+  config: require("../metronome.config.js"),
+})
 
 express()
   .use((req, res, next) => {
@@ -23,31 +31,6 @@ express()
     }
     next()
   })
-  // if we're not in the primary region, then we need to make sure all
-  // non-GET/HEAD/OPTIONS requests hit the primary region rather than read-only
-  // Postgres DBs.
-  // learn more: https://fly.io/docs/getting-started/multi-region-databases/#replay-the-request
-  .all("*", function getReplayResponse(req, res, next) {
-    const { method, path: pathname } = req
-    const { PRIMARY_REGION, FLY_REGION } = process.env
-
-    const isMethodReplayable = !["GET", "OPTIONS", "HEAD"].includes(method)
-    const isReadOnlyRegion = FLY_REGION && PRIMARY_REGION && FLY_REGION !== PRIMARY_REGION
-
-    const shouldReplay = isMethodReplayable && isReadOnlyRegion
-
-    if (!shouldReplay) return next()
-
-    const logInfo = {
-      pathname,
-      method,
-      PRIMARY_REGION,
-      FLY_REGION,
-    }
-    console.info(`Replaying:`, logInfo)
-    res.set("fly-replay", `region=${PRIMARY_REGION}`)
-    return res.sendStatus(409)
-  })
   .use(compression())
   // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
   .disable("x-powered-by")
@@ -60,14 +43,18 @@ express()
   .all(
     "*",
     MODE === "production"
-      ? createRequestHandler({ build: require(BUILD_DIR) })
+      ? createRequestHandler({
+          build: require(BUILD_DIR),
+          mode: MODE,
+          getLoadContext: metronomeGetLoadContext,
+        })
       : (...args) => {
           purgeRequireCache()
-          const requestHandler = createRequestHandler({
+          return createRequestHandler({
             build: require(BUILD_DIR),
             mode: MODE,
-          })
-          return requestHandler(...args)
+            getLoadContext: metronomeGetLoadContext,
+          })(...args)
         },
   )
   .listen(port, () => {

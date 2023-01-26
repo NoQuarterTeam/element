@@ -15,6 +15,7 @@ import { Toaster } from "./components/ui/Toast"
 import { type Theme } from "./lib/theme"
 import { getFlashSession } from "./services/session/flash.server"
 import { getThemeSession } from "./services/session/theme.server"
+import { MetronomeLinks } from "@metronome-sh/react"
 
 export const meta: MetaFunction = () => {
   return { title: "Element" }
@@ -138,6 +139,7 @@ function Document({ theme, children }: DocumentProps) {
         <meta name="theme-color" content={theme === "dark" ? "#000" : "#fff"} />
         <Meta />
         <Links />
+        <MetronomeLinks />
       </head>
       <body className="bg-white dark:bg-gray-800">
         {children}

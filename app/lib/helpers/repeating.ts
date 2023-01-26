@@ -14,11 +14,3 @@ export const getRepeatingDatesBetween = (startDate: Date, endDate: Date, repeat:
   }
   return dates
 }
-
-console.log(
-  getRepeatingDatesBetween(
-    dayjs("2021-01-05").startOf("d").add(12, "h").toDate(),
-    dayjs("2021-01-10").startOf("d").add(12, "h").toDate(),
-    "DAILY",
-  ),
-)
