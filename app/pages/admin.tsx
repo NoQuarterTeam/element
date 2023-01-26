@@ -8,10 +8,10 @@ import { useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
 
 import { Badge } from "~/components/ui/Badge"
+import { Limiter } from "~/components/ui/Limiter"
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
 import { getUser } from "~/services/auth/auth.server"
-import { Limiter } from "~/components/ui/Limiter"
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
