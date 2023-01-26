@@ -19,7 +19,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
   if (user.role !== Role.ADMIN) throw redirect("/")
   const firstUser = await db.user.findFirst({ orderBy: { createdAt: "asc" }, select: { createdAt: true } })
-  const [users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg] = await Promise.all([
+  const [users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg] = await Promise.all([
     db.user.findMany({
       where: { role: Role.USER },
       orderBy: { createdAt: "desc" },
@@ -32,6 +32,7 @@ export const loader = async ({ request }: LoaderArgs) => {
         _count: { select: { tasks: true, elements: true } },
       },
     }),
+    db.user.count(),
     db.task.count(),
     db.task.count({
       where: {
@@ -70,11 +71,12 @@ export const loader = async ({ request }: LoaderArgs) => {
         ORDER BY date ASC
     `,
   ])
-  return json({ users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg })
+  return json({ users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg })
 }
 
 export default function Admin() {
-  const { users, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg } = useLoaderData<typeof loader>()
+  const { users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg } =
+    useLoaderData<typeof loader>()
   const percentageChange = Math.round((taskCountThisMonth / (tastCountLastMonth || 1) - 1) * 100)
 
   return (
@@ -92,7 +94,7 @@ export default function Admin() {
         <div className="flex justify-between border border-gray-100 p-4 dark:border-gray-700">
           <div>
             <h4 className="text-lg">Users</h4>
-            <p className="text-3xl">{users.length}</p>
+            <p className="text-3xl">{userCount}</p>
           </div>
           <div>
             <h4 className="text-lg">Total tasks</h4>
