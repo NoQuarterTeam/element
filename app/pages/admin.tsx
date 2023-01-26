@@ -23,6 +23,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     db.user.findMany({
       where: { role: Role.USER },
       orderBy: { createdAt: "desc" },
+      take: 5,
       select: {
         id: true,
         firstName: true,
