@@ -1,4 +1,3 @@
-import { createMetronomeGetLoadContext, registerMetronome } from "@metronome-sh/express"
 import { createRequestHandler } from "@remix-run/express"
 import compression from "compression"
 import express from "express"
@@ -8,12 +7,6 @@ import path from "path"
 const MODE = process.env.NODE_ENV
 const BUILD_DIR = path.join(process.cwd(), "build")
 const port = process.env.PORT || 3000
-
-const buildWithMetronome = registerMetronome(require(BUILD_DIR))
-
-const metronomeGetLoadContext = createMetronomeGetLoadContext(buildWithMetronome, {
-  config: require("../metronome.config.js"),
-})
 
 express()
   .use((req, res, next) => {
@@ -45,14 +38,12 @@ express()
       ? createRequestHandler({
           build: require(BUILD_DIR),
           mode: MODE,
-          getLoadContext: metronomeGetLoadContext,
         })
       : (...args) => {
           purgeRequireCache()
           return createRequestHandler({
             build: require(BUILD_DIR),
             mode: MODE,
-            getLoadContext: metronomeGetLoadContext,
           })(...args)
         },
   )

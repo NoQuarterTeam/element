@@ -1,5 +1,4 @@
 import * as React from "react"
-import { MetronomeLinks } from "@metronome-sh/react"
 import * as Tooltip from "@radix-ui/react-tooltip"
 import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
