@@ -9,9 +9,8 @@ Comes with user authentication included
 - [Remix](https://remix.run)
 - TypeScript
 - Postgres
-- Chakra UI
-- Customizable theme & Dark mode
-- Eslint
+- Tailwind
+- ESLint
 - Prettier
 - Sendgrid
 
@@ -29,6 +28,8 @@ Make sure you have created a .env file in the api package with the right values,
 
 ## Development
 
+`npm run build`
+then
 `npm run dev`
 
 ## Production
