@@ -5,10 +5,12 @@ import { NavLink, Outlet, useNavigate, useTransition } from "@remix-run/react"
 import { Avatar } from "~/components/ui/Avatar"
 import { Modal } from "~/components/ui/Modal"
 import { Spinner } from "~/components/ui/Spinner"
-import { transformImage } from "~/lib/helpers/image"
+
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { join } from "~/lib/tailwind"
 import { useMe } from "~/pages/_app"
+import { transformImageSrc } from "~/components/OptimisedImage"
+import { createImageUrl } from "~/lib/s3"
 
 export default function Profile() {
   const me = useMe()
@@ -27,7 +29,7 @@ export default function Profile() {
               to="."
               icon={
                 <Avatar
-                  src={me.avatar ? transformImage(me.avatar, "w_30,h_30,g_faces") : undefined}
+                  src={transformImageSrc(createImageUrl(me.avatar), { width: 30, height: 30, fit: "contain" })}
                   name={me.firstName + " " + me.lastName}
                   size="xs"
                 />

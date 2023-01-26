@@ -6,7 +6,7 @@ if (!env) {
   const hostname = typeof window !== "undefined" && window?.location?.hostname
   env = "development"
   if (hostname) {
-    if (hostname.includes("noquarter")) {
+    if (hostname?.includes("element")) {
       env = "production"
     }
   } else {
@@ -15,4 +15,3 @@ if (!env) {
 }
 
 export const IS_PRODUCTION = env === "production"
-export const CLOUDINARY_URL = "https://res.cloudinary.com/noquarter/"

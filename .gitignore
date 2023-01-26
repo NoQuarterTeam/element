@@ -14,3 +14,8 @@ fly.wireguard.conf
 /.vscode/**/*
 
 tailwind.css
+
+.cache/*
+.cache
+.data/*
+.data

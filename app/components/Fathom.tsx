@@ -9,7 +9,7 @@ export function Fathom() {
   React.useEffect(
     function setupFathom() {
       if (!fathomLoaded.current) {
-        FathomClient.load("CUPSLVZQ", { includedDomains: ["element.noquarter.co", "myelement.app"] })
+        FathomClient.load("CUPSLVZQ", { includedDomains: ["myelement.app"] })
         fathomLoaded.current = true
       } else {
         FathomClient.trackPageview()

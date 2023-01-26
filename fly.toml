@@ -3,6 +3,10 @@ kill_signal = "SIGINT"
 kill_timeout = 5
 processes = [ ]
 
+[mounts]
+source="element_data"
+destination="/data"
+
 [env]
 PORT = "8080"
 

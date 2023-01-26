@@ -171,7 +171,7 @@ export function ImageField(props: ImageFieldProps) {
           className={merge("h-48 w-full cursor-pointer object-cover hover:opacity-80", props.className)}
         >
           {image ? (
-            <img src={createImageUrl(image)} className="h-full w-full" alt="preview" />
+            <img src={createImageUrl(image)} className="h-full w-full object-contain" alt="preview" />
           ) : (
             <div className="center h-full w-full">
               <p className="text-center text-gray-500">{props.placeholder || "Upload an image"}</p>
