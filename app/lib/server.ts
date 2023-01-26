@@ -10,6 +10,12 @@ const port = process.env.PORT || 3000
 
 express()
   .use((req, res, next) => {
+    // redirect to myelement.app
+    const host = req.get("host")
+    if (host?.includes("noquarter.co")) {
+      res.redirect(301, `https://myelement.app${req.url}`)
+      return
+    }
     // helpful headers:
     res.set("x-fly-region", process.env.FLY_REGION ?? "unknown")
     res.set("Strict-Transport-Security", `max-age=${60 * 60 * 24 * 365 * 100}`)
