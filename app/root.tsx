@@ -2,25 +2,15 @@ import * as React from "react"
 import * as Tooltip from "@radix-ui/react-tooltip"
 import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useCatch,
-  useLoaderData,
-  useLocation,
-} from "@remix-run/react"
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import * as Fathom from "fathom-client"
 
 import { join } from "~/lib/tailwind"
 import appStyles from "~/styles/app.css"
 import generatedStyles from "~/styles/tailwind.css"
 import toastStyles from "~/styles/toast.css"
 
+import { Fathom } from "./components/Fathom"
 import { FlashMessage } from "./components/FlashMessage"
 import { Toaster } from "./components/ui/Toast"
 import { type Theme } from "./lib/theme"
@@ -57,25 +47,13 @@ const queryClient = new QueryClient()
 
 export default function App() {
   const { flash, theme } = useLoaderData<typeof loader>()
-  const fathomLoaded = React.useRef(false)
-  const location = useLocation()
 
-  React.useEffect(
-    function setupFathom() {
-      if (!fathomLoaded.current) {
-        Fathom.load("CUPSLVZQ", { includedDomains: ["element.noquarter.co"] })
-        fathomLoaded.current = true
-      } else {
-        Fathom.trackPageview()
-      }
-    },
-    [location],
-  )
   return (
     <Document theme={theme}>
       <Toaster>
         <QueryClientProvider client={queryClient}>
           <Tooltip.Provider>
+            <Fathom />
             <FlashMessage flash={flash} />
             <SyncReactNative theme={theme} />
             <Outlet />
@@ -163,7 +141,6 @@ function Document({ theme, children }: DocumentProps) {
         <meta name="theme-color" content={theme === "dark" ? "#000" : "#fff"} />
         <Meta />
         <Links />
-        <MetronomeLinks />
       </head>
       <body className="bg-white dark:bg-gray-800">
         {children}
