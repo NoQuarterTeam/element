@@ -1,15 +1,22 @@
+import { Dialog } from "@headlessui/react"
+import { Prisma } from "@prisma/client"
 import { type ActionArgs, type LoaderArgs, type SerializeFrom, json, redirect } from "@remix-run/node"
-import { useLoaderData } from "@remix-run/react"
+import { useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
 import { z } from "zod"
 
 import { TaskForm } from "~/components/TaskForm"
-import { taskSelectFields } from "~/components/TaskItem"
+import { taskItemSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
 import { getFormDataArray, validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { getUser, requireUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
+
+export const taskDetailSelectFields = {
+  ...taskItemSelectFields,
+  todos: { orderBy: { createdAt: "asc" }, select: { id: true, isComplete: true, name: true } },
+} satisfies Prisma.TaskSelect
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireUser(request)
@@ -17,7 +24,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   if (!id) redirect("/timeline")
   const task = await db.task.findUnique({
     where: { id },
-    select: { ...taskSelectFields, todos: { orderBy: { createdAt: "asc" }, select: { id: true, isComplete: true, name: true } } },
+    select: taskDetailSelectFields,
   })
   if (!task) redirect("/timeline")
   return json(task)
@@ -73,7 +80,7 @@ export const action = async ({ request, params }: ActionArgs) => {
           }))
 
         const updatedTask = await db.task.update({
-          select: taskSelectFields,
+          select: taskItemSelectFields,
           where: { id: taskId },
           data: {
             date: data.date ? dayjs(data.date).startOf("d").add(12, "h").toDate() : undefined,
@@ -97,7 +104,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     case TaskActionMethods.CompleteBacklogTask:
       try {
         const updatedTask = await db.task.update({
-          select: taskSelectFields,
+          select: taskItemSelectFields,
           where: { id: taskId },
           data: { date: dayjs().startOf("d").add(12, "h").toDate(), isComplete: true },
         })
@@ -114,7 +121,7 @@ export const action = async ({ request, params }: ActionArgs) => {
           include: { todos: true },
         })
         const newTask = await db.task.create({
-          select: taskSelectFields,
+          select: taskItemSelectFields,
           data: {
             ...taskToDupe,
             repeat: null,
@@ -134,7 +141,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       try {
         const backlogTask = await db.task.update({
           where: { id: taskId },
-          select: taskSelectFields,
+          select: taskItemSelectFields,
           data: { date: null, isComplete: false },
         })
         return json({ task: backlogTask })
@@ -171,5 +178,17 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 export default function TaskModal() {
   const task = useLoaderData<typeof loader>()
-  return <TaskForm task={task} />
+  const navigate = useNavigate()
+  return (
+    <Dialog open={true} as="div" className="relative z-50" onClose={() => navigate("/timeline")}>
+      <div className="fixed inset-0 bg-black/50" />
+      <div className="fixed inset-0 overflow-y-auto">
+        <div className="flex min-h-full flex-col items-center justify-start p-0 sm:p-4">
+          <Dialog.Panel className="mt-10 w-full max-w-xl overflow-hidden bg-white text-left shadow-xl transition-all dark:bg-gray-700">
+            <TaskForm task={task} onClose={() => navigate("/timeline")} />
+          </Dialog.Panel>
+        </div>
+      </div>
+    </Dialog>
+  )
 }

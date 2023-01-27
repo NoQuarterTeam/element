@@ -4,7 +4,7 @@ import { json, redirect } from "@remix-run/node"
 import dayjs from "dayjs"
 import { z } from "zod"
 
-import { taskSelectFields } from "~/components/TaskItem"
+import { taskItemSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
 import { getFormDataArray, validateFormData } from "~/lib/form"
 import { getRepeatingDatesBetween } from "~/lib/helpers/repeating"
@@ -22,7 +22,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   if (!backParam || !forwardParam) return json([])
   const tasks = await db.task.findMany({
-    select: taskSelectFields,
+    select: taskItemSelectFields,
     orderBy: { order: "asc" },
     where: {
       creatorId: { equals: user.id },
@@ -125,7 +125,7 @@ export const action = async ({ request }: ActionArgs) => {
 
         const newTask = await db.$transaction(async (transaction) => {
           const task = await transaction.task.create({
-            select: { ...taskSelectFields, todos: { select: { ...taskSelectFields.todos.select, name: true } } },
+            select: { ...taskItemSelectFields, todos: { select: { ...taskItemSelectFields.todos.select, name: true } } },
             data: {
               repeat: data.repeat || null,
               isComplete: formData.has("isComplete") ? formData.get("isComplete") !== "false" : false,

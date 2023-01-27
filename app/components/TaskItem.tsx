@@ -15,7 +15,7 @@ import { Button } from "./ui/Button"
 import { ButtonGroup } from "./ui/ButtonGroup"
 import { Modal } from "./ui/Modal"
 
-export const taskSelectFields = {
+export const taskItemSelectFields = {
   id: true,
   createdAt: true,
   name: true,

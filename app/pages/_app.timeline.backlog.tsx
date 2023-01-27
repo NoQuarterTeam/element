@@ -1,45 +1,37 @@
-import * as React from "react"
-import { RiAddLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri"
-import { RiArrowDownSLine, RiArrowRightSLine } from "react-icons/ri"
-import { type LoaderArgs, type SerializeFrom, json } from "@remix-run/node"
+import { json, type LoaderArgs, type SerializeFrom } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
-import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
+import * as React from "react"
+import { RiAddLine, RiArrowDownSLine, RiArrowRightSLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri"
 
+import { Dialog } from "@headlessui/react"
+import { TaskForm } from "~/components/TaskForm"
 import { Button } from "~/components/ui/Button"
-import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Drawer } from "~/components/ui/Drawer"
-import { FormButton, InlineFormField } from "~/components/ui/Form"
 import { IconButton } from "~/components/ui/IconButton"
-import { Checkbox, Input, Textarea } from "~/components/ui/Inputs"
-import { Modal } from "~/components/ui/Modal"
-import { Singleselect } from "~/components/ui/ReactSelect"
+import { Checkbox } from "~/components/ui/Inputs"
 import { Tooltip } from "~/components/ui/Tooltip"
 import { safeReadableColor } from "~/lib/color"
 import { db } from "~/lib/db.server"
-import { type DisclosureProps, useDisclosure } from "~/lib/hooks/useDisclosure"
+import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
+import { type TimelineTask } from "~/pages/api+/tasks"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
-import { type TaskElement } from "~/pages/api+/elements"
-import { type TimelineTask, TasksActionMethods } from "~/pages/api+/tasks"
 import { getUser } from "~/services/auth/auth.server"
+import { taskItemSelectFields } from "~/components/TaskItem"
+import { Prisma } from "@prisma/client"
+
+export const taskDetailSelectFields = {
+  ...taskItemSelectFields,
+  todos: { orderBy: { createdAt: "asc" }, select: { id: true, isComplete: true, name: true } },
+} satisfies Prisma.TaskSelect
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
   const tasks = await db.task.findMany({
-    select: {
-      id: true,
-      isComplete: true,
-      durationHours: true,
-      durationMinutes: true,
-      description: true,
-      name: true,
-      element: {
-        select: { id: true, name: true, color: true },
-      },
-    },
+    select: taskDetailSelectFields,
     orderBy: { createdAt: "desc" },
     where: { creatorId: user.id, date: { equals: null }, isComplete: { equals: false } },
   })
@@ -64,7 +56,16 @@ export default function Backlog() {
             Add
           </Button>
 
-          <BacklogTaskForm {...createModalProps} />
+          <Dialog open={createModalProps.isOpen} as="div" className="relative z-50" onClose={createModalProps.onClose}>
+            <div className="fixed inset-0 bg-black/50" />
+            <div className="fixed inset-0 overflow-y-auto">
+              <div className="flex min-h-full flex-col items-center justify-start p-0 sm:p-4">
+                <Dialog.Panel className="mt-10 w-full max-w-xl overflow-hidden bg-white text-left shadow-xl transition-all dark:bg-gray-700">
+                  <TaskForm onClose={createModalProps.onClose} />
+                </Dialog.Panel>
+              </div>
+            </div>
+          </Dialog>
         </div>
         <div className="stack overflow-scroll pt-2">
           {tasks.length === 0 ? (
@@ -77,111 +78,6 @@ export default function Backlog() {
         </div>
       </div>
     </Drawer>
-  )
-}
-
-function BacklogTaskForm({ task, ...createModalProps }: { task?: BacklogTask } & Omit<DisclosureProps, "children">) {
-  const { data: elements } = useQuery(
-    ["task-elements"],
-    async () => {
-      const response = await fetch(`/api/elements`)
-      if (!response.ok) throw new Error("Network response was not ok")
-      return response.json() as Promise<TaskElement[]>
-    },
-    { keepPreviousData: true, staleTime: 10_000 },
-  )
-  const taskFetcher = useFetcherSubmit({ onSuccess: createModalProps.onClose })
-
-  const [element, setElement] = React.useState(
-    task?.element ? { value: task.element.id, label: task.element.name, color: task.element.color } : undefined,
-  )
-
-  return (
-    <Modal {...createModalProps}>
-      <taskFetcher.Form method="post" replace action={task ? `/timeline/${task.id}` : "/api/tasks"}>
-        <input
-          className="w-full border-none bg-transparent py-3 pl-4 pr-8 text-2xl text-gray-900 focus:outline-none dark:text-gray-100 md:py-4 md:text-4xl"
-          required
-          name="name"
-          placeholder="Name"
-          defaultValue={task?.name}
-          autoFocus
-        />
-        <div className="stack p-4 pt-0">
-          <input type="hidden" name="elementId" value={element?.value} />
-          <InlineFormField
-            required
-            label="Element"
-            name="element"
-            errors={taskFetcher.data?.fieldErrors?.elementId}
-            input={
-              <Singleselect
-                value={element}
-                onChange={setElement}
-                formatOptionLabel={(option) => (
-                  <div className="hstack">
-                    <div className="rounded-full sq-4" style={{ background: option.color }} />
-                    <p>{option.label}</p>
-                  </div>
-                )}
-                options={elements?.map((e) => ({ label: e.name, value: e.id, color: e.color }))}
-              />
-            }
-          />
-          <InlineFormField
-            name="durationHours"
-            label="Duration"
-            shouldPassProps={false}
-            errors={taskFetcher.data?.fieldErrors?.durationHours || taskFetcher.data?.fieldErrors?.durationMinutes}
-            input={
-              <div className="hstack">
-                <div className="hstack space-x-1">
-                  <Input
-                    className="px-0 text-center sq-8"
-                    defaultValue={task?.durationHours ? task.durationHours.toString() : undefined}
-                    id="durationHours"
-                    min={0}
-                    max={24}
-                    name="durationHours"
-                  />
-                  <p className="text-xs opacity-80">Hours</p>
-                </div>
-                <div className="hstack space-x-1">
-                  <Input
-                    className="px-0 text-center sq-8"
-                    defaultValue={task?.durationMinutes ? task.durationMinutes.toString() : undefined}
-                    max={60}
-                    min={0}
-                    name="durationMinutes"
-                  />
-                  <p className="text-xs opacity-80">Minutes</p>
-                </div>
-              </div>
-            }
-          />
-          <InlineFormField
-            name="description"
-            defaultValue={task?.description}
-            label="Description"
-            input={<Textarea rows={6} />}
-            errors={taskFetcher.data?.fieldErrors?.description}
-          />
-          <ButtonGroup>
-            <Button variant="ghost" onClick={createModalProps.onClose}>
-              Cancel
-            </Button>
-            <FormButton
-              colorScheme="primary"
-              name="_action"
-              value={task ? TaskActionMethods.UpdateTask : TasksActionMethods.AddTask}
-              isLoading={taskFetcher.state !== "idle"}
-            >
-              {task ? "Update" : "Create"}
-            </FormButton>
-          </ButtonGroup>
-        </div>
-      </taskFetcher.Form>
-    </Modal>
   )
 }
 
@@ -202,7 +98,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
         <p>{task.name}</p>
 
         <div className="hstack">
-          {task.description && (
+          {(task.description || task.todos.length > 0) && (
             <Tooltip label="Show description">
               <IconButton
                 variant="outline"
@@ -239,7 +135,16 @@ function BacklogItem({ task }: { task: BacklogTask }) {
               />
             </deleteFetcher.Form>
           </Tooltip>
-          <BacklogTaskForm task={task} {...editModalProps} />
+          <Dialog open={editModalProps.isOpen} as="div" className="relative z-50" onClose={editModalProps.onClose}>
+            <div className="fixed inset-0 bg-black/50" />
+            <div className="fixed inset-0 overflow-y-auto">
+              <div className="flex min-h-full flex-col items-center justify-start p-0 sm:p-4">
+                <Dialog.Panel className="mt-10 w-full max-w-xl overflow-hidden bg-white text-left shadow-xl transition-all dark:bg-gray-700">
+                  <TaskForm task={task} onClose={editModalProps.onClose} />
+                </Dialog.Panel>
+              </div>
+            </div>
+          </Dialog>
 
           <updateFetcher.Form action={`/timeline/${task.id}`} replace method="post">
             <input type="hidden" name="date" value={dayjs().startOf("d").add(12, "h").format()} />
@@ -268,8 +173,20 @@ function BacklogItem({ task }: { task: BacklogTask }) {
           />
         </div>
       </div>
-      {isOpen && task.description && (
-        <p className="w-full rounded-sm bg-gray-50 p-2 text-sm dark:bg-gray-800">{task.description}</p>
+      {isOpen && (
+        <div>
+          {task.description && <p className="w-full rounded-sm bg-gray-50 p-2 text-sm dark:bg-gray-800">{task.description}</p>}
+          {task.todos.length > 0 && (
+            <div className="w-full rounded-sm bg-gray-50 p-2 text-sm dark:bg-gray-800">
+              <p>Todos</p>
+              <ul className="list-inside list-disc">
+                {task.todos.map((todo) => (
+                  <p key={todo.id}>- {todo.name}</p>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       )}
 
       <p
