@@ -49,7 +49,7 @@ export const loader = async ({ request }: LoaderArgs) => {
           firstName: true,
           email: true,
           stripeSubscriptionId: true,
-          _count: { select: { tasks: true, elements: true } },
+          _count: { select: { tasks: { where: { isTemplate: false } }, elements: true } },
         },
       }),
       db.user.count({ where: { archivedAt: { equals: null } } }),
@@ -160,8 +160,8 @@ export default function Admin() {
           <div className="stack">
             {users.map((user) => (
               <div className="grid grid-cols-5 rounded-sm border border-gray-100 p-4 text-sm dark:border-gray-700" key={user.id}>
-                <p>{user.firstName}</p>
-                <p>{user.email}</p>
+                <p className="truncate">{user.firstName}</p>
+                <p className="truncate">{user.email}</p>
                 <p>{user._count.tasks}</p>
                 <p>{user._count.elements}</p>
                 <div className="flex justify-end">
