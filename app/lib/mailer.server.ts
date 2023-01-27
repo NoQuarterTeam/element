@@ -6,8 +6,7 @@ import handlebars from "handlebars"
 import type { Transporter } from "nodemailer"
 import nodemailer from "nodemailer"
 
-import { IS_PRODUCTION } from "./config"
-import { SENDGRID_API_KEY } from "./config.server"
+import { IS_PRODUCTION, SENDGRID_API_KEY } from "./config.server"
 
 // MAILER
 sendgrid.setApiKey(SENDGRID_API_KEY)

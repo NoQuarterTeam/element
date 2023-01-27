@@ -37,5 +37,6 @@ export const {
   AWS_SECRET_KEY_USER,
 } = envSchema.parse(process.env)
 
+export const IS_PRODUCTION = APP_ENV === "production"
 // WEB URL
 export const FULL_WEB_URL = `${APP_ENV !== "development" ? "https://" : "http://"}${WEB_URL}`

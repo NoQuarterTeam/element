@@ -1,7 +1,6 @@
 import { createCookieSessionStorage } from "@remix-run/node"
 
-import { IS_PRODUCTION } from "~/lib/config"
-import { FLASH_SESSION_SECRET } from "~/lib/config.server"
+import { FLASH_SESSION_SECRET, IS_PRODUCTION } from "~/lib/config.server"
 
 export const FLASH_COOKIE_KEY = IS_PRODUCTION ? "element_session_flash" : "element_session_dev_flash"
 
