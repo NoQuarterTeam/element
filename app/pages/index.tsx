@@ -11,6 +11,7 @@ import { Menu, MenuButton, MenuItem, MenuList } from "~/components/ui/Menu"
 import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "~/lib/product"
 import { useTheme } from "~/lib/theme"
 import { getUserSession } from "~/services/session/session.server"
+import { Badge } from "~/components/ui/Badge"
 
 export const meta: MetaFunction = () => {
   return { title: "Element" }
@@ -26,32 +27,44 @@ export default function HomeLayout() {
   const theme = useTheme()
   const themeFetcher = useFetcher()
 
+  const isDark = theme === "dark"
   return (
     <div>
+      <div
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 65 65' width='60' height='60' fill='none' stroke='${
+            isDark ? "rgb(50 50 50 / 0.2)" : "rgb(15 23 42 / 0.03)"
+          }'%3e%3cpath d='M0 .5H63.5V65'/%3e%3c/svg%3e")`,
+        }}
+        className="absolute inset-0 z-[-10] h-[1000px]"
+      />
       <div className="border-b border-solid border-gray-50 dark:border-gray-700">
-        <Limiter>
+        <Limiter className="bg-white dark:bg-gray-800">
           <div className="flex justify-between py-5 align-middle">
             <div className="hstack space-x-6">
               <Link to="/">
                 <div className="hstack">
                   <img alt="element logo" src="/logo.png" className="sq-8" />
-                  <p className="text-xl font-bold">Element</p>
+                  <p className="text-xl font-semibold">Element</p>
                 </div>
               </Link>
-              <div className="hstack spacing-x-6 hidden md:flex">
-                <Link to="#why">Why</Link>
-                <Link to="#pricing">Pricing</Link>
-              </div>
+
+              <Link to="#why" className="block hover:opacity-50">
+                Why
+              </Link>
+              <Link to="#pricing" className="block hover:opacity-50">
+                Pricing
+              </Link>
             </div>
             <div className="hstack hidden md:flex">
               <themeFetcher.Form action="/api/theme" method="post" replace>
-                <input type="hidden" name="theme" value={theme === "dark" ? "light" : "dark"} />
+                <input type="hidden" name="theme" value={isDark ? "light" : "dark"} />
                 <IconButton
                   rounded="full"
                   type="submit"
-                  aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                  aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
                   variant="ghost"
-                  icon={theme === "dark" ? <RiSunLine className="sq-4" /> : <RiMoonLine className="sq-4" />}
+                  icon={isDark ? <RiSunLine className="sq-4" /> : <RiMoonLine className="sq-4" />}
                 />
               </themeFetcher.Form>
               <LinkButton size="md" variant="ghost" to="/login">
@@ -109,40 +122,41 @@ export default function HomeLayout() {
           </div>
         </Limiter>
       </div>
-      <Limiter className="py-20">
+      <Limiter className="pt-16 pb-20">
         <div className="stack space-y-20">
           <div className="center flex-col">
-            <div className="vstack max-w-md space-y-6 pb-12 text-center">
-              <h1 className="text-5xl">A better way to plan your life</h1>
+            <div className="vstack max-w-lg space-y-6 pb-12 text-center">
+              <Badge size="lg" colorScheme="green">
+                Early Beta
+              </Badge>
+              <h1 className="text-5xl leading-tight">A better way to plan your life</h1>
               <h2 className="text-lg font-normal">Plan your day consciously and stay in your element.</h2>
               <LinkButton to="/register" size="lg" colorScheme="primary">
                 Join now for free
               </LinkButton>
             </div>
 
-            <div className="overflow-hidden rounded-lg shadow-lg dark:shadow-2xl">
-              <img
-                alt="demo"
-                src={theme === "dark" ? "/demo-dark.png" : "/demo.png"}
-                className="w-full max-w-3xl object-contain"
-              />
+            <div className="overflow-hidden rounded-lg border border-gray-75 shadow-2xl shadow-gray-100 dark:border-gray-700 dark:shadow-gray-900 ">
+              <img alt="demo" src={isDark ? "/demo-dark.png" : "/demo.png"} className="w-full max-w-3xl object-contain" />
             </div>
           </div>
 
-          <div className="vstack spacing-y-6 pt-10" id="why">
+          <div className="vstack space-y-6 pt-20" id="why">
             <div className="vstack">
-              <h3>Why</h3>
-              <p className="text-lg">Just another task planner?</p>
+              <h3 className="text-5xl">Why</h3>
+              <p className="text-lg italic">Just another task planner?</p>
             </div>
-            <p className="w-full max-w-3xl text-center">
-              Task planners don't give a good enough overview of your day/week. Most aren't built to handle your calendar events.
-              With a built in habit tracker, Element helps you stay on track with your goals and aids you in creating a healthier
-              work-life balance.
+            <p className="w-full max-w-3xl text-center leading-loose">
+              Element is the perfect digital life planner for the balanced human. A todo list combined with a calendar, our simple
+              and minimal design lets you easily plan and prioritise your tasks by dragging them around the timeline. Each task
+              belongs to a certain Element of your life, such as work, exercise, holiday, social, or family etc. Our app lets you
+              quickly view your timeline and make sure you stay on top of your tasks without losing focus on what's important to
+              you. Get started with Element today and simplify your life!
             </p>
           </div>
-          <div className="stack spacing-y-6 pt-10" id="pricing">
+          <div className="stack space-y-6 pt-20 md:px-20" id="pricing">
             <div className="vstack">
-              <h3>Pricing</h3>
+              <h3 className="text-5xl">Pricing</h3>
               <p className="text-lg">Start for free, or as low as €4 a month.</p>
             </div>
             <div className="w-full border-r border-b border-gray-100 text-xs dark:border-gray-600 md:text-sm">
@@ -206,8 +220,10 @@ export default function HomeLayout() {
           </div>
         </div>
       </Limiter>
-      <div className="h-[300px] bg-gray-50 py-10 dark:bg-gray-900">
-        <Limiter></Limiter>
+      <div className="h-[300px] bg-white py-10 dark:bg-gray-800">
+        <Limiter>
+          <p className="pt-20 opacity-70">This product is in early beta, so expect frequent updates and improvements!</p>
+        </Limiter>
       </div>
     </div>
   )
