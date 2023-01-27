@@ -2,7 +2,6 @@ import * as React from "react"
 import { BiPlus } from "react-icons/bi"
 import { HiOutlineExclamation } from "react-icons/hi"
 import { RiAddLine, RiDeleteBinLine, RiFileCopyLine, RiTimeLine } from "react-icons/ri"
-
 import { type Element, TaskRepeat } from "@prisma/client"
 import { useSearchParams } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"

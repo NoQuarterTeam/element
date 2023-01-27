@@ -1,5 +1,5 @@
 import { Dialog } from "@headlessui/react"
-import { Prisma } from "@prisma/client"
+import { type Prisma } from "@prisma/client"
 import { type ActionArgs, type LoaderArgs, type SerializeFrom, json, redirect } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"

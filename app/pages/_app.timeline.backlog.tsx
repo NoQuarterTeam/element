@@ -1,11 +1,13 @@
-import { json, type LoaderArgs, type SerializeFrom } from "@remix-run/node"
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
-import dayjs from "dayjs"
 import * as React from "react"
 import { RiAddLine, RiArrowDownSLine, RiArrowRightSLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri"
-
 import { Dialog } from "@headlessui/react"
+import { type Prisma } from "@prisma/client"
+import { type LoaderArgs, type SerializeFrom, json } from "@remix-run/node"
+import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
+import dayjs from "dayjs"
+
 import { TaskForm } from "~/components/TaskForm"
+import { taskItemSelectFields } from "~/components/TaskItem"
 import { Button } from "~/components/ui/Button"
 import { Drawer } from "~/components/ui/Drawer"
 import { IconButton } from "~/components/ui/IconButton"
@@ -17,11 +19,9 @@ import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { type TimelineTask } from "~/pages/api+/tasks"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
+import { type TimelineTask } from "~/pages/api+/tasks"
 import { getUser } from "~/services/auth/auth.server"
-import { taskItemSelectFields } from "~/components/TaskItem"
-import { Prisma } from "@prisma/client"
 
 export const taskDetailSelectFields = {
   ...taskItemSelectFields,
