@@ -1,7 +1,6 @@
 import * as React from "react"
 import { RiAddLine, RiArrowDownSLine, RiArrowRightSLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri"
 import { Dialog } from "@headlessui/react"
-import { type Prisma } from "@prisma/client"
 import { type LoaderArgs, type SerializeFrom, json } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
@@ -23,15 +22,13 @@ import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TimelineTask } from "~/pages/api+/tasks"
 import { getUser } from "~/services/auth/auth.server"
 
-export const taskDetailSelectFields = {
-  ...taskItemSelectFields,
-  todos: { orderBy: { createdAt: "asc" }, select: { id: true, isComplete: true, name: true } },
-} satisfies Prisma.TaskSelect
-
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
   const tasks = await db.task.findMany({
-    select: taskDetailSelectFields,
+    select: {
+      ...taskItemSelectFields,
+      todos: { orderBy: { createdAt: "asc" }, select: { id: true, isComplete: true, name: true } },
+    },
     orderBy: { createdAt: "desc" },
     where: { creatorId: user.id, date: { equals: null }, isComplete: { equals: false } },
   })

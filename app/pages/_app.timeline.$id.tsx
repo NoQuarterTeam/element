@@ -1,5 +1,4 @@
 import { Dialog } from "@headlessui/react"
-import { type Prisma } from "@prisma/client"
 import { type ActionArgs, type LoaderArgs, type SerializeFrom, json, redirect } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
@@ -13,18 +12,16 @@ import { badRequest } from "~/lib/remix"
 import { getUser, requireUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
-export const taskDetailSelectFields = {
-  ...taskItemSelectFields,
-  todos: { orderBy: { createdAt: "asc" }, select: { id: true, isComplete: true, name: true } },
-} satisfies Prisma.TaskSelect
-
 export const loader = async ({ request, params }: LoaderArgs) => {
   await requireUser(request)
   const id = params.id
   if (!id) redirect("/timeline")
   const task = await db.task.findUnique({
     where: { id },
-    select: taskDetailSelectFields,
+    select: {
+      ...taskItemSelectFields,
+      todos: { orderBy: { createdAt: "asc" }, select: { id: true, isComplete: true, name: true } },
+    },
   })
   if (!task) redirect("/timeline")
   return json(task)
@@ -179,6 +176,8 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function TaskModal() {
   const task = useLoaderData<typeof loader>()
   const navigate = useNavigate()
+  console.log({ task })
+
   return (
     <Dialog open={true} as="div" className="relative z-50" onClose={() => navigate("/timeline")}>
       <div className="fixed inset-0 bg-black/50" />
