@@ -10,7 +10,7 @@ import { requireUser } from "~/services/auth/auth.server"
 export const loader = async ({ request }: LoaderArgs) => {
   await requireUser(request)
   const weatherData = await getWeatherData(request)
-  return json(weatherData)
+  return json(weatherData, { headers: { "Cache-Control": "private, max-age=3600, s-maxage=1800" } })
 }
 export type WeatherData = SerializeFrom<typeof loader>
 
