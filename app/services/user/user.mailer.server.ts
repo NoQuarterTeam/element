@@ -24,7 +24,7 @@ export async function sendResetPasswordEmail(user: User, token: string) {
 export async function sendEmailVerification(user: CurrentUser) {
   try {
     if (!user.email) return
-    const token = createToken({ id: user.id })
+    const token = createToken({ id: user.id }, { expiresIn: "30 mins" })
     await mailer.send({
       templateId: "d-aef1cdef55324a45ae6be3b3ae026124",
       to: user.email,

@@ -14,6 +14,7 @@ import { UPLOAD_PATHS } from "~/lib/uploadPaths"
 import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getUserSession } from "~/services/session/session.server"
+import { sendEmailVerification } from "~/services/user/user.mailer.server"
 
 import { useMe } from "./_app"
 
@@ -45,10 +46,17 @@ export const action = async ({ request }: ActionArgs) => {
         if (updateData.email) {
           const existing = await db.user.findFirst({ where: { email: { equals: updateData.email } } })
           if (existing) return badRequest({ data, formError: "User with these details already exists" })
+          await sendEmailVerification(user)
         }
-        await db.user.update({ where: { id: user.id }, data })
+        await db.user.update({ where: { id: user.id }, data: { ...data, verifiedAt: updateData.email ? null : undefined } })
         return redirect("/timeline/profile", {
-          headers: { "Set-Cookie": await createFlash(FlashType.Info, "Profile updated") },
+          headers: {
+            "Set-Cookie": await createFlash(
+              FlashType.Info,
+              "Profile updated",
+              updateData.email && "Verification email sent to " + updateData.email,
+            ),
+          },
         })
       } catch (e: any) {
         return badRequest(e.message, {
