@@ -12,6 +12,7 @@ import { hashPassword } from "~/services/auth/password.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getUserSession } from "~/services/session/session.server"
 import { createTemplates } from "~/services/timeline/templates.server"
+import { sendEmailVerification } from "~/services/user/user.mailer.server"
 
 export const meta: MetaFunction = () => {
   return { title: "Register" }
@@ -42,13 +43,14 @@ export const action = async ({ request }: ActionArgs) => {
     email,
     name: data.firstName + " " + data.lastName,
   })
-  const user = await db.user.create({ data: { ...data, password, stripeCustomerId: stripeCustomer.id } })
+  const user = await db.user.create({ data: { ...data, email, password, stripeCustomerId: stripeCustomer.id } })
   await createTemplates(user.id)
   const { setUser } = await getUserSession(request)
+  await sendEmailVerification(user)
   const { createFlash } = await getFlashSession(request)
   const headers = new Headers([
     ["Set-Cookie", await setUser(user.id)],
-    ["Set-Cookie", await createFlash(FlashType.Info, "Welcome to Element, you're all setup!")],
+    ["Set-Cookie", await createFlash(FlashType.Info, "Welcome to Element!", "Check your emails to verify your account.")],
   ])
   return redirect("/timeline", { headers })
 }

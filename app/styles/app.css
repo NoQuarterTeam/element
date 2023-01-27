@@ -14,7 +14,7 @@
   h5,
   h6 {
     @apply font-heading;
-    @apply font-bold !important;
+    @apply font-bold;
   }
 
   hr {

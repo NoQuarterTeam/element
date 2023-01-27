@@ -144,7 +144,7 @@ function Document({ theme, children }: DocumentProps) {
       </head>
       <body className="bg-white dark:bg-gray-800">
         {children}
-        <ScrollRestoration />
+        <ScrollRestoration getKey={(location) => location.pathname} />
         <Scripts />
         <LiveReload />
       </body>

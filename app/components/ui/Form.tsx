@@ -62,7 +62,7 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(func
   const fieldErrors = errors || form?.fieldErrors?.[props.name]
   const className = merge(props.className, fieldErrors && "border-red-500 focus:border-red-500")
   const sharedProps = {
-    "aria-invalid": errors || errors?.length ? true : undefined,
+    "aria-invalid": fieldErrors || fieldErrors?.length ? true : undefined,
     "aria-errormessage": props.name + "-error",
     id: props.name,
     defaultValue: form?.data?.[props.name],
@@ -71,6 +71,7 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(func
     name: props.name,
     className,
   }
+
   const clonedInput = input && React.cloneElement(input, sharedProps)
   return (
     <div>
@@ -81,12 +82,12 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(func
       )}
       {clonedInput || <Input size="sm" {...sharedProps} />}
 
-      {typeof errors === "string" ? (
-        <FormFieldError>{errors}</FormFieldError>
+      {typeof fieldErrors === "string" ? (
+        <FormFieldError>{fieldErrors}</FormFieldError>
       ) : (
-        errors?.length && (
+        fieldErrors?.length && (
           <ul id={props.name + "-error"}>
-            {errors?.map((error, i) => (
+            {fieldErrors?.map((error, i) => (
               <FormFieldError key={i}>{error}</FormFieldError>
             ))}
           </ul>
@@ -104,7 +105,7 @@ export const InlineFormField = React.forwardRef<HTMLInputElement, FormFieldProps
   const className = merge(props.className, fieldErrors && "border-red-500 focus:border-red-500")
   const sharedProps = shouldPassProps
     ? {
-        "aria-invalid": errors || errors?.length ? true : undefined,
+        "aria-invalid": fieldErrors || fieldErrors?.length ? true : undefined,
         "aria-errormessage": props.name + "-error",
         id: props.name,
         ref,
@@ -127,12 +128,12 @@ export const InlineFormField = React.forwardRef<HTMLInputElement, FormFieldProps
         )}
         {clonedInput || <Input size="sm" {...sharedProps} />}
       </div>
-      {typeof errors === "string" ? (
-        <FormFieldError>{errors}</FormFieldError>
+      {typeof fieldErrors === "string" ? (
+        <FormFieldError>{fieldErrors}</FormFieldError>
       ) : (
-        errors?.length && (
+        fieldErrors?.length && (
           <ul id={props.name + "-error"}>
-            {errors?.map((error, i) => (
+            {fieldErrors?.map((error, i) => (
               <FormFieldError key={i}>{error}</FormFieldError>
             ))}
           </ul>
@@ -156,7 +157,7 @@ interface ImageFieldProps {
 export function ImageField(props: ImageFieldProps) {
   const form = useActionData<ActionData<any>>()
   const [image, setImage] = React.useState(props.defaultValue)
-  const errors = props.errors || form?.fieldErrors?.[props.name]
+  const fieldErrors = props.errors || form?.fieldErrors?.[props.name]
   return (
     <div>
       {props.label && (
@@ -180,12 +181,12 @@ export function ImageField(props: ImageFieldProps) {
         </ImageUploader>
         <input type="hidden" value={image || ""} name={props.name} />
       </div>
-      {typeof errors === "string" ? (
-        <FormFieldError>{errors}</FormFieldError>
+      {typeof fieldErrors === "string" ? (
+        <FormFieldError>{fieldErrors}</FormFieldError>
       ) : (
-        errors?.length && (
+        fieldErrors?.length && (
           <ul id={props.name + "-error"}>
-            {errors?.map((error, i) => (
+            {fieldErrors?.map((error, i) => (
               <FormFieldError key={i}>{error}</FormFieldError>
             ))}
           </ul>

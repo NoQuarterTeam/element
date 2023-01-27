@@ -9,7 +9,7 @@ export const action = async ({ request }: ActionArgs) => {
   const { createFlash } = await getFlashSession(request)
   const headers = new Headers([
     ["Set-Cookie", await destroy()],
-    ["Set-Cookie", await createFlash(FlashType.Info, "Logged out!")],
+    ["Set-Cookie", await createFlash(FlashType.Info, "Logged out!", "See you soon!")],
   ])
   return redirect("/login", { headers })
 }

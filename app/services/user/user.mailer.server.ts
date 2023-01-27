@@ -1,7 +1,10 @@
 import type { User } from "@prisma/client"
 
 import { FULL_WEB_URL } from "~/lib/config.server"
+import { createToken } from "~/lib/jwt.server"
 import { mailer } from "~/lib/mailer.server"
+
+import { type CurrentUser } from "../auth/auth.server"
 
 export async function sendResetPasswordEmail(user: User, token: string) {
   try {
@@ -18,6 +21,24 @@ export async function sendResetPasswordEmail(user: User, token: string) {
   }
 }
 
+export async function sendEmailVerification(user: CurrentUser) {
+  try {
+    if (!user.email) return
+    const token = createToken({ id: user.id })
+    await mailer.send({
+      templateId: "d-aef1cdef55324a45ae6be3b3ae026124",
+      to: user.email,
+      variables: {
+        subject: "Verify email",
+        text: "Click below to verify your email",
+        linkText: "Verify",
+        linkUrl: `${FULL_WEB_URL}/api/email-verification/${token}`,
+      },
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
 export async function sendPasswordChangedEmail(user: User) {
   try {
     if (!user.email) return

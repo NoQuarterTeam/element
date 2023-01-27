@@ -34,8 +34,9 @@ export function Modal({ isOpen, size = "xl", onClose, position = "top", ...props
         <div className="fixed inset-0 overflow-y-auto">
           <div
             className={join(
-              "flex min-h-full flex-col items-center p-0 pt-10 sm:p-4 md:pt-16",
+              "flex min-h-full flex-col items-center",
               position === "top" ? "justify-start" : "justify-center",
+              size !== "full" && "p-0 pt-10 sm:p-4 md:pt-16",
             )}
           >
             <Transition.Child

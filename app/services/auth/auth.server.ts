@@ -20,6 +20,7 @@ const userSelectFields = {
   lastName: true,
   avatar: true,
   role: true,
+  verifiedAt: true,
   stripeSubscriptionId: true,
   stripeCustomerId: true,
 } satisfies Prisma.UserSelect
@@ -33,4 +34,4 @@ export async function getUser(request: Request) {
   if (!user) throw redirect(`/login`)
   return user
 }
-export type CurrentUser = Await<typeof requireUser>
+export type CurrentUser = Await<typeof getUser>

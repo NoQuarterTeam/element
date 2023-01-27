@@ -1,4 +1,4 @@
-import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
+import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { type ShouldRevalidateFunction, useRouteLoaderData } from "@remix-run/react"
 import { useLoaderData } from "@remix-run/react"
@@ -6,7 +6,7 @@ import { Outlet } from "@remix-run/react"
 
 import { useHydrated } from "~/components/ui/ClientOnly"
 import { LoadingScreen } from "~/components/ui/LoadingScreen"
-import { getUser } from "~/services/auth/auth.server"
+import { type CurrentUser, getUser } from "~/services/auth/auth.server"
 
 export const shouldRevalidate: ShouldRevalidateFunction = ({ formAction }) => {
   if (!formAction) return false
@@ -16,8 +16,6 @@ export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
   return json(user)
 }
-
-export type CurrentUser = SerializeFrom<typeof loader>
 
 export default function TimelineLayout() {
   useLoaderData<typeof loader>()

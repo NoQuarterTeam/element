@@ -16,12 +16,14 @@ export async function createTemplates(userId: string) {
               {
                 name: "Send proposal",
                 order: 10,
+                isTemplate: true,
                 creatorId: userId,
                 date: dayjs().endOf("w").add(3, "d").startOf("d").add(12, "h").toDate(),
               },
               {
                 name: "Finish presentation",
                 durationHours: 2,
+                isTemplate: true,
                 order: 2,
                 creatorId: userId,
                 date: dayjs().endOf("w").add(5, "d").startOf("d").add(12, "h").toDate(),
@@ -41,6 +43,7 @@ export async function createTemplates(userId: string) {
                     name: "Weekly stand up",
                     creatorId: userId,
                     startTime: "10:00",
+                    isTemplate: true,
                     order: 1,
                     durationHours: 1,
                     date: dayjs().endOf("w").add(2, "d").startOf("d").add(12, "h").toDate(),
@@ -49,6 +52,7 @@ export async function createTemplates(userId: string) {
                     name: "Lunch with Jim",
                     creatorId: userId,
                     startTime: "13:00",
+                    isTemplate: true,
                     order: 20,
                     durationHours: 1,
                     date: dayjs().endOf("w").add(3, "d").startOf("d").add(12, "h").toDate(),
@@ -66,11 +70,12 @@ export async function createTemplates(userId: string) {
         tasks: {
           createMany: {
             data: [
-              { name: "Gym", durationHours: 1, creatorId: userId, date: dayjs().add(1, "d").toDate() },
+              { name: "Gym", durationHours: 1, isTemplate: true, creatorId: userId, date: dayjs().add(1, "d").toDate() },
               {
                 name: "Meditate",
                 durationMinutes: 15,
                 startTime: "08:00",
+                isTemplate: true,
                 order: 0,
                 creatorId: userId,
                 date: dayjs().add(1, "d").startOf("d").add(12, "h").toDate(),
@@ -78,6 +83,7 @@ export async function createTemplates(userId: string) {
               {
                 name: "Dinner with Sophie",
                 startTime: "19:00",
+                isTemplate: true,
                 order: 50,
                 description: "Pick her up at 18:30",
                 creatorId: userId,

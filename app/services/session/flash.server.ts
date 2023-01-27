@@ -22,14 +22,15 @@ const flashStorage = createCookieSessionStorage({
   },
 })
 
+export type FlashMessage = { title: string; description?: string }
 export async function getFlashSession(request: Request) {
   const session = await flashStorage.getSession(request.headers.get("Cookie"))
-  const flashError = session.get(FlashType.Error) || null
-  const flashInfo = session.get(FlashType.Info) || null
+  const flashError = (session.get(FlashType.Error) as FlashMessage) || null
+  const flashInfo = (session.get(FlashType.Info) as FlashMessage) || null
 
   const commit = () => flashStorage.commitSession(session)
-  const createFlash = (type: FlashType, message: string) => {
-    session.flash(type, message)
+  const createFlash = (type: FlashType, message: string, description?: string) => {
+    session.flash(type, { title: message, description })
     return commit()
   }
   return {

@@ -60,6 +60,17 @@ export const action = async ({ request }: ActionArgs) => {
           const taskCount = await db.task.count({ where: { creatorId: { equals: user.id } } })
           if (taskCount >= MAX_FREE_TASKS) return redirect("/timeline/profile/plan/limit-task")
         }
+        if (!user.verifiedAt) {
+          return redirect("/timeline/profile", {
+            headers: {
+              "Set-Cookie": await createFlash(
+                FlashType.Info,
+                "Please verify your account",
+                "You can resend an email if you haven't received one.",
+              ),
+            },
+          })
+        }
         const createSchema = z
           .object({
             name: z.string(),
