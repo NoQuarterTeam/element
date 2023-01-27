@@ -41,7 +41,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const [users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg, activeUsersAgg] =
     await Promise.all([
       db.user.findMany({
-        where: { role: Role.USER, archivedAt: { equals: null } },
+        where: { archivedAt: { equals: null } },
         orderBy: { createdAt: "desc" },
         take: 5,
         select: {
@@ -52,7 +52,7 @@ export const loader = async ({ request }: LoaderArgs) => {
           _count: { select: { tasks: true, elements: true } },
         },
       }),
-      db.user.count({ where: { role: Role.USER, archivedAt: { equals: null } } }),
+      db.user.count({ where: { archivedAt: { equals: null } } }),
       db.task.count(),
       db.task.count({
         where: {
@@ -84,7 +84,6 @@ export const loader = async ({ request }: LoaderArgs) => {
         SELECT series.date, COUNT("User".id)::int
         FROM series
         LEFT JOIN "User" ON date_trunc(${period}, "User"."createdAt"::date) <= series.date
-          AND "User"."role" = 'USER'
           AND "User"."archivedAt" IS NULL
         GROUP BY series.date
         ORDER BY series.date ASC
@@ -102,7 +101,6 @@ export const loader = async ({ request }: LoaderArgs) => {
         LEFT JOIN "Task" ON date_trunc(${period}, "createdAt") = series.date
           AND "Task"."isTemplate" = false
         LEFT JOIN "User" ON "Task"."creatorId" = "User".id
-          AND "User"."role" = 'USER'
           AND "User"."archivedAt" IS NULL
         GROUP BY series.date
         ORDER BY series.date ASC
