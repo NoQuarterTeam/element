@@ -57,8 +57,8 @@ export default function Focus() {
   return (
     <Dialog open={true} as="div" className="relative z-50" onClose={() => navigate("/timeline")}>
       <div className="fixed inset-0 bg-black/50" />
-      <div className="fixed inset-0 overflow-y-auto">
-        <Dialog.Panel className="relative h-full w-full bg-white dark:bg-gray-900">
+      <div className="fixed inset-0 top-0 h-screen overflow-y-auto">
+        <Dialog.Panel className="relative h-full w-full bg-white dark:bg-gray-800">
           <div className="absolute top-2 right-4">
             <CloseButton size="lg" onClick={() => navigate("/timeline")} />
           </div>

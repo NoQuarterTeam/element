@@ -1,7 +1,6 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { type ShouldRevalidateFunction, useRouteLoaderData } from "@remix-run/react"
-import { useLoaderData } from "@remix-run/react"
 import { Outlet } from "@remix-run/react"
 
 import { useHydrated } from "~/components/ui/ClientOnly"
@@ -18,7 +17,6 @@ export const loader = async ({ request }: LoaderArgs) => {
 }
 
 export default function TimelineLayout() {
-  useLoaderData<typeof loader>()
   const isHydrated = useHydrated()
 
   if (!isHydrated) return <LoadingScreen />

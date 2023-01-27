@@ -33,7 +33,7 @@ export default Timeline
 function _Timeline() {
   const [isFinishedLoading, setIsFinishedLoading] = React.useState(false)
   React.useEffect(() => {
-    const timeout = setTimeout(() => setIsFinishedLoading(true), 300)
+    const timeout = setTimeout(() => setIsFinishedLoading(true), 100)
     return () => clearTimeout(timeout)
   }, [])
 
@@ -55,7 +55,10 @@ function _Timeline() {
       if (!response.ok) throw new Error("Failed to load tasks")
       return response.json() as Promise<TimelineTask[]>
     },
-    { refetchOnWindowFocus: false, staleTime: Infinity },
+    {
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
+    },
   )
 
   React.useEffect(() => {

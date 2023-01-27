@@ -9,7 +9,7 @@ import dayjs from "dayjs"
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 import { DATE_BACK } from "~/lib/hooks/useTimelineTaskDates"
-import { merge } from "~/lib/tailwind"
+import { join } from "~/lib/tailwind"
 import { useMe } from "~/pages/_app"
 import type { TimelineHabitResponse } from "~/pages/api+/habits"
 import type { WeatherData } from "~/pages/api+/weather"
@@ -59,7 +59,7 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
 
   return (
     <div
-      className={merge(
+      className={join(
         "flex w-min border-b border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800",
         isHabitsEnabled ? "h-headerHabit" : "h-header",
       )}

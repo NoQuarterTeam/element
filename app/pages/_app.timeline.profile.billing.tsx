@@ -32,7 +32,10 @@ export const loader = async ({ request }: LoaderArgs) => {
     email: stripeCustomer.email,
     taxId: { value: stripeCustomer.tax_ids?.data?.[0]?.value, type: stripeCustomer.tax_ids?.data?.[0]?.type },
   }
-  return json({ billing, invoices: invoices.data }, { headers: { "Cache-Control": "private, max-age=360" } })
+  return json(
+    { billing, invoices: invoices.data },
+    { headers: { "Cache-Control": "private, max-age=360, stale-while-revalidate" } },
+  )
 }
 export type ProfileBilling = SerializeFrom<typeof loader>
 
