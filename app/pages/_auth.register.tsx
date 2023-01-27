@@ -9,6 +9,7 @@ import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { hashPassword } from "~/services/auth/password.server"
+import { generateFakeUser } from "~/services/auth/temporary-account.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getUserSession } from "~/services/session/session.server"
 import { createTemplates } from "~/services/timeline/templates.server"
@@ -17,67 +18,145 @@ import { sendEmailVerification } from "~/services/user/user.mailer.server"
 export const meta: MetaFunction = () => {
   return { title: "Register" }
 }
-
 export const headers = () => {
   return {
     "Cache-Control": "max-age=3600, s-maxage=86400",
   }
 }
 
+enum RegisterActionMethods {
+  Register = "Register",
+  RegisterTemporay = "RegisterTemporay",
+}
+
 export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData()
-  const registerSchema = z.object({
-    email: z.string().min(3).email("Invalid email"),
-    password: z.string().min(8, "Must be at least 8 characters"),
-    firstName: z.string().min(2, "Must be at least 2 characters"),
-    lastName: z.string().min(2, "Must be at least 2 characters"),
-  })
-  const { data, fieldErrors } = await validateFormData(registerSchema, formData)
-  if (fieldErrors) return badRequest({ fieldErrors, data })
+  const action = formData.get("_action") as RegisterActionMethods | undefined
 
-  const email = data.email.toLowerCase().trim()
-  const existing = await db.user.findFirst({ where: { email } })
-  if (existing) return badRequest({ data, formError: "User with these details already exists" })
-  const password = await hashPassword(data.password)
-  const stripeCustomer = await stripe.customers.create({
-    email,
-    name: data.firstName + " " + data.lastName,
-  })
-  const user = await db.user.create({ data: { ...data, email, password, stripeCustomerId: stripeCustomer.id } })
-  await createTemplates(user.id)
-  const { setUser } = await getUserSession(request)
-  await sendEmailVerification(user)
   const { createFlash } = await getFlashSession(request)
-  const headers = new Headers([
-    ["Set-Cookie", await setUser(user.id)],
-    ["Set-Cookie", await createFlash(FlashType.Info, "Welcome to Element!", "Check your emails to verify your account.")],
-  ])
-  return redirect("/timeline", { headers })
+  switch (action) {
+    case RegisterActionMethods.Register:
+      try {
+        const registerSchema = z.object({
+          email: z.string().min(3).email("Invalid email"),
+          password: z.string().min(8, "Must be at least 8 characters"),
+          firstName: z.string().min(2, "Must be at least 2 characters"),
+          lastName: z.string().min(2, "Must be at least 2 characters"),
+        })
+        const { data, fieldErrors } = await validateFormData(registerSchema, formData)
+        if (fieldErrors) return badRequest({ fieldErrors, data })
+
+        const email = data.email.toLowerCase().trim()
+        const existing = await db.user.findFirst({ where: { email } })
+        if (existing) return badRequest({ data, formError: "User with these details already exists" })
+        const password = await hashPassword(data.password)
+        const stripeCustomer = await stripe.customers.create({
+          email,
+          name: data.firstName + " " + data.lastName,
+        })
+        const user = await db.user.create({ data: { ...data, email, password, stripeCustomerId: stripeCustomer.id } })
+        await createTemplates(user.id)
+        const { setUser } = await getUserSession(request)
+        await sendEmailVerification(user)
+        const { createFlash } = await getFlashSession(request)
+        const headers = new Headers([
+          ["Set-Cookie", await setUser(user.id)],
+          [
+            "Set-Cookie",
+            await createFlash(
+              FlashType.Info,
+              `Welcome to Element, ${data.firstName}!`,
+              "Check your emails to verify your account.",
+            ),
+          ],
+        ])
+        return redirect("/timeline", { headers })
+      } catch (e: any) {
+        return badRequest(e.message, {
+          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Register error") },
+        })
+      }
+    case RegisterActionMethods.RegisterTemporay:
+      try {
+        const data = await generateFakeUser()
+        const stripeCustomer = await stripe.customers.create({
+          email: data.email,
+          name: data.firstName + " " + data.lastName,
+        })
+        const user = await db.user.create({ data: { ...data, stripeCustomerId: stripeCustomer.id } })
+        await createTemplates(user.id)
+        const { setUser } = await getUserSession(request)
+        const { createFlash } = await getFlashSession(request)
+        const headers = new Headers([
+          ["Set-Cookie", await setUser(user.id)],
+          [
+            "Set-Cookie",
+            await createFlash(
+              FlashType.Info,
+              "Welcome to Element!",
+              "This is a temporary account, change your email to convert to a permanent account.",
+            ),
+          ],
+        ])
+        return redirect("/timeline", { headers })
+      } catch (e: any) {
+        return badRequest(e.message, {
+          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Register error") },
+        })
+      }
+
+    default:
+      break
+  }
 }
 
 export default function Register() {
   return (
-    <Form method="post" replace>
-      <div className="stack">
-        <h1 className="text-6xl font-bold">Register</h1>
-        <FormField required label="Email address" name="email" placeholder="jim@gmail.com" />
-        <FormField required label="Password" name="password" type="password" placeholder="********" />
-        <FormField required label="First name" name="firstName" placeholder="Jim" />
-        <FormField required label="Last name" name="lastName" placeholder="Bob" />
-        <div>
-          <FormButton className="w-full">Register</FormButton>
-          <FormError />
-        </div>
+    <div>
+      <Form method="post" replace>
+        <div className="stack">
+          <h1 className="text-4xl font-bold">Register</h1>
+          <FormField required label="Email address" name="email" placeholder="jim@gmail.com" />
+          <FormField required label="Password" name="password" type="password" placeholder="********" />
+          <FormField required label="First name" name="firstName" placeholder="Jim" />
+          <FormField required label="Last name" name="lastName" placeholder="Bob" />
+          <div>
+            <FormButton name="_action" value={RegisterActionMethods.Register} className="w-full">
+              Register
+            </FormButton>
+            <FormError />
+          </div>
 
-        <div className="flex justify-between">
-          <Link to="/login" className="hover:opacity-70">
-            Login
-          </Link>
-          <Link to="/forgot-password" className="hover:opacity-70">
-            Forgot password?
-          </Link>
+          <div className="flex justify-between">
+            <Link to="/login" className="hover:opacity-70">
+              Login
+            </Link>
+            <Link to="/forgot-password" className="hover:opacity-70">
+              Forgot password?
+            </Link>
+          </div>
         </div>
+      </Form>
+      <div>
+        <div className="flex items-center justify-center py-4">
+          <div className="mr-3 flex-grow border-t border-gray-300 dark:border-gray-700" aria-hidden="true"></div>
+          <div className="opacity-50">or</div>
+          <div className="ml-3 flex-grow border-t border-gray-300 dark:border-gray-700" aria-hidden="true"></div>
+        </div>
+        <Form method="post" replace>
+          <FormButton
+            variant="outline"
+            colorScheme="gray"
+            type="submit"
+            name="_action"
+            value={RegisterActionMethods.RegisterTemporay}
+            className="w-full"
+          >
+            Create a temporary account
+          </FormButton>
+        </Form>
+        <p className="pt-1 text-center text-xs opacity-60">This can be converted to a real account later on</p>
       </div>
-    </Form>
+    </div>
   )
 }

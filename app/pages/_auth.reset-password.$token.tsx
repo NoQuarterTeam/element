@@ -11,6 +11,12 @@ import { badRequest } from "~/lib/remix"
 import { hashPassword } from "~/services/auth/password.server"
 import { sendPasswordChangedEmail } from "~/services/user/user.mailer.server"
 
+export const headers = () => {
+  return {
+    "Cache-Control": "max-age=3600, s-maxage=86400",
+  }
+}
+
 export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData()
   const resetPasswordSchema = z.object({
@@ -38,7 +44,7 @@ export default function ResetPassword() {
     <Form method="post">
       <div className="stack">
         <div>
-          <h1 className="text-6xl font-bold">Reset password</h1>
+          <h1 className="text-4xl font-bold">Reset password</h1>
           <p>Enter a new password below.</p>
         </div>
         <input name="token" type="hidden" value={token} />

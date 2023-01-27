@@ -45,7 +45,7 @@ export default function Login() {
   return (
     <Form method="post" replace>
       <div className="stack">
-        <h1 className="text-6xl">Login</h1>
+        <h1 className="text-4xl">Login</h1>
         <input type="hidden" name="redirectTo" value={params.get("redirectTo") || ""} />
         <FormField required label="Email address" name="email" placeholder="jim@gmail.com" />
         <FormField required label="Password" name="password" type="password" placeholder="********" />

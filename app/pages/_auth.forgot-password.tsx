@@ -11,6 +11,12 @@ import { createToken } from "~/lib/jwt.server"
 import { badRequest } from "~/lib/remix"
 import { sendResetPasswordEmail } from "~/services/user/user.mailer.server"
 
+export const headers = () => {
+  return {
+    "Cache-Control": "max-age=3600, s-maxage=86400",
+  }
+}
+
 export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData()
   const resetSchema = z.object({ email: z.string().email("Invalid email") })
@@ -41,7 +47,7 @@ export default function ForgotPassword() {
   return (
     <Form method="post">
       <div className="stack">
-        <h1 className="text-6xl font-bold">Forgot your password?</h1>
+        <h1 className="text-4xl font-bold">Forgot password?</h1>
         <p>Enter your email below to receive your password reset instructions.</p>
         <FormField required label="Email address" name="email" placeholder="jim@gmail.com" />
         <FormError />

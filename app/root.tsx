@@ -2,7 +2,17 @@ import * as React from "react"
 import * as Tooltip from "@radix-ui/react-tooltip"
 import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from "@remix-run/react"
+import {
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useCatch,
+  useLoaderData,
+  useMatches,
+} from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 import { join } from "~/lib/tailwind"
@@ -47,9 +57,12 @@ const queryClient = new QueryClient()
 
 export default function App() {
   const { flash, theme } = useLoaderData<typeof loader>()
+  const matches = useMatches()
+
+  const shouldDisableScripts = matches.some((match) => match.handle?.disableScripts)
 
   return (
-    <Document theme={theme}>
+    <Document theme={theme} shouldDisableScripts={shouldDisableScripts}>
       <Toaster>
         <QueryClientProvider client={queryClient}>
           <Tooltip.Provider>
@@ -67,7 +80,7 @@ export default function App() {
 export function ErrorBoundary({ error }: { error: Error }) {
   console.error("Boundary:", error)
   return (
-    <Document theme="dark">
+    <Document theme="dark" shouldDisableScripts={false}>
       <div className="vstack h-screen justify-center p-20">
         <img alt="logo" src="/logo.png" className="sq-24" />
         <h1>Oops, there was an error.</h1>
@@ -93,7 +106,7 @@ export function CatchBoundary() {
   }
 
   return (
-    <Document theme="dark">
+    <Document theme="dark" shouldDisableScripts={false}>
       <div className="vstack h-screen justify-center p-20">
         <img alt="logo" src="/logo.png" className="sq-24" />
         <h1>
@@ -108,9 +121,10 @@ export function CatchBoundary() {
 interface DocumentProps {
   children: React.ReactNode
   theme: Theme
+  shouldDisableScripts: boolean
 }
 
-function Document({ theme, children }: DocumentProps) {
+function Document({ theme, children, shouldDisableScripts }: DocumentProps) {
   return (
     <html lang="en" className={join(theme)}>
       <head>
@@ -150,7 +164,7 @@ function Document({ theme, children }: DocumentProps) {
             return paths.includes(location.pathname) ? location.pathname : location.key
           }}
         />
-        <Scripts />
+        {!shouldDisableScripts && <Scripts />}
         <LiveReload />
       </body>
     </html>
