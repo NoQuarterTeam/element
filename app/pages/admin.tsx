@@ -19,41 +19,42 @@ export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
   if (user.role !== Role.ADMIN) throw redirect("/")
   const firstUser = await db.user.findFirst({ orderBy: { createdAt: "asc" }, select: { createdAt: true } })
-  const [users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg] = await Promise.all([
-    db.user.findMany({
-      where: { role: Role.USER },
-      orderBy: { createdAt: "desc" },
-      take: 5,
-      select: {
-        id: true,
-        firstName: true,
-        email: true,
-        stripeSubscriptionId: true,
-        _count: { select: { tasks: true, elements: true } },
-      },
-    }),
-    db.user.count(),
-    db.task.count(),
-    db.task.count({
-      where: {
-        createdAt: {
-          gte: dayjs().subtract(1, "month").startOf("month").toDate(),
-          lt: dayjs().subtract(1, "month").toDate(),
+  const [users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg, activeUsersAgg] =
+    await Promise.all([
+      db.user.findMany({
+        where: { role: Role.USER },
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          firstName: true,
+          email: true,
+          stripeSubscriptionId: true,
+          _count: { select: { tasks: true, elements: true } },
         },
-      },
-    }),
-    db.task.count({ where: { createdAt: { gte: dayjs().startOf("month").toDate() } } }),
-    db.feedback.findMany({
-      select: {
-        id: true,
-        content: true,
-        type: true,
-        creator: { select: { email: true, avatar: true, firstName: true, lastName: true } },
-      },
-      take: 20,
-      orderBy: { createdAt: "desc" },
-    }),
-    db.$queryRaw<{ date: string; count: number }[]>`
+      }),
+      db.user.count(),
+      db.task.count(),
+      db.task.count({
+        where: {
+          createdAt: {
+            gte: dayjs().subtract(1, "month").startOf("month").toDate(),
+            lt: dayjs().subtract(1, "month").toDate(),
+          },
+        },
+      }),
+      db.task.count({ where: { createdAt: { gte: dayjs().startOf("month").toDate() } } }),
+      db.feedback.findMany({
+        select: {
+          id: true,
+          content: true,
+          type: true,
+          creator: { select: { email: true, avatar: true, firstName: true, lastName: true } },
+        },
+        take: 20,
+        orderBy: { createdAt: "desc" },
+      }),
+      db.$queryRaw<{ date: string; count: number }[]>`
       WITH series AS (
         SELECT generate_series(
           date_trunc('month', ${
@@ -70,31 +71,31 @@ export const loader = async ({ request }: LoaderArgs) => {
       GROUP BY date
       ORDER BY date ASC
     `,
-    //   db.$queryRaw<{ date: string; count: number }[]>`
-    //   WITH series AS (
-    //     SELECT generate_series(
-    //       date_trunc('month', ${
-    //         firstUser ? dayjs(firstUser.createdAt).subtract(1, "month").format("YYYY-MM-DD") : dayjs().subtract(1, "year")
-    //       }::date),
-    //       date_trunc('month', ${dayjs().format("YYYY-MM-DD")}::date),
-    //       '1 month'::interval
-    //     ) AS date
-    //   )
-    //   SELECT series.date as date, COUNT(distinct "creatorId")::int
-    //   FROM series
-    //   LEFT JOIN "Task"
-    //     ON date_trunc('month', "createdAt") = series.date
-    //     LEFT JOIN "User"
-    //     	ON "Task"."creatorId" = "User".id
-    //   GROUP BY series.date
-    //   ORDER BY series.date ASC
-    // `,
-  ])
-  return json({ users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg })
+      db.$queryRaw<{ date: string; count: number }[]>`
+      WITH series AS (
+        SELECT generate_series(
+          date_trunc('month', ${
+            firstUser ? dayjs(firstUser.createdAt).subtract(1, "month").format("YYYY-MM-DD") : dayjs().subtract(1, "year")
+          }::date),
+          date_trunc('month', ${dayjs().format("YYYY-MM-DD")}::date),
+          '1 month'::interval
+        ) AS date
+      )
+      SELECT series.date as date, COUNT(distinct "creatorId")::int
+      FROM series
+      LEFT JOIN "Task"
+        ON date_trunc('month', "createdAt") = series.date
+        LEFT JOIN "User"
+        	ON "Task"."creatorId" = "User".id
+      GROUP BY series.date
+      ORDER BY series.date ASC
+    `,
+    ])
+  return json({ users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg, activeUsersAgg })
 }
 
 export default function Admin() {
-  const { users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg } =
+  const { users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg, activeUsersAgg } =
     useLoaderData<typeof loader>()
   const percentageChange = Math.round((taskCountThisMonth / (tastCountLastMonth || 1) - 1) * 100)
 
@@ -161,7 +162,7 @@ export default function Admin() {
             <ClientOnly fallback={<div className="h-[450px]" />}>
               {() => (
                 <LineChart width={1000} height={450}>
-                  <XAxis dataKey="date" />
+                  <XAxis dataKey="date" minTickGap={10} type="category" allowDuplicatedCategory={false} />
                   <YAxis />
                   <Line
                     data={usersAgg.map((stat) => ({ date: dayjs(stat.date).format("DD-MM-YYYY"), Users: stat.count }))}
@@ -171,7 +172,7 @@ export default function Admin() {
                     stroke="orange"
                     strokeWidth={3}
                   />
-                  {/* <Line
+                  <Line
                     data={activeUsersAgg.map((stat) => ({
                       date: dayjs(stat.date).format("DD-MM-YYYY"),
                       "Active users": stat.count,
@@ -181,7 +182,7 @@ export default function Admin() {
                     dataKey="Active users"
                     stroke="blue"
                     strokeWidth={3}
-                  /> */}
+                  />
                   <Tooltip wrapperClassName="dark:!bg-black !border-none !outline-none" />
                 </LineChart>
               )}
