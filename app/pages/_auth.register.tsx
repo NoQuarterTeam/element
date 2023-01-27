@@ -42,7 +42,7 @@ export const action = async ({ request }: ActionArgs) => {
     email,
     name: data.firstName + " " + data.lastName,
   })
-  const user = await db.user.create({ data: { ...data, password, stripeCustomerId: stripeCustomer.id } })
+  const user = await db.user.create({ data: { ...data, email, password, stripeCustomerId: stripeCustomer.id } })
   await createTemplates(user.id)
   const { setUser } = await getUserSession(request)
   const { createFlash } = await getFlashSession(request)
