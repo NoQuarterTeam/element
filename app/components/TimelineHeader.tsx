@@ -31,7 +31,7 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
   const me = useMe()
 
   const features = useFeatures((s) => s.features)
-  const isHabitsEnabled = features.includes("habits")
+  const isHabitsEnabled = !!me.stripeSubscriptionId && features.includes("habits")
   const isWeatherEnabled = features.includes("weather")
 
   const { data } = useQuery(
@@ -41,7 +41,7 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
       if (!response.ok) throw new Error("Failed to load habits")
       return response.json() as Promise<TimelineHabitResponse>
     },
-    { refetchOnWindowFocus: false, enabled: !!me.stripeSubscriptionId && isHabitsEnabled },
+    { refetchOnWindowFocus: false, enabled: isHabitsEnabled },
   )
 
   const habits = data?.habits

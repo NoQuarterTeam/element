@@ -22,6 +22,7 @@ import { SCROLL_DAYS_BACK, useTimelineScrollDays } from "~/lib/hooks/useTimeline
 import { DATE_BACK, DATE_FORWARD, useTimelineTaskDates } from "~/lib/hooks/useTimelineTaskDates"
 import { TASK_CACHE_KEY } from "~/lib/hooks/useTimelineTasks"
 
+import { useMe } from "./_app"
 import type { TimelineTask } from "./api+/tasks"
 
 dayjs.extend(advancedFormat)
@@ -121,7 +122,9 @@ function _Timeline() {
       navigate("new")
     }
   })
-  const headerHeight = useFeatures((s) => s.features).includes("habits") ? HEADER_HABIT_HEIGHT : HEADER_HEIGHT
+  const me = useMe()
+  const isHabitsEnabled = useFeatures((s) => s.features).includes("habits")
+  const headerHeight = !!me.stripeSubscriptionId && isHabitsEnabled ? HEADER_HABIT_HEIGHT : HEADER_HEIGHT
 
   return (
     <>

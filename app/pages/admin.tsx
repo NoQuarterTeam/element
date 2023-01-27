@@ -10,11 +10,11 @@ import { Line, LineChart, Tooltip, XAxis, YAxis } from "recharts"
 
 import { Badge } from "~/components/ui/Badge"
 import { ClientOnly } from "~/components/ui/ClientOnly"
+import { Select } from "~/components/ui/Inputs"
 import { Limiter } from "~/components/ui/Limiter"
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
 import { getUser } from "~/services/auth/auth.server"
-import { Select } from "~/components/ui/Inputs"
 
 type ActivePeriod = "all" | "year" | "month" | "week"
 export const loader = async ({ request }: LoaderArgs) => {

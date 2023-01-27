@@ -26,6 +26,7 @@ model User {
   createdAt            DateTime     @default(now()) @db.Timestamptz(6)
   updatedAt            DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
   archivedAt           DateTime?    @db.Timestamptz(6)
+  verifiedAt           DateTime?    @db.Timestamptz(6)
   tasks                Task[]
   elements             Element[]
   habits               Habit[]

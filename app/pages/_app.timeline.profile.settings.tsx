@@ -56,9 +56,6 @@ export default function Settings() {
       <div className="stack">
         <div className="hstack">
           <p className="text-sm">Weather</p>
-          <Badge size="sm" colorScheme="primary">
-            New
-          </Badge>
         </div>
         <p className="text-xs">Show the next weeks weather based on your current location.</p>
         <Switch onCheckedChange={handleToggleWeather} defaultChecked={features.includes("weather")} />
@@ -67,9 +64,6 @@ export default function Settings() {
       <div className="stack">
         <div className="hstack">
           <p className="text-sm">Habits</p>
-          <Badge size="sm" colorScheme="primary">
-            New
-          </Badge>
           <Badge size="sm" colorScheme="red">
             Pro
           </Badge>

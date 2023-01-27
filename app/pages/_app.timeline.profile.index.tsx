@@ -1,6 +1,6 @@
 import type { ActionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
-import { useSubmit } from "@remix-run/react"
+import { useFetcher, useSubmit } from "@remix-run/react"
 import { z } from "zod"
 
 import { AlertDialog } from "~/components/ui/AlertDialog"
@@ -80,11 +80,21 @@ export const action = async ({ request }: ActionArgs) => {
 export default function Account() {
   const logoutSubmit = useSubmit()
   const me = useMe()
-
+  const verifyFetcher = useFetcher()
   return (
     <div className="stack">
       <p className="text-lg font-medium">Account</p>
-
+      {!me.verifiedAt && (
+        <verifyFetcher.Form action="/api/email-verification" method="post" replace>
+          <div className="stack rounded-sm bg-orange-100 p-2 dark:bg-orange-900">
+            <p className="text-md">Your account is not yet verified</p>
+            <p className="text-xs">Please check your email inbox for a verification link</p>
+            <Button type="submit" variant="outline" className="font-normal" isLoading={verifyFetcher.state !== "idle"}>
+              Resend email verification
+            </Button>
+          </div>
+        </verifyFetcher.Form>
+      )}
       <Form method="post" replace>
         <div className="stack">
           <FormField defaultValue={me.email} name="email" label="Email" />
