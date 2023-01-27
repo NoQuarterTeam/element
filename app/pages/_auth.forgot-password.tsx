@@ -1,15 +1,15 @@
-import * as React from "react"
-import type { ActionArgs } from "@remix-run/node"
-import { Link, useTransition } from "@remix-run/react"
+import { ActionArgs, redirect } from "@remix-run/node"
+import { Link } from "@remix-run/react"
 import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
-import { useToast } from "~/components/ui/Toast"
+
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { createToken } from "~/lib/jwt.server"
 import { badRequest } from "~/lib/remix"
 import { sendResetPasswordEmail } from "~/services/user/user.mailer.server"
+import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const headers = () => {
   return {
@@ -27,23 +27,13 @@ export const action = async ({ request }: ActionArgs) => {
     const token = createToken({ id: user.id })
     await sendResetPasswordEmail(user, token)
   }
-  return true
+  const { createFlash } = await getFlashSession(request)
+  return redirect("/login", {
+    headers: { "Set-Cookie": await createFlash(FlashType.Info, "Reset link sent to your email") },
+  })
 }
 
 export default function ForgotPassword() {
-  const { type } = useTransition()
-  const inputRef = React.useRef<HTMLInputElement>(null)
-
-  const toast = useToast()
-  React.useEffect(() => {
-    if (type === "actionSubmission") {
-      toast({ description: "Reset link sent to your email" })
-      if (!inputRef.current) return
-      inputRef.current.value = ""
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type])
-
   return (
     <Form method="post">
       <div className="stack">

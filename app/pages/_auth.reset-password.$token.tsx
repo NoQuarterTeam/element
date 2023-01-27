@@ -9,6 +9,7 @@ import { validateFormData } from "~/lib/form"
 import { decryptToken } from "~/lib/jwt.server"
 import { badRequest } from "~/lib/remix"
 import { hashPassword } from "~/services/auth/password.server"
+import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { sendPasswordChangedEmail } from "~/services/user/user.mailer.server"
 
 export const headers = () => {
@@ -33,8 +34,10 @@ export const action = async ({ request }: ActionArgs) => {
     data: { password: hashedPassword },
   })
   await sendPasswordChangedEmail(user)
-
-  return redirect("/login")
+  const { createFlash } = await getFlashSession(request)
+  return redirect("/login", {
+    headers: { "Set-Cookie": await createFlash(FlashType.Info, "Password changed") },
+  })
 }
 
 export default function ResetPassword() {
