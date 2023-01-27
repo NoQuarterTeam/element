@@ -149,22 +149,20 @@ export default function Admin() {
         </div>
         <div className="stack">
           <h4 className="text-lg">Latest 5 users</h4>
-          <div className="grid grid-cols-5 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-            <p>Name</p>
-            <p>Email</p>
-            <p>Tasks</p>
-            <p>Elements</p>
-            <p className="text-right">Subscription</p>
+          <div className="grid grid-cols-9 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+            <p className="col-span-3">Name</p>
+            <p className="col-span-3">Email</p>
+            <p className="col-span-1">Tasks</p>
+            <p className="col-span-2 text-right">Subscription</p>
           </div>
 
           <div className="stack">
             {users.map((user) => (
-              <div className="grid grid-cols-5 rounded-sm border border-gray-100 p-4 text-sm dark:border-gray-700" key={user.id}>
-                <p className="truncate">{user.firstName}</p>
-                <p className="truncate">{user.email}</p>
-                <p>{user._count.tasks}</p>
-                <p>{user._count.elements}</p>
-                <div className="flex justify-end">
+              <div className="grid grid-cols-9 rounded-sm border border-gray-100 p-4 text-sm dark:border-gray-700" key={user.id}>
+                <p className="col-span-3 truncate">{user.firstName}</p>
+                <p className="col-span-3 truncate">{user.email}</p>
+                <p className="col-span-1">{user._count.tasks}</p>
+                <div className="col-span-2 flex justify-end">
                   {user.stripeSubscriptionId ? <Badge colorScheme="red">Pro</Badge> : <Badge>Free</Badge>}
                 </div>
               </div>
