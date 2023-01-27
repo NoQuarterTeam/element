@@ -1,15 +1,14 @@
-import { ActionArgs, redirect } from "@remix-run/node"
+import { type ActionArgs, redirect } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
-
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { createToken } from "~/lib/jwt.server"
 import { badRequest } from "~/lib/remix"
-import { sendResetPasswordEmail } from "~/services/user/user.mailer.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
+import { sendResetPasswordEmail } from "~/services/user/user.mailer.server"
 
 export const headers = () => {
   return {
