@@ -4,7 +4,7 @@ import { Role } from "@prisma/client"
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
-import { useLoaderData } from "@remix-run/react"
+import { useLoaderData, useSearchParams } from "@remix-run/react"
 import dayjs from "dayjs"
 import { Line, LineChart, Tooltip, XAxis, YAxis } from "recharts"
 
@@ -14,11 +14,30 @@ import { Limiter } from "~/components/ui/Limiter"
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
 import { getUser } from "~/services/auth/auth.server"
+import { Select } from "~/components/ui/Inputs"
 
+type ActivePeriod = "all" | "year" | "month" | "week"
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await getUser(request)
   if (user.role !== Role.ADMIN) throw redirect("/")
+  const url = new URL(request.url)
+  const activePeriod = (url.searchParams.get("activePeriod") || "all") as ActivePeriod
+
   const firstUser = await db.user.findFirst({ orderBy: { createdAt: "asc" }, select: { createdAt: true } })
+  const period = activePeriod === "all" ? "month" : activePeriod === "year" ? "month" : "day"
+  const interval = activePeriod === "all" ? "1 month" : activePeriod === "year" ? "1 month" : "1 day"
+
+  const startDate =
+    activePeriod === "all"
+      ? firstUser
+        ? dayjs(firstUser.createdAt).subtract(1, "month").format("YYYY-MM-DD")
+        : dayjs().subtract(1, "year")
+      : activePeriod === "year"
+      ? dayjs().subtract(1, "year")
+      : activePeriod === "month"
+      ? dayjs().subtract(1, "month")
+      : dayjs().subtract(1, "week")
+
   const [users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg, activeUsersAgg] =
     await Promise.all([
       db.user.findMany({
@@ -55,37 +74,33 @@ export const loader = async ({ request }: LoaderArgs) => {
         orderBy: { createdAt: "desc" },
       }),
       db.$queryRaw<{ date: string; count: number }[]>`
-      WITH series AS (
-        SELECT generate_series(
-          date_trunc('month', ${
-            firstUser ? dayjs(firstUser.createdAt).subtract(1, "month").format("YYYY-MM-DD") : dayjs().subtract(1, "year")
-          }::date),
-          date_trunc('month', ${dayjs().format("YYYY-MM-DD")}::date),
-          '1 month'::interval
-        ) AS date
-      )
-      SELECT series.date, COUNT("User".id)::int
-      FROM series
-      LEFT JOIN "User" ON date_trunc('month', "User"."createdAt"::date) <= series.date
-      GROUP BY date
-      ORDER BY date ASC
+        WITH series AS (
+          SELECT generate_series(
+            date_trunc(${period}, ${startDate}::date),
+            date_trunc(${period}, ${dayjs().format("YYYY-MM-DD")}::date),
+            ${interval}::interval
+          ) AS date
+        )
+        SELECT series.date, COUNT("User".id)::int
+        FROM series
+        LEFT JOIN "User" ON date_trunc(${period}, "User"."createdAt"::date) <= series.date
+        GROUP BY series.date
+        ORDER BY series.date ASC
     `,
       db.$queryRaw<{ date: string; count: number }[]>`
-      WITH series AS (
-        SELECT generate_series(
-          date_trunc('month', ${
-            firstUser ? dayjs(firstUser.createdAt).subtract(1, "month").format("YYYY-MM-DD") : dayjs().subtract(1, "year")
-          }::date),
-          date_trunc('month', ${dayjs().format("YYYY-MM-DD")}::date),
-          '1 month'::interval
-        ) AS date
-      )
-      SELECT series.date as date, COUNT(distinct "creatorId")::int as count
-      FROM series
-      LEFT JOIN "Task" ON date_trunc('month', "createdAt") = series.date AND "Task"."isTemplate" = false
-      LEFT JOIN "User" ON "Task"."creatorId" = "User".id
-      GROUP BY series.date
-      ORDER BY series.date ASC
+        WITH series AS (
+          SELECT generate_series(
+            date_trunc(${period}, ${startDate}::date),
+            date_trunc(${period}, ${dayjs().format("YYYY-MM-DD")}::date),
+            ${interval}::interval
+          ) AS date
+        )
+        SELECT series.date as date, COUNT(distinct "creatorId")::int as count
+        FROM series
+        LEFT JOIN "Task" ON date_trunc(${period}, "createdAt") = series.date AND "Task"."isTemplate" = false
+        LEFT JOIN "User" ON "Task"."creatorId" = "User".id
+        GROUP BY series.date
+        ORDER BY series.date ASC
     `,
     ])
   return json({ users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg, activeUsersAgg })
@@ -96,6 +111,7 @@ export default function Admin() {
     useLoaderData<typeof loader>()
   const percentageChange = Math.round((taskCountThisMonth / (tastCountLastMonth || 1) - 1) * 100)
 
+  const [params, setParams] = useSearchParams()
   return (
     <Limiter>
       <div className="space-y-6 p-6">
@@ -154,7 +170,22 @@ export default function Admin() {
         </div>
 
         <div>
-          <h4 className="text-lg">All users</h4>
+          <div className="flex justify-between">
+            <h4 className="text-lg">All users</h4>
+            <div>
+              <Select
+                className="w-40"
+                size="sm"
+                value={params.get("activePeriod") || "all"}
+                onChange={(e) => setParams({ activePeriod: e.target.value as ActivePeriod })}
+              >
+                <option value="all">All time</option>
+                <option value="year">Last year</option>
+                <option value="month">Last month</option>
+                <option value="week">Last week</option>
+              </Select>
+            </div>
+          </div>
           <div className="center">
             <ClientOnly fallback={<div className="h-[450px]" />}>
               {() => (
