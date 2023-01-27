@@ -176,7 +176,6 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function TaskModal() {
   const task = useLoaderData<typeof loader>()
   const navigate = useNavigate()
-  console.log({ task })
 
   return (
     <Dialog open={true} as="div" className="relative z-50" onClose={() => navigate("/timeline")}>
