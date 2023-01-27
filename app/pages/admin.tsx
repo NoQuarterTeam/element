@@ -66,8 +66,7 @@ export const loader = async ({ request }: LoaderArgs) => {
       )
       SELECT series.date, COUNT("User".id)::int
       FROM series
-      LEFT JOIN "User"
-        ON date_trunc('month', "User"."createdAt"::date) <= series.date
+      LEFT JOIN "User" ON date_trunc('month', "User"."createdAt"::date) <= series.date
       GROUP BY date
       ORDER BY date ASC
     `,
@@ -81,12 +80,10 @@ export const loader = async ({ request }: LoaderArgs) => {
           '1 month'::interval
         ) AS date
       )
-      SELECT series.date as date, COUNT(distinct "creatorId")::int
+      SELECT series.date as date, COUNT(distinct "creatorId")::int as count
       FROM series
-      LEFT JOIN "Task"
-        ON date_trunc('month', "createdAt") = series.date
-        LEFT JOIN "User"
-        	ON "Task"."creatorId" = "User".id
+      LEFT JOIN "Task" ON date_trunc('month', "createdAt") = series.date AND "Task"."isTemplate" = false
+      LEFT JOIN "User" ON "Task"."creatorId" = "User".id
       GROUP BY series.date
       ORDER BY series.date ASC
     `,
@@ -111,7 +108,7 @@ export default function Admin() {
           <h2 className="flex-1 text-center text-xl">Admin</h2>
           <div className="flex-1" />
         </div>
-        <div className="flex justify-between border border-gray-100 p-4 dark:border-gray-700">
+        <div className="flex justify-between rounded-sm border border-gray-100 p-4 dark:border-gray-700">
           <div>
             <h4 className="text-lg">Users</h4>
             <p className="text-3xl">{userCount}</p>
@@ -143,7 +140,7 @@ export default function Admin() {
 
           <div className="stack">
             {users.map((user) => (
-              <div className="grid grid-cols-5 rounded border border-gray-100 p-4 text-sm dark:border-gray-700" key={user.id}>
+              <div className="grid grid-cols-5 rounded-sm border border-gray-100 p-4 text-sm dark:border-gray-700" key={user.id}>
                 <p>{user.firstName}</p>
                 <p>{user.email}</p>
                 <p>{user._count.tasks}</p>
