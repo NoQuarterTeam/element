@@ -37,6 +37,7 @@ export const action = async ({ request }: ActionArgs) => {
   switch (action) {
     case RegisterActionMethods.Register:
       try {
+        if (formData.get("passwordConfirmation")) return redirect("/")
         const registerSchema = z.object({
           email: z.string().min(3).email("Invalid email"),
           password: z.string().min(8, "Must be at least 8 characters"),
@@ -78,6 +79,7 @@ export const action = async ({ request }: ActionArgs) => {
       }
     case RegisterActionMethods.RegisterTemporay:
       try {
+        if (formData.get("passwordConfirmation")) return redirect("/")
         const data = await generateFakeUser()
         const stripeCustomer = await stripe.customers.create({
           email: data.email,
@@ -118,6 +120,7 @@ export default function Register() {
           <h1 className="text-4xl font-bold">Register</h1>
           <FormField required label="Email address" name="email" placeholder="jim@gmail.com" />
           <FormField required label="Password" name="password" type="password" placeholder="********" />
+          <input name="passwordConfirmation" className="hidden" />
           <FormField required label="First name" name="firstName" placeholder="Jim" />
           <FormField required label="Last name" name="lastName" placeholder="Bob" />
           <div>
@@ -144,6 +147,7 @@ export default function Register() {
           <div className="ml-3 flex-grow border-t border-gray-300 dark:border-gray-700" aria-hidden="true"></div>
         </div>
         <Form method="post" replace>
+          <input name="passwordConfirmation" className="hidden" />
           <FormButton
             variant="outline"
             colorScheme="gray"

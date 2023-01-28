@@ -1,7 +1,7 @@
 import { createCookieSessionStorage } from "@remix-run/node"
 
 import { IS_PRODUCTION, THEME_SESSION_SECRET } from "~/lib/config.server"
-import { type Theme, isTheme } from "~/lib/theme"
+import { isTheme, type Theme } from "~/lib/theme"
 
 export const THEME_COOKIE_KEY = IS_PRODUCTION ? "element_session_theme" : "element_session_dev_theme"
 
