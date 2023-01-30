@@ -117,7 +117,7 @@ export default function Admin() {
   const [params, setParams] = useSearchParams()
   return (
     <Limiter>
-      <div className="space-y-6 p-6">
+      <div className="space-y-6 p-2 md:p-6">
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <LinkButton to="/timeline" variant="outline" leftIcon={<RiArrowLeftLine />}>
@@ -125,7 +125,7 @@ export default function Admin() {
             </LinkButton>
           </div>
           <h2 className="flex-1 text-center text-xl">Admin</h2>
-          <div className="flex-1" />
+          <div className="hidden flex-1 md:flex" />
         </div>
         <div className="flex justify-between rounded-sm border border-gray-100 p-4 dark:border-gray-700">
           <div>
