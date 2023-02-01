@@ -286,14 +286,27 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
           }
         />
 
-        <InlineFormField
-          pattern="^([01]\d|2[0-3]):?([0-5]\d)$"
-          type="time"
-          name="startTime"
-          defaultValue={task?.startTime}
-          label="Start time"
-          errors={createUpdateFetcher.data?.fieldErrors?.startTime}
-        />
+        <div className="flex space-x-2">
+          <InlineFormField
+            pattern="^([01]\d|2[0-3]):?([0-5]\d)$"
+            type="time"
+            name="startTime"
+            defaultValue={task?.startTime}
+            label="Start time"
+            errors={createUpdateFetcher.data?.fieldErrors?.startTime}
+          />
+          {/* <Tooltip label="Notifications">
+            <IconButton
+              size="sm"
+              variant="outline"
+              icon={<RiNotification2Line />}
+              aria-label="send notifications"
+              // onClick={() => {
+
+              // }}
+            />
+          </Tooltip> */}
+        </div>
 
         {!task && (
           <InlineFormField
