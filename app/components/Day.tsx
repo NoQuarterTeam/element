@@ -19,11 +19,10 @@ import { IconButton } from "./ui/IconButton"
 
 interface Props {
   day: string
-  index: number
   tasks: TimelineTask[]
 }
 
-export const DAY_WIDTH = 98
+export const DAY_WIDTH = 100
 
 function _Day(props: Props) {
   const client = useQueryClient()
@@ -135,5 +134,5 @@ function _Day(props: Props) {
 export const Day = React.memo(_Day, dayIsEqual)
 
 function dayIsEqual(prevDay: Props, nextDay: Props) {
-  return deepEqual(prevDay.tasks, nextDay.tasks)
+  return prevDay.day === nextDay.day && deepEqual(prevDay.tasks, nextDay.tasks)
 }

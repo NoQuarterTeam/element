@@ -18,7 +18,7 @@ import { isMobile } from "~/lib/helpers/utils"
 import { useEventListener } from "~/lib/hooks/useEventListener"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
-import { SCROLL_DAYS_BACK, useTimelineScrollDays } from "~/lib/hooks/useTimelineScrollDays"
+import { SCROLL_DAYS_BACK, SCROLL_DAYS_FORWARD, useTimelineScrollDays } from "~/lib/hooks/useTimelineScrollDays"
 import { DATE_BACK, DATE_FORWARD, useTimelineTaskDates } from "~/lib/hooks/useTimelineTaskDates"
 import { TASK_CACHE_KEY } from "~/lib/hooks/useTimelineTasks"
 
@@ -129,6 +129,23 @@ function _Timeline() {
   const isHabitsEnabled = useFeatures((s) => s.features).includes("habits")
   const headerHeight = !!me.stripeSubscriptionId && isHabitsEnabled ? HEADER_HABIT_HEIGHT : HEADER_HEIGHT
 
+  const dropTasks = React.useMemo(() => tasks.map((t) => ({ id: t.id, date: t.date, order: t.order })), [tasks])
+  const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineScrollDays()
+  const { ref: leftRef } = useInView({
+    onChange: (inView) => {
+      if (inView) {
+        setDaysBack(daysBack + SCROLL_DAYS_BACK)
+      }
+    },
+  })
+  const { ref: rightRef } = useInView({
+    onChange: (inView) => {
+      if (inView) {
+        setDaysForward(daysForward + SCROLL_DAYS_FORWARD)
+      }
+    },
+  })
+
   return (
     <>
       <div
@@ -138,7 +155,15 @@ function _Timeline() {
       >
         <TimelineHeader isLoading={isLoading || isFetching} days={days} months={months} />
         <div ref={daysRef} className="w-min overflow-scroll" style={{ height: `calc(100vh - ${headerHeight}px)` }}>
-          <TimelineContent days={days} tasks={tasks} />
+          <div className="flex">
+            <DropContainer tasks={dropTasks}>
+              <div ref={leftRef} />
+              {days.map((day) => (
+                <Day key={day} day={day} tasks={tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))} />
+              ))}
+              <div ref={rightRef} />
+            </DropContainer>
+          </div>
         </div>
         <Nav />
         <div className="absolute bottom-4 left-4 md:bottom-8 md:left-8">
@@ -170,33 +195,34 @@ function _Timeline() {
   )
 }
 
-const TimelineContent = React.memo(_TimelineContent)
-function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
-  const dropTasks = React.useMemo(() => props.tasks.map((t) => ({ id: t.id, date: t.date, order: t.order })), [props.tasks])
-  const { daysForward, setDaysForward } = useTimelineScrollDays()
-  // const { ref: leftRef } = useInView({
-  //   onChange: (inView) => {
-  //     if (inView) {
-  //       setDaysBack(daysBack + 100)
-  //     }
-  //   },
-  // })
-  const { ref: rightRef } = useInView({
-    onChange: (inView) => {
-      if (inView) {
-        setDaysForward(daysForward + 100)
-      }
-    },
-  })
-  return (
-    <div className="flex">
-      <DropContainer tasks={dropTasks}>
-        {/* <div ref={leftRef} /> */}
-        {props.days.map((day, index) => (
-          <Day key={index} day={day} index={index} tasks={props.tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))} />
-        ))}
-        <div ref={rightRef} />
-      </DropContainer>
-    </div>
-  )
-}
+// const TimelineContent = React.memo(_TimelineContent)
+// function _TimelineContent(props: { days: string[]; tasks: TimelineTask[] }) {
+//   const dropTasks = React.useMemo(() => props.tasks.map((t) => ({ id: t.id, date: t.date, order: t.order })), [props.tasks])
+//   const { daysForward, daysBack, setDaysBack, setDaysForward } = useTimelineScrollDays()
+//   const { ref: leftRef } = useInView({
+//     delay: 1000,
+//     onChange: (inView) => {
+//       if (inView) {
+//         setDaysBack(daysBack + SCROLL_DAYS_BACK)
+//       }
+//     },
+//   })
+//   const { ref: rightRef } = useInView({
+//     onChange: (inView) => {
+//       if (inView) {
+//         setDaysForward(daysForward + SCROLL_DAYS_FORWARD)
+//       }
+//     },
+//   })
+//   return (
+//     <div className="flex">
+//       <DropContainer tasks={dropTasks}>
+//         <div ref={leftRef} />
+//         {props.days.map((day) => (
+//           <Day key={day} day={day} tasks={props.tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))} />
+//         ))}
+//         <div ref={rightRef} />
+//       </DropContainer>
+//     </div>
+//   )
+// }

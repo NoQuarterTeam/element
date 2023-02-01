@@ -29,7 +29,7 @@ module.exports = {
         nav: "72px",
         header: "124px",
         headerHabit: "143px",
-        day: "98px",
+        day: "100px",
       },
       borderRadius: {
         xs: "2px",
