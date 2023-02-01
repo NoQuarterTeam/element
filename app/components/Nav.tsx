@@ -12,7 +12,7 @@ import {
   RiUser3Line,
 } from "react-icons/ri"
 import { Role } from "@prisma/client"
-import { useFetcher, useNavigate, useSubmit } from "@remix-run/react"
+import { useFetcher, useLocation, useNavigate, useSubmit } from "@remix-run/react"
 
 import { useDisclosure } from "~/lib/hooks/useDisclosure"
 import { useEventListener } from "~/lib/hooks/useEventListener"
@@ -34,11 +34,12 @@ export function Nav() {
   const navProps = useStoredDisclosure("element.nav", { defaultIsOpen: true })
   const me = useMe()
   const featuresSeen = useFeaturesSeen((s) => s.featuresSeen)
-
+  const location = useLocation()
   const logoutSubmit = useSubmit()
   const navigate = useNavigate()
 
   useEventListener("keydown", (event: KeyboardEvent) => {
+    if (location.pathname !== "/timeline") return
     if (event.metaKey && event.key === "k") {
       event.preventDefault()
       navigate("/timeline/focus")
