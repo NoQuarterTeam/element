@@ -9,7 +9,7 @@ import { merge } from "~/lib/tailwind"
 import { BrandButton } from "./BrandButton"
 import { type ButtonProps } from "./Button"
 import { ImageUploader } from "./ImageUploader"
-import { type InputProps, Input } from "./Inputs"
+import { Input, type InputProps } from "./Inputs"
 
 export const Form = React.forwardRef(function _Form(props: RemixFormProps, ref: React.ForwardedRef<HTMLFormElement> | null) {
   const form = useActionData<ActionData<any>>()

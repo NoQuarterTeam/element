@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as RAvatar from "@radix-ui/react-avatar"
-import { type VariantProps, cva } from "class-variance-authority"
+import { cva, type VariantProps } from "class-variance-authority"
 
 import { merge } from "~/lib/tailwind"
 

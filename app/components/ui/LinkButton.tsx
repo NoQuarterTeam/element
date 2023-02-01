@@ -1,8 +1,8 @@
-import { type LinkProps, Link } from "@remix-run/react"
+import { Link, type LinkProps } from "@remix-run/react"
 
 import { join, merge } from "~/lib/tailwind"
 
-import { type ButtonStyleProps, buttonSizeStyles, buttonStyles } from "./Button"
+import { buttonSizeStyles, type ButtonStyleProps, buttonStyles } from "./Button"
 import { Spinner } from "./Spinner"
 
 interface LinkButtonProps extends ButtonStyleProps, LinkProps {

@@ -1,7 +1,7 @@
 import * as React from "react"
 import { RiAddLine, RiArrowDownSLine, RiArrowRightSLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri"
 import { Dialog } from "@headlessui/react"
-import { type LoaderArgs, type SerializeFrom, json } from "@remix-run/node"
+import { json, type LoaderArgs, type SerializeFrom } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
 

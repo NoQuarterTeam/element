@@ -1,4 +1,4 @@
-import { type NavLinkProps, NavLink as RNavLink } from "@remix-run/react"
+import { NavLink as RNavLink, type NavLinkProps } from "@remix-run/react"
 
 import { merge } from "~/lib/tailwind"
 

@@ -7,7 +7,7 @@ import queryString from "query-string"
 import { merge } from "~/lib/tailwind"
 
 import { IconButton } from "./IconButton"
-import { type InputProps, Input } from "./Inputs"
+import { Input, type InputProps } from "./Inputs"
 
 export function Search({ placeholder, name = "search", ...props }: InputProps) {
   const [params, setParams] = useSearchParams()
