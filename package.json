@@ -79,7 +79,7 @@
     "react": "18.2.0",
     "recharts": "^2.3.2",
     "sharp": "^0.31.3",
-    "stripe": "11.9.0",
+    "stripe": "11.9.1",
     "tailwind-merge": "^1.8.1",
     "tailwindcss-radix": "^2.6.2",
     "zod": "3.20.2",
