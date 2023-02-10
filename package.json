@@ -83,7 +83,7 @@
     "tailwind-merge": "^1.8.1",
     "tailwindcss-radix": "^2.6.2",
     "zod": "3.20.6",
-    "zustand": "4.3.2"
+    "zustand": "4.3.3"
   },
   "devDependencies": {
     "@remix-run/dev": "1.12.0",
