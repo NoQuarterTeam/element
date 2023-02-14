@@ -21,6 +21,7 @@ const userSelectFields = {
   avatar: true,
   role: true,
   verifiedAt: true,
+  createdAt: true,
   stripeSubscriptionId: true,
   stripeCustomerId: true,
 } satisfies Prisma.UserSelect
