@@ -2,6 +2,7 @@ import * as React from "react"
 import { BsSunrise, BsThermometerHalf } from "react-icons/bs"
 import { RiWindyLine } from "react-icons/ri"
 import { TbDroplet, TbLocation } from "react-icons/tb"
+import { InView } from "react-intersection-observer"
 import * as HoverCard from "@radix-ui/react-hover-card"
 import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
@@ -112,86 +113,94 @@ function _HeaderDay(props: {
     [props.day, props.habitEntries],
   )
   return (
-    <div className="vstack w-day space-y-1 px-2" key={props.day}>
-      <div className="h-9 overflow-hidden">
-        {props.isWeatherEnabled && props.weather && (
-          <HoverCard.Root openDelay={0} closeDelay={50}>
-            <HoverCard.Trigger asChild>
-              <div className="flex items-center rounded-full border border-gray-100 px-3 dark:border-gray-700">
-                <p className="text-xs opacity-80">{props.weather.temp.max}°C</p>
+    <InView>
+      {({ ref, inView }) => (
+        <div ref={ref} className="vstack w-day space-y-1 px-2">
+          {inView && (
+            <>
+              <div className="h-9 overflow-hidden">
+                {props.isWeatherEnabled && props.weather && (
+                  <HoverCard.Root openDelay={0} closeDelay={50}>
+                    <HoverCard.Trigger asChild>
+                      <div className="flex items-center rounded-full border border-gray-100 px-3 dark:border-gray-700">
+                        <p className="text-xs opacity-80">{props.weather.temp.max}°C</p>
 
-                <img
-                  src={`https://openweathermap.org/img/wn/${props.weather.icon}@2x.png`}
-                  className="object-cover sq-8"
-                  alt="weather icon"
-                />
-              </div>
-            </HoverCard.Trigger>
+                        <img
+                          src={`https://openweathermap.org/img/wn/${props.weather.icon}@2x.png`}
+                          className="object-cover sq-8"
+                          alt="weather icon"
+                        />
+                      </div>
+                    </HoverCard.Trigger>
 
-            <HoverCard.Portal>
-              <HoverCard.Content
-                className="rounded-sm border border-gray-100 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-700"
-                sideOffset={5}
-              >
-                <p className="border-b border-gray-100 p-2 dark:border-gray-600">
-                  {dayjs(props.day).format("dddd Do")} -{" "}
-                  {props.weather.description[0].toUpperCase() + props.weather.description.slice(1)}
-                </p>
-                <div className="p-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <WeatherStat icon={<BsThermometerHalf className="sq-3.5" />} label="Temp">
-                      <div className="flex h-full flex-col justify-between">
-                        <p className="text-2xl">{props.weather.temp.max}°</p>
-                        <p className="text-xs">Min: {props.weather.temp.min}°</p>
-                      </div>
-                    </WeatherStat>
-                    <WeatherStat icon={<BsSunrise className="sq-3.5" />} label="Sunrise">
-                      <div className="flex h-full flex-col justify-between">
-                        <p className="text-2xl">{dayjs(props.weather.sunrise).format("HH:mm")}</p>
-                        <p className="text-xs">Sunset: {dayjs(props.weather.sunset).format("HH:mm")}</p>
-                      </div>
-                    </WeatherStat>
-                    <WeatherStat icon={<TbDroplet className="sq-3.5" />} label="Rain">
-                      <div className="flex h-full flex-col justify-between">
-                        <p className="text-2xl">{props.weather.rain} mm</p>
-                        <p className="text-xs">Chance: {props.weather.chanceOfRain}%</p>
-                      </div>
-                    </WeatherStat>
-                    <WeatherStat icon={<RiWindyLine className="sq-3.5" />} label="Wind">
-                      <div className="flex h-full flex-col justify-between">
-                        <div>
-                          <div className="hstack">
-                            <p className="text-2xl">
-                              {props.weather.windSpeed}
-                              <span className="text-lg">km/h</span>
-                            </p>
-                            <TbLocation
-                              className="opacity-60 sq-4"
-                              style={{ transform: `rotate(${135 + props.weather.windDirection}deg)` }}
-                            />
+                    <HoverCard.Portal>
+                      <HoverCard.Content
+                        className="rounded-sm border border-gray-100 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-700"
+                        sideOffset={5}
+                      >
+                        <p className="border-b border-gray-100 p-2 dark:border-gray-600">
+                          {dayjs(props.day).format("dddd Do")} -{" "}
+                          {props.weather.description[0].toUpperCase() + props.weather.description.slice(1)}
+                        </p>
+                        <div className="p-2">
+                          <div className="grid grid-cols-2 gap-2">
+                            <WeatherStat icon={<BsThermometerHalf className="sq-3.5" />} label="Temp">
+                              <div className="flex h-full flex-col justify-between">
+                                <p className="text-2xl">{props.weather.temp.max}°</p>
+                                <p className="text-xs">Min: {props.weather.temp.min}°</p>
+                              </div>
+                            </WeatherStat>
+                            <WeatherStat icon={<BsSunrise className="sq-3.5" />} label="Sunrise">
+                              <div className="flex h-full flex-col justify-between">
+                                <p className="text-2xl">{dayjs(props.weather.sunrise).format("HH:mm")}</p>
+                                <p className="text-xs">Sunset: {dayjs(props.weather.sunset).format("HH:mm")}</p>
+                              </div>
+                            </WeatherStat>
+                            <WeatherStat icon={<TbDroplet className="sq-3.5" />} label="Rain">
+                              <div className="flex h-full flex-col justify-between">
+                                <p className="text-2xl">{props.weather.rain} mm</p>
+                                <p className="text-xs">Chance: {props.weather.chanceOfRain}%</p>
+                              </div>
+                            </WeatherStat>
+                            <WeatherStat icon={<RiWindyLine className="sq-3.5" />} label="Wind">
+                              <div className="flex h-full flex-col justify-between">
+                                <div>
+                                  <div className="hstack">
+                                    <p className="text-2xl">
+                                      {props.weather.windSpeed}
+                                      <span className="text-lg">km/h</span>
+                                    </p>
+                                    <TbLocation
+                                      className="opacity-60 sq-4"
+                                      style={{ transform: `rotate(${135 + props.weather.windDirection}deg)` }}
+                                    />
+                                  </div>
+                                </div>
+                                <p className="text-xs">
+                                  Gusts: {props.weather.windGust}
+                                  <span>km/h</span>
+                                </p>
+                              </div>
+                            </WeatherStat>
                           </div>
                         </div>
-                        <p className="text-xs">
-                          Gusts: {props.weather.windGust}
-                          <span>km/h</span>
-                        </p>
-                      </div>
-                    </WeatherStat>
-                  </div>
-                </div>
-                <HoverCard.Arrow className="z-[1000] fill-white dark:fill-gray-700" />
-              </HoverCard.Content>
-            </HoverCard.Portal>
-          </HoverCard.Root>
-        )}
-      </div>
-      <div className="vstack space-y-0.5">
-        <p className="text-center text-sm">{dayjs(props.day).format("ddd Do")}</p>
-        {props.isHabitsEnabled && props.habits && (
-          <Habits day={dayjs(props.day).format("YYYY-MM-DD")} habits={props.habits} habitEntries={habitEntries} />
-        )}
-      </div>
-    </div>
+                        <HoverCard.Arrow className="z-[1000] fill-white dark:fill-gray-700" />
+                      </HoverCard.Content>
+                    </HoverCard.Portal>
+                  </HoverCard.Root>
+                )}
+              </div>
+              <div className="vstack space-y-0.5">
+                <p className="text-center text-sm">{dayjs(props.day).format("ddd Do")}</p>
+                {props.isHabitsEnabled && props.habits && (
+                  <Habits day={dayjs(props.day).format("YYYY-MM-DD")} habits={props.habits} habitEntries={habitEntries} />
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </InView>
   )
 }
 
