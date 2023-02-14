@@ -1,4 +1,4 @@
-import { type ActionArgs, json } from "@remix-run/node"
+import { type ActionArgs, json, redirect } from "@remix-run/node"
 
 import { isTheme } from "~/lib/theme"
 import { getThemeSession } from "~/services/session/theme.server"
@@ -15,3 +15,5 @@ export const action = async ({ request }: ActionArgs) => {
   themeSession.setTheme(theme)
   return json({ theme }, { headers: { "Set-Cookie": await themeSession.commit() } })
 }
+
+export const loader = async () => redirect("/", { status: 404 })

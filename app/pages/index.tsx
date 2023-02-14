@@ -8,10 +8,10 @@ import { Badge } from "~/components/ui/Badge"
 import { IconButton } from "~/components/ui/IconButton"
 import { Limiter } from "~/components/ui/Limiter"
 import { LinkButton } from "~/components/ui/LinkButton"
-import { Menu, MenuButton, MenuItem, MenuList } from "~/components/ui/Menu"
 import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "~/lib/product"
 import { useTheme } from "~/lib/theme"
 import { getUserSession } from "~/services/session/session.server"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "~/components/ui/DropdownMenu"
 
 export const meta: MetaFunction = () => {
   return { title: "Element" }
@@ -73,51 +73,34 @@ export default function HomeLayout() {
                 Join now
               </LinkButton>
             </div>
-            <Menu className="inline-block md:hidden">
-              <MenuButton>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                 <IconButton
                   size="md"
                   rounded="full"
+                  className="inline-block md:hidden"
                   aria-label={`Toggle open menu`}
                   icon={<RiMenuLine className="sq-5" />}
                   variant="ghost"
                 />
-              </MenuButton>
-              <MenuList>
-                <div>
-                  <MenuItem>
-                    {({ className }) => (
-                      <Link to="#why" className={className}>
-                        Why
-                      </Link>
-                    )}
-                  </MenuItem>
-                  <MenuItem>
-                    {({ className }) => (
-                      <Link to="#pricing" className={className}>
-                        Pricing
-                      </Link>
-                    )}
-                  </MenuItem>
-                </div>
-                <div>
-                  <MenuItem>
-                    {({ className }) => (
-                      <Link to="/register" className={className}>
-                        Register
-                      </Link>
-                    )}
-                  </MenuItem>
-                  <MenuItem>
-                    {({ className }) => (
-                      <Link to="/login" className={className}>
-                        Login
-                      </Link>
-                    )}
-                  </MenuItem>
-                </div>
-              </MenuList>
-            </Menu>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="bottom" align="end" className="inline-block md:hidden">
+                <DropdownMenuItem asChild>
+                  <Link to="#why">Why</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="#pricing">Pricing</Link>
+                </DropdownMenuItem>
+                <hr className="my-2 mx-1" />
+                <DropdownMenuItem asChild>
+                  <Link to="/register">Register</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/login">Login</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </Limiter>
       </div>

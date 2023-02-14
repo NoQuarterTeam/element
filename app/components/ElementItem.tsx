@@ -26,9 +26,10 @@ import { Button } from "./ui/Button"
 import { ButtonGroup } from "./ui/ButtonGroup"
 import { Form, FormButton, FormError, InlineFormField } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
-import { Menu, MenuButton, MenuItem, MenuList } from "./ui/Menu"
+
 import { Modal } from "./ui/Modal"
 import { useToast } from "./ui/Toast"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuTrigger } from "./ui/DropdownMenu"
 
 const MAX_DEPTH = 2
 
@@ -121,61 +122,51 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
           )}
         </div>
         <div>
-          <Menu>
-            <MenuButton>
-              <IconButton aria-label="more" size="xs" variant="ghost" rounded="full" icon={<RiMore2Fill className="sq-4" />} />
-            </MenuButton>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <IconButton
+                className="outline-none"
+                aria-label="more"
+                size="xs"
+                variant="ghost"
+                rounded="full"
+                icon={<RiMore2Fill className="sq-4" />}
+              />
+            </DropdownMenuTrigger>
 
-            <MenuList>
-              <div>
+            <DropdownMenuPortal>
+              <DropdownMenuContent side="left" align="start" className="z-[200]">
                 {props.depth < MAX_DEPTH && (
-                  <MenuItem>
-                    {({ className }) => (
-                      <button onClick={createModalProps.onOpen} className={className}>
-                        <RiAddLine className="sq-3" />
-                        <span>Create child</span>
-                      </button>
-                    )}
-                  </MenuItem>
+                  <DropdownMenuItem onClick={createModalProps.onOpen}>
+                    <RiAddLine className="mr-2 sq-3" />
+                    <span>Create child</span>
+                  </DropdownMenuItem>
                 )}
-                <MenuItem>
-                  {({ className }) => (
-                    <button onClick={updateModalProps.onOpen} className={className}>
-                      <RiEdit2Line className="sq-3" />
-                      <span>Edit</span>
-                    </button>
-                  )}
-                </MenuItem>
+                <DropdownMenuItem onClick={updateModalProps.onOpen}>
+                  <RiEdit2Line className="mr-2 sq-3" />
+                  <span>Edit</span>
+                </DropdownMenuItem>
                 {element.archivedAt ? (
-                  <MenuItem>
-                    {({ className }) => (
-                      <button
-                        onClick={() =>
-                          unarchiveFetcher.submit(
-                            { _action: ElementActionMethods.UnarchiveElement },
-                            { method: "post", action: `/api/elements/${element.id}` },
-                          )
-                        }
-                        className={className}
-                      >
-                        <RiEye2Line className="sq-3" />
-                        <span>Unarchive</span>
-                      </button>
-                    )}
-                  </MenuItem>
+                  <DropdownMenuItem
+                    onClick={() =>
+                      unarchiveFetcher.submit(
+                        { _action: ElementActionMethods.UnarchiveElement },
+                        { method: "post", action: `/api/elements/${element.id}` },
+                      )
+                    }
+                  >
+                    <RiEye2Line className="mr-2 sq-3" />
+                    <span>Unarchive</span>
+                  </DropdownMenuItem>
                 ) : (
-                  <MenuItem>
-                    {({ className }) => (
-                      <button onClick={archiveModalProps.onOpen} className={className}>
-                        <RiDeleteBinLine className="sq-3" />
-                        <span>Archive</span>
-                      </button>
-                    )}
-                  </MenuItem>
+                  <DropdownMenuItem onClick={archiveModalProps.onOpen}>
+                    <RiDeleteBinLine className="mr-2 sq-3" />
+                    <span>Archive</span>
+                  </DropdownMenuItem>
                 )}
-              </div>
-            </MenuList>
-          </Menu>
+              </DropdownMenuContent>
+            </DropdownMenuPortal>
+          </DropdownMenu>
         </div>
         <Modal title="Create a child element" size="xl" {...createModalProps}>
           <Form
