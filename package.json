@@ -5,9 +5,8 @@
   "license": "",
   "scripts": {
     "dev": "run-p dev:*",
-    "dev:build": "cross-env NODE_ENV=development npm run build:server -- --watch",
-    "dev:remix": "cross-env NODE_ENV=development remix watch",
-    "dev:server": "cross-env NODE_ENV=development node --inspect --require ./node_modules/dotenv/config ./build/server.js",
+    "dev:remix": "remix dev",
+    "dev:server": "cross-env NODE_ENV=development node ./build/server.js",
     "build": "run-s build:*",
     "build:remix": "remix build",
     "build:server": "esbuild --platform=node --format=cjs ./app/lib/server.ts --outdir=build",

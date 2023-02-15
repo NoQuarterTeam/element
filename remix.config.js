@@ -8,6 +8,7 @@ module.exports = {
   ignoredRouteFiles: ["**/*"],
   future: {
     unstable_postcss: true,
+    unstable_dev: true,
     unstable_tailwind: true,
   },
   serverDependenciesToBundle: ["query-string", "filter-obj", "split-on-first"],
