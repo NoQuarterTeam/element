@@ -17,7 +17,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 import { join } from "~/lib/tailwind"
 import appStyles from "~/styles/app.css"
-import generatedStyles from "~/styles/tailwind.css"
 import toastStyles from "~/styles/toast.css"
 
 import { Fathom } from "./components/Fathom"
@@ -33,7 +32,6 @@ export const meta: MetaFunction = () => {
 
 export const links: LinksFunction = () => {
   return [
-    { rel: "stylesheet", href: generatedStyles },
     { rel: "stylesheet", href: appStyles },
     { rel: "stylesheet", href: toastStyles, async: true },
   ]
