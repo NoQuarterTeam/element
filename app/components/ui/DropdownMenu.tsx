@@ -1,7 +1,8 @@
 import * as React from "react"
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
-import { merge } from "~/lib/tailwind"
 import { BiChevronRight } from "react-icons/bi"
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
+
+import { merge } from "~/lib/tailwind"
 
 const DropdownMenu = DropdownMenuPrimitive.Root
 

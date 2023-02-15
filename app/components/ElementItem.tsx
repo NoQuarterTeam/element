@@ -24,12 +24,11 @@ import { ElementActionMethods } from "~/pages/api+/elements.$id"
 import { ColorInput } from "./ColorInput"
 import { Button } from "./ui/Button"
 import { ButtonGroup } from "./ui/ButtonGroup"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuTrigger } from "./ui/DropdownMenu"
 import { Form, FormButton, FormError, InlineFormField } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
-
 import { Modal } from "./ui/Modal"
 import { useToast } from "./ui/Toast"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuTrigger } from "./ui/DropdownMenu"
 
 const MAX_DEPTH = 2
 
