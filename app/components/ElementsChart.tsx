@@ -12,7 +12,7 @@ export default function ElementsChart(props: Props) {
           <Cell key={`cell-${i}`} fill={entry.color} />
         ))}
       </Pie>
-      <Tooltip />
+      <Tooltip wrapperClassName="dark:!bg-black !border-none !outline-none" />
     </RChart>
   )
 }
