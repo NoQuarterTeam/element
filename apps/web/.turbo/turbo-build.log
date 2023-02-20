@@ -1,0 +1,16 @@
+
+> @element/web@ build /Users/jclackett/Apps/NoQuarter/@element/apps/web
+> run-s build:*
+
+
+> @element/web@ build:remix /Users/jclackett/Apps/NoQuarter/@element/apps/web
+> remix build
+
+Building Remix app in production mode...
+Built in 1.3s
+
+> @element/web@ build:server /Users/jclackett/Apps/NoQuarter/@element/apps/web
+> tsx ./app/lib/server.ts --outdir=build
+
+✅ Ready: http://localhost:3000
+ ELIFECYCLE  Command failed.
