@@ -1,7 +1,7 @@
 import * as React from "react"
 import { BiMessage } from "react-icons/bi"
 import { RiBug2Line, RiLightbulbLine } from "react-icons/ri"
-import { FeedbackType } from "@element/database"
+import { FeedbackType } from "@element/database/types"
 import type { ActionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { useActionData, useNavigate } from "@remix-run/react"

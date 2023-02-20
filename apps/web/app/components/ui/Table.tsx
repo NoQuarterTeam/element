@@ -1,6 +1,6 @@
 import * as React from "react"
 import { CgArrowLongDown, CgArrowLongUp } from "react-icons/cg"
-import { Prisma } from "@element/database"
+import { Prisma } from "@element/database/types"
 import { Link as RLink, useSearchParams } from "@remix-run/react"
 import queryString from "query-string"
 

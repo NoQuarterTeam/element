@@ -1,5 +1,5 @@
 import * as React from "react"
-import { type Prisma } from "@element/database"
+import { type Prisma } from "@element/database/types"
 import { Link, useFetcher } from "@remix-run/react"
 
 import { safeReadableColor } from "~/lib/color"

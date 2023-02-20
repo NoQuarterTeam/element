@@ -4,9 +4,9 @@
   "private": true,
   "license": "",
   "scripts": {
-    "dev": "run-p dev:*",
+    "dev": "pnpm with-env run-p dev:*",
     "dev:remix": "remix dev",
-    "dev:server": "cross-env NODE_ENV=development tsx watch app/lib/server.ts",
+    "dev:server": "node build/server.js",
     "build": "run-s build:*",
     "build:remix": "remix build",
     "build:server": "esbuild --platform=node --format=cjs ./app/lib/server.ts --outdir=build",
@@ -17,9 +17,11 @@
     "prettier": "prettier --check app",
     "prettify": "prettier --write app",
     "start": "cross-env NODE_ENV=production node ./build/server.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@element/api": "*",
     "@element/database": "*",
     "@faker-js/faker": "^7.6.0",
     "@headlessui/react": "^1.7.7",
@@ -100,6 +102,7 @@
     "@typescript-eslint/eslint-plugin": "5.52.0",
     "@typescript-eslint/parser": "5.52.0",
     "cssnano": "^5.1.14",
+    "dotenv-cli": "^7.0.0",
     "esbuild": "0.17.8",
     "esbuild-register": "3.4.2",
     "eslint": "8.34.0",

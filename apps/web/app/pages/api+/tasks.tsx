@@ -1,4 +1,4 @@
-import { type Task, TaskRepeat } from "@element/database"
+import { type Task, TaskRepeat } from "@element/database/types"
 import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import dayjs from "dayjs"

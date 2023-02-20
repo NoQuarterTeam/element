@@ -7,11 +7,7 @@
   "devDependencies": {
     "@types/node": "^18.14.0"
   },
-  "scripts": {
-    "db:migrate": "prisma migrate dev",
-    "db:push": "prisma db push",
-    "db:generate": "prisma generate"
-  },
+  "scripts": {},
   "dependencies": {
     "@element/database": "*",
     "@trpc/server": "^10.12.0",

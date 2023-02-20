@@ -4,9 +4,6 @@ import express from "express"
 import morgan from "morgan"
 import path from "path"
 
-import * as trpcExpress from "@trpc/server/adapters/express"
-import { appRouter, createContext } from "@element/api"
-
 const MODE = process.env.NODE_ENV
 const BUILD_DIR = path.join(process.cwd(), "build")
 const port = process.env.PORT || 3000
@@ -41,13 +38,6 @@ express()
   // more aggressive with this caching.
   .use(express.static("public", { maxAge: "1h" }))
   .use(morgan("tiny"))
-  .use(
-    "/trpc",
-    trpcExpress.createExpressMiddleware({
-      router: appRouter,
-      createContext,
-    }),
-  )
   .all(
     "*",
     MODE === "production"

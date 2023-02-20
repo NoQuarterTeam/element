@@ -1,6 +1,6 @@
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 import { RiArrowLeftLine } from "react-icons/ri"
-import { Role } from "@element/database"
+import { Role } from "@element/database/types"
 import type { LoaderArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { redirect } from "@remix-run/node"

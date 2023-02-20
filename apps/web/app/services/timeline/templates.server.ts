@@ -1,4 +1,4 @@
-import type { Prisma } from "@element/database"
+import type { Prisma } from "@element/database/types"
 import dayjs from "dayjs"
 
 import { db } from "~/lib/db.server"

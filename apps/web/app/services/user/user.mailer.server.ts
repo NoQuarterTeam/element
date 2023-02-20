@@ -1,4 +1,4 @@
-import type { User } from "@element/database"
+import type { User } from "@element/database/types"
 
 import { FULL_WEB_URL } from "~/lib/config.server"
 import { createToken } from "~/lib/jwt.server"

@@ -11,7 +11,16 @@ module.exports = {
     unstable_dev: true,
     unstable_tailwind: true,
   },
-  serverDependenciesToBundle: ["@element/api", "axios", "@element/database", "query-string", "filter-obj", "split-on-first"],
+  serverDependenciesToBundle: [
+    "@element/api",
+    "axios",
+    "@element/database",
+    "@element/database/types",
+    "query-string",
+    "filter-obj",
+    "split-on-first",
+  ],
+  watchPaths: ["../../packages/api"],
   routes: (defineRoutes) => {
     return flatRoutes("pages", defineRoutes)
   },

@@ -11,7 +11,7 @@ import {
   RiTimeLine,
   RiUser3Line,
 } from "react-icons/ri"
-import { Role } from "@element/database"
+import { Role } from "@element/database/types"
 import { useFetcher, useLocation, useNavigate, useSubmit } from "@remix-run/react"
 
 import { useDisclosure } from "~/lib/hooks/useDisclosure"

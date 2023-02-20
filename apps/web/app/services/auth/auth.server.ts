@@ -1,4 +1,4 @@
-import { type Prisma } from "@element/database"
+import { type Prisma } from "@element/database/types"
 import { redirect } from "@remix-run/node"
 
 import { db } from "~/lib/db.server"

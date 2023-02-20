@@ -1,4 +1,4 @@
-import type { Task } from "@element/database"
+import type { Task } from "@element/database/types"
 
 export function formatTotalDuration(duration: number) {
   const hours = (duration / 60) | 0
