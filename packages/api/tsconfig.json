@@ -16,7 +16,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "sourceMap": true,
-    "lib": ["ES2021"],
+    "lib": ["ES2021", "DOM"],
     "module": "CommonJS",
     "target": "ES2019",
     "strict": true,

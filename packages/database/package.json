@@ -7,8 +7,10 @@
     "./types.ts"
   ],
   "sideEffects": false,
+  "dependencies": {
+    "@prisma/client": "4.10.1"
+  },
   "devDependencies": {
-    "@prisma/client": "4.10.1",
     "@types/node": "^18.14.0",
     "prisma": "4.10.1"
   },

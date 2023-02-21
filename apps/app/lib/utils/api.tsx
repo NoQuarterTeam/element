@@ -5,6 +5,7 @@ import { httpBatchLink } from "@trpc/client"
 import { createTRPCReact } from "@trpc/react-query"
 import { inferRouterInputs, inferRouterOutputs } from "@trpc/server"
 import type { AppRouter } from "@element/api"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 /**
  * A set of typesafe hooks for consuming your API.
@@ -45,6 +46,7 @@ const getBaseUrl = () => {
  * A wrapper for your app that provides the TRPC context.
  * Use only in _app.tsx
  */
+export const AUTH_TOKEN = "AUTH_TOKEN"
 export function TRPCProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = React.useState(() => new QueryClient())
   const [trpcClient] = React.useState(() =>
@@ -52,6 +54,12 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
       links: [
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
+          headers: async () => {
+            const token = await AsyncStorage.getItem(AUTH_TOKEN).catch()
+            return {
+              authorization: token ? "Bearer " + token : "",
+            }
+          },
         }),
       ],
     }),
