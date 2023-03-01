@@ -81,7 +81,7 @@ function _TaskItem({ task }: Props) {
       { _action: TaskActionMethods.DeleteTask, shouldDeleteFuture: shouldDeleteFuture ? "true" : "false" },
       { action: `/timeline/${task.id}`, method: "post" },
     )
-    await new Promise((res) => setTimeout(res, 100))
+    await new Promise((res) => setTimeout(res, 500))
     if (shouldDeleteFuture) {
       refetch()
     } else {
