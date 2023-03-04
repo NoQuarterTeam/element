@@ -80,7 +80,7 @@
     "stripe": "11.13.0",
     "tailwind-merge": "^1.8.1",
     "tailwindcss-radix": "^2.6.2",
-    "zod": "3.20.6",
+    "zod": "3.21.0",
     "zustand": "4.3.5"
   },
   "devDependencies": {
