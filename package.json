@@ -44,7 +44,7 @@
     "@remix-run/react": "1.14.0",
     "@sendgrid/client": "7.7.0",
     "@sendgrid/mail": "7.7.0",
-    "@tanstack/react-query": "4.25.0",
+    "@tanstack/react-query": "4.26.0",
     "aws-sdk": "2.1323.0",
     "bcrypt": "5.1.0",
     "class-variance-authority": "^0.4.0",
