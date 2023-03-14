@@ -1,4 +1,4 @@
-import { Slot } from "expo-router"
+import { Slot, Stack } from "expo-router"
 import { View } from "react-native"
 
 import { AuthProvider } from "../../components/AuthProvider"
@@ -8,8 +8,22 @@ import { AuthProvider } from "../../components/AuthProvider"
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <View className="pt-16">
-        <Slot />
+      <View className="flex-1 bg-white pt-16">
+        <Stack screenOptions={{ contentStyle: { backgroundColor: "white" } }}>
+          <Stack.Screen
+            name="index"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="new"
+            options={{
+              headerShown: false,
+              presentation: "modal",
+            }}
+          />
+        </Stack>
       </View>
     </AuthProvider>
   )

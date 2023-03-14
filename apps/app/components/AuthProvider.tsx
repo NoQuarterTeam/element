@@ -19,7 +19,7 @@ export function AuthProvider(props: { children: React.ReactNode }) {
       router.replace("/login")
     } else if (data && inAuthGroup) {
       // Redirect away from the sign-in page.
-      router.replace("/")
+      router.replace("/timeline")
     }
   }, [data, isLoading, segments])
   if (isLoading) return null

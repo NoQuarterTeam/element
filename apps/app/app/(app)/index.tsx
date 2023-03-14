@@ -2,7 +2,7 @@ import * as React from "react"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import { Link } from "expo-router"
-import { Text, View, TouchableOpacity } from "react-native"
+import { Text, View, TouchableOpacity, Dimensions } from "react-native"
 import { api, RouterOutputs } from "../../lib/utils/api"
 
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
@@ -33,7 +33,7 @@ export default function Timeline() {
   }, [date])
   return (
     <View>
-      <View className="px-4">
+      <View className="border-gray-75 border-b px-4 py-2">
         <View className="flex w-full flex-row items-center justify-between pb-2">
           <Text className="pb-2 text-3xl font-extrabold">Timeline</Text>
           <Link href="/profile" asChild>
@@ -46,7 +46,7 @@ export default function Timeline() {
           <View>
             <TouchableOpacity
               onPress={() => setDate(dayjs(date).subtract(1, "day").format())}
-              className="rounded-full border border-gray-100 p-4"
+              className="rounded-full border border-gray-100 p-3"
             >
               <Ionicons name="chevron-back" />
             </TouchableOpacity>
@@ -55,7 +55,7 @@ export default function Timeline() {
           <View>
             <TouchableOpacity
               onPress={() => setDate(dayjs(date).add(1, "day").format())}
-              className="flex items-end rounded-full border border-gray-100 p-4"
+              className="flex items-end rounded-full border border-gray-100 p-3"
             >
               <Ionicons name="chevron-forward" />
             </TouchableOpacity>
@@ -63,16 +63,25 @@ export default function Timeline() {
         </View>
       </View>
 
-      <View className="min-h-[500px] py-2">
+      <View>
         {taskData?.length === 0 ? (
           <Text className="flex py-10 text-center">No tasks</Text>
         ) : isLoading || !taskData ? null : (
           <TaskList key={date} tasks={taskData} />
         )}
       </View>
+      <View className="absolute bottom-10 right-10">
+        <Link href="/new" asChild>
+          <TouchableOpacity className="bg-primary-500 rounded-full p-4 shadow-lg">
+            <Feather name="plus" size={24} />
+          </TouchableOpacity>
+        </Link>
+      </View>
     </View>
   )
 }
+
+const height = Dimensions.get("screen").height
 
 type Tasks = NonNullable<RouterOutputs["task"]["byDate"]>
 function TaskList({ tasks }: { tasks: Tasks }) {
@@ -89,7 +98,8 @@ function TaskList({ tasks }: { tasks: Tasks }) {
       data={data}
       onDragEnd={({ data }) => handleUpdateOrder(data)}
       keyExtractor={(item) => item.id}
-      containerStyle={{ flex: 1, minHeight: "100%" }}
+      contentContainerStyle={{ paddingBottom: 130 }}
+      containerStyle={{ height: height - 180 }}
       renderItem={({ item, drag, isActive }) => (
         <TaskItem onToggleComplete={() => handleToggle(item.id)} task={item} drag={drag} isActive={isActive} />
       )}
