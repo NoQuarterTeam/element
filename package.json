@@ -39,9 +39,9 @@
     "@radix-ui/react-switch": "^1.0.1",
     "@radix-ui/react-toast": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.0.2",
-    "@remix-run/express": "1.14.1",
-    "@remix-run/node": "1.14.1",
-    "@remix-run/react": "1.14.1",
+    "@remix-run/express": "1.14.2",
+    "@remix-run/node": "1.14.2",
+    "@remix-run/react": "1.14.2",
     "@sendgrid/client": "7.7.0",
     "@sendgrid/mail": "7.7.0",
     "@tanstack/react-query": "4.26.1",
@@ -84,7 +84,7 @@
     "zustand": "4.3.6"
   },
   "devDependencies": {
-    "@remix-run/dev": "1.14.1",
+    "@remix-run/dev": "1.14.2",
     "@remix-run/eslint-config": "1.14.2",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/line-clamp": "^0.4.2",
