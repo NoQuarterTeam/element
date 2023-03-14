@@ -33,7 +33,7 @@ export default function Timeline() {
   }, [date])
   return (
     <View>
-      <View className="border-gray-75 border-b px-4 py-2">
+      <View className="border-gray-75 border-b px-4 py-2 pt-16">
         <View className="flex w-full flex-row items-center justify-between pb-2">
           <Text className="pb-2 text-3xl font-extrabold">Timeline</Text>
           <Link href="/profile" asChild>

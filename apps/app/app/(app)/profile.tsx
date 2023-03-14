@@ -13,7 +13,7 @@ export default function Profile() {
   }
 
   return (
-    <View className="flex-grow px-4">
+    <View className="px-4 pt-16">
       <Link href="/" className="p-2">
         Back
       </Link>
