@@ -6,6 +6,7 @@
     "esModuleInterop": true,
     "jsx": "react-jsx",
     "module": "CommonJS",
+    "outDir": "build",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "target": "ES2019",

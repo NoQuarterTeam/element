@@ -49,6 +49,8 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
   const day = searchParams.get("day") || undefined
   const { addTask, updateTask, removeTask, refetch } = useTimelineTasks()
   const [isImportant, setIsImportant] = React.useState(task?.isImportant || false)
+  const [isComplete, setIsComplete] = React.useState(task?.isComplete || false)
+
   const [color, setColor] = React.useState(randomHexColor())
   const [repeat, setRepeat] = React.useState<TaskRepeat | undefined>(task?.repeat || undefined)
   const [repeatEndDate, setRepeatEndDate] = React.useState<string>(dayjs().add(1, "week").format("YYYY-MM-DD"))
@@ -173,7 +175,8 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
           </Button>
 
           <input type="hidden" name="isImportant" value={isImportant ? "true" : "false"} />
-          <Checkbox defaultChecked={task?.isComplete} name="isComplete" size="md" />
+          <Checkbox defaultChecked={isComplete} onChange={() => setIsComplete(!isComplete)} size="md" />
+          <input type="hidden" name="isComplete" value={isComplete ? "true" : "false"} />
         </div>
       </div>
       <div className="stack space-y-1 p-3 pt-0 md:space-y-3 md:p-5 md:pt-0">
@@ -191,7 +194,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                 onChange={setElement}
                 formatOptionLabel={(option) => (
                   <div className="hstack">
-                    <div className="rounded-full sq-4" style={{ background: option.color }} />
+                    <div className="sq-4 rounded-full" style={{ background: option.color }} />
                     <p>{option.label}</p>
                   </div>
                 )}
@@ -263,7 +266,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             <div className="hstack">
               <div className="hstack space-x-1">
                 <Input
-                  className="px-0 text-center sq-8"
+                  className="sq-8 px-0 text-center"
                   defaultValue={task?.durationHours ? task.durationHours.toString() : undefined}
                   id="durationHours"
                   min={0}
@@ -274,7 +277,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
               </div>
               <div className="hstack space-x-1">
                 <Input
-                  className="px-0 text-center sq-8"
+                  className="sq-8 px-0 text-center"
                   defaultValue={task?.durationMinutes ? task.durationMinutes.toString() : undefined}
                   max={60}
                   min={0}
