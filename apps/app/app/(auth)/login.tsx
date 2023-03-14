@@ -20,7 +20,7 @@ export default function Login() {
     <View className="p-10">
       <Text className="mb-4 text-3xl font-extrabold">Login</Text>
       <Text>Email</Text>
-      <TextInput value={email} onChangeText={setEmail} className="bg-gray-75 w-full p-4" />
+      <TextInput value={email} onChangeText={setEmail} className="bg-gray-75 focus:border-primary-400 w-full border p-4" />
       <Text>Password</Text>
       <TextInput value={password} onChangeText={setPassword} className="bg-gray-75 w-full p-4" />
       <Pressable

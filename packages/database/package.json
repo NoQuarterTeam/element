@@ -8,11 +8,11 @@
   ],
   "sideEffects": false,
   "dependencies": {
-    "@prisma/client": "4.10.1"
+    "@prisma/client": "4.11.0"
   },
   "devDependencies": {
     "@types/node": "^18.14.0",
-    "prisma": "4.10.1"
+    "prisma": "4.11.0"
   },
   "scripts": {
     "db:migrate": "prisma migrate dev",
