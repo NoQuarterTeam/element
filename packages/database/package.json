@@ -1,0 +1,23 @@
+{
+  "name": "@element/database",
+  "version": "1.0.0",
+  "main": "./index.ts",
+  "files": [
+    "./index.ts",
+    "./types.ts"
+  ],
+  "sideEffects": false,
+  "dependencies": {
+    "@prisma/client": "4.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.14.0",
+    "prisma": "4.11.0"
+  },
+  "scripts": {
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:generate": "prisma generate",
+    "postinstall": "prisma generate"
+  }
+}
