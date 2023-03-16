@@ -154,7 +154,7 @@ importers:
       dotenv-cli: ^7.1.0
       downshift: 7.2.0
       esbuild: 0.16.3
-      esbuild-register: 3.3.2
+      esbuild-register: 3.4.2
       eslint: 8.34.0
       eslint-config-prettier: 8.6.0
       eslint-plugin-import: 2.27.5
@@ -291,7 +291,7 @@ importers:
       cssnano: 5.1.15_postcss@8.4.21
       dotenv-cli: 7.1.0
       esbuild: 0.16.3
-      esbuild-register: 3.3.2_esbuild@0.16.3
+      esbuild-register: 3.4.2_esbuild@0.16.3
       eslint: 8.34.0
       eslint-config-prettier: 8.6.0_eslint@8.34.0
       eslint-plugin-import: 2.27.5_mcvs2y73sfmcxqzpjj5lr7a2m4
@@ -8067,12 +8067,15 @@ packages:
       is-symbol: 1.0.4
     dev: true
 
-  /esbuild-register/3.3.2_esbuild@0.16.3:
-    resolution: {integrity: sha512-jceAtTO6zxPmCfSD5cBb3rgIK1vmuqCKYwgylHiS1BF4pq0jJiJb4K2QMuqF4BEw7XDBRatYzip0upyTzfkgsQ==}
+  /esbuild-register/3.4.2_esbuild@0.16.3:
+    resolution: {integrity: sha512-kG/XyTDyz6+YDuyfB9ZoSIOOmgyFCH+xPRtsCa8W85HLRV5Csp+o3jWVbOSHgSLfyLc5DmP+KFDNwty4mEjC+Q==}
     peerDependencies:
       esbuild: '>=0.12 <1'
     dependencies:
+      debug: 4.3.4
       esbuild: 0.16.3
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /esbuild/0.16.3:
