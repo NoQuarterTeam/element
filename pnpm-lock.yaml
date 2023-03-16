@@ -25,6 +25,8 @@ importers:
       '@element/api': '*'
       '@expo/config-plugins': ^6.0.0
       '@react-native-async-storage/async-storage': 1.17.11
+      '@react-native-community/datetimepicker': 6.7.3
+      '@react-native-picker/picker': ^2.4.8
       '@tanstack/react-query': ^4.23.0
       '@trpc/client': ^10.9.0
       '@trpc/react-query': ^10.9.0
@@ -45,6 +47,7 @@ importers:
       react-native: 0.71.2
       react-native-draggable-flatlist: ^4.0.1
       react-native-gesture-handler: ^2.9.0
+      react-native-modal-datetime-picker: ^14.0.1
       react-native-reanimated: 2.14.4
       react-native-safe-area-context: 4.5.0
       react-native-screens: ~3.20.0
@@ -53,6 +56,8 @@ importers:
     dependencies:
       '@element/api': link:../../packages/api
       '@react-native-async-storage/async-storage': 1.17.11_react-native@0.71.2
+      '@react-native-community/datetimepicker': 6.7.3
+      '@react-native-picker/picker': 2.4.8_4abxuapkhmo52mhwaeeet7psu4
       '@tanstack/react-query': 4.24.9_5ltrbq4k3th7ucjbxabykyadgy
       '@trpc/client': 10.16.0_@trpc+server@10.16.0
       '@trpc/react-query': 10.16.0_epgyz22nwnviwgjvbpmri5azpe
@@ -70,6 +75,7 @@ importers:
       react-native: 0.71.2_raab37p3ikkajcivlo24zcd7ie
       react-native-draggable-flatlist: 4.0.1_voreod4vdaz3ga755bwi4rj6h4
       react-native-gesture-handler: 2.9.0_4abxuapkhmo52mhwaeeet7psu4
+      react-native-modal-datetime-picker: 14.0.1_arhvjbzzmrpxhpi7xb2p4yq2wm
       react-native-reanimated: 2.14.4_xjgch72ai5v2jnutn3o3tn3q4u
       react-native-safe-area-context: 4.5.0_4abxuapkhmo52mhwaeeet7psu4
       react-native-screens: 3.20.0_4abxuapkhmo52mhwaeeet7psu4
@@ -4739,6 +4745,22 @@ packages:
       - encoding
       - supports-color
       - utf-8-validate
+    dev: false
+
+  /@react-native-community/datetimepicker/6.7.3:
+    resolution: {integrity: sha512-fXWbEdHMLW/e8cts3snEsbOTbnFXfUHeO2pkiDFX3fWpFoDtUrRWvn50xbY13IJUUKHDhoJ+mj24nMRVIXfX1A==}
+    dependencies:
+      invariant: 2.2.4
+    dev: false
+
+  /@react-native-picker/picker/2.4.8_4abxuapkhmo52mhwaeeet7psu4:
+    resolution: {integrity: sha512-5NQ5XPo1B03YNqKFrV6h9L3CQaHlB80wd4ETHUEABRP2iLh7FHLVObX2GfziD+K/VJb8G4KZcZ23NFBFP1f7bg==}
+    peerDependencies:
+      react: '>=16'
+      react-native: '>=0.57'
+    dependencies:
+      react: 18.2.0
+      react-native: 0.71.2_raab37p3ikkajcivlo24zcd7ie
     dev: false
 
   /@react-native/assets/1.0.0:
@@ -13987,6 +14009,17 @@ packages:
 
   /react-native-gradle-plugin/0.71.16:
     resolution: {integrity: sha512-H2BjG2zk7B7Wii9sXvd9qhCVRQYDAHSWdMw9tscmZBqSP62DkIWEQSk4/B2GhQ4aK9ydVXgtqR6tBeg3yy8TSA==}
+    dev: false
+
+  /react-native-modal-datetime-picker/14.0.1_arhvjbzzmrpxhpi7xb2p4yq2wm:
+    resolution: {integrity: sha512-wQt4Pjxt2jiTsVhLMG0E7WrRTYBEQx2d/nUrFVCbRqJ7lrXocXaT5UZsyMpV93TnKcyut62OprbO88wYq/vh0g==}
+    peerDependencies:
+      '@react-native-community/datetimepicker': '>=3.0.0'
+      react-native: '>=0.65.0'
+    dependencies:
+      '@react-native-community/datetimepicker': 6.7.3
+      prop-types: 15.8.1
+      react-native: 0.71.2_raab37p3ikkajcivlo24zcd7ie
     dev: false
 
   /react-native-reanimated/2.14.4_xjgch72ai5v2jnutn3o3tn3q4u:

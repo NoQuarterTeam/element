@@ -1,8 +1,8 @@
 import * as React from "react"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
-import { Link } from "expo-router"
-import { Text, View, TouchableOpacity, Dimensions } from "react-native"
+import { Link, useRouter } from "expo-router"
+import { Text, View, TouchableOpacity, Dimensions, RefreshControl } from "react-native"
 import { api, RouterOutputs } from "../../lib/utils/api"
 
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
@@ -13,7 +13,7 @@ import Feather from "@expo/vector-icons/Feather"
 dayjs.extend(advancedFormat)
 
 export default function Timeline() {
-  const [date, setDate] = React.useState(dayjs().format())
+  const [date, setDate] = React.useState(dayjs().format("YYYY-MM-DD"))
   const { data: taskData, isLoading } = api.task.byDate.useQuery(date)
   const utils = api.useContext()
   const dateLabel = dayjs(date).isSame(dayjs(), "date")
@@ -28,8 +28,8 @@ export default function Timeline() {
 
   React.useEffect(() => {
     // prefetch next and previous dates
-    utils.task.byDate.prefetch(dayjs(date).subtract(1, "day").format())
-    utils.task.byDate.prefetch(dayjs(date).add(1, "day").format())
+    utils.task.byDate.prefetch(dayjs(date).subtract(1, "day").format("YYYY-MM-DD"))
+    utils.task.byDate.prefetch(dayjs(date).add(1, "day").format("YYYY-MM-DD"))
   }, [date])
   return (
     <View className="flex-1">
@@ -45,7 +45,7 @@ export default function Timeline() {
         <View className="flex w-full flex-row items-center justify-between">
           <View>
             <TouchableOpacity
-              onPress={() => setDate(dayjs(date).subtract(1, "day").format())}
+              onPress={() => setDate(dayjs(date).subtract(1, "day").format("YYYY-MM-DD"))}
               className="rounded-full border border-gray-100 p-3"
             >
               <Ionicons name="chevron-back" />
@@ -54,7 +54,7 @@ export default function Timeline() {
           <Text className="flex-1 text-center text-lg">{dateLabel}</Text>
           <View>
             <TouchableOpacity
-              onPress={() => setDate(dayjs(date).add(1, "day").format())}
+              onPress={() => setDate(dayjs(date).add(1, "day").format("YYYY-MM-DD"))}
               className="flex items-end rounded-full border border-gray-100 p-3"
             >
               <Ionicons name="chevron-forward" />
@@ -71,7 +71,7 @@ export default function Timeline() {
         )}
       </View>
       <View className="absolute bottom-4 right-4">
-        <Link href="/new" asChild>
+        <Link href={`/new?date=${date}`} asChild>
           <TouchableOpacity className="bg-primary-500 rounded-full p-4 shadow-lg">
             <Feather name="plus" size={24} />
           </TouchableOpacity>
@@ -84,10 +84,17 @@ export default function Timeline() {
 const height = Dimensions.get("screen").height
 
 type Tasks = NonNullable<RouterOutputs["task"]["byDate"]>
+
 function TaskList({ tasks }: { tasks: Tasks }) {
   const [data, setData] = React.useState(tasks)
-  const handleToggle = (id: string) =>
+
+  React.useEffect(() => {
+    setData(tasks)
+  }, [tasks])
+
+  const handleToggle = (id: string) => {
     setData(data.map((task) => (task.id === id ? { ...task, isComplete: !task.isComplete } : task)))
+  }
   const { mutate: updateOrder } = api.task.updateOrder.useMutation()
   const handleUpdateOrder = (data: Tasks) => {
     setData(data)
@@ -96,6 +103,7 @@ function TaskList({ tasks }: { tasks: Tasks }) {
   return (
     <DraggableFlatList
       data={data}
+      // refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={onRefetch} />}
       onDragEnd={({ data }) => handleUpdateOrder(data)}
       keyExtractor={(item) => item.id}
       contentContainerStyle={{ paddingBottom: 130 }}
@@ -120,10 +128,13 @@ function TaskItem({
 }) {
   const { mutate: toggleComplete } = api.task.toggleComplete.useMutation({ onMutate: onToggleComplete })
   const handleToggleComplete = () => toggleComplete(task.id)
+  const router = useRouter()
   return (
     <ScaleDecorator activeScale={1.02}>
       <TouchableOpacity
+        onPress={() => router.push({ pathname: "index", params: { id: task.id } })}
         onLongPress={drag}
+        delayLongPress={100}
         disabled={isActive}
         className={join(
           "mx-4 mt-2 flex flex-row items-center justify-between rounded-md border border-gray-100 bg-white p-2",
