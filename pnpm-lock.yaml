@@ -25,7 +25,6 @@ importers:
       '@element/api': '*'
       '@expo/config-plugins': ^6.0.0
       '@react-native-async-storage/async-storage': 1.17.11
-      '@shopify/flash-list': 1.4.1
       '@tanstack/react-query': ^4.23.0
       '@trpc/client': ^10.9.0
       '@trpc/react-query': ^10.9.0
@@ -36,7 +35,7 @@ importers:
       expo: 48.0.1
       expo-constants: ~14.2.1
       expo-linking: ~4.0.1
-      expo-router: ^1.0.0-rc5
+      expo-router: ^1.2.2
       expo-splash-screen: ~0.18.1
       expo-status-bar: ~1.4.4
       nativewind: ^2.0.11
@@ -54,7 +53,6 @@ importers:
     dependencies:
       '@element/api': link:../../packages/api
       '@react-native-async-storage/async-storage': 1.17.11_react-native@0.71.2
-      '@shopify/flash-list': 1.4.1_azf626xeoakf6cqsblu2cpk2xi
       '@tanstack/react-query': 4.24.9_5ltrbq4k3th7ucjbxabykyadgy
       '@trpc/client': 10.16.0_@trpc+server@10.16.0
       '@trpc/react-query': 10.16.0_epgyz22nwnviwgjvbpmri5azpe
@@ -5075,20 +5073,6 @@ packages:
     dependencies:
       domhandler: 5.0.3
       selderee: 0.10.0
-    dev: false
-
-  /@shopify/flash-list/1.4.1_azf626xeoakf6cqsblu2cpk2xi:
-    resolution: {integrity: sha512-yM5dlhqolO/R8FKomqCrSYz0Cc82vJDikxhbu1CXXGp3rPvo/ceP9jJyKueW96SXHsn/87fcSq2BjztWjlp74Q==}
-    peerDependencies:
-      '@babel/runtime': '*'
-      react: '*'
-      react-native: '*'
-    dependencies:
-      '@babel/runtime': 7.21.0
-      react: 18.2.0
-      react-native: 0.71.2_raab37p3ikkajcivlo24zcd7ie
-      recyclerlistview: 4.2.0_4abxuapkhmo52mhwaeeet7psu4
-      tslib: 2.4.0
     dev: false
 
   /@sideway/address/4.1.4:
@@ -14410,19 +14394,6 @@ packages:
       victory-vendor: 36.6.8
     dev: false
 
-  /recyclerlistview/4.2.0_4abxuapkhmo52mhwaeeet7psu4:
-    resolution: {integrity: sha512-uuBCi0c+ggqHKwrzPX4Z/mJOzsBbjZEAwGGmlwpD/sD7raXixdAbdJ6BTcAmuWG50Cg4ru9p12M94Njwhr/27A==}
-    peerDependencies:
-      react: '>= 15.2.1'
-      react-native: '>= 0.30.0'
-    dependencies:
-      lodash.debounce: 4.0.8
-      prop-types: 15.8.1
-      react: 18.2.0
-      react-native: 0.71.2_raab37p3ikkajcivlo24zcd7ie
-      ts-object-utils: 0.0.5
-    dev: false
-
   /reduce-css-calc/2.1.8:
     resolution: {integrity: sha512-8liAVezDmUcH+tdzoEGrhfbGcP7nOV4NkGE3a74+qqvE7nt9i4sKLGBuZNOnpI4WiGksiNPklZxva80061QiPg==}
     dependencies:
@@ -15756,10 +15727,6 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: false
 
-  /ts-object-utils/0.0.5:
-    resolution: {integrity: sha512-iV0GvHqOmilbIKJsfyfJY9/dNHCs969z3so90dQWsO1eMMozvTpnB1MEaUbb3FYtZTGjv5sIy/xmslEz0Rg2TA==}
-    dev: false
-
   /tsconfig-paths/3.14.2:
     resolution: {integrity: sha512-o/9iXgCYc5L/JxCHPe3Hvh8Q/2xm5Z+p18PESBU6Ff33695QnCHBEjcytY2q19ua7Mbl/DavtBOLq+oG0RCL+g==}
     dependencies:
@@ -15781,10 +15748,6 @@ packages:
   /tslib/1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
-
-  /tslib/2.4.0:
-    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
-    dev: false
 
   /tslib/2.5.0:
     resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}

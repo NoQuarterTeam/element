@@ -15,7 +15,7 @@ export function Modal(props: Props) {
       <View className="flex flex-row justify-between">
         <Text className="text-3xl font-extrabold">{props.title}</Text>
 
-        <Link href="/" className="p-2" asChild>
+        <Link href="../" className="p-2" asChild>
           <Feather name="x" size={24} />
         </Link>
       </View>
