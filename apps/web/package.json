@@ -66,7 +66,7 @@
     "dayjs": "1.11.7",
     "deep-equal": "2.2.0",
     "dotenv": "16.0.3",
-    "downshift": "7.2.0",
+    "downshift": "7.4.1",
     "express": "^4.18.2",
     "fathom-client": "^3.5.0",
     "isbot": "^3.6.7",
@@ -116,10 +116,10 @@
     "@typescript-eslint/parser": "5.52.0",
     "cssnano": "^5.1.15",
     "dotenv-cli": "^7.1.0",
-    "esbuild": "0.16.3",
-    "esbuild-register": "3.3.2",
+    "esbuild": "0.17.11",
+    "esbuild-register": "3.4.2",
     "eslint": "8.34.0",
-    "eslint-config-prettier": "8.6.0",
+    "eslint-config-prettier": "8.7.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-simple-import-sort": "10.0.0",
     "eslint-plugin-tailwindcss": "^3.10.1",
@@ -137,7 +137,7 @@
     "node": ">=16"
   },
   "resolutions": {
-    "esbuild": "0.16.3"
+    "esbuild": "0.17.11"
   },
   "pnpm": {
     "overrides": {
