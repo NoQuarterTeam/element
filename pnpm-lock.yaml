@@ -24,7 +24,7 @@ importers:
       '@babel/runtime': ^7.20.0
       '@element/api': '*'
       '@expo/config-plugins': ^6.0.0
-      '@react-native-async-storage/async-storage': 1.17.11
+      '@react-native-async-storage/async-storage': 1.17.12
       '@shopify/flash-list': 1.4.0
       '@tanstack/react-query': ^4.23.0
       '@trpc/client': ^10.9.0
@@ -53,7 +53,7 @@ importers:
       typescript: ^4.9.5
     dependencies:
       '@element/api': link:../../packages/api
-      '@react-native-async-storage/async-storage': 1.17.11_react-native@0.71.2
+      '@react-native-async-storage/async-storage': 1.17.12_react-native@0.71.2
       '@shopify/flash-list': 1.4.0_azf626xeoakf6cqsblu2cpk2xi
       '@tanstack/react-query': 4.24.9_5ltrbq4k3th7ucjbxabykyadgy
       '@trpc/client': 10.16.0_@trpc+server@10.16.0
@@ -4525,8 +4525,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@react-native-async-storage/async-storage/1.17.11_react-native@0.71.2:
-    resolution: {integrity: sha512-bzs45n5HNcDq6mxXnSsOHysZWn1SbbebNxldBXCQs8dSvF8Aor9KCdpm+TpnnGweK3R6diqsT8lFhX77VX0NFw==}
+  /@react-native-async-storage/async-storage/1.17.12_react-native@0.71.2:
+    resolution: {integrity: sha512-BXg4OxFdjPTRt+8MvN6jz4muq0/2zII3s7HeT/11e4Zeh3WCgk/BleLzUcDfVqF3OzFHUqEkSrb76d6Ndjd/Nw==}
     peerDependencies:
       react-native: ^0.0.0-0 || 0.60 - 0.71 || 1000.0.0
     dependencies:
