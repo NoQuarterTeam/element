@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { Link, Stack, useRouter } from "expo-router"
+import { Link, useRouter } from "expo-router"
 import * as React from "react"
-import { Button, Pressable, Text, TextInput, View } from "react-native"
+import { Pressable, Text, TextInput, View } from "react-native"
 import { api, AUTH_TOKEN } from "../../lib/utils/api"
 
 export default function Login() {

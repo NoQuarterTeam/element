@@ -2,14 +2,13 @@ import { Stack } from "expo-router"
 
 import { AuthProvider } from "../../components/AuthProvider"
 
-// This is the main layout of the app
-// It wraps your pages with the providers they need
+// Timeline layout
 export default function RootLayout() {
   return (
     <AuthProvider>
       <Stack screenOptions={{ contentStyle: { backgroundColor: "white" }, headerShown: false }}>
         <Stack.Screen name="index" />
-        <Stack.Screen name="profile" />
+        <Stack.Screen name="profile" options={{ presentation: "modal" }} />
         <Stack.Screen name="new" options={{ presentation: "modal" }} />
       </Stack>
     </AuthProvider>

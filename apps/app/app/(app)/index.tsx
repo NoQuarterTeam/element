@@ -32,7 +32,7 @@ export default function Timeline() {
     utils.task.byDate.prefetch(dayjs(date).add(1, "day").format())
   }, [date])
   return (
-    <View>
+    <View className="flex-1">
       <View className="border-gray-75 border-b px-4 py-2 pt-16">
         <View className="flex w-full flex-row items-center justify-between pb-2">
           <Text className="pb-2 text-3xl font-extrabold">Timeline</Text>
@@ -70,7 +70,7 @@ export default function Timeline() {
           <TaskList key={date} tasks={taskData} />
         )}
       </View>
-      <View className="absolute bottom-10 right-10">
+      <View className="absolute bottom-4 right-4">
         <Link href="/new" asChild>
           <TouchableOpacity className="bg-primary-500 rounded-full p-4 shadow-lg">
             <Feather name="plus" size={24} />
