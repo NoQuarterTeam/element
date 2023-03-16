@@ -25,7 +25,7 @@ importers:
       '@element/api': '*'
       '@expo/config-plugins': ^6.0.0
       '@react-native-async-storage/async-storage': 1.17.12
-      '@shopify/flash-list': 1.4.0
+      '@shopify/flash-list': 1.4.1
       '@tanstack/react-query': ^4.23.0
       '@trpc/client': ^10.9.0
       '@trpc/react-query': ^10.9.0
@@ -54,7 +54,7 @@ importers:
     dependencies:
       '@element/api': link:../../packages/api
       '@react-native-async-storage/async-storage': 1.17.12_react-native@0.71.2
-      '@shopify/flash-list': 1.4.0_azf626xeoakf6cqsblu2cpk2xi
+      '@shopify/flash-list': 1.4.1_azf626xeoakf6cqsblu2cpk2xi
       '@tanstack/react-query': 4.24.9_5ltrbq4k3th7ucjbxabykyadgy
       '@trpc/client': 10.16.0_@trpc+server@10.16.0
       '@trpc/react-query': 10.16.0_epgyz22nwnviwgjvbpmri5azpe
@@ -5077,8 +5077,8 @@ packages:
       selderee: 0.10.0
     dev: false
 
-  /@shopify/flash-list/1.4.0_azf626xeoakf6cqsblu2cpk2xi:
-    resolution: {integrity: sha512-PvPOyk353LuETFnNA038+QaJsAFlCQ2TYC7DHP3YnYqTX72g2BM6qLoLsPaptXKuoXX+dinOo0MbEm7HDjTy1g==}
+  /@shopify/flash-list/1.4.1_azf626xeoakf6cqsblu2cpk2xi:
+    resolution: {integrity: sha512-yM5dlhqolO/R8FKomqCrSYz0Cc82vJDikxhbu1CXXGp3rPvo/ceP9jJyKueW96SXHsn/87fcSq2BjztWjlp74Q==}
     peerDependencies:
       '@babel/runtime': '*'
       react: '*'
