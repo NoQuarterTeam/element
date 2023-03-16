@@ -11,7 +11,7 @@
     "@prisma/client": "4.11.0"
   },
   "devDependencies": {
-    "@types/node": "^18.14.0",
+    "@types/node": "^18.15.3",
     "prisma": "4.11.0"
   },
   "scripts": {
