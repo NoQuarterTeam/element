@@ -1,6 +1,6 @@
 import * as React from "react"
 import type { FormProps as RemixFormProps } from "@remix-run/react"
-import { Form as RemixForm, useActionData, useTransition } from "@remix-run/react"
+import { Form as RemixForm, useActionData, useNavigation } from "@remix-run/react"
 
 import type { ActionData } from "~/lib/form"
 import { createImageUrl } from "~/lib/s3"
@@ -202,6 +202,6 @@ export function FormError({ error }: { error?: string }) {
   return <FormFieldError id="form-error">{form?.formError || error}</FormFieldError>
 }
 export const FormButton = React.forwardRef<HTMLButtonElement, ButtonProps>(function _FormButton(props, ref) {
-  const transition = useTransition()
-  return <BrandButton type="submit" isLoading={transition.state === "submitting"} {...props} ref={ref} />
+  const navigation = useNavigation()
+  return <BrandButton type="submit" isLoading={navigation.state === "submitting"} {...props} ref={ref} />
 })

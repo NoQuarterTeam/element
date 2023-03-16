@@ -2,7 +2,7 @@ import * as React from "react"
 import { RiAddLine } from "react-icons/ri"
 import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
-import { useLoaderData, useNavigate, useTransition } from "@remix-run/react"
+import { useLoaderData, useNavigate, useNavigation } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
 import { z } from "zod"
 
@@ -108,13 +108,16 @@ export default function Elements() {
   const achiveProps = useDisclosure()
   const [color, setColor] = React.useState(randomHexColor())
   const createModalProps = useDisclosure()
-  const createFetcher = useTransition()
+  const createFetcher = useNavigation()
   React.useEffect(() => {
-    if (createFetcher.type === "actionReload") {
+    if (
+      createFetcher.state === "loading" &&
+      !!createFetcher.formData &&
+      createFetcher.formAction === createFetcher.location.pathname
+    ) {
       createModalProps.onClose()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createFetcher.type])
+  }, [createFetcher, createModalProps])
 
   const matchedMyElements = matchSorter(
     elements.filter((e) => (achiveProps.isOpen ? e : !e.archivedAt)),

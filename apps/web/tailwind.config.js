@@ -21,7 +21,13 @@ const shapes = plugin(function ({ matchUtilities, theme }) {
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
-  content: ["./app/**/*.{js,ts,jsx,tsx}"],
+  content: [
+    "./app/pages/**/*.{js,ts,jsx,tsx}",
+    "!./app/pages/emails+/**/*",
+    "./app/root.tsx",
+    "./app/components/**/*.{js,ts,jsx,tsx}",
+    "./app/lib/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     extend: {
       spacing: {

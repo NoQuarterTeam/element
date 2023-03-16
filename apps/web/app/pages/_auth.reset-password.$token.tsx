@@ -10,7 +10,6 @@ import { decryptToken } from "~/lib/jwt.server"
 import { badRequest } from "~/lib/remix"
 import { hashPassword } from "~/services/auth/password.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
-import { sendPasswordChangedEmail } from "~/services/user/user.mailer.server"
 
 export const headers = () => {
   return {
@@ -29,11 +28,7 @@ export const action = async ({ request }: ActionArgs) => {
 
   const payload = decryptToken<{ id: string }>(data.token)
   const hashedPassword = await hashPassword(data.password)
-  const user = await db.user.update({
-    where: { id: payload.id },
-    data: { password: hashedPassword },
-  })
-  await sendPasswordChangedEmail(user)
+  await db.user.update({ where: { id: payload.id }, data: { password: hashedPassword } })
   const { createFlash } = await getFlashSession(request)
   return redirect("/login", {
     headers: { "Set-Cookie": await createFlash(FlashType.Info, "Password changed") },

@@ -1,6 +1,6 @@
 import type * as React from "react"
 import { RiBankCard2Line, RiMap2Line, RiSettings2Line } from "react-icons/ri"
-import { NavLink, Outlet, useNavigate, useTransition } from "@remix-run/react"
+import { NavLink, Outlet, useNavigate, useNavigation } from "@remix-run/react"
 
 import { transformImageSrc } from "~/components/OptimisedImage"
 import { Avatar } from "~/components/ui/Avatar"
@@ -42,7 +42,7 @@ export default function Profile() {
                 <div className="relative">
                   <RiSettings2Line className="sq-4" />
                   {!featuresSeen.find((u) => ["weather", "habits"].includes(u)) && (
-                    <div className="absolute -top-[3px] -right-[3px] rounded-full bg-red-500 sq-1.5" />
+                    <div className="sq-1.5 absolute -top-[3px] -right-[3px] rounded-full bg-red-500" />
                   )}
                 </div>
               }
@@ -66,10 +66,9 @@ export default function Profile() {
 }
 
 function TabLink({ children, icon, to }: { to: string; children: string; icon: React.ReactElement<any> | undefined }) {
-  const transition = useTransition()
+  const navigation = useNavigation()
 
-  const isLoading =
-    transition.type === "normalLoad" && transition.state === "loading" && transition.location.pathname.includes(to)
+  const isLoading = navigation.state === "loading" && !navigation.formData && navigation.location.pathname.includes(to)
 
   return (
     <NavLink to={to} end={to === "."} className="outline-none" prefetch="render">

@@ -8,7 +8,7 @@ import {
   RiEye2Line,
   RiMore2Fill,
 } from "react-icons/ri"
-import { useFetcher, useTransition } from "@remix-run/react"
+import { useFetcher, useNavigation } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
 
 import { isValidHex } from "~/lib/color"
@@ -46,12 +46,12 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
   const [newColor, setNewColor] = React.useState(element.color)
   const [editColor, setEditColor] = React.useState(element.color)
   const createModalProps = useDisclosure()
-  const transition = useTransition()
+  const navigation = useNavigation()
   React.useEffect(() => {
-    if (transition.type === "actionReload") {
+    if (navigation.state === "loading" && !!navigation.formData && navigation.formAction === navigation.location.pathname) {
       createModalProps.onClose()
     }
-  }, [transition.type, createModalProps])
+  }, [navigation, createModalProps])
 
   const updateModalProps = useDisclosure()
   const updateFetcher = useFetcher()
@@ -137,12 +137,12 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
               <DropdownMenuContent side="left" align="start" className="z-[200]">
                 {props.depth < MAX_DEPTH && (
                   <DropdownMenuItem onClick={createModalProps.onOpen}>
-                    <RiAddLine className="mr-2 sq-3" />
+                    <RiAddLine className="sq-3 mr-2" />
                     <span>Create child</span>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={updateModalProps.onOpen}>
-                  <RiEdit2Line className="mr-2 sq-3" />
+                  <RiEdit2Line className="sq-3 mr-2" />
                   <span>Edit</span>
                 </DropdownMenuItem>
                 {element.archivedAt ? (
@@ -154,12 +154,12 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                       )
                     }
                   >
-                    <RiEye2Line className="mr-2 sq-3" />
+                    <RiEye2Line className="sq-3 mr-2" />
                     <span>Unarchive</span>
                   </DropdownMenuItem>
                 ) : (
                   <DropdownMenuItem onClick={archiveModalProps.onOpen}>
-                    <RiDeleteBinLine className="mr-2 sq-3" />
+                    <RiDeleteBinLine className="sq-3 mr-2" />
                     <span>Archive</span>
                   </DropdownMenuItem>
                 )}

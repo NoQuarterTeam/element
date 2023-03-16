@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as Tooltip from "@radix-ui/react-tooltip"
-import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node"
+import type { LinksFunction, LoaderArgs, MetaFunction, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import {
   Links,
@@ -25,6 +25,7 @@ import { Toaster } from "./components/ui/Toast"
 import { type Theme } from "./lib/theme"
 import { getFlashSession } from "./services/session/flash.server"
 import { getThemeSession } from "./services/session/theme.server"
+import { FULL_WEB_URL } from "./lib/config.server"
 
 export const meta: MetaFunction = () => {
   return { title: "Element" }
@@ -41,7 +42,11 @@ export const loader = async ({ request }: LoaderArgs) => {
   const { flash, commit } = await getFlashSession(request)
   const { getTheme, commit: commitTheme } = await getThemeSession(request)
   return json(
-    { flash, theme: getTheme() },
+    {
+      flash,
+      theme: getTheme(),
+      config: { WEB_URL: FULL_WEB_URL },
+    },
     {
       headers: [
         ["Set-Cookie", await commit()],
@@ -50,23 +55,20 @@ export const loader = async ({ request }: LoaderArgs) => {
     },
   )
 }
+export type RootLoader = SerializeFrom<typeof loader>
 
 const queryClient = new QueryClient()
 
 export default function App() {
   const { flash, theme } = useLoaderData<typeof loader>()
-  const matches = useMatches()
-
-  const shouldDisableScripts = matches.some((match) => match.handle?.disableScripts)
 
   return (
-    <Document theme={theme} shouldDisableScripts={shouldDisableScripts}>
+    <Document theme={theme}>
       <Toaster>
         <QueryClientProvider client={queryClient}>
           <Tooltip.Provider>
             <Fathom />
             <FlashMessage flash={flash} />
-            <SyncReactNative theme={theme} />
             <Outlet />
           </Tooltip.Provider>
         </QueryClientProvider>
@@ -78,7 +80,7 @@ export default function App() {
 export function ErrorBoundary({ error }: { error: Error }) {
   console.error("Boundary:", error)
   return (
-    <Document theme="dark" shouldDisableScripts={false}>
+    <Document theme="dark">
       <div className="vstack h-screen justify-center p-20">
         <img alt="logo" src="/logo.png" className="sq-24" />
         <h1>Oops, there was an error.</h1>
@@ -104,7 +106,7 @@ export function CatchBoundary() {
   }
 
   return (
-    <Document theme="dark" shouldDisableScripts={false}>
+    <Document theme="dark">
       <div className="vstack h-screen justify-center p-20">
         <img alt="logo" src="/logo.png" className="sq-24" />
         <h1>
@@ -119,10 +121,11 @@ export function CatchBoundary() {
 interface DocumentProps {
   children: React.ReactNode
   theme: Theme
-  shouldDisableScripts: boolean
 }
 
-function Document({ theme, children, shouldDisableScripts }: DocumentProps) {
+function Document({ theme, children }: DocumentProps) {
+  const matches = useMatches()
+  const shouldDisableScripts = matches.some((match) => match.handle?.disableScripts)
   return (
     <html lang="en" className={join(theme)}>
       <head>
@@ -167,12 +170,4 @@ function Document({ theme, children, shouldDisableScripts }: DocumentProps) {
       </body>
     </html>
   )
-}
-
-function SyncReactNative({ theme }: { theme: Theme }) {
-  React.useEffect(() => {
-    ;(window as any)?.ReactNativeWebView?.postMessage(theme)
-  }, [theme])
-
-  return null
 }
