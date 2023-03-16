@@ -180,19 +180,19 @@ importers:
       react-colorful: 5.6.1
       react-dom: 18.2.0
       react-dropzone: 14.2.3
-      react-icons: 4.7.1
+      react-icons: 4.8.0
       react-intersection-observer: ^9.4.3
       react-select: 5.7.0
       recharts: ^2.5.0
       remix-flat-routes: 0.5.8
       resend: ^0.11.1
       sharp: ^0.31.3
-      stripe: 11.11.0
+      stripe: 11.14.0
       tailwind-merge: ^1.10.0
       tailwindcss: ^3.2.7
       tailwindcss-radix: ^2.8.0
       typescript: ^4.9.5
-      zod: 3.20.6
+      zod: 3.21.4
       zustand: 4.3.6
     dependencies:
       '@element/api': link:../../packages/api
@@ -256,16 +256,16 @@ importers:
       react-colorful: 5.6.1_biqbaboplfbrettd7655fr4n2y
       react-dom: 18.2.0_react@18.2.0
       react-dropzone: 14.2.3_react@18.2.0
-      react-icons: 4.7.1_react@18.2.0
+      react-icons: 4.8.0_react@18.2.0
       react-intersection-observer: 9.4.3_react@18.2.0
       react-select: 5.7.0_zula6vjvt3wdocc4mwcxqa6nzi
       recharts: 2.5.0_biqbaboplfbrettd7655fr4n2y
       resend: 0.11.1
       sharp: 0.31.3
-      stripe: 11.11.0
+      stripe: 11.14.0
       tailwind-merge: 1.10.0
       tailwindcss-radix: 2.8.0
-      zod: 3.20.6
+      zod: 3.21.4
       zustand: 4.3.6_react@18.2.0
     devDependencies:
       '@remix-run/dev': 1.14.3_@remix-run+serve@1.14.3
@@ -315,14 +315,14 @@ importers:
       bcrypt: ^5.1.0
       dayjs: 1.11.7
       jsonwebtoken: 9.0.0
-      zod: 3.20.6
+      zod: 3.21.4
     dependencies:
       '@element/database': link:../database
       '@trpc/server': 10.16.0
       bcrypt: 5.1.0
       dayjs: 1.11.7
       jsonwebtoken: 9.0.0
-      zod: 3.20.6
+      zod: 3.21.4
     devDependencies:
       '@types/bcrypt': 5.0.0
       '@types/jsonwebtoken': 9.0.1
@@ -13912,8 +13912,8 @@ packages:
       shallowequal: 1.1.0
     dev: false
 
-  /react-icons/4.7.1_react@18.2.0:
-    resolution: {integrity: sha512-yHd3oKGMgm7zxo3EA7H2n7vxSoiGmHk5t6Ou4bXsfcgWyhfDKMpyKfhHR6Bjnn63c+YXBLBPUql9H4wPJM6sXw==}
+  /react-icons/4.8.0_react@18.2.0:
+    resolution: {integrity: sha512-N6+kOLcihDiAnj5Czu637waJqSnwlMNROzVZMhfX68V/9bu9qHaMIJC4UdozWoOk57gahFCNHwVvWzm0MTzRjg==}
     peerDependencies:
       react: '*'
     dependencies:
@@ -15356,8 +15356,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /stripe/11.11.0:
-    resolution: {integrity: sha512-CT8TZJ+bUaMmqCOljHdKwHTWym0bscrCHrKmvK2KoTaz/9gDIzG+lXTJOFUOb3K7Jwaoaori4yEVzOgA7U46+g==}
+  /stripe/11.14.0:
+    resolution: {integrity: sha512-EqIMCKkfkewf3eLJo0fopDy/EN2UF6q7L3NEycwThjZRUj8HFz3BpcEDjCITfNJ04ozrAmZNqFaiW46YG4KUtw==}
     engines: {node: '>=12.*'}
     dependencies:
       '@types/node': 18.15.3
@@ -16720,8 +16720,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  /zod/3.20.6:
-    resolution: {integrity: sha512-oyu0m54SGCtzh6EClBVqDDlAYRz4jrVtKwQ7ZnsEmMI9HnzuZFj8QFwAY1M5uniIYACdGvv0PBWPF2kO0aNofA==}
+  /zod/3.21.4:
+    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
   /zustand/4.3.6_react@18.2.0:
