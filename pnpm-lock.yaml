@@ -164,7 +164,7 @@ importers:
       js-confetti: 0.11.0
       js-cookie: 3.0.1
       jsonwebtoken: 9.0.0
-      limax: 3.0.0
+      limax: 4.0.0
       match-sorter: 6.3.1
       mock-aws-s3: ^4.0.2
       morgan: 1.10.0
@@ -246,7 +246,7 @@ importers:
       js-confetti: 0.11.0
       js-cookie: 3.0.1
       jsonwebtoken: 9.0.0
-      limax: 3.0.0
+      limax: 4.0.0
       match-sorter: 6.3.1
       morgan: 1.10.0
       nodemailer: 6.9.1
@@ -3783,10 +3783,12 @@ packages:
       '@napi-rs/pinyin-win32-ia32-msvc': 1.7.1
       '@napi-rs/pinyin-win32-x64-msvc': 1.7.1
     dev: false
+    optional: true
 
   /@napi-rs/triples/1.1.0:
     resolution: {integrity: sha512-XQr74QaLeMiqhStEhLn1im9EOMnkypp7MZOwQhGzqp2Weu5eQJbpPxWxixxlYRKWPOmJjsk6qYfYH9kq43yc2w==}
     dev: false
+    optional: true
 
   /@nicolo-ribaudo/eslint-scope-5-internals/5.1.1-v1:
     resolution: {integrity: sha512-54/JRvkLIzzDWshCWfuhadfrfZVPiElY8Fcgmg1HroEly/EDSszzhBAsarCux+D/kOslTRquNzuyGSmUSTTHGg==}
@@ -10881,13 +10883,15 @@ packages:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
     engines: {node: '>=10'}
 
-  /limax/3.0.0:
-    resolution: {integrity: sha512-7O14piibxAkJlQuAvhbJY5uubV7xszi1kQgnr5z+RkDJXyKYoStilqqpH8//LJq+HQpQN7TJmj3qxXzaEJOSfg==}
-    engines: {node: '>=10'}
+  /limax/4.0.0:
+    resolution: {integrity: sha512-OXOYiu4GbgSW9siKHqzKL0q18c3JWO5fDTPvWuCqFC/MaC/7ckEeEXoWErdPJis6JJgBWO6F/WLFD/3JMpEixA==}
+    engines: {node: '>=14'}
     dependencies:
-      '@napi-rs/pinyin': 1.7.1
       hepburn: 1.2.0
+      lodash.deburr: 4.1.0
       speakingurl: 14.0.1
+    optionalDependencies:
+      '@napi-rs/pinyin': 1.7.1
     dev: false
 
   /lines-and-columns/1.2.4:
@@ -10945,6 +10949,10 @@ packages:
 
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
+
+  /lodash.deburr/4.1.0:
+    resolution: {integrity: sha512-m/M1U1f3ddMCs6Hq2tAsYThTBDaAKFDX3dwDo97GEYzamXi9SqUpjWi/Rrj/gf3X2n8ktwgZrlP1z6E3v/IExQ==}
+    dev: false
 
   /lodash.isequal/4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
