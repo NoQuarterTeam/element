@@ -18,5 +18,10 @@
       "extends": ["schedule:weekly"]
     }
   ],
-  "ignoreDeps": ["react-native", "react-native-reanimated", "@react-native-async-storage/async-storage"]
+  "ignoreDeps": [
+    "react-native",
+    "react-native-reanimated",
+    "@react-native-async-storage/async-storage",
+    "@react-native-community/datetimepicker"
+  ]
 }

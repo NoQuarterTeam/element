@@ -6,10 +6,11 @@ import { api, AUTH_TOKEN } from "../../lib/utils/api"
 
 export default function Profile() {
   const { data } = api.auth.me.useQuery()
-  const queryClient = api.useContext()
+  const utils = api.useContext()
+
   const handleLogout = async () => {
     await AsyncStorage.setItem(AUTH_TOKEN, "")
-    queryClient.auth.me.setData(undefined, null)
+    utils.auth.me.setData(undefined, null)
   }
 
   return (

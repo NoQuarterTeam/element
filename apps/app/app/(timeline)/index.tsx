@@ -2,7 +2,7 @@ import * as React from "react"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import { Link, useRouter } from "expo-router"
-import { Text, View, TouchableOpacity, Dimensions, RefreshControl } from "react-native"
+import { Text, View, TouchableOpacity, Dimensions } from "react-native"
 import { api, RouterOutputs } from "../../lib/utils/api"
 
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
