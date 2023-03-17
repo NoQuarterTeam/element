@@ -3,5 +3,5 @@
   "compilerOptions": {
     "jsx": "react-native"
   },
-  "include": ["./**/*.ts", "./**/*.tsx"]
+  "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./**/*.jsx", "./**/*.d.ts"]
 }

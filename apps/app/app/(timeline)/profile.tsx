@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useQueryClient } from "@tanstack/react-query"
 import { Text, View } from "react-native"
 import { Button } from "../../components/Button"
 import { Modal } from "../../components/Modal"
@@ -7,10 +8,12 @@ import { api, AUTH_TOKEN } from "../../lib/utils/api"
 export default function Profile() {
   const { data } = api.auth.me.useQuery()
   const utils = api.useContext()
+  const client = useQueryClient()
 
   const handleLogout = async () => {
     await AsyncStorage.setItem(AUTH_TOKEN, "")
     utils.auth.me.setData(undefined, null)
+    client.clear()
   }
 
   return (
