@@ -75,9 +75,6 @@ export const action = async ({ request, params }: ActionArgs) => {
             name: t.name as string,
             isComplete: !!t.isComplete,
           }))
-
-        console.log(formData.get("isComplete"))
-
         const updatedTask = await db.task.update({
           select: taskItemSelectFields,
           where: { id: taskId },

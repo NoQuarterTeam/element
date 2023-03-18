@@ -8,8 +8,6 @@ import { api } from "../../../lib/utils/api"
 
 export default function Plan() {
   const { data, isLoading } = api.auth.myPlan.useQuery()
-  console.log({ data })
-
   const discountedPlanAmount = data?.subscription?.discountPercent ? 4 - (4 * 100) / data.subscription.discountPercent : null
   return (
     <ScreenView title="Plan">
