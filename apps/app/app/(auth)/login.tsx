@@ -1,9 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useRouter } from "expo-router"
 import * as React from "react"
-import { Text, View } from "react-native"
+import { View } from "react-native"
 import { Button } from "../../components/Button"
-import { Input } from "../../components/Input"
+import { FormInput } from "../../components/FormInput"
+import { Heading } from "../../components/Heading"
+
 import { api, AUTH_TOKEN } from "../../lib/utils/api"
 
 export default function Login() {
@@ -20,14 +22,12 @@ export default function Login() {
   const [password, setPassword] = React.useState("password")
   return (
     <View className="space-y-3 px-4 pt-16">
-      <Text className="text-3xl font-extrabold">Login</Text>
+      <Heading className="text-3xl">Login</Heading>
       <View>
-        <Text>Email</Text>
-        <Input value={email} onChangeText={setEmail} />
+        <FormInput label="Email" value={email} onChangeText={setEmail} />
       </View>
       <View>
-        <Text>Password</Text>
-        <Input value={password} onChangeText={setPassword} />
+        <FormInput secureTextEntry label="Password" value={password} onChangeText={setPassword} />
       </View>
       <View>
         <Button disabled={login.isLoading} onPress={() => login.mutate({ email, password })}>

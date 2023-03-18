@@ -2,13 +2,16 @@ import * as React from "react"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import { Link, useRouter } from "expo-router"
-import { Text, View, TouchableOpacity, Dimensions } from "react-native"
+import { View, TouchableOpacity, Dimensions } from "react-native"
 import { api, RouterOutputs } from "../../lib/utils/api"
 
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
-import { join } from "../../lib/tailwind"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import Feather from "@expo/vector-icons/Feather"
+import { safeReadableColor } from "../../lib/utils/colors"
+import { formatDuration } from "../../lib/utils/duration"
+import { Text } from "../../components/Text"
+import { Heading } from "../../components/Heading"
 
 dayjs.extend(advancedFormat)
 
@@ -33,9 +36,9 @@ export default function Timeline() {
   }, [date])
   return (
     <View className="flex-1">
-      <View className="border-gray-75 border-b px-4 py-2 pt-16">
+      <View className="border-gray-75 border-b px-4 pb-2 pt-16">
         <View className="flex w-full flex-row items-center justify-between pb-2">
-          <Text className="pb-2 text-3xl font-extrabold">Timeline</Text>
+          <Heading className="pb-2 text-4xl">Timeline</Heading>
           <Link href="/profile" asChild>
             <TouchableOpacity>
               <Feather name="user" size={24} />
@@ -70,9 +73,16 @@ export default function Timeline() {
           <TaskList key={date} tasks={taskData} />
         )}
       </View>
-      <View className="absolute bottom-4 right-4">
-        <Link href={`/new?date=${date}`} asChild>
-          <TouchableOpacity className="bg-primary-500 rounded-full p-4 shadow-lg">
+      <View className="absolute bottom-4 right-4 space-y-2">
+        <TouchableOpacity
+          onPressIn={() => setDate(dayjs().format("YYYY-MM-DD"))}
+          className="rounded-full bg-gray-100/90 p-4 shadow-lg"
+        >
+          <Feather name="calendar" size={24} />
+        </TouchableOpacity>
+
+        <Link href={`new?date=${date}`} asChild>
+          <TouchableOpacity className="bg-primary-500/90 rounded-full p-4 shadow-lg">
             <Feather name="plus" size={24} />
           </TouchableOpacity>
         </Link>
@@ -106,7 +116,7 @@ function TaskList({ tasks }: { tasks: Tasks }) {
       // refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={onRefetch} />}
       onDragEnd={({ data }) => handleUpdateOrder(data)}
       keyExtractor={(item) => item.id}
-      contentContainerStyle={{ paddingBottom: 130 }}
+      contentContainerStyle={{ paddingBottom: 130, paddingTop: 10 }}
       containerStyle={{ height: height - 180 }}
       renderItem={({ item, drag, isActive }) => (
         <TaskItem onToggleComplete={() => handleToggle(item.id)} task={item} drag={drag} isActive={isActive} />
@@ -126,25 +136,54 @@ function TaskItem({
   drag: () => void
   isActive: boolean
 }) {
+  const [isHovered, setIsHovered] = React.useState(false)
   const { mutate: toggleComplete } = api.task.toggleComplete.useMutation({ onMutate: onToggleComplete })
   const handleToggleComplete = () => toggleComplete(task.id)
   const router = useRouter()
+
   return (
-    <ScaleDecorator activeScale={1.02}>
+    <ScaleDecorator activeScale={1}>
       <TouchableOpacity
         onPress={() => router.push({ pathname: "index", params: { id: task.id } })}
         onLongPress={drag}
-        delayLongPress={100}
+        onPressIn={() => setIsHovered(true)}
+        onPressOut={() => setIsHovered(false)}
+        delayLongPress={400}
         disabled={isActive}
-        className={join(
-          "mx-4 mt-2 flex flex-row items-center justify-between rounded-md border border-gray-100 bg-white p-2",
-          isActive && "shadow-md",
-        )}
+        className="mx-4 mt-1 mb-px bg-white"
       >
-        <Text className="text-lg">{task.name}</Text>
-        <TouchableOpacity onPress={handleToggleComplete}>
-          {task.isComplete ? <Feather name="check-square" size={24} /> : <Feather name="square" size={24} />}
-        </TouchableOpacity>
+        <View className="overflow-hidden rounded-sm border border-gray-100 bg-white">
+          <View className="flex flex-row justify-between p-2">
+            <View>
+              <Text className="text-lg" style={{ textDecorationLine: task.isComplete ? "line-through" : undefined }}>
+                {task.name}
+              </Text>
+              {!task.isComplete && (
+                <View className="flex flex-row items-center space-x-2">
+                  {task.startTime ? <Text className="text-xs">{task.startTime}</Text> : null}
+                  {task.durationHours || task.durationMinutes ? (
+                    <Text className="text-xs">{formatDuration(task.durationHours, task.durationMinutes)}</Text>
+                  ) : null}
+                </View>
+              )}
+            </View>
+
+            <TouchableOpacity onPress={handleToggleComplete}>
+              {task.isComplete ? (
+                <Ionicons name="checkbox" size={24} color="#E87B35" />
+              ) : (
+                <Ionicons name="square-outline" size={24} />
+              )}
+            </TouchableOpacity>
+          </View>
+          <View style={{ backgroundColor: task.element.color }} className="rounded-b-sm p-1">
+            {isHovered || isActive ? (
+              <Text style={{ color: safeReadableColor(task.element.color) }} className="text-xs">
+                {task.element.name}
+              </Text>
+            ) : null}
+          </View>
+        </View>
       </TouchableOpacity>
     </ScaleDecorator>
   )

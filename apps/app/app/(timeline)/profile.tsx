@@ -2,7 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useQueryClient } from "@tanstack/react-query"
 import { Text, View } from "react-native"
 import { Button } from "../../components/Button"
-import { Modal } from "../../components/Modal"
+
+import { ScreenView } from "../../components/ScreenView"
 import { api, AUTH_TOKEN } from "../../lib/utils/api"
 
 export default function Profile() {
@@ -11,19 +12,19 @@ export default function Profile() {
   const client = useQueryClient()
 
   const handleLogout = async () => {
-    await AsyncStorage.setItem(AUTH_TOKEN, "")
     utils.auth.me.setData(undefined, null)
+    await AsyncStorage.setItem(AUTH_TOKEN, "")
     client.clear()
   }
 
   return (
-    <Modal title="Profile">
+    <ScreenView title="Profile">
       {data && (
         <View className="space-y-4">
-          <Text className="text-3xl font-extrabold">Hey, {data.firstName}</Text>
+          <Text className="font-body text-3xl">Hey, {data.firstName}</Text>
           <Button onPress={handleLogout}>Logout</Button>
         </View>
       )}
-    </Modal>
+    </ScreenView>
   )
 }

@@ -22,6 +22,6 @@ export function AuthProvider(props: { children: React.ReactNode }) {
       router.replace("/timeline")
     }
   }, [data, isLoading, segments])
-  if (isLoading) return null
+  if (isLoading || !data) return null
   return <>{props.children}</>
 }

@@ -23,6 +23,8 @@ importers:
       '@babel/preset-env': ^7.20.0
       '@babel/runtime': ^7.20.0
       '@element/api': '*'
+      '@element/database': '*'
+      '@expo-google-fonts/poppins': ^0.2.3
       '@expo/config-plugins': ^6.0.0
       '@react-native-async-storage/async-storage': 1.17.11
       '@react-native-community/datetimepicker': 6.7.3
@@ -32,15 +34,18 @@ importers:
       '@trpc/react-query': ^10.9.0
       '@trpc/server': ^10.9.0
       '@types/react': ^18.0.27
+      '@types/react-native': ^0.71.3
       dayjs: 1.11.7
       eslint: ^8.32.0
       expo: 48.0.7
       expo-constants: ~14.2.1
+      expo-font: ~11.1.1
       expo-linking: ~4.0.1
       expo-router: ^1.2.2
       expo-splash-screen: ~0.18.1
       expo-status-bar: ~1.4.4
       nativewind: ^2.0.11
+      polished: 4.2.2
       postcss: ^8.4.21
       react: 18.2.0
       react-dom: 18.2.0
@@ -55,6 +60,8 @@ importers:
       typescript: ^4.9.5
     dependencies:
       '@element/api': link:../../packages/api
+      '@element/database': link:../../packages/database
+      '@expo-google-fonts/poppins': 0.2.3
       '@react-native-async-storage/async-storage': 1.17.11_react-native@0.71.3
       '@react-native-community/datetimepicker': 6.7.3
       '@react-native-picker/picker': 2.4.8_yqouayos4dnow7nnkhah4yzuzq
@@ -65,11 +72,13 @@ importers:
       dayjs: 1.11.7
       expo: 48.0.7_@babel+core@7.21.3
       expo-constants: 14.2.1_expo@48.0.7
+      expo-font: 11.1.1_expo@48.0.7
       expo-linking: 4.0.1_expo@48.0.7
       expo-router: 1.2.2_qbki6edvqur7h7jx2nxzg342ki
       expo-splash-screen: 0.18.1_expo@48.0.7
       expo-status-bar: 1.4.4
       nativewind: 2.0.11_dmdrd7wro7is5ymtgffolhsaq4
+      polished: 4.2.2
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-native: 0.71.3_klxfafkpjmb2537xfoky62a7f4
@@ -85,6 +94,7 @@ importers:
       '@babel/runtime': 7.21.0
       '@expo/config-plugins': 6.0.1
       '@types/react': 18.0.28
+      '@types/react-native': 0.71.3
       eslint: 8.34.0
       postcss: 8.4.21
       tailwindcss: 3.2.7_postcss@8.4.21
@@ -2006,6 +2016,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@expo-google-fonts/poppins/0.2.3:
+    resolution: {integrity: sha512-PXkur1ZY/puy1PwVFYPJx8qiI3dtBzC2ig1bo53swCt7/sI7krCGYRO6hLBNp15M0kcNh2J4cCR9ZQyFxsving==}
+    dev: false
 
   /@expo/bunyan/4.0.0:
     resolution: {integrity: sha512-Ydf4LidRB/EBI+YrB+cVLqIseiRfjUI/AeHBgjGMtq3GroraDu81OV7zqophRgupngoL3iS3JUMDMnxO7g39qA==}
@@ -4448,6 +4462,12 @@ packages:
     resolution: {integrity: sha512-O38bPbI2CWtgw/OoQoY+BRelw7uysmXbWvw3nLWO21H1HSh+GOlqPuXshJfjmpNlKiiSDG9cc1JZAaMmVdcTlw==}
     dependencies:
       '@types/react': 18.0.28
+
+  /@types/react-native/0.71.3:
+    resolution: {integrity: sha512-0Uqw1YZ0qbVla0MMWFTANFm6W8KYWNvGQmYfucdecbXivLMcQ2v4PovuYFKr7bE6Bc5nDCUEaga962Y8gcDF7A==}
+    dependencies:
+      '@types/react': 18.0.28
+    dev: true
 
   /@types/react-transition-group/4.4.5:
     resolution: {integrity: sha512-juKD/eiSM3/xZYzjuzH6ZwpP+/lejltmiS3QEzV/vmb/Q8+HfDmxu+Baga8UEMGBqV88Nbg4l2hY/K2DkyaLLA==}

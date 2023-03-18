@@ -36,17 +36,17 @@ const getBaseUrl = () => {
    */
   const localhost = Constants.manifest?.debuggerHost?.split(":")[0]
   if (!localhost) {
-    // return "https://your-production-url.com";
-    throw new Error("Failed to get localhost. Please point to your production server.")
+    return "https://myelement.app"
   }
   return `http://${localhost}:3000`
 }
+
+export const AUTH_TOKEN = "AUTH_TOKEN"
 
 /**
  * A wrapper for your app that provides the TRPC context.
  * Use only in _app.tsx
  */
-export const AUTH_TOKEN = "AUTH_TOKEN"
 export function TRPCProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = React.useState(() => new QueryClient())
   const [trpcClient] = React.useState(() =>

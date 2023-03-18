@@ -13,18 +13,20 @@ const timelineTaskFields = {
   startTime: true,
   date: true,
   name: true,
-  elementId: true,
-  element: { select: { name: true, color: true } },
+  element: { select: { id: true, name: true, color: true } },
 } satisfies Prisma.TaskSelect
+
+const nullableString = z.preprocess((v) => (v === "" ? null : v), z.string().nullable()).optional()
+const nullableNumber = z.preprocess((v) => (v === 0 ? null : v), z.number().nullable()).optional()
 
 const taskSchema = z.object({
   name: z.string(),
   elementId: z.string(),
-  date: z.string().nullable().optional(),
-  description: z.string().nullable().optional(),
-  startTime: z.string().nullable().optional(),
-  durationHours: z.number().nullable().optional(),
-  durationMinutes: z.number().nullable().optional(),
+  date: nullableString,
+  description: nullableString,
+  startTime: nullableString,
+  durationHours: nullableNumber,
+  durationMinutes: nullableNumber,
 })
 
 export const taskRouter = createTRPCRouter({

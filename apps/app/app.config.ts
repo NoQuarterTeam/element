@@ -11,7 +11,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   splash: {
     image: "./assets/icon.png",
     resizeMode: "contain",
-    backgroundColor: "white",
+    backgroundColor: "#ffffff",
   },
   updates: {
     fallbackToCacheTimeout: 0,
@@ -24,7 +24,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   android: {
     adaptiveIcon: {
       foregroundImage: "./assets/icon.png",
-      backgroundColor: "white",
+      backgroundColor: "#ffffff",
     },
   },
   extra: {

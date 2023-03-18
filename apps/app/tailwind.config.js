@@ -56,9 +56,10 @@ module.exports = {
       },
     },
     fontFamily: {
-      heading: ["Poppins", "sans-serif"],
-      body: ["Poppins", "sans-serif"],
-      mono: ["SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
+      body: ["Poppins_400Regular"],
+      label: ["Poppins_600SemiBold"],
+      heading: ["Poppins_700Bold"],
+      "extra-thick": ["Poppins_900Black"],
     },
   },
   plugins: [require("@tailwindcss/forms"), require("@tailwindcss/line-clamp"), require("tailwindcss-radix"), shapes],

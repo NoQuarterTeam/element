@@ -8,7 +8,7 @@ export default function RootLayout() {
     <AuthProvider>
       <Stack screenOptions={{ contentStyle: { backgroundColor: "white" }, headerShown: false }}>
         <Stack.Screen name="index" />
-        <Stack.Screen name="profile" options={{ presentation: "modal" }} />
+        <Stack.Screen name="profile" />
         <Stack.Screen name="new" options={{ presentation: "modal" }} />
         <Stack.Screen name="[id]" options={{ presentation: "modal" }} />
       </Stack>
