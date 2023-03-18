@@ -1,7 +1,6 @@
 import { HexColorPicker } from "react-colorful"
 
-import { isValidHex, safeReadableColor } from "~/lib/color"
-import { merge } from "~/lib/tailwind"
+import { merge, isValidHex, safeReadableColor } from "@element/shared"
 
 interface Props {
   name: string
@@ -22,7 +21,7 @@ export function ColorInput(props: Props) {
             name={props.name}
             required
             className={merge(
-              "w-full rounded-xs border bg-transparent py-2 text-center text-sm outline-none",
+              "rounded-xs w-full border bg-transparent py-2 text-center text-sm outline-none",
               !isValidHex(props.value) ? "border-red-500" : "border-transparent hover:border-white/70 focus:border-white/70",
             )}
             style={{ color: isValidHex(props.value) ? safeReadableColor(props.value) : undefined }}

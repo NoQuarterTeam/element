@@ -8,7 +8,7 @@ import { Modal } from "~/components/ui/Modal"
 import { Spinner } from "~/components/ui/Spinner"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { createImageUrl } from "~/lib/s3"
-import { join } from "~/lib/tailwind"
+import { join } from "@element/shared"
 import { useMe } from "~/pages/_app"
 
 export default function Profile() {

@@ -2,7 +2,7 @@ import * as React from "react"
 import type { VariantProps } from "class-variance-authority"
 import { cva } from "class-variance-authority"
 
-import { join, merge } from "~/lib/tailwind"
+import { join, merge } from "@element/shared"
 
 import { Spinner } from "./Spinner"
 

@@ -5,7 +5,7 @@ export const formatFileName = (filename: string): string => {
   const type = filename.split(".").pop()
   let name = filename
     .split(".")[0]
-    .toLowerCase()
+    ?.toLowerCase()
     .replace(/[^a-z0-9]/g, "-")
   name = dayjs().format("YYYYMMDDHHmmss") + "-" + name
   if (type) {

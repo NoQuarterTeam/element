@@ -1,5 +1,5 @@
 import { TextProps, Text as RText } from "react-native"
-import { merge } from "../lib/tailwind"
+import { merge } from "@element/shared"
 
 export function Text(props: TextProps) {
   return (

@@ -24,6 +24,7 @@
   "dependencies": {
     "@element/api": "*",
     "@element/database": "*",
+    "@element/shared": "*",
     "@faker-js/faker": "^7.6.0",
     "@headlessui/react": "^1.7.13",
     "@hello-pangea/dnd": "^16.2.0",

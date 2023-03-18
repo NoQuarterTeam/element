@@ -7,11 +7,12 @@ import Constants from "expo-constants"
 import * as Updates from "expo-updates"
 import { Button } from "../../../components/Button"
 import { ScreenView } from "../../../components/ScreenView"
-import { join } from "../../../lib/tailwind"
+import { join } from "@element/shared"
 import { api, AUTH_TOKEN } from "../../../lib/utils/api"
 import { OptimizedImage } from "../../../components/OptimisedImage"
 import { Text } from "../../../components/Text"
 import { VERSION } from "../../../lib/config"
+
 const updateId = Updates.updateId
 const updateGroup = (Constants.manifest2?.metadata as any)?.["updateGroup"]
 

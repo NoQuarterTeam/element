@@ -2,9 +2,7 @@ import * as React from "react"
 import type { DropzoneOptions, FileRejection } from "react-dropzone"
 import { useDropzone } from "react-dropzone"
 
-import { useDisclosure } from "~/lib/hooks/useDisclosure"
-import { useS3Upload } from "~/lib/hooks/useS3"
-import { merge } from "~/lib/tailwind"
+import { merge, useDisclosure, useS3Upload } from "@element/shared"
 
 import { BrandButton } from "./BrandButton"
 import { Button } from "./Button"

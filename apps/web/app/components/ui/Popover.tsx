@@ -1,7 +1,7 @@
 import * as React from "react"
 import * as Popover from "@radix-ui/react-popover"
 
-import { merge } from "~/lib/tailwind"
+import { merge } from "@element/shared"
 
 export * from "@radix-ui/react-popover"
 

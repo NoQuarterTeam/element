@@ -1,3 +1,5 @@
+import { useFetcher, useNavigation } from "@remix-run/react"
+import { matchSorter } from "match-sorter"
 import React from "react"
 import {
   RiAddLine,
@@ -8,18 +10,15 @@ import {
   RiEye2Line,
   RiMore2Fill,
 } from "react-icons/ri"
-import { useFetcher, useNavigation } from "@remix-run/react"
-import { matchSorter } from "match-sorter"
 
-import { isValidHex } from "~/lib/color"
-import { useDisclosure } from "~/lib/hooks/useDisclosure"
+import { isValidHex, join, useDisclosure } from "@element/shared"
+
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { join } from "~/lib/tailwind"
+import { ElementActionMethods } from "~/pages/api+/elements.$id"
 import type { SidebarElement } from "~/pages/_app.timeline.elements"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
-import { ElementActionMethods } from "~/pages/api+/elements.$id"
 
 import { ColorInput } from "./ColorInput"
 import { Button } from "./ui/Button"

@@ -4,7 +4,7 @@ import { Form as RemixForm, useActionData, useNavigation } from "@remix-run/reac
 
 import type { ActionData } from "~/lib/form"
 import { createImageUrl } from "~/lib/s3"
-import { merge } from "~/lib/tailwind"
+import { merge } from "@element/shared"
 
 import { BrandButton } from "./BrandButton"
 import { type ButtonProps } from "./Button"

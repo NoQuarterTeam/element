@@ -14,12 +14,12 @@ import {
 import { Role } from "@element/database/types"
 import { useFetcher, useLocation, useNavigate, useSubmit } from "@remix-run/react"
 
-import { useDisclosure } from "~/lib/hooks/useDisclosure"
+import { useDisclosure } from "@element/shared"
 import { useEventListener } from "~/lib/hooks/useEventListener"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
-import { join } from "~/lib/tailwind"
+import { join } from "@element/shared"
 import { useMe } from "~/pages/_app"
 
 import { useTheme } from "../lib/theme"
@@ -96,7 +96,7 @@ export function Nav() {
               icon={
                 <div className="relative">
                   <RiTimeLine className="sq-4" />
-                  {!featuresSeen.includes("backlog") && <div className="absolute top-0 right-0 rounded-full bg-red-500 sq-1.5" />}
+                  {!featuresSeen.includes("backlog") && <div className="sq-1.5 absolute top-0 right-0 rounded-full bg-red-500" />}
                 </div>
               }
             />
@@ -110,7 +110,7 @@ export function Nav() {
               icon={
                 <div className="relative">
                   <RiBookLine className="sq-4" />
-                  {elementIds.length > 0 && <div className="absolute -top-1 -right-1 rounded-full bg-primary-500 sq-2.5" />}
+                  {elementIds.length > 0 && <div className="bg-primary-500 sq-2.5 absolute -top-1 -right-1 rounded-full" />}
                 </div>
               }
             />
@@ -126,7 +126,7 @@ export function Nav() {
               icon={
                 <div className="relative">
                   <RiFocus3Line className="sq-4" />
-                  {!featuresSeen.includes("focus") && <div className="absolute top-0 right-0 rounded-full bg-red-500 sq-1.5" />}
+                  {!featuresSeen.includes("focus") && <div className="sq-1.5 absolute top-0 right-0 rounded-full bg-red-500" />}
                 </div>
               }
             />
@@ -153,7 +153,7 @@ export function Nav() {
                 <div className="relative">
                   <RiUser3Line className="sq-4" />
                   {(!featuresSeen.includes("weather") || !featuresSeen.includes("habits")) && (
-                    <div className="absolute top-0 right-0 rounded-full bg-red-500 sq-1.5" />
+                    <div className="sq-1.5 absolute top-0 right-0 rounded-full bg-red-500" />
                   )}
                 </div>
               }

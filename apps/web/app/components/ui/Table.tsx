@@ -4,7 +4,7 @@ import { Prisma } from "@element/database/types"
 import { Link as RLink, useSearchParams } from "@remix-run/react"
 import queryString from "query-string"
 
-import { join, merge } from "~/lib/tailwind"
+import { join, merge } from "@element/shared"
 
 import { Button } from "./Button"
 import { NoData } from "./NoData"

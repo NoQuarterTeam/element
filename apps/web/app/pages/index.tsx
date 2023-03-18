@@ -9,7 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { IconButton } from "~/components/ui/IconButton"
 import { Limiter } from "~/components/ui/Limiter"
 import { LinkButton } from "~/components/ui/LinkButton"
-import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "~/lib/product"
+import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "@element/shared"
 import { useTheme } from "~/lib/theme"
 import { getUserSession } from "~/services/session/session.server"
 
@@ -118,7 +118,7 @@ export default function HomeLayout() {
               </LinkButton>
             </div>
 
-            <div className="overflow-hidden rounded-lg border border-gray-75 shadow-2xl shadow-gray-100 dark:border-gray-700 dark:shadow-gray-900 ">
+            <div className="border-gray-75 overflow-hidden rounded-lg border shadow-2xl shadow-gray-100 dark:border-gray-700 dark:shadow-gray-900 ">
               <img alt="demo" src={isDark ? "/demo-dark.png" : "/demo.png"} className="w-full max-w-3xl object-contain" />
             </div>
           </div>

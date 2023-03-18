@@ -10,7 +10,7 @@ import dayjs from "dayjs"
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 import { DATE_BACK } from "~/lib/hooks/useTimelineTaskDates"
-import { join } from "~/lib/tailwind"
+import { join } from "@element/shared"
 import { useMe } from "~/pages/_app"
 import type { TimelineHabitResponse } from "~/pages/api+/habits"
 import type { WeatherData } from "~/pages/api+/weather"
@@ -65,7 +65,7 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
         isHabitsEnabled ? "h-headerHabit" : "h-header",
       )}
     >
-      <img className="absolute top-5 left-5 sq-8" src="/logo.png" alt="logo" />
+      <img className="sq-8 absolute top-5 left-5" src="/logo.png" alt="logo" />
       {months.map(({ month, year }) => (
         <div key={`${month}${year}`}>
           <div className="sticky left-12 flex w-max items-center pt-4 pl-4">
@@ -127,7 +127,7 @@ function _HeaderDay(props: {
 
                         <img
                           src={`https://openweathermap.org/img/wn/${props.weather.icon}@2x.png`}
-                          className="object-cover sq-8"
+                          className="sq-8 object-cover"
                           alt="weather icon"
                         />
                       </div>
@@ -171,7 +171,7 @@ function _HeaderDay(props: {
                                       <span className="text-lg">km/h</span>
                                     </p>
                                     <TbLocation
-                                      className="opacity-60 sq-4"
+                                      className="sq-4 opacity-60"
                                       style={{ transform: `rotate(${135 + props.weather.windDirection}deg)` }}
                                     />
                                   </div>

@@ -8,11 +8,10 @@ import { api, RouterOutputs } from "../../lib/utils/api"
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import Feather from "@expo/vector-icons/Feather"
-import { safeReadableColor } from "../../lib/utils/colors"
-import { formatDuration } from "../../lib/utils/duration"
+import { safeReadableColor, formatDuration, join } from "@element/shared"
+
 import { Text } from "../../components/Text"
 import { Heading } from "../../components/Heading"
-import { join } from "../../lib/tailwind"
 
 dayjs.extend(advancedFormat)
 

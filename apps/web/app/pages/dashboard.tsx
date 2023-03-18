@@ -7,8 +7,8 @@ import dayjs from "dayjs"
 
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
-import { getMinutesFromTasks, getTotalTaskDuration } from "~/lib/helpers/duration"
-import { merge } from "~/lib/tailwind"
+import { getMinutesFromTasks, getTotalTaskDuration } from "@element/shared"
+import { merge } from "@element/shared"
 import { getUser } from "~/services/auth/auth.server"
 
 const PieChart = React.lazy(() => import("../components/ElementsChart"))
@@ -198,7 +198,7 @@ function ElementStat({ element, depth }: Props) {
     <div className="stack">
       <div className="flex items-center justify-between">
         <div className="hstack">
-          <div className="rounded-full sq-5" style={{ background: element.color }} />
+          <div className="sq-5 rounded-full" style={{ background: element.color }} />
           <p>{element.name}</p>
         </div>
         <div className="hstack">

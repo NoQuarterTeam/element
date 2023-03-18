@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Dialog, Transition } from "@headlessui/react"
 
-import { join } from "~/lib/tailwind"
+import { join } from "@element/shared"
 
 // import { twMerge } from 'tailwind-join'
 import { CloseButton } from "./CloseButton"

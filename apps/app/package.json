@@ -8,11 +8,12 @@
     "dev:android": "expo start --android",
     "dev:ios": "expo start --ios",
     "lint": "eslint .",
-    "type-check": "tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@element/api": "*",
     "@element/database": "*",
+    "@element/shared": "*",
     "@expo-google-fonts/poppins": "^0.2.3",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-native-community/datetimepicker": "6.7.3",
@@ -43,7 +44,8 @@
     "react-native-modal-datetime-picker": "^14.0.1",
     "react-native-reanimated": "2.14.4",
     "react-native-safe-area-context": "4.5.0",
-    "react-native-screens": "~3.20.0"
+    "react-native-screens": "~3.20.0",
+    "reanimated-color-picker": "^1.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

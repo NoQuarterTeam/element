@@ -1,4 +1,4 @@
-import { merge } from "~/lib/tailwind"
+import { merge } from "@element/shared"
 
 export function ButtonGroup(props: React.HtmlHTMLAttributes<HTMLDivElement>) {
   return (

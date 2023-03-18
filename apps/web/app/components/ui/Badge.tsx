@@ -1,7 +1,7 @@
 import type * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
-import { merge } from "~/lib/tailwind"
+import { merge } from "@element/shared"
 
 export const badgeProps = cva("rounded-xs font-semibold uppercase", {
   variants: {

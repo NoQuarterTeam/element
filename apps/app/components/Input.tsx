@@ -1,5 +1,5 @@
 import { TextInput, TextInputProps } from "react-native"
-import { merge } from "../lib/tailwind"
+import { merge } from "@element/shared"
 import { styled } from "nativewind"
 
 export interface InputProps extends TextInputProps {}

@@ -15,7 +15,7 @@ import {
 } from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
-import { join } from "~/lib/tailwind"
+import { join } from "@element/shared"
 import appStyles from "~/styles/app.css"
 import toastStyles from "~/styles/toast.css"
 

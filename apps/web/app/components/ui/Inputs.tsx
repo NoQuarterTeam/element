@@ -1,7 +1,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
-import { merge } from "~/lib/tailwind"
+import { merge } from "@element/shared"
 
 export const inputStyles = cva(
   "text-base block w-full border text-black dark:text-white placeholder-gray-500 transition-colors focus:border-primary-500 focus:bg-transparent focus:ring-transparent rounded-xs focus:ring-primary-500 ring-0 focus:ring-2",
@@ -152,7 +152,7 @@ export function Checkbox({
       className={merge(
         inputStyles({ variant: "outline", size: "xs" }),
         checkboxSizeStyles({ size }),
-        "cursor-pointer text-primary-500 transition-all checked:bg-primary-500 hover:text-primary-600 focus:ring-primary-300  dark:checked:bg-primary-500  dark:hover:checked:bg-primary-600 dark:focus:ring-primary-300 ",
+        "text-primary-500 checked:bg-primary-500 hover:text-primary-600 focus:ring-primary-300 dark:checked:bg-primary-500 dark:hover:checked:bg-primary-600  dark:focus:ring-primary-300  cursor-pointer transition-all ",
         props.className,
       )}
     />

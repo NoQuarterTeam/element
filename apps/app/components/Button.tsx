@@ -1,6 +1,6 @@
 import * as React from "react"
 import { TouchableOpacityProps, TouchableOpacity } from "react-native"
-import { merge } from "../lib/tailwind"
+import { merge } from "@element/shared"
 import { cva } from "class-variance-authority"
 import { Text } from "./Text"
 

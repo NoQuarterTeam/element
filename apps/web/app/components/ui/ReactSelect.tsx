@@ -2,7 +2,7 @@ import Select, { type ClassNamesConfig, type GroupBase } from "react-select"
 import Creatable from "react-select/creatable"
 import type { StateManagerProps } from "react-select/dist/declarations/src/stateManager"
 
-import { join } from "~/lib/tailwind"
+import { join } from "@element/shared"
 
 import { ClientOnly } from "./ClientOnly"
 import { inputSizeStyles, inputStyles } from "./Inputs"

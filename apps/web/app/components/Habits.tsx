@@ -5,8 +5,8 @@ import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
 import * as Popover from "~/components/ui/Popover"
-import { useDisclosure } from "~/lib/hooks/useDisclosure"
-import { merge } from "~/lib/tailwind"
+
+import { merge, useDisclosure } from "@element/shared"
 import type { TimelineHabit, TimelineHabitEntry, TimelineHabitResponse } from "~/pages/api+/habits"
 import { HabitsActionMethods } from "~/pages/api+/habits"
 import { HabitActionMethods } from "~/pages/api+/habits.$id"
@@ -191,7 +191,7 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
       <div className="w-3/4">
         <input
           defaultValue={habit.name}
-          className="w-full border-2 border-transparent bg-transparent p-1 text-sm outline-none hover:opacity-75 focus:border-primary-500 focus:opacity-100"
+          className="focus:border-primary-500 w-full border-2 border-transparent bg-transparent p-1 text-sm outline-none hover:opacity-75 focus:opacity-100"
           onBlur={(e) => handleUpdateHabit(e.target.value)}
         />
       </div>

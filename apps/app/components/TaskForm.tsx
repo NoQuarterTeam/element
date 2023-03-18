@@ -5,12 +5,15 @@ import * as React from "react"
 import { Modal, TextInput, TouchableOpacity, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
+import ColorPicker, { Panel1, HueSlider } from "reanimated-color-picker"
+
 import { Button } from "./Button"
 import { FormInput, FormLabel } from "./FormInput"
 import { Input } from "./Input"
 import { ModalView } from "./ModalView"
 import { api, RouterOutputs } from "../lib/utils/api"
 import { Text } from "./Text"
+import { randomHexColor, useDisclosure } from "@element/shared"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 
@@ -50,24 +53,32 @@ export function TaskForm({ task, ...props }: Props) {
       color: "",
     },
   })
+  const utils = api.useContext()
+
   const { data } = api.element.all.useQuery()
 
-  const [isElementModalOpen, setIsElementModalOpen] = React.useState(false)
-  const handleShowElementPicker = () => setIsElementModalOpen(true)
-  const handleCancelElementPicker = () => setIsElementModalOpen(false)
+  const elementCreateModalProps = useDisclosure()
+  const createElement = api.element.create.useMutation()
+  const handleCreateElement = async (element: { name: string; color: string }) => {
+    createElement.mutate(element, {
+      onSuccess: (data) => {
+        setForm((f) => ({ ...f, element: { id: data.id, name: data.name, color: data.color } }))
+        elementCreateModalProps.onClose()
+        utils.element.all.invalidate()
+      },
+    })
+  }
+  const elementModalProps = useDisclosure()
 
-  const [isTimeModalOpen, setIsTimeModalOpen] = React.useState(false)
-  const handleShowTimePicker = () => setIsTimeModalOpen(true)
-  const handleCancelTimePicker = () => setIsTimeModalOpen(false)
+  const timeProps = useDisclosure()
+
   const handlePickTime = (startTime: Date) => {
-    setIsTimeModalOpen(false)
+    timeProps.onClose()
     setForm((f) => ({ ...f, startTime: dayjs(startTime).format("HH:mm") }))
   }
-  const [isDateModalOpen, setIsDateModalOpen] = React.useState(false)
-  const handleShowDatePicker = () => setIsDateModalOpen(true)
-  const handleCancelDatePicker = () => setIsDateModalOpen(false)
+  const dateProps = useDisclosure()
   const handlePickDate = (date: Date) => {
-    setIsDateModalOpen(false)
+    dateProps.onClose()
     setForm((f) => ({ ...f, date: dayjs(date).format("YYYY-MM-DD") }))
   }
 
@@ -90,17 +101,39 @@ export function TaskForm({ task, ...props }: Props) {
           label="Element"
           editable={false}
           value={form.element?.name}
-          rightAction={{ icon: <Feather name="edit-2" size={20} />, onPress: handleShowElementPicker }}
+          rightElement={
+            <View className="flex flex-row space-x-2">
+              <TouchableOpacity onPress={elementCreateModalProps.onOpen} className="border border-gray-100 p-2.5">
+                <Feather name="plus" size={20} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={elementModalProps.onOpen} className="border border-gray-100 p-2.5">
+                <Feather name="edit-2" size={20} />
+              </TouchableOpacity>
+            </View>
+          }
         />
 
         <Modal
           animationType="slide"
           presentationStyle="formSheet"
-          visible={isElementModalOpen}
-          onDismiss={handleCancelElementPicker}
-          onRequestClose={handleCancelElementPicker}
+          visible={elementCreateModalProps.isOpen}
+          onDismiss={elementCreateModalProps.onClose}
+          onRequestClose={elementCreateModalProps.onClose}
         >
-          <ModalView title="Select element" onBack={handleCancelElementPicker}>
+          <ModalView title="Create element" onBack={elementCreateModalProps.onClose}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 100, paddingTop: 20 }} showsVerticalScrollIndicator={false}>
+              <ElementForm onCreate={handleCreateElement} isLoading={createElement.isLoading} />
+            </ScrollView>
+          </ModalView>
+        </Modal>
+        <Modal
+          animationType="slide"
+          presentationStyle="formSheet"
+          visible={elementModalProps.isOpen}
+          onDismiss={elementModalProps.onClose}
+          onRequestClose={elementModalProps.onClose}
+        >
+          <ModalView title="Select element" onBack={elementModalProps.onClose}>
             <ScrollView contentContainerStyle={{ paddingBottom: 100, paddingTop: 20 }} showsVerticalScrollIndicator={false}>
               <View className="space-y-2">
                 {data?.map((element) => (
@@ -109,7 +142,7 @@ export function TaskForm({ task, ...props }: Props) {
                     className="flex flex-row items-center space-x-2 p-1"
                     onPress={() => {
                       setForm((f) => ({ ...f, element }))
-                      setIsElementModalOpen(false)
+                      elementModalProps.onClose()
                     }}
                   >
                     <View className="sq-4 rounded-full" style={{ backgroundColor: element.color }} />
@@ -126,13 +159,17 @@ export function TaskForm({ task, ...props }: Props) {
           label="Date"
           editable={false}
           value={dayjs(form.date).format("DD/MM/YYYY")}
-          rightAction={{ icon: <Feather name="edit-2" size={20} />, onPress: handleShowDatePicker }}
+          rightElement={
+            <TouchableOpacity onPress={dateProps.onOpen} className="border border-gray-100 p-2.5">
+              <Feather name="edit-2" size={20} />
+            </TouchableOpacity>
+          }
         />
         <DateTimePickerModal
-          isVisible={isDateModalOpen}
+          isVisible={dateProps.isOpen}
           date={dayjs(form.date).toDate()}
           onConfirm={handlePickDate}
-          onCancel={handleCancelDatePicker}
+          onCancel={dateProps.onClose}
         />
       </View>
       <View className="space-y-1">
@@ -163,17 +200,21 @@ export function TaskForm({ task, ...props }: Props) {
           label="Start time"
           editable={false}
           value={form.startTime}
-          rightAction={{ icon: <Feather name="edit-2" size={20} />, onPress: handleShowTimePicker }}
+          rightElement={
+            <TouchableOpacity onPress={timeProps.onOpen} className="border border-gray-100 p-2.5">
+              <Feather name="edit-2" size={20} />
+            </TouchableOpacity>
+          }
         />
         <DateTimePickerModal
           mode="time"
-          isVisible={isTimeModalOpen}
+          isVisible={timeProps.isOpen}
           date={dayjs()
             .set("hour", Number(form.startTime?.split(":")[0] || 12))
             .set("minutes", Number(form.startTime?.split(":")[1] || 0))
             .toDate()}
           onConfirm={handlePickTime}
-          onCancel={handleCancelTimePicker}
+          onCancel={timeProps.onClose}
         />
       </View>
 
@@ -188,6 +229,40 @@ export function TaskForm({ task, ...props }: Props) {
 
       <View>
         <Button onPress={() => props.onSubmit(form)}>{props.isLoading ? "Saving..." : task ? "Update" : "Create"}</Button>
+      </View>
+    </View>
+  )
+}
+
+function ElementForm({
+  onCreate,
+  isLoading,
+}: {
+  onCreate: (element: { name: string; color: string }) => void
+  isLoading: boolean
+}) {
+  const [elementForm, setElementForm] = React.useState({ name: "", color: randomHexColor() })
+  return (
+    <View className="space-y-2">
+      <View>
+        <FormInput label="Name" value={elementForm.name} onChangeText={(name) => setElementForm((f) => ({ ...f, name }))} />
+      </View>
+      <View>
+        <FormLabel label="Color" />
+        <ColorPicker
+          style={{ width: "100%" }}
+          value={elementForm.color}
+          onComplete={(color) => setElementForm((f) => ({ ...f, color: color.hex }))}
+        >
+          {/* <Preview /> */}
+          <Panel1 />
+          <HueSlider />
+        </ColorPicker>
+      </View>
+      <View>
+        <Button onPress={() => onCreate(elementForm)} disabled={isLoading}>
+          {isLoading ? "Creating..." : "Create"}
+        </Button>
       </View>
     </View>
   )

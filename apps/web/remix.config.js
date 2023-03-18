@@ -13,6 +13,7 @@ module.exports = {
   },
   serverDependenciesToBundle: [
     "@element/api",
+    "@element/shared",
     "axios",
     "@element/database",
     "@element/database/types",

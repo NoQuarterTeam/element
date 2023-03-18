@@ -4,7 +4,7 @@ import { CgSearch } from "react-icons/cg"
 import { useSearchParams } from "@remix-run/react"
 import queryString from "query-string"
 
-import { merge } from "~/lib/tailwind"
+import { merge } from "@element/shared"
 
 import { IconButton } from "./IconButton"
 import { Input, type InputProps } from "./Inputs"

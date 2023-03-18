@@ -2,8 +2,7 @@ import dayjs from "dayjs"
 import { View } from "react-native"
 import { ScreenView } from "../../../components/ScreenView"
 import { Text } from "../../../components/Text"
-import { MAX_FREE_TASKS, MAX_FREE_ELEMENTS } from "../../../lib/product"
-import { join } from "../../../lib/tailwind"
+import { MAX_FREE_TASKS, MAX_FREE_ELEMENTS, join } from "@element/shared"
 import { api } from "../../../lib/utils/api"
 
 export default function Plan() {

@@ -2,12 +2,12 @@ import * as React from "react"
 import { type Prisma } from "@element/database/types"
 import { Link, useFetcher } from "@remix-run/react"
 
-import { safeReadableColor } from "~/lib/color"
-import { formatDuration } from "~/lib/helpers/duration"
-import { useDisclosure } from "~/lib/hooks/useDisclosure"
+import { safeReadableColor } from "@element/shared"
+import { formatDuration } from "@element/shared"
+import { useDisclosure } from "@element/shared"
 import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { join } from "~/lib/tailwind"
+import { join } from "@element/shared"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TimelineTask } from "~/pages/api+/tasks"
 
@@ -92,14 +92,14 @@ function _TaskItem({ task }: Props) {
   const deleteModalProps = useDisclosure()
 
   return (
-    <div className="z-[1] w-day  p-2 pb-0" tabIndex={-1}>
+    <div className="w-day z-[1]  p-2 pb-0" tabIndex={-1}>
       <Link to={task.id} onClick={handleClick} prefetch="intent" tabIndex={-1} className="">
         <div
           className={join(
             "group/task-item relative w-full cursor-pointer overflow-hidden rounded-md border border-gray-100 bg-white outline-none dark:border-gray-900 dark:bg-gray-700",
             task.isImportant &&
               !task.isComplete &&
-              "border-primary-400 shadow-[0_0_0_1px_black] shadow-primary-400 dark:border-primary-400",
+              "border-primary-400 shadow-primary-400 dark:border-primary-400 shadow-[0_0_0_1px_black]",
           )}
         >
           <div
@@ -112,7 +112,7 @@ function _TaskItem({ task }: Props) {
               <div>
                 <p
                   className={join(
-                    "mb-1 text-xxs",
+                    "text-xxs mb-1",
                     task.isComplete ? "line-clamp-1" : "line-clamp-2 group-hover/task-item:line-clamp-6",
                   )}
                 >
@@ -145,7 +145,7 @@ function _TaskItem({ task }: Props) {
                 )}
 
                 {!task.isComplete && task.description && (
-                  <div className="absolute top-1 right-1 opacity-70 circle-1.5" style={{ background: task.element.color }} />
+                  <div className="circle-1.5 absolute top-1 right-1 opacity-70" style={{ background: task.element.color }} />
                 )}
               </div>
             </div>
@@ -187,7 +187,7 @@ function _TaskItem({ task }: Props) {
           >
             <p
               style={{ color: safeReadableColor(task.element.color) }}
-              className="truncate whitespace-nowrap pl-2 text-xxs opacity-0 group-hover/task-item:opacity-100"
+              className="text-xxs truncate whitespace-nowrap pl-2 opacity-0 group-hover/task-item:opacity-100"
             >
               {task.element.name}
             </p>

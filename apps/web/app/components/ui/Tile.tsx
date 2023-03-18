@@ -1,4 +1,4 @@
-import { merge } from "~/lib/tailwind"
+import { merge } from "@element/shared"
 
 type DivProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 

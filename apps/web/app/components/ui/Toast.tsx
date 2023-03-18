@@ -2,7 +2,7 @@ import * as React from "react"
 import * as ToastPrimitive from "@radix-ui/react-toast"
 import { ToastProvider, ToastViewport } from "@radix-ui/react-toast"
 
-import { join } from "~/lib/tailwind"
+import { join } from "@element/shared"
 
 import { CloseButton } from "./CloseButton"
 
@@ -36,7 +36,7 @@ export function Toaster(props: { children: React.ReactNode }) {
               "radix-swipe-direction-down:radix-swipe-end:animate-toast-swipe-out-y",
               "radix-swipe-direction-down:translate-y-radix-toast-swipe-move-y",
               "radix-swipe-cancel:translate-x-0 radix-swipe-cancel:duration-200 radix-swipe-cancel:ease-[ease]",
-              "z-50 w-auto rounded-md border border-gray-75 shadow-xl focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75 dark:border-gray-800 md:w-full md:max-w-sm",
+              "border-gray-75 z-50 w-auto rounded-md border shadow-xl focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75 dark:border-gray-800 md:w-full md:max-w-sm",
               toast.status === "info" && "bg-white dark:bg-gray-700",
               toast.status === "error" && "bg-red-500 dark:bg-red-700",
               toast.status === "warning" && "bg-orange-500 dark:bg-orange-700",

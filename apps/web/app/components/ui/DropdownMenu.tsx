@@ -2,7 +2,7 @@ import * as React from "react"
 import { BiChevronRight } from "react-icons/bi"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 
-import { merge } from "~/lib/tailwind"
+import { merge } from "@element/shared"
 
 const DropdownMenu = DropdownMenuPrimitive.Root
 
@@ -79,7 +79,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={merge(
-      "relative flex w-52 cursor-pointer items-center rounded-sm py-1.5 px-2 text-sm font-normal outline-none hover:bg-gray-75 focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:hover:bg-gray-700 dark:focus:bg-gray-700/70",
+      "hover:bg-gray-75 relative flex w-52 cursor-pointer items-center rounded-sm py-1.5 px-2 text-sm font-normal outline-none focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:hover:bg-gray-700 dark:focus:bg-gray-700/70",
       inset && "pl-8",
       className,
     )}

@@ -7,10 +7,10 @@ import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import deepEqual from "deep-equal"
 
-import { getTotalTaskDuration } from "~/lib/helpers/duration"
+import { getTotalTaskDuration } from "@element/shared"
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useTimelineTaskDates } from "~/lib/hooks/useTimelineTaskDates"
-import { join } from "~/lib/tailwind"
+import { join } from "@element/shared"
 import type { TimelineHabitResponse } from "~/pages/api+/habits"
 import type { TimelineTask } from "~/pages/api+/tasks"
 
@@ -81,7 +81,7 @@ function _Day(props: Props) {
               <div
                 ref={dayRef}
                 className={join(
-                  "group/day h-full min-h-screen w-day border-r border-gray-100 pb-2 hover:opacity-100 dark:border-gray-700",
+                  "group/day w-day h-full min-h-screen border-r border-gray-100 pb-2 hover:opacity-100 dark:border-gray-700",
                   dayjs(props.day).isSame(dayjs(), "day")
                     ? "bg-primary-100 dark:bg-primary-900/90"
                     : dayjs(props.day).day() === 6 || dayjs(props.day).day() === 0

@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { useDisclosure } from "~/lib/hooks/useDisclosure"
+import { useDisclosure } from "@element/shared"
 
 export function useStoredDisclosure(key: string, args?: { defaultIsOpen?: boolean }) {
   const disclosureProps = useDisclosure({

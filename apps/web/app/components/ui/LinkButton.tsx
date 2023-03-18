@@ -1,6 +1,6 @@
 import { Link, type LinkProps } from "@remix-run/react"
 
-import { join, merge } from "~/lib/tailwind"
+import { join, merge } from "@element/shared"
 
 import { buttonSizeStyles, type ButtonStyleProps, buttonStyles } from "./Button"
 import { Spinner } from "./Spinner"

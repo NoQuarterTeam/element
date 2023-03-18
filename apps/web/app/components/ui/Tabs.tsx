@@ -1,6 +1,6 @@
 import { NavLink as RNavLink, type NavLinkProps } from "@remix-run/react"
 
-import { merge } from "~/lib/tailwind"
+import { merge } from "@element/shared"
 
 export function TabLink(props: NavLinkProps) {
   return (
@@ -8,7 +8,7 @@ export function TabLink(props: NavLinkProps) {
       {...props}
       className={({ isActive, isPending }) =>
         merge(
-          "border-b-2 pb-1 font-body text-lg hover:opacity-70",
+          "font-body border-b-2 pb-1 text-lg hover:opacity-70",
           isActive ? "border-primary-500 text-primary-500" : "border-transparent text-white",
           typeof props.className === "string" ? props.className : props.className?.({ isActive, isPending }),
         )
