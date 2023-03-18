@@ -28,7 +28,7 @@ export default function Profile() {
               to="."
               icon={
                 <Avatar
-                  src={transformImageSrc(createImageUrl(me.avatar), { width: 30, height: 30, fit: "contain" })}
+                  src={transformImageSrc(createImageUrl(me.avatar), { width: 30, height: 30, fit: "cover" })}
                   name={me.firstName + " " + me.lastName}
                   size="xs"
                 />

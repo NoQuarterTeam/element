@@ -19,7 +19,7 @@ export function FormInput({ label, error, rightAction, ...props }: Props) {
       <View className="flex flex-row items-center space-x-2">
         <Input {...props} className={merge(rightAction && "flex-1")} />
         {rightAction ? (
-          <TouchableOpacity onPress={rightAction.onPress} className="border border-gray-100 p-3">
+          <TouchableOpacity onPress={rightAction.onPress} className="border border-gray-100 p-2.5">
             {rightAction.icon}
           </TouchableOpacity>
         ) : null}

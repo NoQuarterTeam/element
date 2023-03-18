@@ -12,6 +12,7 @@ import { safeReadableColor } from "../../lib/utils/colors"
 import { formatDuration } from "../../lib/utils/duration"
 import { Text } from "../../components/Text"
 import { Heading } from "../../components/Heading"
+import { join } from "../../lib/tailwind"
 
 dayjs.extend(advancedFormat)
 
@@ -19,6 +20,7 @@ export default function Timeline() {
   const [date, setDate] = React.useState(dayjs().format("YYYY-MM-DD"))
   const { data: taskData, isLoading } = api.task.byDate.useQuery(date)
   const utils = api.useContext()
+  const router = useRouter()
   const dateLabel = dayjs(date).isSame(dayjs(), "date")
     ? "Today"
     : // if yesterday
@@ -37,13 +39,11 @@ export default function Timeline() {
   return (
     <View className="flex-1">
       <View className="border-gray-75 border-b px-4 pb-2 pt-16">
-        <View className="flex w-full flex-row items-center justify-between pb-2">
-          <Heading className="pb-2 text-4xl">Timeline</Heading>
-          <Link href="/profile" asChild>
-            <TouchableOpacity>
-              <Feather name="user" size={24} />
-            </TouchableOpacity>
-          </Link>
+        <View className="flex w-full flex-row items-center justify-between pb-3">
+          <Heading className="text-4xl">Timeline</Heading>
+          <TouchableOpacity onPress={() => router.push("/profile")} className="p-2">
+            <Feather name="user" size={24} />
+          </TouchableOpacity>
         </View>
         <View className="flex w-full flex-row items-center justify-between">
           <View>
@@ -73,16 +73,14 @@ export default function Timeline() {
           <TaskList key={date} tasks={taskData} />
         )}
       </View>
-      <View className="absolute bottom-4 right-4 space-y-2">
-        <TouchableOpacity
-          onPressIn={() => setDate(dayjs().format("YYYY-MM-DD"))}
-          className="rounded-full bg-gray-100/90 p-4 shadow-lg"
-        >
+      <View className="absolute bottom-5 left-5 space-y-2">
+        <TouchableOpacity onPressIn={() => setDate(dayjs().format("YYYY-MM-DD"))} className="rounded-full bg-gray-100/90 p-4 ">
           <Feather name="calendar" size={24} />
         </TouchableOpacity>
-
+      </View>
+      <View className="absolute bottom-5 right-5 space-y-2">
         <Link href={`new?date=${date}`} asChild>
-          <TouchableOpacity className="bg-primary-500/90 rounded-full p-4 shadow-lg">
+          <TouchableOpacity className="bg-primary-500/90 rounded-full p-4 ">
             <Feather name="plus" size={24} />
           </TouchableOpacity>
         </Link>
@@ -142,7 +140,7 @@ function TaskItem({
   const router = useRouter()
 
   return (
-    <ScaleDecorator activeScale={1}>
+    <ScaleDecorator activeScale={1.01}>
       <TouchableOpacity
         onPress={() => router.push({ pathname: "index", params: { id: task.id } })}
         onLongPress={drag}
@@ -152,10 +150,10 @@ function TaskItem({
         disabled={isActive}
         className="mx-4 mt-1 mb-px bg-white"
       >
-        <View className="overflow-hidden rounded-sm border border-gray-100 bg-white">
+        <View className={join("overflow-hidden rounded-sm border border-gray-100 bg-white", task.isComplete && "opacity-50")}>
           <View className="flex flex-row justify-between p-2">
-            <View>
-              <Text className="text-lg" style={{ textDecorationLine: task.isComplete ? "line-through" : undefined }}>
+            <View className="flex-1">
+              <Text className="text-md" style={{ textDecorationLine: task.isComplete ? "line-through" : undefined }}>
                 {task.name}
               </Text>
               {!task.isComplete && (
@@ -168,7 +166,7 @@ function TaskItem({
               )}
             </View>
 
-            <TouchableOpacity onPress={handleToggleComplete}>
+            <TouchableOpacity onPress={handleToggleComplete} className="flex-shrink-0">
               {task.isComplete ? (
                 <Ionicons name="checkbox" size={24} color="#E87B35" />
               ) : (

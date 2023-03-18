@@ -108,7 +108,9 @@ export const loader = async ({ request }: LoaderArgs) => {
       status: 200,
       headers: { "Content-Type": "image/webp", "Cache-Control": "public, max-age=31536000, immutable" },
     })
-  } catch {
+  } catch (e) {
+    console.log(e)
+
     return badImageResponse()
   }
 }

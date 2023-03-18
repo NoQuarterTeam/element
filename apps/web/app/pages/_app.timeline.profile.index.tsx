@@ -37,6 +37,7 @@ export const action = async ({ request }: ActionArgs) => {
           lastName: z.string().min(2, "Must be at least 2 characters").optional(),
           avatar: z.string().nullable().optional(),
         })
+
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
         // Dont need to update email address if the same as the current one
@@ -110,7 +111,7 @@ export default function Account() {
           <FormField defaultValue={me.lastName} name="lastName" label="Last name" />
           <ImageField
             defaultValue={me.avatar}
-            className="hidden text-center sq-24 xl:flex"
+            className="sq-24 hidden text-center xl:flex"
             label="Avatar"
             name="avatar"
             path={UPLOAD_PATHS.userAvatar(me.id)}

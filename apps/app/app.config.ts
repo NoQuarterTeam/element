@@ -1,9 +1,10 @@
 import { ConfigContext, ExpoConfig } from "expo/config"
 
 const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
-  name: "element",
-  slug: "element",
+  name: "Element",
+  slug: "element-app",
   scheme: "element",
+  owner: "noquarter",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/icon.png",
@@ -19,7 +20,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "your.bundle.identifier",
+    bundleIdentifier: "myelement.app",
   },
   android: {
     adaptiveIcon: {
@@ -29,7 +30,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   },
   extra: {
     eas: {
-      projectId: "your-project-id",
+      projectId: "93cfd208-76bb-4e7c-b368-5a09679e1a72",
     },
   },
   plugins: ["./expo-plugins/with-modify-gradle.js"],
