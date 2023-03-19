@@ -36,46 +36,48 @@ export default function Plan() {
           ) : null}
         </View>
       ) : (
-        <View className="space-y-3">
-          <Text className="text-lg">
+        <View className="mt-2 space-y-5">
+          <Text className="text-xl">
             You are currently on the <Text className="font-heading">Personal</Text> plan
           </Text>
-          <Text className="text-sm">Current usage</Text>
-          <View className="grid grid-cols-2 gap-4">
-            <View>
-              <Text className="text-sm">Tasks</Text>
-              <View className="flex flex-row">
-                <Text
-                  className={join(
-                    "text-2xl",
-                    (data?.taskCount || 0) >= MAX_FREE_TASKS
-                      ? "text-red-500"
-                      : (data?.taskCount || 0) > MAX_FREE_TASKS * 0.75
-                      ? "text-primary-500"
-                      : undefined,
-                  )}
-                >
-                  {data?.taskCount}{" "}
-                </Text>
-                <Text className="text-xs font-thin opacity-70">/ {MAX_FREE_TASKS}</Text>
+          <View>
+            <Text className="mb-1 text-lg">Current usage</Text>
+            <View className="flex flex-row gap-4">
+              <View className="flex-1">
+                <Text className="text-lg">Tasks</Text>
+                <View className="flex flex-row">
+                  <Text
+                    className={join(
+                      "text-4xl",
+                      (data?.taskCount || 0) >= MAX_FREE_TASKS
+                        ? "text-red-500"
+                        : (data?.taskCount || 0) > MAX_FREE_TASKS * 0.75
+                        ? "text-primary-500"
+                        : undefined,
+                    )}
+                  >
+                    {data?.taskCount}{" "}
+                  </Text>
+                  <Text className="text-sm font-thin opacity-70">/ {MAX_FREE_TASKS}</Text>
+                </View>
               </View>
-            </View>
-            <View>
-              <Text className="text-sm">Elements</Text>
-              <View className="flex flex-row">
-                <Text
-                  className={join(
-                    "text-2xl",
-                    (data?.elementCount || 0) >= MAX_FREE_ELEMENTS
-                      ? "text-red-500"
-                      : (data?.elementCount || 0) > MAX_FREE_ELEMENTS * 0.75
-                      ? "text-primary-500"
-                      : undefined,
-                  )}
-                >
-                  {data?.elementCount}
-                </Text>{" "}
-                <Text className="text-xs font-thin opacity-70">/ 5</Text>
+              <View className="flex-1">
+                <Text className="text-lg">Elements</Text>
+                <View className="flex flex-row">
+                  <Text
+                    className={join(
+                      "text-4xl",
+                      (data?.elementCount || 0) >= MAX_FREE_ELEMENTS
+                        ? "text-red-500"
+                        : (data?.elementCount || 0) > MAX_FREE_ELEMENTS * 0.75
+                        ? "text-primary-500"
+                        : undefined,
+                    )}
+                  >
+                    {data?.elementCount}{" "}
+                  </Text>
+                  <Text className="text-sm font-thin opacity-70">/ 5</Text>
+                </View>
               </View>
             </View>
           </View>

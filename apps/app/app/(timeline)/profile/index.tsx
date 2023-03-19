@@ -33,18 +33,14 @@ export default function Profile() {
         <View className="flex flex-row items-center space-x-4">
           {data?.avatar ? (
             <OptimizedImage
-              config={{
-                height: 70,
-                width: 70,
-                fit: "cover",
-              }}
+              config={{ height: 70, width: 70, fit: "cover" }}
               style={{ width: 70, height: 70, borderRadius: 35 }}
               source={data?.avatar}
               contentFit="cover"
               transition={1000}
             />
           ) : (
-            <View className="bg-primary-200 flex h-[70] w-[70] items-center justify-center rounded-full">
+            <View className="bg-primary-200 dark:bg-primary-900 flex h-[70] w-[70] items-center justify-center rounded-full">
               <Text>
                 {data?.firstName[0]}
                 {data?.lastName[0]}
@@ -85,9 +81,9 @@ function ProfileLink(props: { isFirst?: boolean; isLast?: boolean; href: string;
     <Link href={props.href} asChild>
       <TouchableOpacity
         className={join(
-          "flex flex-row items-center justify-between border-x border-t border-gray-100 py-2 px-4",
-          props.isFirst && "rounded-t-md",
-          props.isLast && "rounded-b-md border-b",
+          "flex flex-row items-center justify-between border-x border-t border-gray-100 py-2 px-4 dark:border-gray-600",
+          props.isFirst && "rounded-t-sm",
+          props.isLast && "rounded-b-sm border-b",
         )}
       >
         <Text className="font-body text-lg">{props.children}</Text>

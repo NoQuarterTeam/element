@@ -5,6 +5,8 @@ import { StatusBar } from "expo-status-bar"
 import { useFonts, Poppins_400Regular, Poppins_700Bold, Poppins_900Black, Poppins_600SemiBold } from "@expo-google-fonts/poppins"
 
 import { TRPCProvider } from "../lib/utils/api"
+import { View } from "react-native"
+// import { useColorScheme } from "react-native"
 
 // This is the main layout of the app
 // It wraps your pages with the providers they need
@@ -22,7 +24,9 @@ export default function RootLayout() {
   return (
     <TRPCProvider>
       <SafeAreaProvider>
-        <Slot />
+        <View className="flex-1 bg-white dark:bg-black">
+          <Slot />
+        </View>
         <StatusBar />
       </SafeAreaProvider>
     </TRPCProvider>

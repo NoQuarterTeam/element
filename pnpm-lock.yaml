@@ -48,6 +48,7 @@ importers:
       expo-router: ^1.2.2
       expo-splash-screen: ~0.18.1
       expo-status-bar: ~1.4.4
+      expo-system-ui: ^2.2.1
       expo-updates: ~0.16.3
       nativewind: ^2.0.11
       polished: 4.2.2
@@ -87,6 +88,7 @@ importers:
       expo-router: 1.2.2_qbki6edvqur7h7jx2nxzg342ki
       expo-splash-screen: 0.18.1_expo@48.0.7
       expo-status-bar: 1.4.4
+      expo-system-ui: 2.2.1_expo@48.0.7
       expo-updates: 0.16.3_expo@48.0.7
       nativewind: 2.0.11_dmdrd7wro7is5ymtgffolhsaq4
       polished: 4.2.2
@@ -7883,6 +7885,18 @@ packages:
 
   /expo-structured-headers/3.1.1:
     resolution: {integrity: sha512-oV6yNGsJxQt7S9HYZTr+4L0I/yRwOF38USJ81I1KiN3GQI4C2z7P5OosyREA2VL9O+kUZVCCpNYsBLSa3/5bAQ==}
+    dev: false
+
+  /expo-system-ui/2.2.1_expo@48.0.7:
+    resolution: {integrity: sha512-a//8woMYFz5k4lSm8Mt84kueuQRv4TEU1ESwZQl0cEZcKlxw5e4t4Z/68KGVzCLWOMUFoCN67BgFwxpwHBbrMw==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      '@react-native/normalize-color': 2.1.0
+      debug: 4.3.4
+      expo: 48.0.7_@babel+core@7.21.3
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /expo-updates-interface/0.9.1_expo@48.0.7:

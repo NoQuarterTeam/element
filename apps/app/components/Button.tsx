@@ -20,8 +20,8 @@ export const buttonStyles = cva("rounded-sm border px-4 py-3", {
       lg: "px-5",
     },
     variant: {
-      primary: "bg-primary-600 border-primary-600 ",
-      outline: "border-gray-100 bg-transparent",
+      primary: "bg-primary-600 border-primary-600",
+      outline: "border-gray-100 bg-transparent dark:border-gray-600",
       ghost: "bg-transparent border-transparent",
     },
   },
@@ -39,8 +39,8 @@ export const buttonTextStyles = cva("font-heading text-center text-lg", {
     },
     variant: {
       primary: "text-white",
-      outline: "text-gray-900",
-      ghost: "text-gray-900",
+      outline: "text-gray-900 dark:text-white",
+      ghost: "text-gray-900 dark:text-white",
     },
   },
 })

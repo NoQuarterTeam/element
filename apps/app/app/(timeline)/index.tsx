@@ -2,7 +2,7 @@ import * as React from "react"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import { Link, useRouter } from "expo-router"
-import { View, TouchableOpacity, Dimensions } from "react-native"
+import { View, TouchableOpacity, Dimensions, useColorScheme } from "react-native"
 import { api, RouterOutputs } from "../../lib/utils/api"
 
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
@@ -35,31 +35,33 @@ export default function Timeline() {
     utils.task.byDate.prefetch(dayjs(date).subtract(1, "day").format("YYYY-MM-DD"))
     utils.task.byDate.prefetch(dayjs(date).add(1, "day").format("YYYY-MM-DD"))
   }, [date])
+
+  const colorScheme = useColorScheme()
   return (
     <View className="flex-1">
-      <View className="border-gray-75 border-b px-4 pb-2 pt-16">
+      <View className="border-gray-75 border-b px-4 pb-2 pt-16 dark:border-gray-600">
         <View className="flex w-full flex-row items-center justify-between pb-3">
           <Heading className="text-4xl">Timeline</Heading>
           <TouchableOpacity onPress={() => router.push("/profile")} className="p-2">
-            <Feather name="user" size={24} />
+            <Feather name="user" size={24} color={colorScheme === "dark" ? "white" : "black"} />
           </TouchableOpacity>
         </View>
         <View className="flex w-full flex-row items-center justify-between">
           <View>
             <TouchableOpacity
               onPress={() => setDate(dayjs(date).subtract(1, "day").format("YYYY-MM-DD"))}
-              className="rounded-full border border-gray-100 p-3"
+              className="rounded-full border border-gray-100 p-3 dark:border-gray-500"
             >
-              <Ionicons name="chevron-back" />
+              <Ionicons name="chevron-back" color={colorScheme === "dark" ? "white" : "black"} />
             </TouchableOpacity>
           </View>
           <Text className="flex-1 text-center text-lg">{dateLabel}</Text>
           <View>
             <TouchableOpacity
               onPress={() => setDate(dayjs(date).add(1, "day").format("YYYY-MM-DD"))}
-              className="flex items-end rounded-full border border-gray-100 p-3"
+              className="flex items-end rounded-full border border-gray-100 p-3 dark:border-gray-500"
             >
-              <Ionicons name="chevron-forward" />
+              <Ionicons name="chevron-forward" color={colorScheme === "dark" ? "white" : "black"} />
             </TouchableOpacity>
           </View>
         </View>
@@ -67,13 +69,16 @@ export default function Timeline() {
 
       <View>
         {taskData?.length === 0 ? (
-          <Text className="flex py-10 text-center">No tasks</Text>
+          <Text className="flex py-10 text-center">Nothing planned</Text>
         ) : isLoading || !taskData ? null : (
           <TaskList key={date} tasks={taskData} />
         )}
       </View>
       <View className="absolute bottom-5 left-5 space-y-2">
-        <TouchableOpacity onPressIn={() => setDate(dayjs().format("YYYY-MM-DD"))} className="rounded-full bg-gray-100/90 p-4 ">
+        <TouchableOpacity
+          onPress={() => setDate(dayjs().format("YYYY-MM-DD"))}
+          className="rounded-full bg-gray-100/90 p-4 dark:bg-gray-500/90"
+        >
           <Feather name="calendar" size={24} />
         </TouchableOpacity>
       </View>
@@ -138,6 +143,8 @@ function TaskItem({
   const handleToggleComplete = () => toggleComplete(task.id)
   const router = useRouter()
 
+  const colorScheme = useColorScheme()
+
   return (
     <ScaleDecorator activeScale={1.01}>
       <TouchableOpacity
@@ -147,9 +154,14 @@ function TaskItem({
         onPressOut={() => setIsHovered(false)}
         delayLongPress={400}
         disabled={isActive}
-        className="mx-4 mt-1 mb-px bg-white"
+        className="mx-4 mt-1 mb-px bg-white dark:bg-black"
       >
-        <View className={join("overflow-hidden rounded-sm border border-gray-100 bg-white", task.isComplete && "opacity-50")}>
+        <View
+          className={join(
+            "overflow-hidden rounded-sm border border-gray-100 bg-white dark:border-gray-600 dark:bg-black",
+            task.isComplete && "opacity-50",
+          )}
+        >
           <View className="flex flex-row justify-between p-2">
             <View className="flex-1">
               <Text className="text-md" style={{ textDecorationLine: task.isComplete ? "line-through" : undefined }}>
@@ -169,7 +181,7 @@ function TaskItem({
               {task.isComplete ? (
                 <Ionicons name="checkbox" size={24} color="#E87B35" />
               ) : (
-                <Ionicons name="square-outline" size={24} />
+                <Ionicons name="square-outline" size={24} color={colorScheme === "dark" ? "#777" : "#aaa"} />
               )}
             </TouchableOpacity>
           </View>

@@ -7,6 +7,7 @@ import { createAuthToken } from "../lib/jwt"
 import { createImageUrl } from "../lib/s3"
 import { stripe } from "../lib/stripe"
 import { hashPassword } from "../lib/password"
+import { createTemplates } from "../lib/templates"
 
 export const authRouter = createTRPCRouter({
   me: publicProcedure.query(({ ctx }) => (ctx.user ? { ...ctx.user, avatar: createImageUrl(ctx.user.avatar) } : null)),
@@ -34,6 +35,10 @@ export const authRouter = createTRPCRouter({
       name: firstName + " " + lastName,
     })
     const user = await ctx.prisma.user.create({ data: { ...data, stripeCustomerId: stripeCustomer.id } })
+    const elements = createTemplates(user.id)
+    for await (const element of elements) {
+      await ctx.prisma.element.create({ data: element })
+    }
     return { user: { ...user, avatar: createImageUrl(user.avatar) }, token: createAuthToken({ id: user.id }) }
   }),
   update: protectedProcedure

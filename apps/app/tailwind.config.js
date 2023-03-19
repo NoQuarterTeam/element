@@ -20,16 +20,12 @@ const shapes = plugin(function ({ matchUtilities, theme }) {
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: "class",
+  // darkMode: "class",
   content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}", "./lib/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       spacing: {
         full: "100%",
-        nav: "72px",
-        header: "124px",
-        headerHabit: "143px",
-        day: "100px",
       },
       borderRadius: {
         xs: "2px",
@@ -62,5 +58,5 @@ module.exports = {
       "extra-thick": ["Poppins_900Black"],
     },
   },
-  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/line-clamp"), require("tailwindcss-radix"), shapes],
+  plugins: [require("@tailwindcss/line-clamp"), require("tailwindcss-radix"), shapes],
 }

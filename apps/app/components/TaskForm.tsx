@@ -2,7 +2,7 @@ import Feather from "@expo/vector-icons/Feather"
 import dayjs from "dayjs"
 import { useRouter, useSearchParams } from "expo-router"
 import * as React from "react"
-import { Modal, TextInput, TouchableOpacity, View } from "react-native"
+import { Modal, TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import ColorPicker, { Panel1, HueSlider } from "reanimated-color-picker"
@@ -81,19 +81,21 @@ export function TaskForm({ task, ...props }: Props) {
     dateProps.onClose()
     setForm((f) => ({ ...f, date: dayjs(date).format("YYYY-MM-DD") }))
   }
+  const colorScheme = useColorScheme()
 
   return (
     <View className="space-y-2">
       <View className="flex flex-row justify-between">
         <TextInput
-          className="font-body w-11/12 text-3xl"
+          className="font-heading w-11/12 text-3xl dark:text-white"
           value={form.name}
           multiline
+          placeholderTextColor={colorScheme === "dark" ? "#444" : "#ccc"}
           placeholder="Name"
           onChangeText={(name) => setForm((f) => ({ ...f, name }))}
         />
         <TouchableOpacity onPress={router.back} className="p-2">
-          <Feather name="x" size={24} />
+          <Feather name="x" size={24} color={colorScheme === "dark" ? "white" : "black"} />
         </TouchableOpacity>
       </View>
       <View>
@@ -103,11 +105,14 @@ export function TaskForm({ task, ...props }: Props) {
           value={form.element?.name}
           rightElement={
             <View className="flex flex-row space-x-2">
-              <TouchableOpacity onPress={elementCreateModalProps.onOpen} className="border border-gray-100 p-2.5">
-                <Feather name="plus" size={20} />
+              <TouchableOpacity
+                onPress={elementCreateModalProps.onOpen}
+                className="border border-gray-100 p-2.5 dark:border-gray-600"
+              >
+                <Feather name="plus" size={20} color={colorScheme === "dark" ? "white" : "black"} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={elementModalProps.onOpen} className="border border-gray-100 p-2.5">
-                <Feather name="edit-2" size={20} />
+              <TouchableOpacity onPress={elementModalProps.onOpen} className="border border-gray-100 p-2.5 dark:border-gray-600">
+                <Feather name="edit-2" size={20} color={colorScheme === "dark" ? "white" : "black"} />
               </TouchableOpacity>
             </View>
           }
@@ -134,7 +139,7 @@ export function TaskForm({ task, ...props }: Props) {
           onRequestClose={elementModalProps.onClose}
         >
           <ModalView title="Select element" onBack={elementModalProps.onClose}>
-            <ScrollView contentContainerStyle={{ paddingBottom: 100, paddingTop: 20 }} showsVerticalScrollIndicator={false}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 100, paddingTop: 0 }} showsVerticalScrollIndicator={false}>
               <View className="space-y-2">
                 {data?.map((element) => (
                   <TouchableOpacity
@@ -160,8 +165,8 @@ export function TaskForm({ task, ...props }: Props) {
           editable={false}
           value={dayjs(form.date).format("DD/MM/YYYY")}
           rightElement={
-            <TouchableOpacity onPress={dateProps.onOpen} className="border border-gray-100 p-2.5">
-              <Feather name="edit-2" size={20} />
+            <TouchableOpacity onPress={dateProps.onOpen} className="border border-gray-100 p-2.5 dark:border-gray-600">
+              <Feather name="edit-2" size={20} color={colorScheme === "dark" ? "white" : "black"} />
             </TouchableOpacity>
           }
         />
@@ -201,8 +206,8 @@ export function TaskForm({ task, ...props }: Props) {
           editable={false}
           value={form.startTime}
           rightElement={
-            <TouchableOpacity onPress={timeProps.onOpen} className="border border-gray-100 p-2.5">
-              <Feather name="edit-2" size={20} />
+            <TouchableOpacity onPress={timeProps.onOpen} className="border border-gray-100 p-2.5 dark:border-gray-600">
+              <Feather name="edit-2" size={20} color={colorScheme === "dark" ? "white" : "black"} />
             </TouchableOpacity>
           }
         />

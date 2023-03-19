@@ -1,8 +1,9 @@
 import { useRouter } from "expo-router"
-import { View, Text, TouchableOpacity } from "react-native"
+import { View, Text, TouchableOpacity, useColorScheme } from "react-native"
 import { StatusBar } from "expo-status-bar"
 import Feather from "@expo/vector-icons/Feather"
 import * as React from "react"
+import { Heading } from "./Heading"
 
 interface Props {
   title?: string
@@ -12,13 +13,14 @@ interface Props {
 
 export function ModalView(props: Props) {
   const router = useRouter()
+  const colorScheme = useColorScheme()
   return (
-    <View className="px-4 pt-6">
+    <View className="h-full bg-white px-4 pt-6 dark:bg-black">
       <View className="flex flex-row justify-between">
-        {props.title ? <Text className="text-3xl font-extrabold">{props.title}</Text> : <Text />}
+        {props.title ? <Heading className="text-3xl">{props.title}</Heading> : <Text />}
 
         <TouchableOpacity onPress={props.onBack ? props.onBack : router.back} className="p-2">
-          <Feather name="x" size={24} />
+          <Feather name="x" size={24} color={colorScheme === "dark" ? "white" : "black"} />
         </TouchableOpacity>
       </View>
       {props.children}
