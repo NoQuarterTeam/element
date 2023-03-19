@@ -47,7 +47,7 @@
     "react-native-reanimated": "2.14.4",
     "react-native-safe-area-context": "4.5.0",
     "react-native-screens": "~3.20.0",
-    "react-native-svg": "13.4.0",
+    "react-native-svg": "13.8.0",
     "reanimated-color-picker": "^1.5.1",
     "zustand": "4.3.6"
   },
