@@ -14,6 +14,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" />
         <Stack.Screen name="profile/index" />
         <Stack.Screen name="new" options={{ presentation: "modal" }} />
+        <Stack.Screen name="habits" options={{ presentation: "modal" }} />
         <Stack.Screen name="[id]" options={{ presentation: "modal" }} />
       </Stack>
     </AuthProvider>

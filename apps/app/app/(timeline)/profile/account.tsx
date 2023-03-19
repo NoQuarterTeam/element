@@ -44,7 +44,9 @@ export default function Account() {
             />
           </View>
           <View>
-            <Button onPress={handleUpdate}>Update</Button>
+            <Button size="sm" onPress={handleUpdate}>
+              Update
+            </Button>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

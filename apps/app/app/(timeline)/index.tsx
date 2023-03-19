@@ -1,6 +1,8 @@
 import * as React from "react"
 import dayjs from "dayjs"
+import colors from "tailwindcss/colors"
 import advancedFormat from "dayjs/plugin/advancedFormat"
+import * as Progress from "react-native-progress"
 import { Link, useRouter } from "expo-router"
 import { View, TouchableOpacity, Dimensions, useColorScheme } from "react-native"
 import { api, RouterOutputs } from "../../lib/utils/api"
@@ -12,13 +14,13 @@ import { safeReadableColor, formatDuration, join } from "@element/shared"
 
 import { Text } from "../../components/Text"
 import { Heading } from "../../components/Heading"
+import { useFeatures } from "../../lib/hooks/useFeatures"
 
 dayjs.extend(advancedFormat)
 
 export default function Timeline() {
   const [date, setDate] = React.useState(dayjs().format("YYYY-MM-DD"))
-  const { data: taskData, isLoading } = api.task.byDate.useQuery(date)
-  const utils = api.useContext()
+  const { data: taskData, isLoading } = api.task.byDate.useQuery(date, { staleTime: 10000 })
   const router = useRouter()
   const dateLabel = dayjs(date).isSame(dayjs(), "date")
     ? "Today"
@@ -30,16 +32,21 @@ export default function Timeline() {
     ? "Tomorrow"
     : dayjs(date).format("ddd Do MMMM")
 
+  const utils = api.useContext()
+
   React.useEffect(() => {
     // prefetch next and previous dates
     utils.task.byDate.prefetch(dayjs(date).subtract(1, "day").format("YYYY-MM-DD"))
     utils.task.byDate.prefetch(dayjs(date).add(1, "day").format("YYYY-MM-DD"))
+    utils.habit.progressCompleteByDate.prefetch({ date: dayjs(date).subtract(1, "day").format("YYYY-MM-DD") })
   }, [date])
 
+  const { features } = useFeatures()
   const colorScheme = useColorScheme()
+
   return (
     <View className="flex-1">
-      <View className="border-gray-75 border-b px-4 pb-2 pt-16 dark:border-gray-600">
+      <View className="border-gray-75 border-b px-4 pb-3 pt-16 dark:border-gray-700">
         <View className="flex w-full flex-row items-center justify-between pb-3">
           <Heading className="text-4xl">Timeline</Heading>
           <TouchableOpacity onPress={() => router.push("/profile")} className="p-2">
@@ -82,9 +89,12 @@ export default function Timeline() {
           <Feather name="calendar" size={24} />
         </TouchableOpacity>
       </View>
-      <View className="absolute bottom-5 right-5 space-y-2">
+      <View className="absolute bottom-5 right-5 flex items-center space-y-2">
+        {features.includes("habits") && dayjs(date).isBefore(dayjs().add(1, "day").startOf("day")) ? (
+          <Habits date={date} />
+        ) : null}
         <Link href={`new?date=${date}`} asChild>
-          <TouchableOpacity className="bg-primary-500/90 rounded-full p-4 ">
+          <TouchableOpacity className="bg-primary-500/90 rounded-full p-4">
             <Feather name="plus" size={24} />
           </TouchableOpacity>
         </Link>
@@ -197,3 +207,27 @@ function TaskItem({
     </ScaleDecorator>
   )
 }
+
+const Habits = React.memo(function _Habits({ date }: { date: string }) {
+  const { data } = api.habit.progressCompleteByDate.useQuery({ date })
+  const progress = (data || 0) / 100
+  const router = useRouter()
+  const colorScheme = useColorScheme()
+  return (
+    <TouchableOpacity
+      onPress={() => router.push({ pathname: "habits", params: { date } })}
+      activeOpacity={0.8}
+      className="flex items-center justify-center rounded-full border border-gray-100 p-3 dark:border-gray-600"
+    >
+      <Progress.Circle
+        thickness={5}
+        size={34}
+        animated={false}
+        borderWidth={0}
+        progress={progress}
+        unfilledColor={colorScheme === "dark" ? colors.red[700] : colors.red[500]}
+        color={colorScheme === "dark" ? colors.green[600] : colors.green[500]}
+      />
+    </TouchableOpacity>
+  )
+})

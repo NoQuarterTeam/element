@@ -233,7 +233,9 @@ export function TaskForm({ task, ...props }: Props) {
       </View>
 
       <View>
-        <Button onPress={() => props.onSubmit(form)}>{props.isLoading ? "Saving..." : task ? "Update" : "Create"}</Button>
+        <Button isLoading={props.isLoading} onPress={() => props.onSubmit(form)}>
+          {task ? "Update" : "Create"}
+        </Button>
       </View>
     </View>
   )
@@ -259,7 +261,6 @@ function ElementForm({
           value={elementForm.color}
           onComplete={(color) => setElementForm((f) => ({ ...f, color: color.hex }))}
         >
-          {/* <Preview /> */}
           <Panel1 />
           <HueSlider />
         </ColorPicker>

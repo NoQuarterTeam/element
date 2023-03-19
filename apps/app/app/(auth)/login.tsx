@@ -31,7 +31,7 @@ export default function Login() {
   return (
     <KeyboardAvoidingView>
       <ScrollView className="h-full space-y-3 px-4 pt-16">
-        <Heading className="text-3xl">Login</Heading>
+        <Heading className="text-4xl">Login</Heading>
         <View>
           <FormInput label="Email" value={email} onChangeText={setEmail} />
         </View>
@@ -39,8 +39,12 @@ export default function Login() {
           <FormInput secureTextEntry label="Password" value={password} onChangeText={setPassword} />
         </View>
         <View>
-          <Button disabled={login.isLoading || registerTempAccount.isLoading} onPress={() => login.mutate({ email, password })}>
-            {login.isLoading ? "Logging in..." : "Login"}
+          <Button
+            isLoading={login.isLoading}
+            disabled={login.isLoading || registerTempAccount.isLoading}
+            onPress={() => login.mutate({ email, password })}
+          >
+            Login
           </Button>
         </View>
         <View className="flex flex-row items-center justify-center py-3">
@@ -52,9 +56,10 @@ export default function Login() {
           <Button
             variant="outline"
             disabled={registerTempAccount.isLoading || login.isLoading}
+            isLoading={registerTempAccount.isLoading}
             onPress={() => registerTempAccount.mutate()}
           >
-            {registerTempAccount.isLoading ? "Creating account..." : "Create a temporary account"}
+            Create a temporary account
           </Button>
           <Text className="text-center">This can be converted to a real account later on</Text>
         </View>

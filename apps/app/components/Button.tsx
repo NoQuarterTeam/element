@@ -1,23 +1,17 @@
 import * as React from "react"
-import { TouchableOpacityProps, TouchableOpacity } from "react-native"
+import { TouchableOpacityProps, TouchableOpacity, useColorScheme } from "react-native"
+import * as Progress from "react-native-progress"
 import { merge } from "@element/shared"
-import { cva } from "class-variance-authority"
+import { cva, VariantProps } from "class-variance-authority"
 import { Text } from "./Text"
 
-interface Props extends TouchableOpacityProps {
-  className?: string
-  textClassName?: string
-  children: React.ReactNode
-  variant?: "primary" | "outline" | "ghost"
-}
-
-export const buttonStyles = cva("rounded-sm border px-4 py-3", {
+export const buttonStyles = cva("flex items-center justify-center rounded-sm border", {
   variants: {
     size: {
-      xs: "px-2",
-      sm: "px-2",
-      md: "px-4",
-      lg: "px-5",
+      xs: "h-10",
+      sm: "h-12",
+      md: "h-14",
+      lg: "h-16",
     },
     variant: {
       primary: "bg-primary-600 border-primary-600",
@@ -27,6 +21,7 @@ export const buttonStyles = cva("rounded-sm border px-4 py-3", {
   },
   defaultVariants: {
     variant: "primary",
+    size: "md",
   },
 })
 export const buttonTextStyles = cva("font-heading text-center text-lg", {
@@ -44,15 +39,37 @@ export const buttonTextStyles = cva("font-heading text-center text-lg", {
     },
   },
 })
+export type ButtonStyleProps = VariantProps<typeof buttonStyles>
 
-export function Button({ variant = "primary", ...props }: Props) {
+interface Props extends TouchableOpacityProps, ButtonStyleProps {
+  className?: string
+  textClassName?: string
+  children: React.ReactNode
+  isLoading?: boolean
+}
+
+export function Button({ variant = "primary", size = "md", isLoading, ...props }: Props) {
+  const colorScheme = useColorScheme()
   return (
     <TouchableOpacity
       {...props}
+      disabled={props.disabled || isLoading}
       activeOpacity={0.7}
-      className={merge(buttonStyles({ variant, className: props.className }), props.disabled && "opacity-70")}
+      className={merge(
+        buttonStyles({ variant, size, className: props.className }),
+        (props.disabled || isLoading) && "opacity-70",
+      )}
     >
-      <Text className={buttonTextStyles({ variant, className: props.textClassName })}>{props.children}</Text>
+      {isLoading ? (
+        <Progress.Circle
+          size={size === "md" ? 20 : size === "lg" ? 25 : 15}
+          indeterminate
+          borderWidth={3}
+          color={variant === "primary" ? "white" : colorScheme === "dark" ? "white" : "black"}
+        />
+      ) : (
+        <Text className={buttonTextStyles({ variant, className: props.textClassName })}>{props.children}</Text>
+      )}
     </TouchableOpacity>
   )
 }
