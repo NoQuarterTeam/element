@@ -1,7 +1,7 @@
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { Slot, SplashScreen } from "expo-router"
 import { StatusBar } from "expo-status-bar"
-
+import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { useFonts, Poppins_400Regular, Poppins_700Bold, Poppins_900Black, Poppins_600SemiBold } from "@expo-google-fonts/poppins"
 
 import { TRPCProvider } from "../lib/utils/api"
@@ -22,13 +22,15 @@ export default function RootLayout() {
   if (!fontsLoaded) return <SplashScreen />
 
   return (
-    <TRPCProvider>
-      <SafeAreaProvider>
-        <View className="flex-1 bg-white dark:bg-black">
-          <Slot />
-        </View>
-        <StatusBar />
-      </SafeAreaProvider>
-    </TRPCProvider>
+    <ActionSheetProvider>
+      <TRPCProvider>
+        <SafeAreaProvider>
+          <View className="flex-1 bg-white dark:bg-black">
+            <Slot />
+          </View>
+          <StatusBar />
+        </SafeAreaProvider>
+      </TRPCProvider>
+    </ActionSheetProvider>
   )
 }

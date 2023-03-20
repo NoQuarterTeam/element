@@ -1,0 +1,21 @@
+{
+  "name": "@element/tailwind-config",
+  "version": "1.0.0",
+  "sideEffects": false,
+  "main": "index.js",
+  "license": "MIT",
+  "types": "./",
+  "files": [
+    "./index.js",
+    "./colors.js"
+  ],
+  "scripts": {
+    "types": "tsc"
+  },
+  "peerDependencies": {
+    "@tailwindcss/forms": "^0.5.3",
+    "@tailwindcss/line-clamp": "^0.4.2",
+    "autoprefixer": "^10.4.13",
+    "tailwindcss": "^3.2.7"
+  }
+}

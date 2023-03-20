@@ -25,8 +25,10 @@ importers:
       '@element/api': '*'
       '@element/database': '*'
       '@element/shared': '*'
+      '@element/tailwind-config': '*'
       '@expo-google-fonts/poppins': ^0.2.3
       '@expo/config-plugins': ^6.0.0
+      '@expo/react-native-action-sheet': ^4.0.1
       '@react-native-async-storage/async-storage': 1.17.11
       '@react-native-community/datetimepicker': 6.7.3
       '@react-native-picker/picker': ^2.4.8
@@ -65,7 +67,7 @@ importers:
       react-native-screens: ~3.20.0
       react-native-svg: 13.4.0
       reanimated-color-picker: ^1.5.1
-      tailwindcss: ^3.2.4
+      tailwindcss: ^3.2.7
       typescript: ^4.9.5
       zustand: 4.3.6
     dependencies:
@@ -73,6 +75,7 @@ importers:
       '@element/database': link:../../packages/database
       '@element/shared': link:../../packages/shared
       '@expo-google-fonts/poppins': 0.2.3
+      '@expo/react-native-action-sheet': 4.0.1_react@18.2.0
       '@react-native-async-storage/async-storage': 1.17.11_react-native@0.71.3
       '@react-native-community/datetimepicker': 6.7.3
       '@react-native-picker/picker': 2.4.8_yqouayos4dnow7nnkhah4yzuzq
@@ -112,6 +115,7 @@ importers:
       '@babel/core': 7.21.3
       '@babel/preset-env': 7.20.2_@babel+core@7.21.3
       '@babel/runtime': 7.21.0
+      '@element/tailwind-config': link:../../packages/config/tailwind
       '@expo/config-plugins': 6.0.1
       '@types/react': 18.0.28
       '@types/react-native': 0.71.3
@@ -125,6 +129,7 @@ importers:
       '@element/api': '*'
       '@element/database': '*'
       '@element/shared': '*'
+      '@element/tailwind-config': '*'
       '@faker-js/faker': ^7.6.0
       '@headlessui/react': ^1.7.13
       '@hello-pangea/dnd': ^16.2.0
@@ -306,6 +311,7 @@ importers:
       zod: 3.21.4
       zustand: 4.3.6_react@18.2.0
     devDependencies:
+      '@element/tailwind-config': link:../../packages/config/tailwind
       '@remix-run/dev': 1.14.3_@remix-run+serve@1.14.3
       '@remix-run/eslint-config': 1.14.3_g4ssdyyxd6zhf5tqd24yazbeaq
       '@tailwindcss/forms': 0.5.3_tailwindcss@3.2.7
@@ -365,6 +371,9 @@ importers:
       '@types/bcrypt': 5.0.0
       '@types/jsonwebtoken': 9.0.1
       '@types/node': 18.15.3
+
+  packages/config/tailwind:
+    specifiers: {}
 
   packages/database:
     specifiers:
@@ -2387,6 +2396,16 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
+    dev: false
+
+  /@expo/react-native-action-sheet/4.0.1_react@18.2.0:
+    resolution: {integrity: sha512-FwCFpjpB6yzrK8CIWssLlh/i6zQFytFBiJfNdz0mJ2ckU4hWk8SrjB37P0Q4kF7w0bnIdYzPgRbdPR9hnfFqPw==}
+    peerDependencies:
+      react: '>=16.3.0'
+    dependencies:
+      '@types/hoist-non-react-statics': 3.3.1
+      hoist-non-react-statics: 3.3.2
+      react: 18.2.0
     dev: false
 
   /@expo/rudder-sdk-node/1.1.1:

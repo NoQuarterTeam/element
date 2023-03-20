@@ -12,6 +12,7 @@ import { api, AUTH_TOKEN } from "../../../lib/utils/api"
 import { OptimizedImage } from "../../../components/OptimisedImage"
 import { Text } from "../../../components/Text"
 import { VERSION } from "../../../lib/config"
+import colors from "@element/tailwind-config/colors"
 
 const updateId = Updates.updateId
 const updateGroup = (Constants.manifest2?.metadata as any)?.["updateGroup"]
@@ -87,7 +88,7 @@ function ProfileLink(props: { isFirst?: boolean; isLast?: boolean; href: string;
         )}
       >
         <Text className="font-body text-lg">{props.children}</Text>
-        <Feather name="chevron-right" size={20} color="#999" />
+        <Feather name="chevron-right" size={20} color={colors.gray[500]} />
       </TouchableOpacity>
     </Link>
   )

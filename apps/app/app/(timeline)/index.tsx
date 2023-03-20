@@ -1,6 +1,6 @@
 import * as React from "react"
 import dayjs from "dayjs"
-import colors from "tailwindcss/colors"
+
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import * as Progress from "react-native-progress"
 import { Link, useRouter } from "expo-router"
@@ -11,6 +11,7 @@ import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatli
 import Ionicons from "@expo/vector-icons/Ionicons"
 import Feather from "@expo/vector-icons/Feather"
 import { safeReadableColor, formatDuration, join } from "@element/shared"
+import colors from "@element/tailwind-config/colors"
 
 import { Text } from "../../components/Text"
 import { Heading } from "../../components/Heading"
@@ -81,23 +82,21 @@ export default function Timeline() {
           <TaskList key={date} tasks={taskData} />
         )}
       </View>
-      <View className="absolute bottom-5 left-5 space-y-2">
+      <View className="absolute right-0 bottom-8 left-0 flex flex-row items-end justify-between px-5">
         <TouchableOpacity
           onPress={() => setDate(dayjs().format("YYYY-MM-DD"))}
           className="rounded-full bg-gray-100/90 p-4 dark:bg-gray-500/90"
         >
           <Feather name="calendar" size={24} />
         </TouchableOpacity>
-      </View>
-      <View className="absolute bottom-5 right-5 flex items-center space-y-2">
-        {features.includes("habits") && dayjs(date).isBefore(dayjs().add(1, "day").startOf("day")) ? (
-          <Habits date={date} />
-        ) : null}
         <Link href={`new?date=${date}`} asChild>
           <TouchableOpacity className="bg-primary-500/90 rounded-full p-4">
             <Feather name="plus" size={24} />
           </TouchableOpacity>
         </Link>
+        {features.includes("habits") && dayjs(date).isBefore(dayjs().add(1, "day").startOf("day")) ? (
+          <Habits date={date} />
+        ) : null}
       </View>
     </View>
   )
@@ -189,9 +188,9 @@ function TaskItem({
 
             <TouchableOpacity onPress={handleToggleComplete} className="flex-shrink-0">
               {task.isComplete ? (
-                <Ionicons name="checkbox" size={24} color="#E87B35" />
+                <Ionicons name="checkbox" size={24} color={colors.primary[600]} />
               ) : (
-                <Ionicons name="square-outline" size={24} color={colorScheme === "dark" ? "#777" : "#aaa"} />
+                <Ionicons name="square-outline" size={24} color={colorScheme === "dark" ? colors.gray[600] : colors.gray[200]} />
               )}
             </TouchableOpacity>
           </View>
@@ -213,6 +212,12 @@ const Habits = React.memo(function _Habits({ date }: { date: string }) {
   const progress = (data || 0) / 100
   const router = useRouter()
   const colorScheme = useColorScheme()
+
+  const unfilledColor = {
+    light: colors.red[500],
+    dark: colors.red[700],
+  }[colorScheme || "light"]
+
   return (
     <TouchableOpacity
       onPress={() => router.push({ pathname: "habits", params: { date } })}
@@ -221,11 +226,11 @@ const Habits = React.memo(function _Habits({ date }: { date: string }) {
     >
       <Progress.Circle
         thickness={5}
-        size={34}
+        size={32}
         animated={false}
         borderWidth={0}
         progress={progress}
-        unfilledColor={colorScheme === "dark" ? colors.red[700] : colors.red[500]}
+        unfilledColor={unfilledColor}
         color={colorScheme === "dark" ? colors.green[600] : colors.green[500]}
       />
     </TouchableOpacity>

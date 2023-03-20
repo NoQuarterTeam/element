@@ -1,5 +1,6 @@
 import { TextInput, TextInputProps, useColorScheme } from "react-native"
 import { merge } from "@element/shared"
+import colors from "@element/tailwind-config/colors"
 import { styled } from "nativewind"
 
 export interface InputProps extends TextInputProps {}
@@ -10,7 +11,7 @@ export function Input(props: TextInputProps) {
   const colorScheme = useColorScheme()
   return (
     <StyledInput
-      placeholderTextColor={colorScheme === "dark" ? "#444" : "#ccc"}
+      placeholderTextColor={colorScheme === "dark" ? colors.gray[600] : colors.gray[400]}
       {...props}
       className={merge(
         "border border-gray-100 dark:border-gray-600",

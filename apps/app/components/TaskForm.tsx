@@ -14,6 +14,7 @@ import { ModalView } from "./ModalView"
 import { api, RouterOutputs } from "../lib/utils/api"
 import { Text } from "./Text"
 import { randomHexColor, useDisclosure } from "@element/shared"
+import colors from "@element/tailwind-config/colors"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 
@@ -90,7 +91,7 @@ export function TaskForm({ task, ...props }: Props) {
           className="font-heading w-11/12 text-3xl dark:text-white"
           value={form.name}
           multiline
-          placeholderTextColor={colorScheme === "dark" ? "#444" : "#ccc"}
+          placeholderTextColor={colorScheme === "dark" ? colors.gray[500] : colors.gray[300]}
           placeholder="Name"
           onChangeText={(name) => setForm((f) => ({ ...f, name }))}
         />
