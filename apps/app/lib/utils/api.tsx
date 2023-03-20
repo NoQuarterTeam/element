@@ -6,6 +6,7 @@ import { createTRPCReact } from "@trpc/react-query"
 import { inferRouterInputs, inferRouterOutputs } from "@trpc/server"
 import type { AppRouter } from "@element/api"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import superjson from "superjson"
 
 /**
  * A set of typesafe hooks for consuming your API.
@@ -35,9 +36,7 @@ const getBaseUrl = () => {
    * you don't have anything else running on it, or you'd have to change it.
    */
   const localhost = Constants.manifest?.debuggerHost?.split(":")[0]
-  if (!localhost) {
-    return "https://myelement.app"
-  }
+  if (!localhost) return "https://myelement.app"
   return `http://${localhost}:3000`
 }
 
@@ -51,6 +50,7 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = React.useState(() => new QueryClient())
   const [trpcClient] = React.useState(() =>
     api.createClient({
+      transformer: superjson,
       links: [
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,

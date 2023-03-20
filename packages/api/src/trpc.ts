@@ -2,6 +2,7 @@ import { initTRPC, TRPCError } from "@trpc/server"
 import { inferAsyncReturnType } from "@trpc/server"
 import * as trpcFetch from "@trpc/server/adapters/fetch"
 import { ZodError } from "zod"
+import superjson from "superjson"
 import { prisma, User } from "@element/database"
 import { decodeAuthToken } from "./lib/jwt"
 
@@ -18,6 +19,7 @@ export async function createContext({ req }: trpcFetch.FetchCreateContextFnOptio
 export type Context = inferAsyncReturnType<typeof createContext>
 
 export const t = initTRPC.context<Context>().create({
+  transformer: superjson,
   errorFormatter({ shape, error }) {
     // TODO: sentry for internal server errors
     // if (error.cause instanceof ZodError) {
@@ -33,7 +35,7 @@ export const t = initTRPC.context<Context>().create({
             ? "There was an error processing your request."
             : error.message
           : undefined,
-        zodError: error.code === "BAD_REQUEST" && error.cause instanceof ZodError ? error.cause.flatten() : undefined,
+        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
       },
     }
   },

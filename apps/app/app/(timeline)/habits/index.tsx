@@ -89,6 +89,7 @@ function HabitItem({ habit, entries, date }: { date: string; habit: Habit; entri
           break
         case 1:
           // Edit
+          //TODO: edit habit
           break
         case 2:
           // Archive

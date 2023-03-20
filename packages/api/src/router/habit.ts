@@ -46,10 +46,12 @@ export const habitRouter = createTRPCRouter({
     ])
     return { habits, habitEntries }
   }),
-  create: protectedProcedure.input(z.object({ name: z.string().min(1), startDate: z.string() })).mutation(({ ctx, input }) => {
-    const startDate = dayjs(input.startDate).startOf("day").add(12, "h").toDate()
-    return ctx.prisma.habit.create({ data: { ...input, startDate, creatorId: ctx.user.id } })
-  }),
+  create: protectedProcedure
+    .input(z.object({ name: z.string().min(1, { message: "Please provide a name" }), startDate: z.string() }))
+    .mutation(({ ctx, input }) => {
+      const startDate = dayjs(input.startDate).startOf("day").add(12, "h").toDate()
+      return ctx.prisma.habit.create({ data: { ...input, startDate, creatorId: ctx.user.id } })
+    }),
   delete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     const habit = await ctx.prisma.habit.findFirst({
       select: { id: true },

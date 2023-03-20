@@ -2,6 +2,7 @@ import { useRouter, useSearchParams } from "expo-router"
 import * as React from "react"
 import { View } from "react-native"
 import { Button } from "../../../components/Button"
+import { FormError } from "../../../components/FormError"
 import { FormInput } from "../../../components/FormInput"
 import { ModalView } from "../../../components/ModalView"
 import { api } from "../../../lib/utils/api"
@@ -18,19 +19,32 @@ export default function NewHabit() {
       router.back()
     },
   })
+
   const handleCreate = () => {
-    if (!name) return
     createHabit.mutate({ name, startDate: date })
   }
 
   return (
     <ModalView title="New habit">
       <View className="space-y-2">
-        <FormInput label="Name" autoFocus value={name} onChangeText={setName} />
-        <View className="flex flex-row space-x-2">
-          <Button isLoading={createHabit.isLoading} className="flex-1" size="sm" onPress={handleCreate}>
-            Create
-          </Button>
+        <FormInput
+          label="Name"
+          autoFocus
+          value={name}
+          error={createHabit.error?.data?.zodError?.fieldErrors?.name}
+          onChangeText={setName}
+        />
+        <View className="space-y-1">
+          <View>
+            <Button isLoading={createHabit.isLoading} size="sm" onPress={handleCreate}>
+              Create
+            </Button>
+          </View>
+          {createHabit.error?.data?.formError && (
+            <View>
+              <FormError error={createHabit.error.data.formError} />
+            </View>
+          )}
         </View>
       </View>
     </ModalView>
