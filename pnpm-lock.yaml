@@ -63,7 +63,7 @@ importers:
       react-native-reanimated: 2.14.4
       react-native-safe-area-context: 4.5.0
       react-native-screens: ~3.20.0
-      react-native-svg: 13.8.0
+      react-native-svg: 13.4.0
       reanimated-color-picker: ^1.5.1
       tailwindcss: ^3.2.4
       typescript: ^4.9.5
@@ -101,11 +101,11 @@ importers:
       react-native-draggable-flatlist: 4.0.1_xe2ht3ahmj2hpxjjupgvwwljzi
       react-native-gesture-handler: 2.9.0_yqouayos4dnow7nnkhah4yzuzq
       react-native-modal-datetime-picker: 14.0.1_sbnjusi757nojgda5zw24ifyue
-      react-native-progress: 5.0.0_react-native-svg@13.8.0
+      react-native-progress: 5.0.0_react-native-svg@13.4.0
       react-native-reanimated: 2.14.4_wsjruegzaqs3hyryg2adjqm4hq
       react-native-safe-area-context: 4.5.0_yqouayos4dnow7nnkhah4yzuzq
       react-native-screens: 3.20.0_yqouayos4dnow7nnkhah4yzuzq
-      react-native-svg: 13.8.0_yqouayos4dnow7nnkhah4yzuzq
+      react-native-svg: 13.4.0_yqouayos4dnow7nnkhah4yzuzq
       reanimated-color-picker: 1.5.1_en5fpk4xvacew66c5lqwufbm3y
       zustand: 4.3.6_react@18.2.0
     devDependencies:
@@ -13074,13 +13074,13 @@ packages:
       react-native: 0.71.3_klxfafkpjmb2537xfoky62a7f4
     dev: false
 
-  /react-native-progress/5.0.0_react-native-svg@13.8.0:
+  /react-native-progress/5.0.0_react-native-svg@13.4.0:
     resolution: {integrity: sha512-KjnGIt3r9i5Kn2biOD9fXLJocf0bwxPRxOyAgXEnZTJQU2O+HyzgGFRCbM5h3izm9kKIkSc1txh8aGmMafCD9A==}
     peerDependencies:
       react-native-svg: '*'
     dependencies:
       prop-types: 15.8.1
-      react-native-svg: 13.8.0_yqouayos4dnow7nnkhah4yzuzq
+      react-native-svg: 13.4.0_yqouayos4dnow7nnkhah4yzuzq
     dev: false
 
   /react-native-reanimated/2.14.4_wsjruegzaqs3hyryg2adjqm4hq:
@@ -13126,8 +13126,8 @@ packages:
       warn-once: 0.1.1
     dev: false
 
-  /react-native-svg/13.8.0_yqouayos4dnow7nnkhah4yzuzq:
-    resolution: {integrity: sha512-G8Mx6W86da+vFimZBJvA93POw8yz0fgDS5biy6oIjMWVJVQSDzCyzwO/zY0yuZmCDhKSZzogl5m0wXXvW2OcTA==}
+  /react-native-svg/13.4.0_yqouayos4dnow7nnkhah4yzuzq:
+    resolution: {integrity: sha512-B3TwK+H0+JuRhYPzF21AgqMt4fjhCwDZ9QUtwNstT5XcslJBXC0FoTkdZo8IEb1Sv4suSqhZwlAY6lwOv3tHag==}
     peerDependencies:
       react: '*'
       react-native: '*'
