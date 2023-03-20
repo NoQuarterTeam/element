@@ -31,7 +31,12 @@ export default function NewTask() {
 
   return (
     <View className="px-4 pt-6">
-      <TaskForm onSubmit={handleCreate} isLoading={create.isLoading} />
+      <TaskForm
+        onSubmit={handleCreate}
+        formError={create.error?.data?.formError}
+        fieldErrors={create.error?.data?.zodError?.fieldErrors}
+        isLoading={create.isLoading}
+      />
       <StatusBar style="light" />
     </View>
   )

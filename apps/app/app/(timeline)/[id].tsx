@@ -44,20 +44,24 @@ function EditTaskForm({ task }: { task: Task }) {
     if (!updateTask.element) return
     update.mutate({
       id: task.id,
-      data: {
-        ...updateTask,
-        elementId: updateTask.element.id,
-        date: updateTask.date,
-        durationHours: Number(updateTask.durationHours),
-        durationMinutes: Number(updateTask.durationMinutes),
-      },
+      ...updateTask,
+      elementId: updateTask.element.id,
+      date: updateTask.date,
+      durationHours: Number(updateTask.durationHours),
+      durationMinutes: Number(updateTask.durationMinutes),
     })
   }
 
   return (
     <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={100}>
       <ScrollView contentContainerStyle={{ minHeight: "100%", paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
-        <TaskForm task={task} onSubmit={handleUpdate} isLoading={update.isLoading} />
+        <TaskForm
+          formError={update.error?.data?.formError}
+          fieldErrors={update.error?.data?.zodError?.fieldErrors}
+          task={task}
+          onSubmit={handleUpdate}
+          isLoading={update.isLoading}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   )

@@ -20,8 +20,8 @@ const nullableString = z.preprocess((v) => (v === "" ? null : v), z.string().nul
 const nullableNumber = z.preprocess((v) => (v === 0 ? null : v), z.number().nullable()).optional()
 
 const taskSchema = z.object({
-  name: z.string(),
-  elementId: z.string(),
+  name: z.string().min(1, { message: "Please enter a name" }),
+  elementId: z.string().min(1, { message: "Please select an element" }),
   date: nullableString,
   description: nullableString,
   startTime: nullableString,
@@ -33,7 +33,7 @@ export const taskRouter = createTRPCRouter({
   byDate: protectedProcedure.input(z.string()).query(({ input, ctx }) => {
     const startOfDay = dayjs(input).startOf("day").toDate()
     const endOfDay = dayjs(input).endOf("day").toDate()
-    return ctx.prisma.user.findUnique({ where: { id: ctx.user.id } }).tasks({
+    return ctx.prisma.user.findUniqueOrThrow({ where: { id: ctx.user.id } }).tasks({
       select: timelineTaskFields,
       orderBy: [{ order: "asc" }, { createdAt: "asc" }],
       where: { date: { gte: startOfDay, lte: endOfDay } },
@@ -58,7 +58,7 @@ export const taskRouter = createTRPCRouter({
     const date = data.date ? dayjs(data.date).startOf("d").add(12, "hours").toDate() : undefined
     return ctx.prisma.task.create({ select: timelineTaskFields, data: { ...data, date, creatorId: ctx.user.id } })
   }),
-  update: protectedProcedure.input(z.object({ id: z.string(), data: taskSchema })).mutation(({ ctx, input: { id, data } }) => {
+  update: protectedProcedure.input(taskSchema.merge(z.object({ id: z.string() }))).mutation(({ ctx, input: { id, ...data } }) => {
     const date = data.date ? dayjs(data.date).startOf("d").add(12, "hours").toDate() : undefined
     return ctx.prisma.task.update({ where: { id }, select: timelineTaskFields, data: { ...data, date } })
   }),

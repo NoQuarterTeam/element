@@ -16,6 +16,7 @@ import colors from "@element/tailwind-config/colors"
 import { Text } from "../../components/Text"
 import { Heading } from "../../components/Heading"
 import { useFeatures } from "../../lib/hooks/useFeatures"
+import { Spinner } from "../../components/Spinner"
 
 dayjs.extend(advancedFormat)
 
@@ -76,9 +77,13 @@ export default function Timeline() {
       </View>
 
       <View>
-        {taskData?.length === 0 ? (
+        {isLoading ? (
+          <View className="flex w-full items-center justify-center pt-4">
+            <Spinner />
+          </View>
+        ) : !taskData ? null : taskData.length === 0 ? (
           <Text className="flex py-10 text-center">Nothing planned</Text>
-        ) : isLoading || !taskData ? null : (
+        ) : (
           <TaskList key={date} tasks={taskData} />
         )}
       </View>

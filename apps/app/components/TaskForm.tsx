@@ -8,13 +8,14 @@ import DateTimePickerModal from "react-native-modal-datetime-picker"
 import ColorPicker, { Panel1, HueSlider } from "reanimated-color-picker"
 
 import { Button } from "./Button"
-import { FormInput, FormLabel } from "./FormInput"
+import { FormInput, FormInputError, FormInputLabel } from "./FormInput"
 import { Input } from "./Input"
 import { ModalView } from "./ModalView"
 import { api, RouterOutputs } from "../lib/utils/api"
 import { Text } from "./Text"
 import { randomHexColor, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/colors"
+import { FormError } from "./FormError"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 
@@ -34,10 +35,12 @@ export type TaskFormData = {
 interface Props {
   isLoading: boolean
   task?: Task
+  fieldErrors?: Record<string, string[] | undefined>
+  formError?: string
   onSubmit: (data: TaskFormData) => void
 }
 
-export function TaskForm({ task, ...props }: Props) {
+export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
   const router = useRouter()
   const { date } = useSearchParams()
 
@@ -48,11 +51,7 @@ export function TaskForm({ task, ...props }: Props) {
     durationHours: task?.durationHours?.toString() || "",
     durationMinutes: task?.durationMinutes?.toString() || "",
     date: task?.date || (date as string | undefined) || "",
-    element: task?.element || {
-      id: "",
-      name: "",
-      color: "",
-    },
+    element: task?.element || { id: "", name: "", color: "" },
   })
   const utils = api.useContext()
 
@@ -83,18 +82,22 @@ export function TaskForm({ task, ...props }: Props) {
     setForm((f) => ({ ...f, date: dayjs(date).format("YYYY-MM-DD") }))
   }
   const colorScheme = useColorScheme()
-
   return (
     <View className="space-y-2">
       <View className="flex flex-row justify-between">
-        <TextInput
-          className="font-heading w-11/12 text-3xl dark:text-white"
-          value={form.name}
-          multiline
-          placeholderTextColor={colorScheme === "dark" ? colors.gray[500] : colors.gray[300]}
-          placeholder="Name"
-          onChangeText={(name) => setForm((f) => ({ ...f, name }))}
-        />
+        <View className="w-11/12">
+          <TextInput
+            className="font-heading text-3xl dark:text-white"
+            value={form.name}
+            multiline
+            placeholderTextColor={colorScheme === "dark" ? colors.gray[500] : colors.gray[300]}
+            placeholder="Name"
+            onChangeText={(name) => setForm((f) => ({ ...f, name }))}
+          />
+          {fieldErrors?.name?.map((error) => (
+            <FormInputError key={error} error={error} />
+          ))}
+        </View>
         <TouchableOpacity onPress={router.back} className="p-2">
           <Feather name="x" size={24} color={colorScheme === "dark" ? "white" : "black"} />
         </TouchableOpacity>
@@ -103,6 +106,7 @@ export function TaskForm({ task, ...props }: Props) {
         <FormInput
           label="Element"
           editable={false}
+          error={fieldErrors?.elementId}
           value={form.element?.name}
           rightElement={
             <View className="flex flex-row space-x-2">
@@ -164,6 +168,7 @@ export function TaskForm({ task, ...props }: Props) {
         <FormInput
           label="Date"
           editable={false}
+          error={fieldErrors?.date}
           value={dayjs(form.date).format("DD/MM/YYYY")}
           rightElement={
             <TouchableOpacity onPress={dateProps.onOpen} className="border border-gray-100 p-2.5 dark:border-gray-600">
@@ -179,7 +184,7 @@ export function TaskForm({ task, ...props }: Props) {
         />
       </View>
       <View className="space-y-1">
-        <FormLabel label="Duration" />
+        <FormInputLabel label="Duration" />
         <View className="flex flex-row items-center space-x-3">
           <View className="flex flex-row items-center space-x-2">
             <Input
@@ -200,11 +205,18 @@ export function TaskForm({ task, ...props }: Props) {
             <Text className="opacity-70">Minutes</Text>
           </View>
         </View>
+        {fieldErrors?.durationHours?.map((error) => (
+          <FormInputError key={error} error={error} />
+        ))}
+        {fieldErrors?.durationMinutes?.map((error) => (
+          <FormInputError key={error} error={error} />
+        ))}
       </View>
       <View>
         <FormInput
           label="Start time"
           editable={false}
+          error={fieldErrors?.startTime}
           value={form.startTime}
           rightElement={
             <TouchableOpacity onPress={timeProps.onOpen} className="border border-gray-100 p-2.5 dark:border-gray-600">
@@ -226,6 +238,7 @@ export function TaskForm({ task, ...props }: Props) {
 
       <View>
         <FormInput
+          error={fieldErrors?.description}
           label="Description"
           value={form.description}
           multiline
@@ -233,10 +246,17 @@ export function TaskForm({ task, ...props }: Props) {
         />
       </View>
 
-      <View>
-        <Button isLoading={props.isLoading} onPress={() => props.onSubmit(form)}>
-          {task ? "Update" : "Create"}
-        </Button>
+      <View className="space-y-1">
+        <View>
+          <Button isLoading={props.isLoading} onPress={() => props.onSubmit(form)}>
+            {task ? "Update" : "Create"}
+          </Button>
+        </View>
+        {formError && (
+          <View>
+            <FormError error={formError} />
+          </View>
+        )}
       </View>
     </View>
   )
@@ -256,7 +276,7 @@ function ElementForm({
         <FormInput label="Name" value={elementForm.name} onChangeText={(name) => setElementForm((f) => ({ ...f, name }))} />
       </View>
       <View>
-        <FormLabel label="Color" />
+        <FormInputLabel label="Color" />
         <ColorPicker
           style={{ width: "100%" }}
           value={elementForm.color}
