@@ -158,7 +158,7 @@ importers:
       '@remix-run/serve': ^1.14.3
       '@tailwindcss/forms': ^0.5.3
       '@tailwindcss/line-clamp': ^0.4.2
-      '@tanstack/react-query': 4.27.0
+      '@tanstack/react-query': 4.28.0
       '@trpc/server': ^10.16.0
       '@types/bcrypt': 5.0.0
       '@types/compression': 1.7.2
@@ -264,7 +264,7 @@ importers:
       '@remix-run/node': 1.14.3
       '@remix-run/react': 1.14.3_biqbaboplfbrettd7655fr4n2y
       '@remix-run/serve': 1.14.3
-      '@tanstack/react-query': 4.27.0_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-query': 4.28.0_biqbaboplfbrettd7655fr4n2y
       '@trpc/server': 10.16.0
       aws-sdk: 2.1338.0
       axios: 1.3.4
@@ -4195,8 +4195,8 @@ packages:
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
-  /@tanstack/react-query/4.27.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-9S49LTFenWbxVHx0iR6qUXP+MKL5kwz/mV9pzfNXvdIM1R0vT+hiecCCL+ox/tD2glAQ51JHHMffQaRuH7wYRA==}
+  /@tanstack/react-query/4.28.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-8cGBV5300RHlvYdS4ea+G1JcZIt5CIuprXYFnsWggkmGoC0b5JaqG0fIX3qwDL9PTNkKvG76NGThIWbpXivMrQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
