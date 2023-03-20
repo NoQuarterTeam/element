@@ -1,9 +1,9 @@
 import * as React from "react"
 import { TouchableOpacityProps, TouchableOpacity, useColorScheme } from "react-native"
-import * as Progress from "react-native-progress"
 import { merge } from "@element/shared"
 import { cva, VariantProps } from "class-variance-authority"
 import { Text } from "./Text"
+import { Spinner } from "./Spinner"
 
 export const buttonStyles = cva("flex items-center justify-center rounded-sm border", {
   variants: {
@@ -61,10 +61,8 @@ export function Button({ variant = "primary", size = "md", isLoading, ...props }
       )}
     >
       {isLoading ? (
-        <Progress.Circle
+        <Spinner
           size={size === "md" ? 20 : size === "lg" ? 25 : 15}
-          indeterminate
-          borderWidth={3}
           color={variant === "primary" ? "white" : colorScheme === "dark" ? "white" : "black"}
         />
       ) : (

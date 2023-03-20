@@ -4,21 +4,26 @@ import { ScreenView } from "../../../components/ScreenView"
 import { Text } from "../../../components/Text"
 import { MAX_FREE_TASKS, MAX_FREE_ELEMENTS, join } from "@element/shared"
 import { api } from "../../../lib/utils/api"
+import { Spinner } from "../../../components/Spinner"
 
 export default function Plan() {
   const { data, isLoading } = api.auth.myPlan.useQuery()
   const discountedPlanAmount = data?.subscription?.discountPercent ? 4 - (4 * 100) / data.subscription.discountPercent : null
   return (
     <ScreenView title="Plan">
-      {!data || isLoading ? null : data?.subscription ? (
+      {isLoading ? (
+        <View className="flex w-full items-center justify-center pt-4">
+          <Spinner />
+        </View>
+      ) : !data ? null : data.subscription ? (
         <View className="space-y-3">
           <Text className="text-lg">
             You are currently on the <Text className="font-heading">Pro</Text> plan
           </Text>
           {discountedPlanAmount || discountedPlanAmount === 0 ? (
             <Text className="text-sm">
-              A {data?.subscription.discountPercent}% discount is applied to your subscription, you pay €{discountedPlanAmount}{" "}
-              per month
+              A {data.subscription.discountPercent}% discount is applied to your subscription, you pay €{discountedPlanAmount} per
+              month
             </Text>
           ) : null}
           {data.subscription.isCancelled ? (
@@ -49,14 +54,14 @@ export default function Plan() {
                   <Text
                     className={join(
                       "text-4xl",
-                      (data?.taskCount || 0) >= MAX_FREE_TASKS
+                      (data.taskCount || 0) >= MAX_FREE_TASKS
                         ? "text-red-500"
-                        : (data?.taskCount || 0) > MAX_FREE_TASKS * 0.75
+                        : (data.taskCount || 0) > MAX_FREE_TASKS * 0.75
                         ? "text-primary-500"
                         : undefined,
                     )}
                   >
-                    {data?.taskCount}{" "}
+                    {data.taskCount}{" "}
                   </Text>
                   <Text className="text-sm font-thin opacity-70">/ {MAX_FREE_TASKS}</Text>
                 </View>
@@ -67,14 +72,14 @@ export default function Plan() {
                   <Text
                     className={join(
                       "text-4xl",
-                      (data?.elementCount || 0) >= MAX_FREE_ELEMENTS
+                      (data.elementCount || 0) >= MAX_FREE_ELEMENTS
                         ? "text-red-500"
-                        : (data?.elementCount || 0) > MAX_FREE_ELEMENTS * 0.75
+                        : (data.elementCount || 0) > MAX_FREE_ELEMENTS * 0.75
                         ? "text-primary-500"
                         : undefined,
                     )}
                   >
-                    {data?.elementCount}{" "}
+                    {data.elementCount}{" "}
                   </Text>
                   <Text className="text-sm font-thin opacity-70">/ 5</Text>
                 </View>

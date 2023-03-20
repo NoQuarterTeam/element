@@ -83,20 +83,26 @@ export default function Timeline() {
         )}
       </View>
       <View className="absolute right-0 bottom-8 left-0 flex flex-row items-end justify-between px-5">
-        <TouchableOpacity
-          onPress={() => setDate(dayjs().format("YYYY-MM-DD"))}
-          className="rounded-full bg-gray-100/90 p-4 dark:bg-gray-500/90"
-        >
-          <Feather name="calendar" size={24} />
-        </TouchableOpacity>
-        <Link href={`new?date=${date}`} asChild>
-          <TouchableOpacity className="bg-primary-500/90 rounded-full p-4">
-            <Feather name="plus" size={24} />
+        <View className="flex-1 flex-row">
+          <TouchableOpacity
+            onPress={() => setDate(dayjs().format("YYYY-MM-DD"))}
+            className="rounded-full border border-gray-100 p-4 dark:border-gray-600"
+          >
+            <Feather name="calendar" size={24} color={colorScheme === "dark" ? "white" : "black"} />
           </TouchableOpacity>
-        </Link>
+        </View>
         {features.includes("habits") && dayjs(date).isBefore(dayjs().add(1, "day").startOf("day")) ? (
-          <Habits date={date} />
+          <View className="flex-1 flex-row justify-center">
+            <Habits date={date} />
+          </View>
         ) : null}
+        <View className="flex-1 flex-row justify-end">
+          <Link href={`new?date=${date}`} asChild>
+            <TouchableOpacity className="bg-primary-500/90 rounded-full p-4">
+              <Feather name="plus" size={24} />
+            </TouchableOpacity>
+          </Link>
+        </View>
       </View>
     </View>
   )
@@ -168,7 +174,7 @@ function TaskItem({
         <View
           className={join(
             "overflow-hidden rounded-sm border border-gray-100 bg-white dark:border-gray-600 dark:bg-black",
-            task.isComplete && "opacity-50",
+            task.isComplete && "opacity-60",
           )}
         >
           <View className="flex flex-row justify-between p-2">
