@@ -43,7 +43,7 @@
     "@react-email/font": "^0.0.1",
     "@react-email/head": "0.0.5",
     "@react-email/heading": "0.0.8",
-    "@react-email/hr": "0.0.4",
+    "@react-email/hr": "0.0.5",
     "@react-email/html": "0.0.4",
     "@react-email/img": "0.0.4",
     "@react-email/link": "0.0.4",
