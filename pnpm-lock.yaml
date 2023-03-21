@@ -145,7 +145,7 @@ importers:
       '@radix-ui/react-toast': ^1.1.3
       '@radix-ui/react-tooltip': ^1.0.5
       '@react-email/button': 0.0.7
-      '@react-email/column': 0.0.6
+      '@react-email/column': 0.0.7
       '@react-email/container': 0.0.7
       '@react-email/font': ^0.0.1
       '@react-email/head': 0.0.4
@@ -255,7 +255,7 @@ importers:
       '@radix-ui/react-toast': 1.1.3_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-tooltip': 1.0.5_zula6vjvt3wdocc4mwcxqa6nzi
       '@react-email/button': 0.0.7
-      '@react-email/column': 0.0.6
+      '@react-email/column': 0.0.7
       '@react-email/container': 0.0.7
       '@react-email/font': 0.0.1
       '@react-email/head': 0.0.4
@@ -3463,8 +3463,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@react-email/column/0.0.6:
-    resolution: {integrity: sha512-zbIH1Qs3la5xVg6VqMeWI4GmedQeHuGMwYXVVRPuAFItHGzgexANJ5dABWIPnB7jS3q2o/6wzLg/NwA/8xT68Q==}
+  /@react-email/column/0.0.7:
+    resolution: {integrity: sha512-B29wVXyIcuVprgGpLkR23waPh/twlqmugZQsCKk05JlMCQ80/Puv4Lgj4dRsIJzgyTLMwG6xq17+Uxc5iGfuaQ==}
     engines: {node: '>=16.0.0'}
     dependencies:
       react: 18.2.0
