@@ -153,7 +153,7 @@ importers:
       '@react-email/hr': 0.0.5
       '@react-email/html': 0.0.4
       '@react-email/img': 0.0.5
-      '@react-email/link': 0.0.4
+      '@react-email/link': 0.0.5
       '@react-email/render': 0.0.6
       '@react-email/tailwind': 0.0.7
       '@react-email/text': 0.0.4
@@ -263,7 +263,7 @@ importers:
       '@react-email/hr': 0.0.5
       '@react-email/html': 0.0.4
       '@react-email/img': 0.0.5
-      '@react-email/link': 0.0.4
+      '@react-email/link': 0.0.5
       '@react-email/render': 0.0.6
       '@react-email/tailwind': 0.0.7
       '@react-email/text': 0.0.4
@@ -3517,8 +3517,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@react-email/link/0.0.4:
-    resolution: {integrity: sha512-4m3PmGsfAUn6/4PmbpW0JkcrIalFkQjWp5SS4w17NQ4FyDmwoojppdYVu7WhUpLj81vL1MkOpAYBojGwv7s8Qg==}
+  /@react-email/link/0.0.5:
+    resolution: {integrity: sha512-z+QW9f4gXBdyfhl7iYMY3td+rXKeZYK/2AGElEMsxVoywn5D0b6cF8m5w2jbf0U2V3enT+zy9yc1R6AyT59NOg==}
     engines: {node: '>=16.0.0'}
     dependencies:
       react: 18.2.0
