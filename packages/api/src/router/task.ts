@@ -11,6 +11,7 @@ const timelineTaskFields = {
   durationHours: true,
   durationMinutes: true,
   startTime: true,
+  order: true,
   date: true,
   name: true,
   element: { select: { id: true, name: true, color: true } },

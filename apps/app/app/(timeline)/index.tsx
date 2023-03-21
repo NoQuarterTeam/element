@@ -10,13 +10,13 @@ import { api, RouterOutputs } from "../../lib/utils/api"
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import Feather from "@expo/vector-icons/Feather"
+import Octicons from "@expo/vector-icons/Octicons"
 import { safeReadableColor, formatDuration, join } from "@element/shared"
 import colors from "@element/tailwind-config/colors"
 
 import { Text } from "../../components/Text"
 import { Heading } from "../../components/Heading"
 import { useFeatures } from "../../lib/hooks/useFeatures"
-import { Spinner } from "../../components/Spinner"
 
 dayjs.extend(advancedFormat)
 
@@ -77,11 +77,7 @@ export default function Timeline() {
       </View>
 
       <View>
-        {isLoading ? (
-          <View className="flex w-full items-center justify-center pt-4">
-            <Spinner />
-          </View>
-        ) : !taskData ? null : taskData.length === 0 ? (
+        {isLoading ? null : !taskData ? null : taskData.length === 0 ? (
           <Text className="flex py-10 text-center">Nothing planned</Text>
         ) : (
           <TaskList key={date} tasks={taskData} />
@@ -121,7 +117,7 @@ function TaskList({ tasks }: { tasks: Tasks }) {
   const [data, setData] = React.useState(tasks)
 
   React.useEffect(() => {
-    setData(tasks)
+    setData(tasks.sort((a, b) => a.order - b.order))
   }, [tasks])
 
   const handleToggle = (id: string) => {
@@ -178,17 +174,28 @@ function TaskItem({
       >
         <View
           className={join(
-            "overflow-hidden rounded-sm border border-gray-100 bg-white dark:border-gray-600 dark:bg-black",
+            "overflow-hidden rounded-md border border-gray-100 bg-white dark:border-gray-600 dark:bg-black",
             task.isComplete && "opacity-60",
           )}
         >
-          <View className="flex flex-row justify-between p-2">
-            <View className="flex-1">
-              <Text className="text-md" style={{ textDecorationLine: task.isComplete ? "line-through" : undefined }}>
+          <View className="flex flex-row space-x-2 p-2">
+            <TouchableOpacity onPress={handleToggleComplete} className="flex-shrink-0">
+              {task.isComplete ? (
+                <Octicons name="check-circle-fill" size={24} color={colors.primary[600]} />
+              ) : (
+                <Octicons name="circle" size={24} color={colorScheme === "dark" ? colors.gray[600] : colors.gray[100]} />
+              )}
+            </TouchableOpacity>
+
+            <View className="flex-1 flex-row justify-between">
+              <Text
+                className="text-md flex flex-1 pt-0.5"
+                style={{ textDecorationLine: task.isComplete ? "line-through" : undefined }}
+              >
                 {task.name}
               </Text>
               {!task.isComplete && (
-                <View className="flex flex-row items-center space-x-2">
+                <View className="flex flex-shrink-0 flex-row items-center space-x-2">
                   {task.startTime ? <Text className="text-xs">{task.startTime}</Text> : null}
                   {task.durationHours || task.durationMinutes ? (
                     <Text className="text-xs">{formatDuration(task.durationHours, task.durationMinutes)}</Text>
@@ -196,14 +203,6 @@ function TaskItem({
                 </View>
               )}
             </View>
-
-            <TouchableOpacity onPress={handleToggleComplete} className="flex-shrink-0">
-              {task.isComplete ? (
-                <Ionicons name="checkbox" size={24} color={colors.primary[600]} />
-              ) : (
-                <Ionicons name="square-outline" size={24} color={colorScheme === "dark" ? colors.gray[600] : colors.gray[200]} />
-              )}
-            </TouchableOpacity>
           </View>
           <View style={{ backgroundColor: task.element.color }} className="rounded-b-sm p-1">
             {isHovered || isActive ? (

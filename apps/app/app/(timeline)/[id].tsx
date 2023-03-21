@@ -26,14 +26,13 @@ function EditTaskForm({ task }: { task: Task }) {
   const utils = api.useContext()
   const update = api.task.update.useMutation({
     onSuccess: (updatedTask) => {
-      if (updatedTask.date !== task.date) {
-        utils.task.byDate.setData(dayjs(task.date).format("YYYY-MM-DD"), (old) =>
-          old ? old.filter((t) => t.id !== updatedTask.id) : [],
+      const oldTasks = utils.task.byDate.getData(dayjs(updatedTask.date).format("YYYY-MM-DD")) || []
+      if (dayjs(updatedTask.date).isSame(dayjs(task.date), "date")) {
+        utils.task.byDate.setData(dayjs(updatedTask.date).format("YYYY-MM-DD"), () =>
+          oldTasks.map((t) => (t.id === updatedTask.id ? updatedTask : t)).sort((a, b) => a.order - b.order),
         )
       } else {
-        utils.task.byDate.setData(dayjs(updatedTask.date).format("YYYY-MM-DD"), (old) =>
-          old ? old.map((t) => (t.id === updatedTask.id ? updatedTask : t)) : [updatedTask],
-        )
+        utils.task.byDate.setData(dayjs(task.date).format("YYYY-MM-DD"), () => oldTasks.filter((t) => t.id !== updatedTask.id))
       }
       utils.task.byId.setData(task.id, updatedTask)
       router.back()
@@ -41,7 +40,6 @@ function EditTaskForm({ task }: { task: Task }) {
   })
 
   const handleUpdate = (updateTask: TaskFormData) => {
-    if (!updateTask.element) return
     update.mutate({
       id: task.id,
       ...updateTask,
