@@ -1,37 +1,20 @@
-name: 🚀 Deploy
+name: 🚀 CI
 on:
   push:
     branches:
       - main
   pull_request: {}
+permissions:
+  actions: write
+  contents: read
 
 jobs:
-  prettier:
-    name: Prettier
-    runs-on: ubuntu-latest
-    if: ${{ (github.ref == 'refs/heads/main') && github.event_name == 'push' }}
-    steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
-
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v3
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-
-      - name: ✨ Prettier
-        run: npm run prettier
-
   lint:
-    name: ESLint
+    name: ⬣ ESLint
     runs-on: ubuntu-latest
-    if: ${{ (github.ref == 'refs/heads/main') && github.event_name == 'push' }}
+    # env:
+    #   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+    #   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -39,21 +22,28 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
-      - name: ⎔ Setup node
+      - uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
+
+      - name: ⎔ Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
+          cache: "pnpm"
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        run: pnpm install --ignore-scripts
 
       - name: 🔬 Lint
         run: npm run lint
 
   typecheck:
-    name: TypeScript
+    name: ʦ TypeScript
     runs-on: ubuntu-latest
-    if: ${{ (github.ref == 'refs/heads/main') && github.event_name == 'push' }}
+    # env:
+    #   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+    #   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -61,22 +51,29 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
-      - name: ⎔ Setup node
+      - uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7
+
+      - name: ⎔ Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
+          cache: "pnpm"
 
       - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+        run: pnpm install --ignore-scripts
+
+      - name: 🛠 Setup PrismaClient
+        run: npm run generate
 
       - name: 🔎 Type check
-        run: npm run typecheck
+        run: pnpm run typecheck
 
   build:
     name: 🐳 Build
-    needs: [prettier, lint, typecheck]
     # only build/deploy main branch on pushes
-    if: ${{ (github.ref == 'refs/heads/main') && github.event_name == 'push' }}
+    if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
@@ -89,7 +86,7 @@ jobs:
         uses: SebRollen/toml-action@v1.0.2
         id: app_name
         with:
-          file: "fly.toml"
+          file: "apps/web/fly.toml"
           field: "app"
 
       - name: 🐳 Set up Docker Buildx
@@ -114,9 +111,10 @@ jobs:
           password: ${{ secrets.FLY_API_TOKEN }}
 
       - name: 🐳 Docker build
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
+          file: apps/web/Dockerfile
           push: true
           tags: registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }}
           build-args: |
@@ -137,9 +135,9 @@ jobs:
   deploy:
     name: 🚀 Deploy
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [lint, typecheck, vitest, cypress, build]
     # only build/deploy main branch on pushes
-    if: ${{ (github.ref == 'refs/heads/main') && github.event_name == 'push' }}
+    if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
 
     steps:
       - name: 🛑 Cancel Previous Runs
@@ -152,13 +150,13 @@ jobs:
         uses: SebRollen/toml-action@v1.0.2
         id: app_name
         with:
-          file: "fly.toml"
+          file: "apps/web/fly.toml"
           field: "app"
 
       - name: 🚀 Deploy Production
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: superfly/flyctl-actions@1.3
         with:
-          args: "deploy --image registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }}"
+          args: "deploy --config ./apps/web/fly.toml --image registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

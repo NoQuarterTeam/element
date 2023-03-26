@@ -26,13 +26,9 @@ function EditTaskForm({ task }: { task: Task }) {
   const utils = api.useContext()
   const update = api.task.update.useMutation({
     onSuccess: (updatedTask) => {
-      const oldTasks = utils.task.byDate.getData(dayjs(updatedTask.date).format("YYYY-MM-DD")) || []
-      if (dayjs(updatedTask.date).isSame(dayjs(task.date), "date")) {
-        utils.task.byDate.setData(dayjs(updatedTask.date).format("YYYY-MM-DD"), () =>
-          oldTasks.map((t) => (t.id === updatedTask.id ? updatedTask : t)).sort((a, b) => a.order - b.order),
-        )
-      } else {
-        utils.task.byDate.setData(dayjs(task.date).format("YYYY-MM-DD"), () => oldTasks.filter((t) => t.id !== updatedTask.id))
+      utils.task.byDate.invalidate(dayjs(updatedTask.date).format("YYYY-MM-DD"))
+      if (!dayjs(updatedTask.date).isSame(dayjs(task.date), "date")) {
+        utils.task.byDate.invalidate(dayjs(task.date).format("YYYY-MM-DD"))
       }
       utils.task.byId.setData(task.id, updatedTask)
       router.back()

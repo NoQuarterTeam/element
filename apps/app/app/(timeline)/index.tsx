@@ -178,7 +178,7 @@ function TaskItem({
             task.isComplete && "opacity-60",
           )}
         >
-          <View className="flex flex-row space-x-2 p-2">
+          <View className="flex flex-row space-x-2 p-3">
             <TouchableOpacity onPress={handleToggleComplete} className="flex-shrink-0">
               {task.isComplete ? (
                 <Octicons name="check-circle-fill" size={24} color={colors.primary[600]} />

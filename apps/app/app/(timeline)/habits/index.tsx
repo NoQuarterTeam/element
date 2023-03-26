@@ -1,4 +1,4 @@
-import Ionicons from "@expo/vector-icons/Ionicons"
+import Octicons from "@expo/vector-icons/Octicons"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import { Link, useSearchParams } from "expo-router"
@@ -103,15 +103,15 @@ function HabitItem({ habit, entries, date }: { date: string; habit: Habit; entri
   }
   return (
     <TouchableOpacity
-      className="flex flex-row items-center justify-between"
+      className="flex flex-row items-center justify-between py-1 pr-2"
       onPress={handleToggleComplete}
       onLongPress={handleOpenMenu}
     >
       <Text className="text-lg">{habit.name}</Text>
       {isComplete ? (
-        <Ionicons name="checkbox" size={30} color={colors.primary[600]} />
+        <Octicons name="check-circle-fill" size={24} color={colors.primary[600]} />
       ) : (
-        <Ionicons name="square-outline" size={30} color={colorScheme === "dark" ? colors.gray[600] : colors.gray[200]} />
+        <Octicons name="circle" size={24} color={colorScheme === "dark" ? colors.gray[600] : colors.gray[100]} />
       )}
     </TouchableOpacity>
   )
