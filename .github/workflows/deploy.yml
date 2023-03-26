@@ -65,7 +65,7 @@ jobs:
         run: pnpm install --ignore-scripts
 
       - name: 🛠 Setup PrismaClient
-        run: npm run generate
+        run: npm run db:generate
 
       - name: 🔎 Type check
         run: pnpm run typecheck
