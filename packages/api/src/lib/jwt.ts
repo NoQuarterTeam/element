@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken"
 import { z } from "zod"
 
-const AUTH_TOKEN = process.env.APP_AUTH_SECRET
+const SESSION_SECRET = process.env.SESSION_SECRET
 
 export const createAuthToken = (payload: { id: string }) => {
-  if (!AUTH_TOKEN) throw new Error("APP_AUTH_SECRET is not defined")
+  if (!SESSION_SECRET) throw new Error("SESSION_SECRET is not defined")
   try {
-    const token = jwt.sign(payload, AUTH_TOKEN, {
+    const token = jwt.sign(payload, SESSION_SECRET, {
       issuer: "@element/api",
       audience: ["@element/app"],
       expiresIn: "8 weeks",
@@ -22,9 +22,9 @@ const authSchema = z.object({
 })
 
 export function decodeAuthToken(token: string): { id: string } {
-  if (!AUTH_TOKEN) throw new Error("APP_AUTH_SECRET is not defined")
+  if (!SESSION_SECRET) throw new Error("SESSION_SECRET is not defined")
   try {
-    jwt.verify(token, AUTH_TOKEN)
+    jwt.verify(token, SESSION_SECRET)
     const payload = jwt.decode(token)
     const result = authSchema.parse(payload)
     return result
