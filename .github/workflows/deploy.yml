@@ -36,7 +36,7 @@ jobs:
         run: pnpm install --ignore-scripts
 
       - name: 🔬 Lint
-        run: npm run lint
+        run: pnpm --filter web lint
 
   typecheck:
     name: ʦ TypeScript
@@ -68,7 +68,7 @@ jobs:
         run: npm run db:generate
 
       - name: 🔎 Type check
-        run: pnpm run typecheck
+        run: pnpm --filter web typecheck
 
   build:
     name: 🐳 Build
