@@ -17,7 +17,7 @@ export default function Account() {
   const router = useRouter()
   const utils = api.useContext()
   const updateMe = api.auth.update.useMutation({
-    onSuccess: () => utils.auth.me.invalidate(),
+    onSuccess: () => void utils.auth.me.invalidate(),
   })
   const handleUpdate = () => {
     updateMe.mutate(form)

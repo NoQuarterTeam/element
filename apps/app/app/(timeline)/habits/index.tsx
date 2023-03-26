@@ -1,7 +1,7 @@
 import Octicons from "@expo/vector-icons/Octicons"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
-import { Link, useSearchParams } from "expo-router"
+import { Link, useRouter, useSearchParams } from "expo-router"
 import Feather from "@expo/vector-icons/Feather"
 import { TouchableOpacity, useColorScheme, View } from "react-native"
 import { ModalView } from "../../../components/ModalView"
@@ -55,23 +55,31 @@ function HabitItem({ habit, entries, date }: { date: string; habit: Habit; entri
   const isComplete = entries.length > 0
   const colorScheme = useColorScheme()
   const utils = api.useContext()
+  const router = useRouter()
   const toggleComplete = api.habit.toggleComplete.useMutation({
+    onMutate: () => {
+      utils.habit.all.setData({ date }, (old) => ({
+        habits: old?.habits || [],
+        habitEntries: old?.habitEntries?.find((entry) => entry.habitId === habit.id)
+          ? old.habitEntries.filter((entry) => entry.habitId !== habit.id)
+          : [...(old?.habitEntries || []), { id: "test", createdAt: dayjs(date).toDate(), habitId: habit.id }],
+      }))
+    },
     onSuccess: () => {
-      utils.habit.progressCompleteByDate.invalidate({ date })
-      utils.habit.all.invalidate({ date })
+      void utils.habit.progressCompleteByDate.invalidate({ date })
     },
   })
 
   const deleteHabit = api.habit.delete.useMutation({
     onSuccess: () => {
-      utils.habit.progressCompleteByDate.invalidate({ date })
-      utils.habit.all.invalidate({ date })
+      void utils.habit.progressCompleteByDate.invalidate({ date })
+      void utils.habit.all.invalidate({ date })
     },
   })
   const archiveHabit = api.habit.archive.useMutation({
     onSuccess: () => {
-      utils.habit.progressCompleteByDate.invalidate({ date })
-      utils.habit.all.invalidate({ date })
+      void utils.habit.progressCompleteByDate.invalidate({ date })
+      void utils.habit.all.invalidate({ date })
     },
   })
 
@@ -89,7 +97,7 @@ function HabitItem({ habit, entries, date }: { date: string; habit: Habit; entri
           break
         case 1:
           // Edit
-          //TODO: edit habit
+          router.push(`/habits/${habit.id}?date=${date}`)
           break
         case 2:
           // Archive

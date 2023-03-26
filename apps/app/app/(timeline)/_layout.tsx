@@ -16,6 +16,7 @@ export default function RootLayout() {
         <Stack.Screen name="new" options={{ presentation: "modal" }} />
         <Stack.Screen name="habits/index" options={{ presentation: "modal" }} />
         <Stack.Screen name="habits/new" options={{ presentation: "modal" }} />
+        <Stack.Screen name="habits/[id]" options={{ presentation: "modal" }} />
         <Stack.Screen name="[id]" options={{ presentation: "modal" }} />
       </Stack>
     </AuthProvider>

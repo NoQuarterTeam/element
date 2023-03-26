@@ -20,6 +20,10 @@ export default function Login() {
       router.replace("/")
     },
   })
+  const handleLogin = async () => {
+    await AsyncStorage.removeItem(AUTH_TOKEN)
+    login.mutate({ email, password })
+  }
   const registerTempAccount = api.auth.registerTempAccount.useMutation({
     onSuccess: async (data) => {
       await AsyncStorage.setItem(AUTH_TOKEN, data.token)
@@ -47,11 +51,7 @@ export default function Login() {
         </View>
         <View className="space-y-1">
           <View>
-            <Button
-              isLoading={login.isLoading}
-              disabled={login.isLoading || registerTempAccount.isLoading}
-              onPress={() => login.mutate({ email, password })}
-            >
+            <Button isLoading={login.isLoading} disabled={login.isLoading || registerTempAccount.isLoading} onPress={handleLogin}>
               Login
             </Button>
           </View>

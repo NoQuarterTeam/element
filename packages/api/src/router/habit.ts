@@ -60,6 +60,22 @@ export const habitRouter = createTRPCRouter({
     if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
     return ctx.prisma.habit.delete({ where: { id: habit.id } })
   }),
+  byId: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    const habit = await ctx.prisma.habit.findFirst({
+      select: { id: true, name: true, startDate: true, archivedAt: true },
+      where: { id: input.id, creatorId: { equals: ctx.user.id } },
+    })
+    if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
+    return habit
+  }),
+  update: protectedProcedure
+    .input(z.object({ id: z.string(), name: z.string() }))
+    .mutation(async ({ ctx, input: { id, ...data } }) => {
+      return ctx.prisma.habit.update({
+        where: { id },
+        data,
+      })
+    }),
   archive: protectedProcedure.input(z.object({ id: z.string(), date: z.string() })).mutation(async ({ ctx, input }) => {
     return ctx.prisma.habit.update({
       where: { id: input.id },

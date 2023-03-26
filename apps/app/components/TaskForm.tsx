@@ -63,8 +63,8 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
     createElement.mutate(element, {
       onSuccess: (data) => {
         setForm((f) => ({ ...f, element: { id: data.id, name: data.name, color: data.color } }))
+        void utils.element.all.invalidate()
         elementCreateModalProps.onClose()
-        utils.element.all.invalidate()
       },
     })
   }
@@ -103,25 +103,32 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
         </TouchableOpacity>
       </View>
       <View>
-        <FormInput
-          label="Element"
-          editable={false}
-          error={fieldErrors?.elementId}
-          value={form.element?.name}
-          rightElement={
-            <View className="flex flex-row space-x-2">
-              <TouchableOpacity
-                onPress={elementCreateModalProps.onOpen}
-                className="border border-gray-100 p-2.5 dark:border-gray-600"
-              >
-                <Feather name="plus" size={20} color={colorScheme === "dark" ? "white" : "black"} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={elementModalProps.onOpen} className="border border-gray-100 p-2.5 dark:border-gray-600">
-                <Feather name="edit-2" size={20} color={colorScheme === "dark" ? "white" : "black"} />
-              </TouchableOpacity>
-            </View>
-          }
-        />
+        <TouchableOpacity onPress={elementModalProps.onOpen}>
+          <View>
+            <FormInput
+              label="Element"
+              editable={false}
+              error={fieldErrors?.elementId}
+              value={form.element?.name}
+              rightElement={
+                <View className="flex flex-row space-x-2">
+                  <TouchableOpacity
+                    onPress={elementCreateModalProps.onOpen}
+                    className="border border-gray-100 p-2.5 dark:border-gray-600"
+                  >
+                    <Feather name="plus" size={20} color={colorScheme === "dark" ? "white" : "black"} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={elementModalProps.onOpen}
+                    className="border border-gray-100 p-2.5 dark:border-gray-600"
+                  >
+                    <Feather name="edit-2" size={20} color={colorScheme === "dark" ? "white" : "black"} />
+                  </TouchableOpacity>
+                </View>
+              }
+            />
+          </View>
+        </TouchableOpacity>
 
         <Modal
           animationType="slide"

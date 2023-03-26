@@ -25,10 +25,10 @@ function EditTaskForm({ task }: { task: Task }) {
 
   const utils = api.useContext()
   const update = api.task.update.useMutation({
-    onSuccess: (updatedTask) => {
-      utils.task.byDate.invalidate(dayjs(updatedTask.date).format("YYYY-MM-DD"))
+    onSuccess: async (updatedTask) => {
+      void utils.task.byDate.invalidate(dayjs(updatedTask.date).format("YYYY-MM-DD"))
       if (!dayjs(updatedTask.date).isSame(dayjs(task.date), "date")) {
-        utils.task.byDate.invalidate(dayjs(task.date).format("YYYY-MM-DD"))
+        void utils.task.byDate.invalidate(dayjs(task.date).format("YYYY-MM-DD"))
       }
       utils.task.byId.setData(task.id, updatedTask)
       router.back()
