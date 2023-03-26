@@ -386,9 +386,9 @@ importers:
       prisma: 4.11.0
     dependencies:
       '@prisma/client': 4.11.0_prisma@4.11.0
+      prisma: 4.11.0
     devDependencies:
       '@types/node': 18.15.3
-      prisma: 4.11.0
 
   packages/shared:
     specifiers:
@@ -2915,6 +2915,7 @@ packages:
   /@prisma/engines/4.11.0:
     resolution: {integrity: sha512-0AEBi2HXGV02cf6ASsBPhfsVIbVSDC9nbQed4iiY5eHttW9ZtMxHThuKZE1pnESbr8HRdgmFSa/Kn4OSNYuibg==}
     requiresBuild: true
+    dev: false
 
   /@radix-ui/primitive/1.0.0:
     resolution: {integrity: sha512-3e7rn8FDMin4CgeL7Z/49smCA3rFYY3Ha2rUQ7HRWFadS5iCRw08ZgVT1LaNTCNqgvrUiyczLflrVrF0SRQtNA==}
@@ -12595,6 +12596,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 4.11.0
+    dev: false
 
   /process-nextick-args/2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
