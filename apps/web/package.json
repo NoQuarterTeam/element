@@ -118,7 +118,7 @@
     "@typescript-eslint/parser": "5.56.0",
     "cssnano": "^5.1.15",
     "dotenv-cli": "^7.1.0",
-    "esbuild": "0.17.13",
+    "esbuild": "0.17.14",
     "esbuild-register": "3.4.2",
     "eslint": "8.36.0",
     "eslint-config-prettier": "8.8.0",
@@ -139,7 +139,7 @@
     "node": ">=16"
   },
   "resolutions": {
-    "esbuild": "0.17.13"
+    "esbuild": "0.17.14"
   },
   "pnpm": {
     "overrides": {
