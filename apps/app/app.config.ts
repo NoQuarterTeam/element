@@ -1,16 +1,17 @@
 import { ConfigContext, ExpoConfig } from "expo/config"
 
 const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
-  name: "Element",
+  name: "Element: Life Planner",
+  description: "A better way to organize your life",
   slug: "element-app",
-  scheme: "element",
+  scheme: "elementapp",
   owner: "noquarter",
-  version: "1.0.0",
+  version: "1.0.4",
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "automatic",
   splash: {
-    image: "./assets/icon.png",
+    image: "./assets/splash.png",
     resizeMode: "contain",
     backgroundColor: "#ffffff",
   },
@@ -20,13 +21,18 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "myelement.app",
+    icon: "./assets/icon.png",
+    bundleIdentifier: "co.noquarter.element",
+    infoPlist: {
+      CFBundleDisplayName: "Element",
+    },
   },
   android: {
     adaptiveIcon: {
       foregroundImage: "./assets/icon.png",
       backgroundColor: "#ffffff",
     },
+    package: "co.noquarter.element",
   },
   extra: {
     eas: {
