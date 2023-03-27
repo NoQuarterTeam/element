@@ -1,11 +1,11 @@
 import { useRouter } from "expo-router"
 import * as React from "react"
 import { KeyboardAvoidingView, ScrollView, View } from "react-native"
-import { Button } from "../../../src/components/Button"
-import { FormError } from "../../../src/components/FormError"
-import { FormInput } from "../../../src/components/FormInput"
-import { ScreenView } from "../../../src/components/ScreenView"
-import { api } from "../../../src/lib/utils/api"
+import { Button } from "../../../components/Button"
+import { FormError } from "../../../components/FormError"
+import { FormInput } from "../../../components/FormInput"
+import { ScreenView } from "../../../components/ScreenView"
+import { api } from "../../../lib/utils/api"
 
 export default function Account() {
   const { data } = api.auth.me.useQuery()

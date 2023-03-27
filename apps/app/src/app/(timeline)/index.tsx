@@ -5,7 +5,7 @@ import advancedFormat from "dayjs/plugin/advancedFormat"
 import * as Progress from "react-native-progress"
 import { Link, useRouter } from "expo-router"
 import { View, TouchableOpacity, Dimensions, useColorScheme } from "react-native"
-import { api, RouterOutputs } from "../../src/lib/utils/api"
+import { api, RouterOutputs } from "../../lib/utils/api"
 
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
 import Ionicons from "@expo/vector-icons/Ionicons"
@@ -14,9 +14,9 @@ import Octicons from "@expo/vector-icons/Octicons"
 import { safeReadableColor, formatDuration, join } from "@element/shared"
 import colors from "@element/tailwind-config/colors"
 
-import { Text } from "../../src/components/Text"
-import { Heading } from "../../src/components/Heading"
-import { useFeatures } from "../../src/lib/hooks/useFeatures"
+import { Text } from "../../components/Text"
+import { Heading } from "../../components/Heading"
+import { useFeatures } from "../../lib/hooks/useFeatures"
 
 dayjs.extend(advancedFormat)
 

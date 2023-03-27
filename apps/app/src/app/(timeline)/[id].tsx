@@ -4,8 +4,8 @@ import { useRouter, useSearchParams } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 import { KeyboardAvoidingView, TouchableOpacity, useColorScheme, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { TaskForm, TaskFormData } from "../../src/components/TaskForm"
-import { api, RouterOutputs } from "../../src/lib/utils/api"
+import { TaskForm, TaskFormData } from "../../components/TaskForm"
+import { api, RouterOutputs } from "../../lib/utils/api"
 import colors from "@element/tailwind-config/colors"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>

@@ -1,7 +1,7 @@
 import { Stack } from "expo-router"
 import { useColorScheme } from "react-native"
 
-import { AuthProvider } from "../../src/components/AuthProvider"
+import { AuthProvider } from "../../components/AuthProvider"
 
 // Timeline layout
 export default function RootLayout() {

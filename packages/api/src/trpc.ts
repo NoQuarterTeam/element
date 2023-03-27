@@ -10,7 +10,6 @@ export async function createContext({ req }: trpcFetch.FetchCreateContextFnOptio
   const headers = new Headers(req.headers)
   const authHeader = headers.get("authorization")
   const token = authHeader?.split("Bearer ")[1]
-  if (!token) throw new TRPCError({ code: "UNAUTHORIZED" })
   let user: User | null = null
   if (token) {
     const payload = decodeAuthToken(token)

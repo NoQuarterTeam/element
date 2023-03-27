@@ -1,11 +1,11 @@
 import { useRouter, useSearchParams } from "expo-router"
 import * as React from "react"
 import { View } from "react-native"
-import { Button } from "../../../src/components/Button"
-import { FormError } from "../../../src/components/FormError"
-import { FormInput } from "../../../src/components/FormInput"
-import { ModalView } from "../../../src/components/ModalView"
-import { api } from "../../../src/lib/utils/api"
+import { Button } from "../../../components/Button"
+import { FormError } from "../../../components/FormError"
+import { FormInput } from "../../../components/FormInput"
+import { ModalView } from "../../../components/ModalView"
+import { api } from "../../../lib/utils/api"
 
 export default function NewHabit() {
   const params = useSearchParams()

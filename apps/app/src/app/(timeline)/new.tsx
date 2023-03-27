@@ -3,8 +3,8 @@ import { useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 import { View } from "react-native"
 
-import { TaskForm, TaskFormData } from "../../src/components/TaskForm"
-import { api } from "../../src/lib/utils/api"
+import { TaskForm, TaskFormData } from "../../components/TaskForm"
+import { api } from "../../lib/utils/api"
 
 export default function NewTask() {
   const router = useRouter()

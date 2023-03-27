@@ -19,5 +19,7 @@
   "devDependencies": {
     "@types/node": "^18.15.3"
   },
-  "scripts": {}
+  "scripts": {
+    "postinstall": "cd ../.. && yarn build"
+  }
 }

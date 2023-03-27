@@ -5,6 +5,6 @@
     "jsx": "react-native",
     "types": ["nativewind/types"]
   },
-  "include": ["expo-plugins", "src", "app.config.ts", "index.ts", "app"],
+  "include": ["expo-plugins", "src", "app.config.ts", "index.ts"],
   "exclude": ["node_modules"]
 }

@@ -4,11 +4,11 @@ import { StatusBar } from "expo-status-bar"
 import { KeyboardAvoidingView, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 
-import { api, RouterOutputs } from "../../../src/lib/utils/api"
-import { Button } from "../../../src//components/Button"
-import { FormError } from "../../../src/components/FormError"
-import { FormInput } from "../../../src/components/FormInput"
-import { ModalView } from "../../../src/components/ModalView"
+import { api, RouterOutputs } from "../../../lib/utils/api"
+import { Button } from "../../../components/Button"
+import { FormError } from "../../../components/FormError"
+import { FormInput } from "../../../components/FormInput"
+import { ModalView } from "../../../components/ModalView"
 
 type Habit = NonNullable<RouterOutputs["habit"]["byId"]>
 export default function HabitDetail() {

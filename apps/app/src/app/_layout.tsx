@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar"
 import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { useFonts, Poppins_400Regular, Poppins_700Bold, Poppins_900Black, Poppins_600SemiBold } from "@expo-google-fonts/poppins"
 
-import { TRPCProvider } from "../src/lib/utils/api"
+import { TRPCProvider } from "../lib/utils/api"
 import { View } from "react-native"
 // import { useColorScheme } from "react-native"
 

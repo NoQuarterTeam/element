@@ -1,10 +1,10 @@
 import dayjs from "dayjs"
 import { View } from "react-native"
-import { ScreenView } from "../../../src/components/ScreenView"
-import { Text } from "../../../src/components/Text"
+import { ScreenView } from "../../../components/ScreenView"
+import { Text } from "../../../components/Text"
 import { MAX_FREE_TASKS, MAX_FREE_ELEMENTS, join } from "@element/shared"
-import { api } from "../../../src/lib/utils/api"
-import { Spinner } from "../../../src/components/Spinner"
+import { api } from "../../../lib/utils/api"
+import { Spinner } from "../../../components/Spinner"
 
 export default function Plan() {
   const { data, isLoading } = api.auth.myPlan.useQuery()

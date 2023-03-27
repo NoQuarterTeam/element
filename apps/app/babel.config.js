@@ -1,5 +1,6 @@
 module.exports = function (api) {
   api.cache(true)
+  process.env.EXPO_ROUTER_APP_ROOT = "../../apps/app/src/app"
   return {
     plugins: [
       ["@babel/plugin-transform-react-jsx", { runtime: "automatic" }],
