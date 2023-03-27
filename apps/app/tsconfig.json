@@ -1,7 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "jsx": "react-native"
+    "target": "ESNext",
+    "jsx": "react-native",
+    "types": ["nativewind/types"]
   },
-  "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./**/*.jsx", "./**/*.d.ts"]
+  "include": ["expo-plugins", "src", "app.config.ts", "index.ts", "app"],
+  "exclude": ["node_modules"]
 }

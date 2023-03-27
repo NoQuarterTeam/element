@@ -5,7 +5,7 @@ import advancedFormat from "dayjs/plugin/advancedFormat"
 import * as Progress from "react-native-progress"
 import { Link, useRouter } from "expo-router"
 import { View, TouchableOpacity, Dimensions, useColorScheme } from "react-native"
-import { api, RouterOutputs } from "../../lib/utils/api"
+import { api, RouterOutputs } from "../../src/lib/utils/api"
 
 import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist"
 import Ionicons from "@expo/vector-icons/Ionicons"
@@ -14,15 +14,15 @@ import Octicons from "@expo/vector-icons/Octicons"
 import { safeReadableColor, formatDuration, join } from "@element/shared"
 import colors from "@element/tailwind-config/colors"
 
-import { Text } from "../../components/Text"
-import { Heading } from "../../components/Heading"
-import { useFeatures } from "../../lib/hooks/useFeatures"
+import { Text } from "../../src/components/Text"
+import { Heading } from "../../src/components/Heading"
+import { useFeatures } from "../../src/lib/hooks/useFeatures"
 
 dayjs.extend(advancedFormat)
 
 export default function Timeline() {
   const [date, setDate] = React.useState(dayjs().format("YYYY-MM-DD"))
-  const { data: taskData, isLoading } = api.task.byDate.useQuery(date, { staleTime: 10000 })
+  const { data: taskData, isLoading } = api.task.byDate.useQuery({ date }, { staleTime: 10000 })
   const router = useRouter()
   const dateLabel = dayjs(date).isSame(dayjs(), "date")
     ? "Today"
@@ -38,8 +38,8 @@ export default function Timeline() {
 
   React.useEffect(() => {
     // prefetch next and previous dates
-    utils.task.byDate.prefetch(dayjs(date).subtract(1, "day").format("YYYY-MM-DD"))
-    utils.task.byDate.prefetch(dayjs(date).add(1, "day").format("YYYY-MM-DD"))
+    utils.task.byDate.prefetch({ date: dayjs(date).subtract(1, "day").format("YYYY-MM-DD") })
+    utils.task.byDate.prefetch({ date: dayjs(date).add(1, "day").format("YYYY-MM-DD") })
     utils.habit.progressCompleteByDate.prefetch({ date: dayjs(date).subtract(1, "day").format("YYYY-MM-DD") })
   }, [date])
 
@@ -156,7 +156,7 @@ function TaskItem({
 }) {
   const [isHovered, setIsHovered] = React.useState(false)
   const { mutate: toggleComplete } = api.task.toggleComplete.useMutation({ onMutate: onToggleComplete })
-  const handleToggleComplete = () => toggleComplete(task.id)
+  const handleToggleComplete = () => toggleComplete({ id: task.id })
   const router = useRouter()
 
   const colorScheme = useColorScheme()

@@ -3,8 +3,8 @@ import { useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 import { View } from "react-native"
 
-import { TaskForm, TaskFormData } from "../../components/TaskForm"
-import { api } from "../../lib/utils/api"
+import { TaskForm, TaskFormData } from "../../src/components/TaskForm"
+import { api } from "../../src/lib/utils/api"
 
 export default function NewTask() {
   const router = useRouter()
@@ -12,7 +12,7 @@ export default function NewTask() {
   const utils = api.useContext()
   const create = api.task.create.useMutation({
     onSuccess: (createdTask) => {
-      utils.task.byDate.setData(dayjs(createdTask.date).format("YYYY-MM-DD"), (old) =>
+      utils.task.byDate.setData({ date: dayjs(createdTask.date).format("YYYY-MM-DD") }, (old) =>
         old ? [...old, createdTask] : [createdTask],
       )
       router.back()

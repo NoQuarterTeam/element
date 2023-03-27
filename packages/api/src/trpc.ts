@@ -8,10 +8,12 @@ import { decodeAuthToken } from "./lib/jwt"
 
 export async function createContext({ req }: trpcFetch.FetchCreateContextFnOptions) {
   const headers = new Headers(req.headers)
-  const authToken = headers.get("authorization")
+  const authHeader = headers.get("authorization")
+  const token = authHeader?.split("Bearer ")[1]
+  if (!token) throw new TRPCError({ code: "UNAUTHORIZED" })
   let user: User | null = null
-  if (authToken) {
-    const payload = decodeAuthToken(authToken.split("Bearer ")[1])
+  if (token) {
+    const payload = decodeAuthToken(token)
     user = await prisma.user.findUnique({ where: { id: payload.id } })
   }
   return { req, prisma, user }
