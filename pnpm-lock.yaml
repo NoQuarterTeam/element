@@ -387,8 +387,8 @@ importers:
         specifier: ^0.32.0
         version: 0.32.0
       stripe:
-        specifier: 11.16.0
-        version: 11.16.0
+        specifier: 11.17.0
+        version: 11.17.0
       tailwind-merge:
         specifier: ^1.10.0
         version: 1.10.0
@@ -14495,8 +14495,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /stripe@11.16.0:
-    resolution: {integrity: sha512-Ej1ZtbrMw+Z7L8Kxj80sDNF0E/lPypY2nwymU/wGcOjn7CppTa2HXxPTsQRQ8U0MSVRcwRWyGMrizQWuaUqVGw==}
+  /stripe@11.17.0:
+    resolution: {integrity: sha512-nDH5afq2J5x8cp0b3Uf0h4U7mLLntDLXA91/4cg+LRhMOrDc2BI6xOGjYpI2uwRG80PU16pqhZh9oVupvCG/pQ==}
     engines: {node: '>=12.*'}
     dependencies:
       '@types/node': 18.15.3
