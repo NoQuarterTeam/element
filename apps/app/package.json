@@ -51,7 +51,7 @@
     "react-native-svg": "13.4.0",
     "reanimated-color-picker": "^1.5.1",
     "superjson": "^1.12.2",
-    "zustand": "4.3.6"
+    "zustand": "4.3.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
