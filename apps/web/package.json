@@ -94,7 +94,7 @@
     "tailwind-merge": "^1.10.0",
     "tailwindcss-radix": "^2.8.0",
     "zod": "3.21.4",
-    "zustand": "4.3.6"
+    "zustand": "4.3.7"
   },
   "devDependencies": {
     "@element/tailwind-config": "*",
