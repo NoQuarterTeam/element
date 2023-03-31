@@ -99,7 +99,7 @@
   "devDependencies": {
     "@element/tailwind-config": "*",
     "@remix-run/dev": "1.14.3",
-    "@remix-run/eslint-config": "1.14.3",
+    "@remix-run/eslint-config": "1.15.0",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@types/bcrypt": "5.0.0",
