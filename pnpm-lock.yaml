@@ -59,8 +59,8 @@ importers:
         specifier: ^10.9.0
         version: 10.16.0
       class-variance-authority:
-        specifier: ^0.4.0
-        version: 0.4.0(typescript@4.9.5)
+        specifier: ^0.5.0
+        version: 0.5.0(typescript@4.9.5)
       dayjs:
         specifier: 1.11.7
         version: 1.11.7
@@ -294,8 +294,8 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0
       class-variance-authority:
-        specifier: ^0.4.0
-        version: 0.4.0(typescript@4.9.5)
+        specifier: ^0.5.0
+        version: 0.5.0(typescript@4.9.5)
       compression:
         specifier: 1.7.4
         version: 1.7.4
@@ -6029,10 +6029,11 @@ packages:
       static-extend: 0.1.2
     dev: false
 
-  /class-variance-authority@0.4.0(typescript@4.9.5):
-    resolution: {integrity: sha512-74enNN8O9ZNieycac/y8FxqgyzZhZbxmCitAtAeUrLPlxjSd5zA7LfpprmxEcOmQBnaGs5hYhiSGnJ0mqrtBLQ==}
+  /class-variance-authority@0.5.0(typescript@4.9.5):
+    resolution: {integrity: sha512-zxROBVgaulmmT1DHnd+MdOqpsYePlllxiA1/lI++bud0AkDJyDKII/kXzOw78iPO7Thfg9Jh0hGNcNw6JVkbWA==}
+    deprecated: Critical bug fixed in v0.5.1
     peerDependencies:
-      typescript: '>= 4.5.5 < 5'
+      typescript: '>= 4.5.5 < 6'
     peerDependenciesMeta:
       typescript:
         optional: true
