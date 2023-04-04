@@ -137,8 +137,8 @@ importers:
         specifier: 13.4.0
         version: 13.4.0(react-native@0.71.3)(react@18.2.0)
       reanimated-color-picker:
-        specifier: ^1.5.1
-        version: 1.5.1(expo@48.0.10)(react-native-gesture-handler@2.9.0)(react-native-reanimated@2.14.4)
+        specifier: ^2.0.0
+        version: 2.0.0(expo@48.0.10)(react-native-gesture-handler@2.9.0)(react-native-reanimated@2.14.4)
       superjson:
         specifier: ^1.12.2
         version: 1.12.2
@@ -13571,8 +13571,8 @@ packages:
     resolution: {integrity: sha512-k2d6ACCkiNYz222Fs/iNze30rRJ1iIicW7JuX/7/cozvih6YCkFZH+J6mAFDVgv0dRBaAyr4jDqC95R2y4IADg==}
     dev: false
 
-  /reanimated-color-picker@1.5.1(expo@48.0.10)(react-native-gesture-handler@2.9.0)(react-native-reanimated@2.14.4):
-    resolution: {integrity: sha512-bwva6TAILXIhbNmh3iMbkXlP4KRBRLqEngHHpGPadKCFneeU/0651inD6NTKF0f5PFKpVURiMO/PMTPtRWct2w==}
+  /reanimated-color-picker@2.0.0(expo@48.0.10)(react-native-gesture-handler@2.9.0)(react-native-reanimated@2.14.4):
+    resolution: {integrity: sha512-E5R4IcQbyvfcM11aBCk3R9HA/78HyHSIFCsuf8VmHW7apGwXVW1o/XxiGm9jd8x05EmIlxLYELQ36EBQDVK63Q==}
     peerDependencies:
       expo: '>=44.0.0'
       react-native-gesture-handler: '>=2.0.0'
