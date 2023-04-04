@@ -25,7 +25,7 @@
     "@trpc/server": "^10.9.0",
     "class-variance-authority": "^0.5.0",
     "dayjs": "1.11.7",
-    "expo": "48.0.9",
+    "expo": "48.0.10",
     "expo-application": "~5.1.1",
     "expo-constants": "~14.2.1",
     "expo-font": "~11.1.1",
