@@ -6,5 +6,4 @@ export const INVOICE_STATUS: { [key in Stripe.Invoice.Status]: string } = {
   uncollectible: "Uncollectible",
   void: "Void",
   draft: "Draft",
-  deleted: "Deleted",
 }
