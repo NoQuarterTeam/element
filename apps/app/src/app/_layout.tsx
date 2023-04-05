@@ -20,7 +20,6 @@ export default function RootLayout() {
   })
   const { isDoneChecking, isNewUpdateAvailable } = useCheckExpoUpdates()
 
-  console.log(isDoneChecking)
   // Prevent rendering until the font has loaded
   if (!fontsLoaded || !isDoneChecking) return <SplashScreen />
 
