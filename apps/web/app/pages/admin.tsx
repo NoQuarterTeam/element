@@ -150,21 +150,21 @@ export default function Admin() {
         </div>
         <div className="stack">
           <h4 className="text-lg">Latest 5 users</h4>
-          <div className="grid grid-cols-10 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+          <div className="grid grid-cols-9 px-4 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
             <p className="col-span-2">Name</p>
             <p className="col-span-4">Email</p>
             <p className="col-span-1">Tasks</p>
-            <p className="col-span-2">Subscription</p>
+            <p className="col-span-1">Subscription</p>
             <p className="col-span-1 text-right">Signed up</p>
           </div>
 
           <div className="stack">
             {users.map((user) => (
-              <div className="grid grid-cols-10 rounded-sm border border-gray-100 p-4 text-sm dark:border-gray-700" key={user.id}>
+              <div className="grid grid-cols-9 rounded-sm border border-gray-100 p-4 text-sm dark:border-gray-700" key={user.id}>
                 <p className="col-span-2 truncate">{user.firstName}</p>
                 <p className="col-span-4 truncate">{user.email}</p>
                 <p className="col-span-1">{user._count.tasks}</p>
-                <div className="col-span-2">
+                <div className="col-span-1">
                   {user.stripeSubscriptionId ? <Badge colorScheme="red">Pro</Badge> : <Badge>Free</Badge>}
                 </div>
                 <p className="col-span-1 flex justify-end">{dayjs(user.createdAt).format("DD/MM/YYYY")}</p>
