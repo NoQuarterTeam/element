@@ -82,7 +82,7 @@ function ProfileLink(props: { isFirst?: boolean; isLast?: boolean; href: string;
     <Link href={props.href} asChild>
       <TouchableOpacity
         className={join(
-          "flex flex-row items-center justify-between border-x border-t border-gray-100 py-3 px-4 dark:border-gray-600",
+          "flex flex-row items-center justify-between border-x border-t border-gray-100 py-2 px-4 dark:border-gray-600",
           props.isFirst && "rounded-t-sm",
           props.isLast && "rounded-b-sm border-b",
         )}
