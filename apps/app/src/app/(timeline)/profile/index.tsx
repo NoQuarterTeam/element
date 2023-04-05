@@ -53,7 +53,6 @@ export default function Profile() {
             <Text>{data?.email}</Text>
           </View>
         </View>
-
         <View>
           <ProfileLink isFirst href="profile/account">
             Account

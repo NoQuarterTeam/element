@@ -14,7 +14,6 @@ export function NewUpdate() {
     try {
       setIsLoading(true)
       setError(false)
-      await new Promise((resolve) => setTimeout(resolve, 1000))
       await Updates.fetchUpdateAsync()
       await Updates.reloadAsync()
     } catch {

@@ -7,8 +7,10 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   scheme: "elementapp",
   owner: "noquarter",
   version: "1.0.4",
+  jsEngine: "hermes",
   orientation: "portrait",
   icon: "./assets/icon.png",
+
   userInterfaceStyle: "automatic",
   splash: {
     image: "./assets/splash.png",
@@ -17,6 +19,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   },
   updates: {
     fallbackToCacheTimeout: 0,
+    checkAutomatically: "ON_ERROR_RECOVERY",
   },
   assetBundlePatterns: ["**/*"],
   ios: {
