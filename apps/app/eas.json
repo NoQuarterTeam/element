@@ -1,9 +1,17 @@
 {
   "build": {
     "preview": {
+      "channel": "development",
       "distribution": "internal"
     },
-    "production": {}
+    "staging": {
+      "channel": "staging",
+      "distribution": "store"
+    },
+    "production": {
+      "channel": "production",
+      "distribution": "store"
+    }
   },
   "submit": {
     "production": {}

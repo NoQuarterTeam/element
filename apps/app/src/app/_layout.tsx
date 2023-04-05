@@ -30,8 +30,8 @@ export default function RootLayout() {
         const { isNew } = await Updates.fetchUpdateAsync()
         if (!isNew) return setisFinishedCheckingUpdates(true)
         await Updates.reloadAsync()
-      } catch (e) {
-        // console.log(e);
+      } catch {
+        return setisFinishedCheckingUpdates(true)
       }
     }
     expoUpdates()
