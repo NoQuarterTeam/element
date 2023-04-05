@@ -26,6 +26,9 @@ importers:
       '@element/shared':
         specifier: '*'
         version: link:../../packages/shared
+      '@element/tailwind-config':
+        specifier: '*'
+        version: link:../../packages/config/tailwind
       '@expo-google-fonts/poppins':
         specifier: ^0.2.3
         version: 0.2.3
@@ -153,9 +156,6 @@ importers:
       '@babel/runtime':
         specifier: ^7.20.0
         version: 7.21.0
-      '@element/tailwind-config':
-        specifier: '*'
-        version: link:../../packages/config/tailwind
       '@expo/config-plugins':
         specifier: ^6.0.0
         version: 6.0.1
