@@ -16,6 +16,7 @@ import type { TimelineTask } from "~/pages/api+/tasks"
 
 import { TaskItem } from "./TaskItem"
 import { IconButton } from "./ui/IconButton"
+import { TASK_CACHE_KEY } from "~/lib/hooks/useTimelineTasks"
 
 interface Props {
   day: string
@@ -59,13 +60,13 @@ function _Day(props: Props) {
           forward = dayjs(props.day).add(1, "w").format("YYYY-MM-DD")
         }
         // update tasks
-        const res = await client.fetchQuery<TimelineTask[]>(["tasks", { back, forward, elementIds }], async () => {
+        const res = await client.fetchQuery<TimelineTask[]>([TASK_CACHE_KEY, { back, forward, elementIds }], async () => {
           const response = await fetch(`/api/tasks?back=${back}&forward=${forward}&${selectedUrlElements(elementIds)}`)
           if (!response.ok) throw new Error("Failed to load tasks")
           return response.json() as Promise<TimelineTask[]>
         })
-        const oldTasks = client.getQueryData<TimelineTask[]>(["tasks"]) || []
-        client.setQueryData(["tasks"], [...oldTasks, ...(res || [])])
+        const oldTasks = client.getQueryData<TimelineTask[]>([TASK_CACHE_KEY]) || []
+        client.setQueryData([TASK_CACHE_KEY], [...oldTasks, ...(res || [])])
         setDate(props.day)
       }
     },
