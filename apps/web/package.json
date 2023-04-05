@@ -47,7 +47,7 @@
     "@react-email/html": "0.0.4",
     "@react-email/img": "0.0.5",
     "@react-email/link": "0.0.5",
-    "@react-email/render": "0.0.6",
+    "@react-email/render": "0.0.7",
     "@react-email/tailwind": "0.0.7",
     "@react-email/text": "0.0.5",
     "@remix-run/express": "1.15.0",
