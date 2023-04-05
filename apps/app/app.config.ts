@@ -6,7 +6,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   slug: "element-app",
   scheme: "elementapp",
   owner: "noquarter",
-  version: "1.0.4",
+  version: "1.0.5",
   jsEngine: "hermes",
   orientation: "portrait",
   icon: "./assets/icon.png",
