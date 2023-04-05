@@ -33,7 +33,6 @@ export default function Login() {
   })
   const [email, setEmail] = React.useState("")
   const [password, setPassword] = React.useState("")
-
   return (
     <KeyboardAvoidingView>
       <ScrollView className="h-full space-y-3 px-4 pt-16">
