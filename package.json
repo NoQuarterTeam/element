@@ -1,10 +1,6 @@
 {
   "name": "@elemment/root",
   "private": true,
-  "workspaces": [
-    "./apps/**/**",
-    "./packages/**/**"
-  ],
   "dependencies": {
     "turbo": "^1.8.3"
   },
