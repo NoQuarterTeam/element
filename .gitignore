@@ -19,3 +19,5 @@ tailwind.css
 .cache
 .data/*
 .data
+.turbo/*
+turbo-build.log
