@@ -3,13 +3,14 @@ lockfileVersion: '6.0'
 importers:
 
   .:
+    dependencies:
+      turbo:
+        specifier: ^1.8.3
+        version: 1.8.3
     devDependencies:
       prettier:
         specifier: ^2.8.4
         version: 2.8.4
-      turbo:
-        specifier: ^1.8.3
-        version: 1.8.3
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
@@ -15343,7 +15344,7 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
-    dev: true
+    dev: false
     optional: true
 
   /turbo-darwin-arm64@1.8.3:
@@ -15351,7 +15352,7 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
-    dev: true
+    dev: false
     optional: true
 
   /turbo-linux-64@1.8.3:
@@ -15359,7 +15360,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: true
+    dev: false
     optional: true
 
   /turbo-linux-arm64@1.8.3:
@@ -15367,7 +15368,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: true
+    dev: false
     optional: true
 
   /turbo-windows-64@1.8.3:
@@ -15375,7 +15376,7 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
-    dev: true
+    dev: false
     optional: true
 
   /turbo-windows-arm64@1.8.3:
@@ -15383,7 +15384,7 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
-    dev: true
+    dev: false
     optional: true
 
   /turbo@1.8.3:
@@ -15397,7 +15398,7 @@ packages:
       turbo-linux-arm64: 1.8.3
       turbo-windows-64: 1.8.3
       turbo-windows-arm64: 1.8.3
-    dev: true
+    dev: false
 
   /tw-to-css@0.0.11:
     resolution: {integrity: sha512-uIJuEBIwyHzZg9xyGyEgDWHIkbAwEC4bhEHQ4THPuN5SToR7Zlhes5ffMjqtrv+WdtTmudTHTdc9VwUldy0FxQ==}
