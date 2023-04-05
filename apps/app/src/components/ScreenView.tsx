@@ -18,6 +18,7 @@ export function ScreenView(props: Props) {
         <Link href="../" className="mb-1 p-2" asChild>
           <Feather name="chevron-left" size={24} color={colorScheme === "dark" ? "white" : "black"} />
         </Link>
+
         <Heading className="text-3xl dark:text-white">{props.title}</Heading>
       </View>
       {props.children}

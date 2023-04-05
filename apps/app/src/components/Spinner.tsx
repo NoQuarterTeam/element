@@ -8,13 +8,14 @@ interface Props extends Progress.CirclePropTypes {
 
 export function Spinner({ size = 20, color, ...props }: Props) {
   const colorScheme = useColorScheme()
+
   return (
     <Progress.Circle
       indeterminate
-      borderWidth={3}
+      borderWidth={2}
       {...props}
       size={size}
-      color={color || colorScheme === "dark" ? "white" : "black"}
+      color={!!color ? color : colorScheme === "dark" ? "white" : "black"}
     />
   )
 }

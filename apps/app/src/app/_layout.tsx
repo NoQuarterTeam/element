@@ -1,14 +1,13 @@
-import * as React from "react"
-import { SafeAreaProvider } from "react-native-safe-area-context"
+import { Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold, Poppins_900Black, useFonts } from "@expo-google-fonts/poppins"
+import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { Slot, SplashScreen } from "expo-router"
 import { StatusBar } from "expo-status-bar"
-import * as Updates from "expo-updates"
-import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { View } from "react-native"
-import { useFonts, Poppins_400Regular, Poppins_700Bold, Poppins_900Black, Poppins_600SemiBold } from "@expo-google-fonts/poppins"
+import { SafeAreaProvider } from "react-native-safe-area-context"
 
+import { NewUpdate } from "../components/NewUpdate"
+import { useCheckExpoUpdates } from "../lib/hooks/useCheckExpoUpdates"
 import { TRPCProvider } from "../lib/utils/api"
-import { IS_DEV } from "../lib/config"
 
 // This is the main layout of the app
 // It wraps your pages with the providers they need
@@ -19,34 +18,17 @@ export default function RootLayout() {
     Poppins_700Bold,
     Poppins_900Black,
   })
-  const [isFinishedCheckingUpdates, setisFinishedCheckingUpdates] = React.useState(false)
+  const { isDoneChecking, isNewUpdateAvailable } = useCheckExpoUpdates()
 
-  React.useEffect(() => {
-    async function expoUpdates() {
-      try {
-        if (IS_DEV) return setisFinishedCheckingUpdates(true)
-        const { isAvailable } = await Updates.checkForUpdateAsync()
-        if (!isAvailable) return setisFinishedCheckingUpdates(true)
-        const { isNew } = await Updates.fetchUpdateAsync()
-        if (!isNew) return setisFinishedCheckingUpdates(true)
-        await Updates.reloadAsync()
-      } catch {
-        return setisFinishedCheckingUpdates(true)
-      }
-    }
-    expoUpdates()
-  }, [])
-
+  console.log(isDoneChecking)
   // Prevent rendering until the font has loaded
-  if (!fontsLoaded || !isFinishedCheckingUpdates) return <SplashScreen />
+  if (!fontsLoaded || !isDoneChecking) return <SplashScreen />
 
   return (
     <ActionSheetProvider>
       <TRPCProvider>
         <SafeAreaProvider>
-          <View className="flex-1 bg-white dark:bg-black">
-            <Slot />
-          </View>
+          <View className="flex-1 bg-white dark:bg-black">{isNewUpdateAvailable ? <NewUpdate /> : <Slot />}</View>
           <StatusBar />
         </SafeAreaProvider>
       </TRPCProvider>
