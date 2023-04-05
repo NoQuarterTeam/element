@@ -20,6 +20,6 @@
     "@types/node": "^18.15.3"
   },
   "scripts": {
-    "postinstall": "cd ../.. && yarn build"
+    "postinstall1": "cd ../.. && yarn build"
   }
 }
