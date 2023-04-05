@@ -1,16 +1,15 @@
 import * as Application from "expo-application"
-import * as Updates from "expo-updates"
 
 function getEnvironment() {
-  if (Updates.channel?.startsWith("production")) {
-    return {
-      ENV: "production",
-      WEB_URL: "https://myelement.app",
-    }
-  } else {
+  if (__DEV__) {
     return {
       ENV: "development",
       WEB_URL: "http://localhost:3000",
+    }
+  } else {
+    return {
+      ENV: "production",
+      WEB_URL: "https://myelement.app",
     }
   }
 }

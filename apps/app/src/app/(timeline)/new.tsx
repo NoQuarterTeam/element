@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import { useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
-import { View } from "react-native"
+import { KeyboardAvoidingView, ScrollView, View } from "react-native"
 
 import { TaskForm, TaskFormData } from "../../components/TaskForm"
 import { api } from "../../lib/utils/api"
@@ -31,12 +31,16 @@ export default function NewTask() {
 
   return (
     <View className="px-4 pt-6">
-      <TaskForm
-        onSubmit={handleCreate}
-        formError={create.error?.data?.formError}
-        fieldErrors={create.error?.data?.zodError?.fieldErrors}
-        isLoading={create.isLoading}
-      />
+      <KeyboardAvoidingView behavior="height" enabled keyboardVerticalOffset={0}>
+        <ScrollView className="space-y-4" contentContainerStyle={{ minHeight: "100%" }} showsVerticalScrollIndicator={false}>
+          <TaskForm
+            onSubmit={handleCreate}
+            formError={create.error?.data?.formError}
+            fieldErrors={create.error?.data?.zodError?.fieldErrors}
+            isLoading={create.isLoading}
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
       <StatusBar style="light" />
     </View>
   )
