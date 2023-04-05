@@ -10,7 +10,6 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   jsEngine: "hermes",
   orientation: "portrait",
   icon: "./assets/icon.png",
-
   userInterfaceStyle: "automatic",
   splash: {
     image: "./assets/splash.png",
