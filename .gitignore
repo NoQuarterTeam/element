@@ -22,3 +22,4 @@ tailwind.css
 .turbo/*
 turbo-build.log
 turbo-*.log
+.expo
