@@ -22,9 +22,9 @@ export default function RootLayout() {
   const [isFinishedCheckingUpdates, setisFinishedCheckingUpdates] = React.useState(false)
 
   React.useEffect(() => {
-    if (IS_DEV) return
     async function expoUpdates() {
       try {
+        if (IS_DEV) return setisFinishedCheckingUpdates(true)
         const { isAvailable } = await Updates.checkForUpdateAsync()
         if (!isAvailable) return setisFinishedCheckingUpdates(true)
         const { isNew } = await Updates.fetchUpdateAsync()

@@ -59,7 +59,7 @@ export default function Timeline() {
           <View>
             <TouchableOpacity
               onPress={() => setDate(dayjs(date).subtract(1, "day").format("YYYY-MM-DD"))}
-              className="rounded-full border border-gray-100 p-3 dark:border-gray-500"
+              className="sq-10 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-500"
             >
               <Ionicons name="chevron-back" color={colorScheme === "dark" ? "white" : "black"} />
             </TouchableOpacity>
@@ -68,7 +68,7 @@ export default function Timeline() {
           <View>
             <TouchableOpacity
               onPress={() => setDate(dayjs(date).add(1, "day").format("YYYY-MM-DD"))}
-              className="flex items-end rounded-full border border-gray-100 p-3 dark:border-gray-500"
+              className="sq-10 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-500"
             >
               <Ionicons name="chevron-forward" color={colorScheme === "dark" ? "white" : "black"} />
             </TouchableOpacity>
@@ -87,7 +87,7 @@ export default function Timeline() {
         <View className="flex-1 flex-row">
           <TouchableOpacity
             onPress={() => setDate(dayjs().format("YYYY-MM-DD"))}
-            className="rounded-full border border-gray-100 p-4 dark:border-gray-600"
+            className="sq-14 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-600"
           >
             <Feather name="calendar" size={24} color={colorScheme === "dark" ? "white" : "black"} />
           </TouchableOpacity>
@@ -99,7 +99,7 @@ export default function Timeline() {
         ) : null}
         <View className="flex-1 flex-row justify-end">
           <Link href={`new?date=${date}`} asChild>
-            <TouchableOpacity className="bg-primary-500/90 rounded-full p-4">
+            <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
               <Feather name="plus" size={24} />
             </TouchableOpacity>
           </Link>
@@ -232,7 +232,7 @@ const Habits = React.memo(function _Habits({ date }: { date: string }) {
     <TouchableOpacity
       onPress={() => router.push({ pathname: "habits", params: { date } })}
       activeOpacity={0.8}
-      className="flex items-center justify-center rounded-full border border-gray-100 p-3 dark:border-gray-600"
+      className="sq-14 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-600"
     >
       <Progress.Circle
         thickness={5}
