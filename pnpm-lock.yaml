@@ -63,7 +63,7 @@ importers:
         specifier: 1.11.7
         version: 1.11.7
       expo:
-        specifier: 48.0.10
+        specifier: ~48.0.10
         version: 48.0.10(@babel/core@7.21.3)
       expo-application:
         specifier: ~5.1.1
