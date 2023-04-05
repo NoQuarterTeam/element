@@ -1,4 +1,4 @@
-import type { ActionArgs, MetaFunction } from "@remix-run/node"
+import type { ActionArgs, V2_MetaFunction } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Link, useSearchParams } from "@remix-run/react"
 import { z } from "zod"
@@ -10,8 +10,8 @@ import { badRequest } from "~/lib/remix"
 import { comparePasswords } from "~/services/auth/password.server"
 import { getUserSession } from "~/services/session/session.server"
 
-export const meta: MetaFunction = () => {
-  return { title: "Login" }
+export const meta: V2_MetaFunction = () => {
+  return [{ title: "Login" }]
 }
 export const headers = () => {
   return {

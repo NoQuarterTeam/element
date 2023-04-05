@@ -1,5 +1,5 @@
 import { RiMenuLine, RiMoonLine, RiSunLine } from "react-icons/ri"
-import type { LoaderArgs, MetaFunction } from "@remix-run/node"
+import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Link, useFetcher } from "@remix-run/react"
@@ -13,8 +13,8 @@ import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "@element/shared"
 import { useTheme } from "~/lib/theme"
 import { getUserSession } from "~/services/session/session.server"
 
-export const meta: MetaFunction = () => {
-  return { title: "Element" }
+export const meta: V2_MetaFunction = () => {
+  return [{ title: "Element" }]
 }
 
 export const loader = async ({ request }: LoaderArgs) => {

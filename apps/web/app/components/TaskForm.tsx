@@ -461,6 +461,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                 <Tooltip label="Delete">
                   <IconButton
                     variant="outline"
+                    isLoading={deleteSubmit.state === "submitting"}
                     icon={<RiDeleteBinLine className="fill-red-500" />}
                     aria-label="delete task"
                     onClick={task.repeat || task.repeatParentId ? deleteModalProps.onOpen : () => handleDelete(false)}
@@ -468,11 +469,23 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                 </Tooltip>
                 {task.date && (
                   <Tooltip label="Add to backlog">
-                    <IconButton variant="outline" icon={<RiTimeLine />} aria-label="Add to backlog" onClick={handleToBacklog} />
+                    <IconButton
+                      isLoading={addToBacklogSubmit.state === "submitting"}
+                      variant="outline"
+                      icon={<RiTimeLine />}
+                      aria-label="Add to backlog"
+                      onClick={handleToBacklog}
+                    />
                   </Tooltip>
                 )}
                 <Tooltip label="Duplicate">
-                  <IconButton variant="outline" icon={<RiFileCopyLine />} aria-label="duplicate task" onClick={handleDuplicate} />
+                  <IconButton
+                    isLoading={duplicateSubmit.state === "submitting"}
+                    variant="outline"
+                    icon={<RiFileCopyLine />}
+                    aria-label="duplicate task"
+                    onClick={handleDuplicate}
+                  />
                 </Tooltip>
               </div>
 

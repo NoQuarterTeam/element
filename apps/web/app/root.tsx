@@ -1,18 +1,8 @@
 import * as React from "react"
 import * as Tooltip from "@radix-ui/react-tooltip"
-import type { LinksFunction, LoaderArgs, MetaFunction, SerializeFrom } from "@remix-run/node"
+import type { LinksFunction, LoaderArgs, SerializeFrom, V2_MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useCatch,
-  useLoaderData,
-  useMatches,
-} from "@remix-run/react"
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData, useMatches } from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 import { join } from "@element/shared"
@@ -27,8 +17,8 @@ import { getFlashSession } from "./services/session/flash.server"
 import { getThemeSession } from "./services/session/theme.server"
 import { FULL_WEB_URL } from "./lib/config.server"
 
-export const meta: MetaFunction = () => {
-  return { title: "Element" }
+export const meta: V2_MetaFunction = () => {
+  return [{ title: "Element" }]
 }
 
 export const links: LinksFunction = () => {
@@ -84,35 +74,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
       <div className="vstack h-screen justify-center p-20">
         <img alt="logo" src="/logo.png" className="sq-24" />
         <h1>Oops, there was an error.</h1>
-        <p>{error.message}</p>
-      </div>
-    </Document>
-  )
-}
-
-export function CatchBoundary() {
-  let caught = useCatch()
-  let message
-  switch (caught.status) {
-    case 401:
-      message = <p>Oops! Looks like you tried to visit a page that you do not have access to.</p>
-      break
-    case 404:
-      message = <p>Oops! Looks like you tried to visit a page that does not exist.</p>
-      break
-
-    default:
-      throw new Error(caught.data || caught.statusText)
-  }
-
-  return (
-    <Document theme="dark">
-      <div className="vstack h-screen justify-center p-20">
-        <img alt="logo" src="/logo.png" className="sq-24" />
-        <h1>
-          {caught.status}: {caught.statusText}
-        </h1>
-        {message}
+        {/* <p>{error.message}</p> */}
       </div>
     </Document>
   )

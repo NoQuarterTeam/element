@@ -9,10 +9,10 @@ export function useFetcherSubmit<T>(props: Props<T>) {
 
   React.useEffect(() => {
     if (!fetcher.data) return
-    if (fetcher.type === "actionReload" && fetcher.data) {
+    if (fetcher.state === "loading" && fetcher.data !== null) {
       props.onSuccess?.(fetcher.data)
     }
-  }, [fetcher.type, fetcher.data])
+  }, [fetcher.formMethod, fetcher.data])
 
   return fetcher
 }

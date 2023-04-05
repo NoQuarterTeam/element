@@ -35,7 +35,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(f
       {...props}
       className={merge(buttonStyles({ colorScheme, rounded, disabled, variant }), iconbuttonStyles({ size }), props.className)}
     >
-      <div className="center h-full w-full">{isLoading ? <Spinner /> : icon}</div>
+      <div className="center h-full w-full">{isLoading ? <Spinner size="xs" /> : icon}</div>
     </button>
   )
 })
