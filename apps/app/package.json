@@ -48,7 +48,7 @@
     "react-native-modal-datetime-picker": "^14.0.1",
     "react-native-progress": "^5.0.0",
     "react-native-reanimated": "2.14.4",
-    "react-native-safe-area-context": "4.5.0",
+    "react-native-safe-area-context": "4.5.1",
     "react-native-screens": "~3.20.0",
     "react-native-svg": "13.4.0",
     "reanimated-color-picker": "^1.5.1",
