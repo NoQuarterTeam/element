@@ -1,5 +1,5 @@
 import { Switch, View } from "react-native"
-import colors from "@element/tailwind-config/colors"
+import colors from "@element/tailwind-config/src/colors"
 import { ScreenView } from "../../../components/ScreenView"
 import { Text } from "../../../components/Text"
 import { useFeatures } from "../../../lib/hooks/useFeatures"

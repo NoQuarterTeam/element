@@ -11,10 +11,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@element/api": "*",
-    "@element/database": "*",
-    "@element/shared": "*",
-    "@element/tailwind-config": "*",
+    "@element/api": "workspace:*",
+    "@element/database": "workspace:*",
+    "@element/shared": "workspace:*",
+    "@element/tailwind-config": "workspace:*",
     "@expo-google-fonts/poppins": "^0.2.3",
     "@expo/react-native-action-sheet": "^4.0.1",
     "@react-native-async-storage/async-storage": "1.17.11",

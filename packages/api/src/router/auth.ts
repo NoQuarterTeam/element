@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server"
 import { faker } from "@faker-js/faker"
 import { z } from "zod"
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc"
 import { createAuthToken } from "../lib/jwt"
 import { createImageUrl } from "../lib/s3"
@@ -24,12 +24,7 @@ export const authRouter = createTRPCRouter({
     const lastName = faker.name.lastName()
     const email = `${firstName}.${lastName}${new Date().getMilliseconds()}@myelement.app`.toLowerCase()
     const password = await hashPassword(faker.internet.password())
-    const data = {
-      firstName,
-      lastName,
-      email,
-      password,
-    }
+    const data = { firstName, lastName, email, password }
     const stripeCustomer = await stripe.customers.create({
       email,
       name: firstName + " " + lastName,

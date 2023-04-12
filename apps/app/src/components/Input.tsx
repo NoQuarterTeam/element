@@ -1,6 +1,6 @@
 import { TextInput, TextInputProps, useColorScheme } from "react-native"
 import { merge } from "@element/shared"
-import colors from "@element/tailwind-config/colors"
+import colors from "@element/tailwind-config/src/colors"
 import { styled } from "nativewind"
 
 export interface InputProps extends TextInputProps {}

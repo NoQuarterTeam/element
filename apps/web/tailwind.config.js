@@ -28,5 +28,5 @@ module.exports = {
       mono: ["SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
     },
   },
-  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/line-clamp"), require("tailwindcss-radix")],
+  plugins: [require("@tailwindcss/forms"), require("tailwindcss-radix")],
 }
