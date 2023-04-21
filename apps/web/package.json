@@ -73,7 +73,7 @@
     "fathom-client": "^3.5.0",
     "isbot": "^3.6.7",
     "js-confetti": "0.11.0",
-    "js-cookie": "3.0.1",
+    "js-cookie": "3.0.4",
     "jsonwebtoken": "9.0.0",
     "limax": "4.0.0",
     "match-sorter": "6.3.1",
