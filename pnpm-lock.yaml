@@ -265,8 +265,8 @@ importers:
         specifier: 0.0.7
         version: 0.0.7
       '@react-email/tailwind':
-        specifier: 0.0.7
-        version: 0.0.7
+        specifier: 0.0.8
+        version: 0.0.8
       '@react-email/text':
         specifier: 0.0.5
         version: 0.0.5
@@ -4090,8 +4090,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@react-email/tailwind@0.0.7:
-    resolution: {integrity: sha512-s4aLmnm7doGhXm+VqR587dlpFTNIDg3Vudzu7ooKNjJwW+/w21IqWs6uilE2RiItq/mgGR6MTbyJZ0Ub1kY/Qw==}
+  /@react-email/tailwind@0.0.8:
+    resolution: {integrity: sha512-0BLjD5GpiyBK7YDlaDrjHIpj9eTrrZrMJud3f1UPoCZhS+0S/M8LcR8WMbQsR+8/aLGmiy4F4TGZuRQcsJEsFw==}
     engines: {node: '>=16.0.0'}
     dependencies:
       html-react-parser: 3.0.9(react@18.2.0)
