@@ -24,7 +24,7 @@
     "@trpc/client": "^10.9.0",
     "@trpc/react-query": "^10.9.0",
     "@trpc/server": "^10.9.0",
-    "class-variance-authority": "^0.5.1",
+    "class-variance-authority": "^0.6.0",
     "dayjs": "1.11.7",
     "expo": "~48.0.10",
     "expo-application": "~5.1.1",
