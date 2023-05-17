@@ -558,11 +558,11 @@ importers:
   packages/database:
     dependencies:
       '@prisma/client':
-        specifier: 4.14.0
-        version: 4.14.0(prisma@4.14.0)
+        specifier: 4.14.1
+        version: 4.14.1(prisma@4.14.1)
       prisma:
-        specifier: 4.14.0
-        version: 4.14.0
+        specifier: 4.14.1
+        version: 4.14.1
     devDependencies:
       '@types/node':
         specifier: ^18.15.3
@@ -1651,6 +1651,15 @@ packages:
       '@babel/helper-plugin-utils': 7.21.5
     dev: true
 
+  /@babel/plugin-syntax-jsx@7.18.6(@babel/core@7.21.3):
+    resolution: {integrity: sha512-6mmljtAedFGTWu2p/8WIORGwy+61PLgOMPOdazc7YoJ9ZCWUyFy3A6CpPkRKLKD1ToAesxX8KGEViAiLo9N+7Q==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.21.3
+      '@babel/helper-plugin-utils': 7.20.2
+
   /@babel/plugin-syntax-jsx@7.18.6(@babel/core@7.21.8):
     resolution: {integrity: sha512-6mmljtAedFGTWu2p/8WIORGwy+61PLgOMPOdazc7YoJ9ZCWUyFy3A6CpPkRKLKD1ToAesxX8KGEViAiLo9N+7Q==}
     engines: {node: '>=6.9.0'}
@@ -2483,8 +2492,8 @@ packages:
       '@babel/core': 7.21.3
       '@babel/helper-annotate-as-pure': 7.18.6
       '@babel/helper-module-imports': 7.21.4
-      '@babel/helper-plugin-utils': 7.21.5
-      '@babel/plugin-syntax-jsx': 7.21.4(@babel/core@7.21.3)
+      '@babel/helper-plugin-utils': 7.20.2
+      '@babel/plugin-syntax-jsx': 7.18.6(@babel/core@7.21.3)
       '@babel/types': 7.21.5
 
   /@babel/plugin-transform-react-jsx@7.21.0(@babel/core@7.21.8):
@@ -4527,8 +4536,8 @@ packages:
       tslib: 2.5.0
     dev: true
 
-  /@prisma/client@4.14.0(prisma@4.14.0):
-    resolution: {integrity: sha512-MK/XaA2sFdfaOa7I9MjNKz6dxeIEdeZlnpNRoF2w3JuRLlFJLkpp6cD3yaqw2nUUhbrn3Iqe3ZpVV+VuGGil7Q==}
+  /@prisma/client@4.14.1(prisma@4.14.1):
+    resolution: {integrity: sha512-TZIswkeX1ccsHG/eN2kICzg/csXll0osK3EHu1QKd8VJ3XLcXozbNELKkCNfsCUvKJAwPdDtFCzF+O+raIVldw==}
     engines: {node: '>=14.17'}
     requiresBuild: true
     peerDependencies:
@@ -4538,15 +4547,15 @@ packages:
         optional: true
     dependencies:
       '@prisma/engines-version': 4.14.0-67.d9a4c5988f480fa576d43970d5a23641aa77bc9c
-      prisma: 4.14.0
+      prisma: 4.14.1
     dev: false
 
   /@prisma/engines-version@4.14.0-67.d9a4c5988f480fa576d43970d5a23641aa77bc9c:
     resolution: {integrity: sha512-3jum8/YSudeSN0zGW5qkpz+wAN2V/NYCQ+BPjvHYDfWatLWlQkqy99toX0GysDeaUoBIJg1vaz2yKqiA3CFcQw==}
     dev: false
 
-  /@prisma/engines@4.14.0:
-    resolution: {integrity: sha512-PDNlhP/1vyTgmNyiucGqGCdXIp7HIkkvKO50si3y3PcceeHvqtiKPaH1iJdz63jCWMVMbj2MElSxXPOeBvEVIQ==}
+  /@prisma/engines@4.14.1:
+    resolution: {integrity: sha512-APqFddPVHYmWNKqc+5J5SqrLFfOghKOLZxobmguDUacxOwdEutLsbXPVhNnpFDmuQWQFbXmrTTPoRrrF6B1MWA==}
     requiresBuild: true
     dev: false
 
@@ -14204,13 +14213,13 @@ packages:
       js-beautify: 1.14.7
     dev: false
 
-  /prisma@4.14.0:
-    resolution: {integrity: sha512-+5dMl1uxMQb4RepndY6AwR9xi1cDcaGFICu+ws6/Nmgt93mFPNj8tYxSfTdmfg+rkNrUId9rk/Ac2vTgLe/oXA==}
+  /prisma@4.14.1:
+    resolution: {integrity: sha512-z6hxzTMYqT9SIKlzD08dhzsLUpxjFKKsLpp5/kBDnSqiOjtUyyl/dC5tzxLcOa3jkEHQ8+RpB/fE3w8bgNP51g==}
     engines: {node: '>=14.17'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@prisma/engines': 4.14.0
+      '@prisma/engines': 4.14.1
     dev: false
 
   /process-nextick-args@2.0.1:
