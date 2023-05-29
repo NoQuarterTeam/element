@@ -287,8 +287,8 @@ importers:
         specifier: 1.16.1
         version: 1.16.1
       '@tanstack/react-query':
-        specifier: 4.29.11
-        version: 4.29.11(react-dom@18.2.0)(react@18.2.0)
+        specifier: 4.29.12
+        version: 4.29.12(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
         specifier: ^10.16.0
         version: 10.16.0
@@ -5812,8 +5812,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /@tanstack/react-query@4.29.11(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-aLaOAhBnCr12YKPjDsZOc0fAtkyaW7f9KfVfw49oYpfe0H9EPXBUgDBIKJ8qdHF3uGzTVSMcmpiw1Za41BLZlw==}
+  /@tanstack/react-query@4.29.12(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-zhcN6+zF6cxprxhTHQajHGlvxgK8npnp9uLe9yaWhGc6sYcPWXzyO4raL4HomUzQOPzu3jLvkriJQ7BOrDM8vA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
