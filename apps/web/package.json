@@ -75,7 +75,7 @@
     "js-confetti": "0.11.0",
     "js-cookie": "3.0.5",
     "jsonwebtoken": "9.0.0",
-    "limax": "4.0.0",
+    "limax": "4.1.0",
     "match-sorter": "6.3.1",
     "morgan": "1.10.0",
     "nodemailer": "6.9.3",
