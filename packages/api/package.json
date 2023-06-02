@@ -9,7 +9,7 @@
     "@element/database": "workspace:*",
     "@trpc/server": "^10.16.0",
     "bcryptjs": "^2.4.3",
-    "dayjs": "1.11.7",
+    "dayjs": "1.11.8",
     "jsonwebtoken": "9.0.0",
     "superjson": "^1.12.2",
     "zod": "3.21.4"
