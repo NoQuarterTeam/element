@@ -64,8 +64,8 @@ importers:
         specifier: ^0.6.0
         version: 0.6.0(typescript@4.9.5)
       dayjs:
-        specifier: 1.11.7
-        version: 1.11.7
+        specifier: 1.11.8
+        version: 1.11.8
       expo:
         specifier: ~48.0.10
         version: 48.0.10(@babel/core@7.21.3)
@@ -317,8 +317,8 @@ importers:
         specifier: 2.0.4
         version: 2.0.4
       dayjs:
-        specifier: 1.11.7
-        version: 1.11.7
+        specifier: 1.11.8
+        version: 1.11.8
       deep-equal:
         specifier: 2.2.1
         version: 2.2.1
@@ -528,8 +528,8 @@ importers:
         specifier: ^2.4.3
         version: 2.4.3
       dayjs:
-        specifier: 1.11.7
-        version: 1.11.7
+        specifier: 1.11.8
+        version: 1.11.8
       jsonwebtoken:
         specifier: 9.0.0
         version: 9.0.0
@@ -7872,8 +7872,8 @@ packages:
     resolution: {integrity: sha512-WboRycPNsVw3B3TL559F7kuBUM4d8CgMEvk6xEJlOp7OBPjt6G7z8WMWlD2rOFZLk6OYfFIUGsCOWzcQH9K2og==}
     engines: {node: '>= 6'}
 
-  /dayjs@1.11.7:
-    resolution: {integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==}
+  /dayjs@1.11.8:
+    resolution: {integrity: sha512-LcgxzFoWMEPO7ggRv1Y2N31hUf2R0Vj7fuy/m+Bg1K8rr+KAs1AEy4y9jd5DXe8pbHgX+srkHNS7TH6Q6ZhYeQ==}
 
   /deasync@0.1.28:
     resolution: {integrity: sha512-QqLF6inIDwiATrfROIyQtwOQxjZuek13WRYZ7donU5wJPLoP67MnYxA6QtqdvdBy2mMqv5m3UefBVdJjvevOYg==}
@@ -11363,7 +11363,7 @@ packages:
     hasBin: true
     dependencies:
       ansi-fragments: 0.2.1
-      dayjs: 1.11.7
+      dayjs: 1.11.8
       yargs: 15.4.1
 
   /longest-streak@3.1.0:
