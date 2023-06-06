@@ -12,7 +12,7 @@ import Ionicons from "@expo/vector-icons/Ionicons"
 import Feather from "@expo/vector-icons/Feather"
 import Octicons from "@expo/vector-icons/Octicons"
 import { safeReadableColor, formatDuration, join } from "@element/shared"
-import colors from "@element/tailwind-config/colors"
+import colors from "@element/tailwind-config/src/colors"
 
 import { Text } from "../../components/Text"
 import { Heading } from "../../components/Heading"
@@ -55,7 +55,40 @@ export default function Timeline() {
             <Feather name="user" size={24} color={colorScheme === "dark" ? "white" : "black"} />
           </TouchableOpacity>
         </View>
-        <View className="flex w-full flex-row items-center justify-between">
+      </View>
+
+      <View>
+        {isLoading ? null : !taskData ? null : taskData.length === 0 ? (
+          <Text className="flex py-10 text-center">Nothing planned</Text>
+        ) : (
+          <TaskList key={date} tasks={taskData} />
+        )}
+      </View>
+
+      <View className="absolute right-0 bottom-10 left-0 space-y-4">
+        <View className="flex flex-row items-end justify-between px-5">
+          <View className="flex-1 flex-row">
+            <TouchableOpacity
+              onPress={() => setDate(dayjs().format("YYYY-MM-DD"))}
+              className="sq-14 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-600"
+            >
+              <Feather name="calendar" size={24} color={colorScheme === "dark" ? "white" : "black"} />
+            </TouchableOpacity>
+          </View>
+          {features.includes("habits") && dayjs(date).isBefore(dayjs().add(1, "day").startOf("day")) ? (
+            <View className="flex-1 flex-row justify-center">
+              <Habits date={date} />
+            </View>
+          ) : null}
+          <View className="flex-1 flex-row justify-end">
+            <Link href={`new?date=${date}`} asChild>
+              <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
+                <Feather name="plus" size={24} />
+              </TouchableOpacity>
+            </Link>
+          </View>
+        </View>
+        <View className="border-gray-75 flex w-full flex-row items-center justify-between border-t px-8 pt-4">
           <View>
             <TouchableOpacity
               onPress={() => setDate(dayjs(date).subtract(1, "day").format("YYYY-MM-DD"))}
@@ -73,36 +106,6 @@ export default function Timeline() {
               <Ionicons name="chevron-forward" color={colorScheme === "dark" ? "white" : "black"} />
             </TouchableOpacity>
           </View>
-        </View>
-      </View>
-
-      <View>
-        {isLoading ? null : !taskData ? null : taskData.length === 0 ? (
-          <Text className="flex py-10 text-center">Nothing planned</Text>
-        ) : (
-          <TaskList key={date} tasks={taskData} />
-        )}
-      </View>
-      <View className="absolute right-0 bottom-8 left-0 flex flex-row items-end justify-between px-5">
-        <View className="flex-1 flex-row">
-          <TouchableOpacity
-            onPress={() => setDate(dayjs().format("YYYY-MM-DD"))}
-            className="sq-14 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-600"
-          >
-            <Feather name="calendar" size={24} color={colorScheme === "dark" ? "white" : "black"} />
-          </TouchableOpacity>
-        </View>
-        {features.includes("habits") && dayjs(date).isBefore(dayjs().add(1, "day").startOf("day")) ? (
-          <View className="flex-1 flex-row justify-center">
-            <Habits date={date} />
-          </View>
-        ) : null}
-        <View className="flex-1 flex-row justify-end">
-          <Link href={`new?date=${date}`} asChild>
-            <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
-              <Feather name="plus" size={24} />
-            </TouchableOpacity>
-          </Link>
         </View>
       </View>
     </View>

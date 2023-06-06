@@ -14,7 +14,7 @@ import { ModalView } from "./ModalView"
 import { api, RouterOutputs } from "../lib/utils/api"
 import { Text } from "./Text"
 import { randomHexColor, useDisclosure } from "@element/shared"
-import colors from "@element/tailwind-config/colors"
+import colors from "@element/tailwind-config/src/colors"
 import { FormError } from "./FormError"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>

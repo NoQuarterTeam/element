@@ -3,7 +3,7 @@ import { Html } from "@react-email/html"
 import { Container } from "@react-email/container"
 import { Head } from "@react-email/head"
 import * as React from "react"
-import colors from "@element/tailwind-config/colors"
+import colors from "@element/tailwind-config/src/colors"
 
 const theme = {
   extend: {

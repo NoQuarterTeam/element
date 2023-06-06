@@ -21,7 +21,7 @@ module.exports = {
     "@element/database",
     "@element/database/types",
     "@element/tailwind-config",
-    "@element/tailwind-config/colors",
+    "@element/tailwind-config/src/colors",
     "axios",
     "query-string",
     "filter-obj",

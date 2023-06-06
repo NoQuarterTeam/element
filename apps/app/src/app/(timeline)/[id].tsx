@@ -6,7 +6,7 @@ import { KeyboardAvoidingView, TouchableOpacity, useColorScheme, View } from "re
 import { ScrollView } from "react-native-gesture-handler"
 import { TaskForm, TaskFormData } from "../../components/TaskForm"
 import { api, RouterOutputs } from "../../lib/utils/api"
-import colors from "@element/tailwind-config/colors"
+import colors from "@element/tailwind-config/src/colors"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 export default function TaskDetail() {
