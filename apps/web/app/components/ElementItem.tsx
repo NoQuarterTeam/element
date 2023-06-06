@@ -327,11 +327,9 @@ function MoveForm({ onClose, elementId }: { onClose: () => void; elementId: stri
           required
           label="Element"
           name="parentId"
-          // errors={createUpdateFetcher.data?.fieldErrors?.elementId}
+          errors={updateFetcher.data?.fieldErrors?.parentId}
           input={
             <Singleselect
-              // value={element}
-              // onChange={setElement}
               formatOptionLabel={(option) => (
                 <div className="hstack">
                   <div className="sq-4 rounded-full" style={{ background: option.color }} />
@@ -347,7 +345,7 @@ function MoveForm({ onClose, elementId }: { onClose: () => void; elementId: stri
           <Button variant="ghost" onClick={onClose}>
             Cancel
           </Button>
-          <FormButton name="_action" value={ElementsActionMethods.UpdateElement}>
+          <FormButton name="_action" value={ElementActionMethods.UpdateElement}>
             Move
           </FormButton>
         </ButtonGroup>

@@ -36,9 +36,9 @@ export type SidebarElement = SerializeFrom<typeof loader>[0]
 
 export enum ElementsActionMethods {
   CreateElement = "createElement",
-  UpdateElement = "updateElement",
 }
-export const action = async ({ request, params }: ActionArgs) => {
+
+export const action = async ({ request }: ActionArgs) => {
   const user = await getUser(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ElementsActionMethods | undefined
@@ -72,30 +72,6 @@ export const action = async ({ request, params }: ActionArgs) => {
       } catch (e: any) {
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error creating element") },
-        })
-      }
-    case ElementsActionMethods.UpdateElement:
-      try {
-        const elementId = params.id as string | undefined
-        if (!elementId) throw badRequest("Element ID is required")
-        const element = await db.element.findFirst({
-          where: { id: elementId, creatorId: { equals: user.id } },
-        })
-        if (!element) throw badRequest("Element not found")
-        const updateSchema = z.object({
-          name: z.string().min(1).optional(),
-          color: z.string().min(1).optional(),
-          parentId: z.string().min(1).optional(),
-        })
-        const { data, fieldErrors } = await validateFormData(updateSchema, formData)
-        if (fieldErrors) return badRequest({ fieldErrors, data })
-        const updatedElement = await db.element.update({ where: { id: elementId }, data })
-        return json({ element: updatedElement })
-      } catch (e: any) {
-        console.log(e)
-
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating element") },
         })
       }
     default:
@@ -138,7 +114,7 @@ export default function Elements() {
       size="md"
     >
       <div className="relative h-screen overflow-y-scroll pb-48">
-        <div className="flex items-center justify-between space-x-2 pr-3 pb-4 pl-4 pt-1">
+        <div className="flex items-center justify-between space-x-2 pb-4 pl-4 pr-3 pt-1">
           <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" variant="outline" />
           <Button colorScheme="primary" leftIcon={<RiAddLine />} onClick={createModalProps.onOpen}>
             Add
