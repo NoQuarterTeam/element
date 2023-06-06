@@ -1,7 +1,7 @@
 import type { LoaderArgs } from "@remix-run/node"
 import { Response as NodeResponse } from "@remix-run/node"
 import axios from "axios"
-import { createHash } from "crypto"
+import * as crypto from "crypto"
 import fs from "fs"
 import fsp from "fs/promises"
 import path from "path"
@@ -41,7 +41,8 @@ export const loader = async ({ request }: LoaderArgs) => {
     const fit: any = url.searchParams.get("fit") || "cover"
 
     // Create hash of the url for unique cache key
-    const hash = createHash("sha256")
+    const hash = crypto
+      .createHash("sha256")
       .update("v1")
       .update(request.method)
       .update(request.url)
