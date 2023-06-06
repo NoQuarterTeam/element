@@ -28,6 +28,9 @@ import { Form, FormButton, FormError, InlineFormField } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
 import { Modal } from "./ui/Modal"
 import { useToast } from "./ui/Toast"
+import { useQuery } from "@tanstack/react-query"
+import { TaskElement } from "~/pages/api+/elements"
+import { Singleselect } from "./ui/ReactSelect"
 
 const MAX_DEPTH = 2
 
@@ -45,6 +48,8 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
   const [newColor, setNewColor] = React.useState(element.color)
   const [editColor, setEditColor] = React.useState(element.color)
   const createModalProps = useDisclosure()
+  const moveModalProps = useDisclosure()
+
   const navigation = useNavigation()
   React.useEffect(() => {
     if (navigation.state === "loading" && !!navigation.formData && navigation.formAction === navigation.location.pathname) {
@@ -140,6 +145,10 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                     <span>Create child</span>
                   </DropdownMenuItem>
                 )}
+                <DropdownMenuItem onClick={moveModalProps.onOpen}>
+                  <RiAddLine className="sq-3 mr-2" />
+                  <span>Move</span>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={updateModalProps.onOpen}>
                   <RiEdit2Line className="sq-3 mr-2" />
                   <span>Edit</span>
@@ -200,6 +209,9 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
               <FormError />
             </div>
           </Form>
+        </Modal>
+        <Modal title="Move element to parent" size="xl" {...moveModalProps}>
+          <MoveForm onClose={moveModalProps.onClose} elementId={element.id} />
         </Modal>
         <Modal title={`Edit ${element.name}`} size="xl" {...updateModalProps}>
           <updateFetcher.Form
@@ -287,5 +299,60 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
         </div>
       ) : null}
     </div>
+  )
+}
+
+function MoveForm({ onClose, elementId }: { onClose: () => void; elementId: string }) {
+  const { data: elements } = useQuery(
+    ["task-elements"],
+    async () => {
+      const response = await fetch(`/api/elements`)
+      if (!response.ok) throw new Error("Network response was not ok")
+      return response.json() as Promise<TaskElement[]>
+    },
+    { keepPreviousData: true, staleTime: 10_000 },
+  )
+
+  const updateFetcher = useFetcher()
+  React.useEffect(() => {
+    if (updateFetcher.type === "actionReload" && updateFetcher.data?.element) {
+      onClose()
+    }
+  }, [updateFetcher.data, updateFetcher.type])
+
+  return (
+    <updateFetcher.Form method="post" replace action={`/api/elements/${elementId}`}>
+      <div className="stack min-h-[200px] p-4">
+        <InlineFormField
+          required
+          label="Element"
+          name="parentId"
+          // errors={createUpdateFetcher.data?.fieldErrors?.elementId}
+          input={
+            <Singleselect
+              // value={element}
+              // onChange={setElement}
+              formatOptionLabel={(option) => (
+                <div className="hstack">
+                  <div className="sq-4 rounded-full" style={{ background: option.color }} />
+                  <p>{option.label}</p>
+                </div>
+              )}
+              options={elements?.map((e) => ({ label: e.name, value: e.id, color: e.color }))}
+            />
+          }
+        />
+        <FormError />
+        <ButtonGroup>
+          <Button variant="ghost" onClick={onClose}>
+            Cancel
+          </Button>
+          <FormButton name="_action" value={ElementsActionMethods.UpdateElement}>
+            Move
+          </FormButton>
+        </ButtonGroup>
+        <FormError />
+      </div>
+    </updateFetcher.Form>
   )
 }

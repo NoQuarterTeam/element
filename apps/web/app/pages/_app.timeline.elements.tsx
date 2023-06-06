@@ -85,12 +85,15 @@ export const action = async ({ request, params }: ActionArgs) => {
         const updateSchema = z.object({
           name: z.string().min(1).optional(),
           color: z.string().min(1).optional(),
+          parentId: z.string().min(1).optional(),
         })
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
         const updatedElement = await db.element.update({ where: { id: elementId }, data })
         return json({ element: updatedElement })
       } catch (e: any) {
+        console.log(e)
+
         return badRequest(e.message, {
           headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating element") },
         })
