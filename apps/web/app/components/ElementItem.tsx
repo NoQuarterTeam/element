@@ -31,6 +31,8 @@ import { useToast } from "./ui/Toast"
 import { useQuery } from "@tanstack/react-query"
 import { TaskElement } from "~/pages/api+/elements"
 import { Singleselect } from "./ui/ReactSelect"
+import { Spinner } from "./ui/Spinner"
+import { BsArrow90DegRight } from "react-icons/bs"
 
 const MAX_DEPTH = 2
 
@@ -82,6 +84,14 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
       archiveModalProps.onClose()
     }
   }, [unarchiveFetcher.data, unarchiveFetcher.type, refetch])
+
+  const moveFetcher = useFetcher()
+  React.useEffect(() => {
+    if (moveFetcher.type === "actionReload" && moveFetcher.data?.element) {
+      moveModalProps.onClose()
+    }
+  }, [moveFetcher.data, moveFetcher.type])
+
   const toast = useToast()
 
   const matchedChildren = matchSorter(
@@ -146,7 +156,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={moveModalProps.onOpen}>
-                  <RiAddLine className="sq-3 mr-2" />
+                  <BsArrow90DegRight className="sq-3 mr-2" />
                   <span>Move</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={updateModalProps.onOpen}>
@@ -211,7 +221,21 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
           </Form>
         </Modal>
         <Modal title="Move element to parent" size="xl" {...moveModalProps}>
-          <MoveForm onClose={moveModalProps.onClose} elementId={element.id} />
+          <moveFetcher.Form method="post" replace action={`/api/elements/${element.id}`}>
+            <div className="stack min-h-[200px] p-4">
+              <MoveFormElementInput error={moveFetcher.data?.fieldErrors?.parentId} elementId={element.id} />
+              <FormError />
+              <ButtonGroup>
+                <Button variant="ghost" onClick={moveModalProps.onClose}>
+                  Cancel
+                </Button>
+                <FormButton name="_action" value={ElementActionMethods.UpdateElement}>
+                  Move
+                </FormButton>
+              </ButtonGroup>
+              <FormError />
+            </div>
+          </moveFetcher.Form>
         </Modal>
         <Modal title={`Edit ${element.name}`} size="xl" {...updateModalProps}>
           <updateFetcher.Form
@@ -302,8 +326,8 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
   )
 }
 
-function MoveForm({ onClose, elementId }: { onClose: () => void; elementId: string }) {
-  const { data: elements } = useQuery(
+function MoveFormElementInput({ elementId, error }: { elementId: string; error: string | string[] | undefined }) {
+  const { data: elements, isLoading } = useQuery(
     ["task-elements"],
     async () => {
       const response = await fetch(`/api/elements`)
@@ -313,44 +337,26 @@ function MoveForm({ onClose, elementId }: { onClose: () => void; elementId: stri
     { keepPreviousData: true, staleTime: 10_000 },
   )
 
-  const updateFetcher = useFetcher()
-  React.useEffect(() => {
-    if (updateFetcher.type === "actionReload" && updateFetcher.data?.element) {
-      onClose()
-    }
-  }, [updateFetcher.data, updateFetcher.type])
+  if (isLoading) return <Spinner />
 
+  if (!elements) return null
   return (
-    <updateFetcher.Form method="post" replace action={`/api/elements/${elementId}`}>
-      <div className="stack min-h-[200px] p-4">
-        <InlineFormField
-          required
-          label="Element"
-          name="parentId"
-          errors={updateFetcher.data?.fieldErrors?.parentId}
-          input={
-            <Singleselect
-              formatOptionLabel={(option) => (
-                <div className="hstack">
-                  <div className="sq-4 rounded-full" style={{ background: option.color }} />
-                  <p>{option.label}</p>
-                </div>
-              )}
-              options={elements?.map((e) => ({ label: e.name, value: e.id, color: e.color }))}
-            />
-          }
+    <InlineFormField
+      required
+      label="Element"
+      name="parentId"
+      errors={error}
+      input={
+        <Singleselect
+          formatOptionLabel={(option) => (
+            <div className="hstack">
+              <div className="sq-4 rounded-full" style={{ background: option.color }} />
+              <p>{option.label}</p>
+            </div>
+          )}
+          options={elements.filter((e) => e.id !== elementId).map((e) => ({ label: e.name, value: e.id, color: e.color }))}
         />
-        <FormError />
-        <ButtonGroup>
-          <Button variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
-          <FormButton name="_action" value={ElementActionMethods.UpdateElement}>
-            Move
-          </FormButton>
-        </ButtonGroup>
-        <FormError />
-      </div>
-    </updateFetcher.Form>
+      }
+    />
   )
 }
