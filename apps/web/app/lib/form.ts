@@ -51,7 +51,8 @@ export const getFormDataArray = (formData: FormData, field: string) =>
     .filter(([key]) => key.startsWith(field))
     .reduce((acc, [key, value]) => {
       const [prefix, name] = key.split(".")
-      const id = Number(prefix.charAt(prefix.lastIndexOf("[") + 1))
+      const match = prefix.match(/\[(\d+)\]$/)
+      const id = match ? Number(match[1]) : 0
       acc[id] = {
         ...acc[id],
         [name]: value as string | undefined,
