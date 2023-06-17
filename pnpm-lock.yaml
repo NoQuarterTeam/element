@@ -323,8 +323,8 @@ importers:
         specifier: 2.2.1
         version: 2.2.1
       dotenv:
-        specifier: 16.3.0
-        version: 16.3.0
+        specifier: 16.3.1
+        version: 16.3.1
       downshift:
         specifier: 7.6.0
         version: 7.6.0(react@18.2.0)
@@ -6072,7 +6072,7 @@ packages:
       cacache: 15.3.0
       chalk: 4.1.2
       chokidar: 3.5.3
-      dotenv: 16.3.0
+      dotenv: 16.3.1
       esbuild: 0.17.6
       esbuild-plugins-node-modules-polyfill: 1.0.15(esbuild@0.17.6)
       execa: 5.1.1
@@ -8999,7 +8999,7 @@ packages:
     hasBin: true
     dependencies:
       cross-spawn: 7.0.3
-      dotenv: 16.3.0
+      dotenv: 16.3.1
       dotenv-expand: 10.0.0
       minimist: 1.2.8
     dev: true
@@ -9009,8 +9009,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /dotenv@16.3.0:
-    resolution: {integrity: sha512-tHB+hmf8MRCkT3VVivGiG8kq9HiGTmQ3FzOKgztfpJQH1IWuZTOvKSJmHNnQPowecAmkCJhLrxdPhOr06LLqIQ==}
+  /dotenv@16.3.1:
+    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
     engines: {node: '>=12'}
 
   /downshift@7.6.0(react@18.2.0):
