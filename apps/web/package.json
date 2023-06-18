@@ -100,7 +100,7 @@
   "devDependencies": {
     "@element/tailwind-config": "*",
     "@remix-run/dev": "1.17.1",
-    "@remix-run/eslint-config": "1.17.0",
+    "@remix-run/eslint-config": "1.17.1",
     "@tailwindcss/forms": "^0.5.3",
     "@types/bcryptjs": "^2.4.2",
     "@types/compression": "1.7.2",
@@ -120,7 +120,7 @@
     "dotenv-cli": "^7.1.0",
     "esbuild": "0.18.4",
     "esbuild-register": "3.4.2",
-    "eslint": "8.42.0",
+    "eslint": "8.43.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-simple-import-sort": "10.0.0",
