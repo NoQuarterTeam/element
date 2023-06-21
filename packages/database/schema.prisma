@@ -59,7 +59,7 @@ model Task {
   repeatParentId  String?     @db.Uuid
   repeatParent    Task?       @relation(name: "RepeatChildren", fields: [repeatParentId], references: [id], onDelete: SetNull)
   creatorId       String      @db.Uuid
-  creator         User        @relation(fields: [creatorId], references: [id])
+  creator         User        @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   elementId       String      @db.Uuid
   element         Element     @relation(fields: [elementId], references: [id], onDelete: Cascade)
   createdAt       DateTime    @default(now()) @db.Timestamptz(6)
@@ -90,7 +90,7 @@ model Element {
   children   Element[] @relation(name: "ChildElements")
   parent     Element?  @relation(name: "ChildElements", fields: [parentId], references: [id], onDelete: SetNull)
   parentId   String?   @db.Uuid
-  creator    User      @relation(fields: [creatorId], references: [id])
+  creator    User      @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId  String    @db.Uuid
   tasks      Task[]
 
