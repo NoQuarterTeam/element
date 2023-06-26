@@ -85,10 +85,10 @@ function _Timeline() {
   const daysRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(function SetInitialScroll() {
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       const scrollTo = isMobile ? SCROLL_DAYS_BACK * DAY_WIDTH : (SCROLL_DAYS_BACK - 2) * DAY_WIDTH
       timelineRef.current?.scrollTo(scrollTo, 0)
-    })
+    }, 100)
   }, [])
 
   React.useEffect(

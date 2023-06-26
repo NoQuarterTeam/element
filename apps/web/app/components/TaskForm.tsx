@@ -67,7 +67,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
           addTask(createUpdateTask)
         }
       }
-      requestAnimationFrame(onClose)
+      setTimeout(onClose, 100)
     },
   })
 
@@ -96,7 +96,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
     onSuccess: ({ task: dupeTask }) => {
       if (!dupeTask) return
       addTask(dupeTask)
-      requestAnimationFrame(onClose)
+      setTimeout(onClose, 100)
     },
   })
   const handleDuplicate = () => {
@@ -108,7 +108,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
     onSuccess: ({ task: backlogTask }) => {
       if (!backlogTask) return
       removeTask(backlogTask)
-      requestAnimationFrame(onClose)
+      setTimeout(onClose, 100)
     },
   })
   const handleToBacklog = () => {
@@ -155,7 +155,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
     <createUpdateFetcher.Form replace method="post" action={task ? `/timeline/${task.id}` : "/api/tasks"}>
       <div className="flex w-full items-start justify-between">
         <input
-          className="w-full border-none bg-transparent pl-3 pt-3 pb-1 text-2xl text-gray-900 focus:outline-none dark:text-gray-100 md:pt-5 md:pl-5 md:text-4xl"
+          className="w-full border-none bg-transparent pb-1 pl-3 pt-3 text-2xl text-gray-900 focus:outline-none dark:text-gray-100 md:pl-5 md:pt-5 md:text-4xl"
           required
           name="name"
           placeholder="Name"
@@ -401,10 +401,10 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                             isComplete: false,
                           })
                           setTodos(newTodos)
-                          requestAnimationFrame(() => {
+                          setTimeout(() => {
                             const nextInput = itemsRef.current?.[i + 1]
                             nextInput?.focus()
-                          })
+                          }, 10)
                         }
                       }
                       if (e.key === "ArrowUp") {
@@ -422,10 +422,10 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                         // if current input was first select second input, else select prev
                         const isFirstInput = i === 0
                         setTodos((c) => c.filter((t) => t.id !== todo.id))
-                        requestAnimationFrame(() => {
+                        setTimeout(() => {
                           const nextInput = itemsRef.current?.[isFirstInput ? 0 : i - 1]
                           nextInput?.focus()
-                        })
+                        }, 10)
                       }
                     }}
                   />
@@ -439,10 +439,10 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                   aria-label="add todo"
                   onClick={() => {
                     setTodos((c) => [...c, { id: new Date().getMilliseconds().toString(), name: "", isComplete: false }])
-                    requestAnimationFrame(() => {
+                    setTimeout(() => {
                       const lastInput = itemsRef.current?.[itemsRef.current.length - 1]
                       lastInput?.focus()
-                    })
+                    }, 50)
                   }}
                 >
                   <BiPlus />
