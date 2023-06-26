@@ -389,8 +389,8 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0)
       resend:
-        specifier: ^0.15.0
-        version: 0.15.0
+        specifier: ^0.16.0
+        version: 0.16.0
       sharp:
         specifier: ^0.32.0
         version: 0.32.0
@@ -15899,8 +15899,8 @@ packages:
     resolution: {integrity: sha512-Zu1xbUt3/OPwsXL46hvOOoQrap2azE7ZQbokq61BQfiXvhewsKDwhMeZjTX9sX0nvw1t/U5Audyn1I9P/m9z0A==}
     dev: false
 
-  /resend@0.15.0:
-    resolution: {integrity: sha512-QfPtsHeiX8F8uvMDFk7F+eQGQERfKWl41sOp6D1BAEC++/yq3b5rX48rCep5LOfAiLGe+YWJQR/yQXtDvsj91A==}
+  /resend@0.16.0:
+    resolution: {integrity: sha512-6NnrtEapGD6FtnhRUrtDdfgQFH2av5cTkrnElUh6AjTzGrHXiMpD/GRwT46pqpA6i/AXSDXKV7Wh/hHQJLKFew==}
     dependencies:
       '@react-email/render': 0.0.7
       axios: 1.4.0
