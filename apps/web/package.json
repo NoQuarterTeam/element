@@ -55,7 +55,7 @@
     "@remix-run/node": "1.18.0",
     "@remix-run/react": "1.18.0",
     "@remix-run/serve": "1.18.0",
-    "@tanstack/react-query": "4.29.18",
+    "@tanstack/react-query": "4.29.19",
     "@trpc/server": "^10.16.0",
     "aws-sdk": "2.1404.0",
     "axios": "^1.3.4",
