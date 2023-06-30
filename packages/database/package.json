@@ -8,8 +8,8 @@
   ],
   "sideEffects": false,
   "dependencies": {
-    "@prisma/client": "4.16.1",
-    "prisma": "4.16.1"
+    "@prisma/client": "4.16.2",
+    "prisma": "4.16.2"
   },
   "devDependencies": {
     "@types/node": "^18.15.3"
