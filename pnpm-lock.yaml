@@ -148,8 +148,8 @@ importers:
         specifier: ^1.12.2
         version: 1.12.2
       zustand:
-        specifier: 4.3.8
-        version: 4.3.8(react@18.2.0)
+        specifier: 4.3.9
+        version: 4.3.9(react@18.2.0)
     devDependencies:
       '@babel/core':
         specifier: ^7.20.0
@@ -407,8 +407,8 @@ importers:
         specifier: 3.21.4
         version: 3.21.4
       zustand:
-        specifier: 4.3.8
-        version: 4.3.8(react@18.2.0)
+        specifier: 4.3.9
+        version: 4.3.9(react@18.2.0)
     devDependencies:
       '@remix-run/dev':
         specifier: 1.18.1
@@ -18033,8 +18033,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  /zustand@4.3.8(react@18.2.0):
-    resolution: {integrity: sha512-4h28KCkHg5ii/wcFFJ5Fp+k1J3gJoasaIbppdgZFO4BPJnsNxL0mQXBSFgOgAdCdBj35aDTPvdAJReTMntFPGg==}
+  /zustand@4.3.9(react@18.2.0):
+    resolution: {integrity: sha512-Tat5r8jOMG1Vcsj8uldMyqYKC5IZvQif8zetmLHs9WoZlntTHmIoNM8TpLRY31ExncuUvUOXehd0kvahkuHjDw==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       immer: '>=9.0'
