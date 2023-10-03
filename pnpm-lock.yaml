@@ -404,8 +404,8 @@ importers:
         specifier: ^2.8.0
         version: 2.8.0
       zod:
-        specifier: 3.21.4
-        version: 3.21.4
+        specifier: 3.22.3
+        version: 3.22.3
       zustand:
         specifier: 4.3.9
         version: 4.3.9(react@18.2.0)
@@ -537,8 +537,8 @@ importers:
         specifier: ^1.12.2
         version: 1.12.2
       zod:
-        specifier: 3.21.4
-        version: 3.21.4
+        specifier: 3.22.3
+        version: 3.22.3
     devDependencies:
       '@types/bcryptjs':
         specifier: ^2.4.2
@@ -18234,8 +18234,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  /zod@3.21.4:
-    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+  /zod@3.22.3:
+    resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
     dev: false
 
   /zustand@4.3.9(react@18.2.0):
