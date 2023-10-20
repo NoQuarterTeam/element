@@ -383,8 +383,8 @@ importers:
         specifier: ^9.4.3
         version: 9.4.3(react@18.2.0)
       react-select:
-        specifier: 5.7.3
-        version: 5.7.3(@types/react@18.2.31)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 5.7.7
+        version: 5.7.7(@types/react@18.2.31)(react-dom@18.2.0)(react@18.2.0)
       recharts:
         specifier: ^2.5.0
         version: 2.5.0(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0)
@@ -15932,8 +15932,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /react-select@5.7.3(@types/react@18.2.31)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-z8i3NCuFFWL3w27xq92rBkVI2onT0jzIIPe480HlBjXJ3b5o6Q+Clp4ydyeKrj9DZZ3lrjawwLC5NGl0FSvUDg==}
+  /react-select@5.7.7(@types/react@18.2.31)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-HhashZZJDRlfF/AKj0a0Lnfs3sRdw/46VJIRd8IbB9/Ovr74+ZIwkAdSBjSPXsFMG+u72c5xShqwLSKIJllzqw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
