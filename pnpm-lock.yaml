@@ -236,8 +236,8 @@ importers:
         specifier: ^1.0.5
         version: 1.0.5(@types/react@18.2.30)(react-dom@18.2.0)(react@18.2.0)
       '@react-email/button':
-        specifier: 0.0.9
-        version: 0.0.9
+        specifier: 0.0.10
+        version: 0.0.10
       '@react-email/column':
         specifier: 0.0.7
         version: 0.0.7
@@ -5808,8 +5808,8 @@ packages:
       '@babel/runtime': 7.21.0
     dev: false
 
-  /@react-email/button@0.0.9:
-    resolution: {integrity: sha512-eYWQ1X4RFlkKYYSPgSrT6rk98wuLOieEAGENrp9j37t1v/1C+jMmBu0UjZvwHsHWdbOMRjbVDFeMI/+MxWKSEg==}
+  /@react-email/button@0.0.10:
+    resolution: {integrity: sha512-S8r7NGTxXoxvw5kCdMzpwXdBHhYAhrYM9sylK6xr+2M9osrjHQOPLBoV3I/po9xdzN3WyRcZqQixH0wPeXy2Gw==}
     engines: {node: '>=16.0.0'}
     dependencies:
       react: 18.2.0
