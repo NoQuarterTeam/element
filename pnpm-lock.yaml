@@ -13,8 +13,8 @@ importers:
         version: 1.8.3
     devDependencies:
       prettier:
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.3
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
@@ -501,11 +501,11 @@ importers:
         specifier: ^8.4.21
         version: 8.4.21
       prettier:
-        specifier: ^2.8.4
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.3
       prettier-plugin-tailwindcss:
         specifier: ^0.5.0
-        version: 0.5.0(prettier@2.8.4)
+        version: 0.5.0(prettier@3.0.3)
       remix-flat-routes:
         specifier: 0.6.1
         version: 0.6.1(@remix-run/dev@1.19.3)
@@ -15238,7 +15238,7 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier-plugin-tailwindcss@0.5.0(prettier@2.8.4):
+  /prettier-plugin-tailwindcss@0.5.0(prettier@3.0.3):
     resolution: {integrity: sha512-EpP/Hg/D/LzjKJ+gYiSnsqk+PkrHSFQAuRHx/sj3O4r2kH0iJAOrKeKmI1X4Fm96M1BY+tO0KiV+/Y03MYbArg==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
@@ -15290,12 +15290,18 @@ packages:
       prettier-plugin-twig-melody:
         optional: true
     dependencies:
-      prettier: 2.8.4
+      prettier: 3.0.3
     dev: true
 
   /prettier@2.8.4:
     resolution: {integrity: sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==}
     engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
+
+  /prettier@3.0.3:
+    resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==}
+    engines: {node: '>=14'}
     hasBin: true
     dev: true
 
