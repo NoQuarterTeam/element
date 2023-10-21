@@ -507,8 +507,8 @@ importers:
         specifier: ^0.5.0
         version: 0.5.0(prettier@2.8.4)
       remix-flat-routes:
-        specifier: 0.5.10
-        version: 0.5.10(@remix-run/dev@1.18.1)
+        specifier: 0.6.1
+        version: 0.6.1(@remix-run/dev@1.18.1)
       tailwindcss:
         specifier: ^3.3.1
         version: 3.3.1(postcss@8.4.21)
@@ -6410,10 +6410,10 @@ packages:
       set-cookie-parser: 2.5.1
       source-map: 0.7.4
 
-  /@remix-run/v1-route-convention@0.1.2(@remix-run/dev@1.18.1):
-    resolution: {integrity: sha512-vlcG2+uNVMf0euoFzM3BR3fgj0xYhjQPSufxK0sCCOXVGCteAqfXtcMQs2pZVYrKjeXLL+8ok2L9ThyZkhyt+A==}
+  /@remix-run/v1-route-convention@0.1.4(@remix-run/dev@1.18.1):
+    resolution: {integrity: sha512-fVTr9YlNLWfaiM/6Y56sOtcY8x1bBJQHY0sDWO5+Z/vjJ2Ni7fe2fwrzs1jUFciMPXqBQdFGePnkuiYLz3cuUA==}
     peerDependencies:
-      '@remix-run/dev': ^1.15.0
+      '@remix-run/dev': ^1.15.0 || ^2.0.0
     dependencies:
       '@remix-run/dev': 1.18.1(@remix-run/serve@1.18.1)
       minimatch: 7.4.6
@@ -16233,14 +16233,14 @@ packages:
       unified: 10.1.2
     dev: true
 
-  /remix-flat-routes@0.5.10(@remix-run/dev@1.18.1):
-    resolution: {integrity: sha512-9pn3vx8q66wmWmaEEUDqFKobKVD6EtC9K/gsZsPAUfRVyzWfcS6GkPq9IKZm/nJ+7WuTpiDOVxvx2j22kbReXw==}
+  /remix-flat-routes@0.6.1(@remix-run/dev@1.18.1):
+    resolution: {integrity: sha512-7QlTjezVCSD1JCONRaEjINVfrkvl29gb9CXzSe6mvUsVvNmVNZ+nJMNTQaUYdDyEtnH9UGUq7NhafK2CHg3RrQ==}
     hasBin: true
     peerDependencies:
-      '@remix-run/dev': ^1.15.0
+      '@remix-run/dev': ^1.15.0 || ^2
     dependencies:
       '@remix-run/dev': 1.18.1(@remix-run/serve@1.18.1)
-      '@remix-run/v1-route-convention': 0.1.2(@remix-run/dev@1.18.1)
+      '@remix-run/v1-route-convention': 0.1.4(@remix-run/dev@1.18.1)
       minimatch: 5.1.6
     dev: true
 
