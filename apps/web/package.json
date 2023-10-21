@@ -89,7 +89,7 @@
     "react-intersection-observer": "^9.4.3",
     "react-select": "5.7.7",
     "recharts": "^2.5.0",
-    "resend": "^0.16.0",
+    "resend": "^0.17.0",
     "sharp": "^0.32.0",
     "stripe": "12.12.0",
     "tailwind-merge": "^1.10.0",
