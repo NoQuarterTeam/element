@@ -61,8 +61,8 @@ importers:
         specifier: ^10.9.0
         version: 10.16.0
       class-variance-authority:
-        specifier: ^0.6.0
-        version: 0.6.0(typescript@4.9.5)
+        specifier: ^0.7.0
+        version: 0.7.0
       dayjs:
         specifier: 1.11.10
         version: 1.11.10
@@ -302,8 +302,8 @@ importers:
         specifier: ^2.4.3
         version: 2.4.3
       class-variance-authority:
-        specifier: ^0.6.0
-        version: 0.6.0(typescript@4.9.5)
+        specifier: ^0.7.0
+        version: 0.7.0
       compression:
         specifier: 1.7.4
         version: 1.7.4
@@ -8244,16 +8244,10 @@ packages:
       isobject: 3.0.1
       static-extend: 0.1.2
 
-  /class-variance-authority@0.6.0(typescript@4.9.5):
-    resolution: {integrity: sha512-qdRDgfjx3GRb9fpwpSvn+YaidnT7IUJNe4wt5/SWwM+PmUwJUhQRk/8zAyNro0PmVfmen2635UboTjIBXXxy5A==}
-    peerDependencies:
-      typescript: '>= 4.5.5 < 6'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
+  /class-variance-authority@0.7.0:
+    resolution: {integrity: sha512-jFI8IQw4hczaL4ALINxqLEXQbWcNjoSkloa4IaufXCJr6QawJyw7tuRysRsrE8w2p/4gGaxKIt/hX3qz/IbD1A==}
     dependencies:
-      clsx: 1.2.1
-      typescript: 4.9.5
+      clsx: 2.0.0
     dev: false
 
   /classnames@2.3.2:
@@ -8328,8 +8322,8 @@ packages:
     engines: {node: '>=0.8'}
     dev: false
 
-  /clsx@1.2.1:
-    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
+  /clsx@2.0.0:
+    resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}
     engines: {node: '>=6'}
     dev: false
 
@@ -17747,6 +17741,7 @@ packages:
     resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
     engines: {node: '>=4.2.0'}
     hasBin: true
+    dev: true
 
   /ua-parser-js@0.7.34:
     resolution: {integrity: sha512-cJMeh/eOILyGu0ejgTKB95yKT3zOenSe9UGE3vj6WfiOwgGYnmATUsnDixMFvdU+rNMvWih83hrUP8VwhF9yXQ==}
