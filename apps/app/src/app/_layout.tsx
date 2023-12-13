@@ -1,3 +1,4 @@
+import * as React from "react"
 import { Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold, Poppins_900Black, useFonts } from "@expo-google-fonts/poppins"
 import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { Slot, SplashScreen } from "expo-router"
@@ -8,6 +9,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context"
 import { NewUpdate } from "../components/NewUpdate"
 import { useCheckExpoUpdates } from "../lib/hooks/useCheckExpoUpdates"
 import { TRPCProvider } from "../lib/utils/api"
+
+SplashScreen.preventAutoHideAsync()
 
 // This is the main layout of the app
 // It wraps your pages with the providers they need
@@ -20,13 +23,15 @@ export default function RootLayout() {
   })
   const { isDoneChecking, isNewUpdateAvailable } = useCheckExpoUpdates()
 
+  const onLayoutRootView = React.useCallback(() => SplashScreen.hideAsync(), [])
+
   // Prevent rendering until the font has loaded
-  if (!fontsLoaded || !isDoneChecking) return <SplashScreen />
+  if (!fontsLoaded || !isDoneChecking) return null
 
   return (
     <ActionSheetProvider>
       <TRPCProvider>
-        <SafeAreaProvider>
+        <SafeAreaProvider onLayout={onLayoutRootView}>
           <View className="flex-1 bg-white dark:bg-black">{isNewUpdateAvailable ? <NewUpdate /> : <Slot />}</View>
           <StatusBar />
         </SafeAreaProvider>

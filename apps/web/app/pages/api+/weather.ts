@@ -1,4 +1,4 @@
-import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
+import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import cookie from "cookie"
 import dayjs from "dayjs"
@@ -7,7 +7,7 @@ import { OPEN_WEATHER_KEY } from "~/lib/config.server"
 import { USER_LOCATION_COOKIE_KEY } from "~/pages/_app.timeline.profile.settings"
 import { requireUser } from "~/services/auth/auth.server"
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireUser(request)
   const weatherData = await getWeatherData(request)
   return json(weatherData, { headers: { "Cache-Control": "private, max-age=3600, s-maxage=1800" } })

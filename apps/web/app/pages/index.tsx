@@ -1,7 +1,7 @@
 import { RiMenuLine, RiMoonLine, RiSunLine } from "react-icons/ri"
-import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
+import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "@element/shared"
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import { Link, useFetcher } from "@remix-run/react"
 
 import { Badge } from "~/components/ui/Badge"
@@ -9,15 +9,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { IconButton } from "~/components/ui/IconButton"
 import { Limiter } from "~/components/ui/Limiter"
 import { LinkButton } from "~/components/ui/LinkButton"
-import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "@element/shared"
 import { useTheme } from "~/lib/theme"
 import { getUserSession } from "~/services/session/session.server"
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [{ title: "Element" }]
 }
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { userId } = await getUserSession(request)
   if (userId) return redirect("/timeline")
   return json(null)
@@ -56,7 +55,7 @@ export default function HomeLayout() {
               </Link>
             </div>
             <div className="hstack hidden md:flex">
-              <themeFetcher.Form action="/api/theme" method="post" replace>
+              <themeFetcher.Form action="/api/theme" method="post">
                 <input type="hidden" name="theme" value={isDark ? "light" : "dark"} />
                 <IconButton
                   rounded="full"
@@ -92,7 +91,7 @@ export default function HomeLayout() {
                 <DropdownMenuItem asChild>
                   <Link to="#pricing">Pricing</Link>
                 </DropdownMenuItem>
-                <hr className="my-2 mx-1" />
+                <hr className="mx-1 my-2" />
                 <DropdownMenuItem asChild>
                   <Link to="/register">Register</Link>
                 </DropdownMenuItem>
@@ -104,7 +103,7 @@ export default function HomeLayout() {
           </div>
         </Limiter>
       </div>
-      <Limiter className="pt-16 pb-20">
+      <Limiter className="pb-20 pt-16">
         <div className="stack space-y-20">
           <div className="center flex-col">
             <div className="vstack max-w-lg space-y-6 pb-12 text-center">
@@ -141,10 +140,10 @@ export default function HomeLayout() {
               <h3 className="text-5xl">Pricing</h3>
               <p className="text-lg">Start for free, or as low as €4 a month.</p>
             </div>
-            <div className="w-full border-r border-b border-gray-100 text-xs dark:border-gray-600 md:text-sm">
+            <div className="w-full border-b border-r border-gray-100 text-xs dark:border-gray-600 md:text-sm">
               <div className="flex">
                 <div className="flex flex-[3] border-l border-transparent p-1 md:p-2" />
-                <div className="flex flex-[2] border-t border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">
+                <div className="flex flex-[2] border-l border-t border-gray-100 p-1 dark:border-gray-600 md:p-2">
                   <div className="stack space-y-0 md:space-y-2">
                     <p className="text-md font-bold">Personal</p>
                     <p className="text-6xl font-bold">€0</p>

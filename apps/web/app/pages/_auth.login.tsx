@@ -1,4 +1,4 @@
-import type { ActionArgs, V2_MetaFunction } from "@remix-run/node"
+import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Link, useSearchParams } from "@remix-run/react"
 import { z } from "zod"
@@ -10,7 +10,7 @@ import { badRequest } from "~/lib/remix"
 import { comparePasswords } from "~/services/auth/password.server"
 import { getUserSession } from "~/services/session/session.server"
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [{ title: "Login" }]
 }
 export const headers = () => {
@@ -19,7 +19,7 @@ export const headers = () => {
   }
 }
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const loginSchema = z.object({
     email: z.string().min(3).email("Invalid email"),

@@ -3,16 +3,13 @@ import { BiPlus } from "react-icons/bi"
 import { HiOutlineExclamation } from "react-icons/hi"
 import { RiAddLine, RiDeleteBinLine, RiFileCopyLine, RiTimeLine } from "react-icons/ri"
 import { type Element, TaskRepeat } from "@element/database/types"
+import { getRepeatingDatesBetween , join,randomHexColor , useDisclosure  } from "@element/shared"
 import { useSearchParams } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
-import { randomHexColor } from "@element/shared"
-import { getRepeatingDatesBetween } from "@element/shared"
-import { useDisclosure } from "@element/shared"
 import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { join } from "@element/shared"
 import { TaskActionMethods, type TaskDetail } from "~/pages/_app.timeline.$id"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
 import type { TaskElement } from "~/pages/api+/elements"
@@ -152,7 +149,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
   }, [todos])
 
   return (
-    <createUpdateFetcher.Form replace method="post" action={task ? `/timeline/${task.id}` : "/api/tasks"}>
+    <createUpdateFetcher.Form method="post" action={task ? `/timeline/${task.id}` : "/api/tasks"}>
       <div className="flex w-full items-start justify-between">
         <input
           className="w-full border-none bg-transparent pb-1 pl-3 pt-3 text-2xl text-gray-900 focus:outline-none dark:text-gray-100 md:pl-5 md:pt-5 md:text-4xl"

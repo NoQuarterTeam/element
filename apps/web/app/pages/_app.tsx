@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { type ShouldRevalidateFunction, useRouteLoaderData } from "@remix-run/react"
 import { Outlet } from "@remix-run/react"
@@ -11,7 +11,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({ formAction }) => {
   if (!formAction) return false
   return ["profile"].some((path) => formAction.includes(path))
 }
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request)
   return json(user)
 }

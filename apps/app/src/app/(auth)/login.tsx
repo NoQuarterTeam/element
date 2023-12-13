@@ -38,7 +38,14 @@ export default function Login() {
       <ScrollView className="h-full space-y-3 px-4 pt-16">
         <Heading className="text-4xl">Login</Heading>
         <View>
-          <FormInput label="Email" value={email} onChangeText={setEmail} error={login.error?.data?.zodError?.fieldErrors.email} />
+          <FormInput
+            autoCapitalize="none"
+            autoComplete="email"
+            label="Email"
+            value={email}
+            onChangeText={setEmail}
+            error={login.error?.data?.zodError?.fieldErrors.email}
+          />
         </View>
         <View>
           <FormInput

@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Link, useParams } from "@remix-run/react"
 import { z } from "zod"
@@ -17,7 +17,7 @@ export const headers = () => {
   }
 }
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const resetPasswordSchema = z.object({
     token: z.string(),

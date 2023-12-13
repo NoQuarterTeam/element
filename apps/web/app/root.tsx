@@ -1,34 +1,30 @@
-import * as React from "react"
-import * as Tooltip from "@radix-ui/react-tooltip"
-import type { LinksFunction, LoaderArgs, SerializeFrom, V2_MetaFunction } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData, useMatches } from "@remix-run/react"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-
+import "~/styles/app.css"
+import "~/styles/toast.css"
+import type * as React from "react"
 import { join } from "@element/shared"
-import appStyles from "~/styles/app.css"
-import toastStyles from "~/styles/toast.css"
+import * as Tooltip from "@radix-ui/react-tooltip"
+import { cssBundleHref } from "@remix-run/css-bundle"
+import type { LinksFunction, LoaderFunctionArgs, MetaFunction, SerializeFrom } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 import { Fathom } from "./components/Fathom"
 import { FlashMessage } from "./components/FlashMessage"
 import { Toaster } from "./components/ui/Toast"
+import { FULL_WEB_URL } from "./lib/config.server"
 import { type Theme } from "./lib/theme"
 import { getFlashSession } from "./services/session/flash.server"
 import { getThemeSession } from "./services/session/theme.server"
-import { FULL_WEB_URL } from "./lib/config.server"
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [{ title: "Element" }]
 }
 
 export const links: LinksFunction = () => {
-  return [
-    { rel: "stylesheet", href: appStyles },
-    { rel: "stylesheet", href: toastStyles, async: true },
-  ]
+  return cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []
 }
-
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { flash, commit } = await getFlashSession(request)
   const { getTheme, commit: commitTheme } = await getThemeSession(request)
   return json(
@@ -86,8 +82,6 @@ interface DocumentProps {
 }
 
 function Document({ theme, children }: DocumentProps) {
-  const matches = useMatches()
-  const shouldDisableScripts = matches.some((match) => match.handle?.disableScripts)
   return (
     <html lang="en" className={join(theme)}>
       <head>
@@ -127,7 +121,7 @@ function Document({ theme, children }: DocumentProps) {
             return paths.includes(location.pathname) ? location.pathname : location.key
           }}
         />
-        {!shouldDisableScripts && <Scripts />}
+        <Scripts />
         <LiveReload />
       </body>
     </html>

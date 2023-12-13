@@ -1,5 +1,6 @@
-import { EmailWrapper } from "~/components/EmailWrapper"
 import { Button } from "@react-email/button"
+
+import { EmailWrapper } from "~/components/EmailWrapper"
 
 export default function ResetPasswordEmail(props: { link?: string }) {
   const link = props.link || "localhost:3000"

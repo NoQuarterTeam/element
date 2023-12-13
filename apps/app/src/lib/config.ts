@@ -1,25 +1,26 @@
 import * as Application from "expo-application"
+import * as Updates from "expo-updates"
 
-function getEnvironment() {
-  if (__DEV__) {
-    return {
-      ENV: "development",
-      WEB_URL: "http://localhost:3000",
-    }
-  } else {
-    return {
-      ENV: "production",
-      WEB_URL: "https://myelement.app",
-    }
-  }
+const config = {
+  WEB_URL: "http://localhost:3000",
+  ENV: "development",
+  UPDATE_ID: Updates.updateId?.split("-")[0] || "dev",
 }
 
-export const environment = getEnvironment()
-export const WEB_URL = environment.WEB_URL
+if (Updates.channel === "production") {
+  config.WEB_URL = "https://ramble.guide"
+  config.ENV = "production"
+} else if (Updates.channel === "preview") {
+  config.WEB_URL = "https://dev.ramble.guide"
+  config.ENV = "preview"
+}
+
+export const FULL_WEB_URL = config.WEB_URL
+export const ENV = config.ENV
 
 export const VERSION = Application.nativeApplicationVersion
-export const ENV = environment.ENV
+export const UPDATE_ID = config.UPDATE_ID
 
 export const IS_DEV = ENV === "development"
-export const IS_STAGING = ENV === "staging"
+export const IS_PREVIEW = ENV === "preview"
 export const IS_PRODUCTION = ENV === "production"

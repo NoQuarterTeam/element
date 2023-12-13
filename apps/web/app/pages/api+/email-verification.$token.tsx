@@ -1,9 +1,9 @@
-import { type LoaderArgs, redirect } from "@remix-run/node"
+import { type LoaderFunctionArgs, redirect } from "@remix-run/node"
 
 import { db } from "~/lib/db.server"
 import { decryptToken } from "~/lib/jwt.server"
 
-export const loader = async ({ params }: LoaderArgs) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   const token = params.token
   if (!token) return redirect("/")
   const { id } = decryptToken<{ id: string }>(token)

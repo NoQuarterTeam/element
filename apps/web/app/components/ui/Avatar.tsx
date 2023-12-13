@@ -1,7 +1,6 @@
+import { merge } from "@element/shared"
 import * as RAvatar from "@radix-ui/react-avatar"
 import { cva, type VariantProps } from "class-variance-authority"
-
-import { merge } from "@element/shared"
 
 export const avatarStyles = cva("center rounded-full capitalize", {
   variants: {

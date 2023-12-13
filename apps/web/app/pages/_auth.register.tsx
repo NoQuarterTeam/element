@@ -1,4 +1,4 @@
-import type { ActionArgs, V2_MetaFunction } from "@remix-run/node"
+import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 import { z } from "zod"
@@ -15,7 +15,7 @@ import { getUserSession } from "~/services/session/session.server"
 import { createTemplates } from "~/services/timeline/templates.server"
 import { sendEmailVerification } from "~/services/user/user.mailer.server"
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [{ title: "Register" }]
 }
 export const headers = () => {
@@ -29,7 +29,7 @@ enum RegisterActionMethods {
   RegisterTemporay = "RegisterTemporay",
 }
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const action = formData.get("_action") as RegisterActionMethods | undefined
 

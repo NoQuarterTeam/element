@@ -1,7 +1,6 @@
 import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-
 import { merge } from "@element/shared"
+import { cva, type VariantProps } from "class-variance-authority"
 
 export const inputStyles = cva(
   "text-base block w-full border text-black dark:text-white placeholder-gray-500 transition-colors focus:border-primary-500 focus:bg-transparent focus:ring-transparent rounded-xs focus:ring-primary-500 ring-0 focus:ring-2",

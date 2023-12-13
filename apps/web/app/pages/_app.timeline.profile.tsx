@@ -1,5 +1,6 @@
 import type * as React from "react"
 import { RiBankCard2Line, RiMap2Line, RiSettings2Line } from "react-icons/ri"
+import { join } from "@element/shared"
 import { NavLink, Outlet, useNavigate, useNavigation } from "@remix-run/react"
 
 import { transformImageSrc } from "~/components/OptimisedImage"
@@ -8,7 +9,6 @@ import { Modal } from "~/components/ui/Modal"
 import { Spinner } from "~/components/ui/Spinner"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { createImageUrl } from "~/lib/s3"
-import { join } from "@element/shared"
 import { useMe } from "~/pages/_app"
 
 export default function Profile() {

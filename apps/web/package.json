@@ -51,10 +51,11 @@
     "@react-email/render": "0.0.7",
     "@react-email/tailwind": "0.0.9",
     "@react-email/text": "0.0.5",
-    "@remix-run/express": "1.19.3",
-    "@remix-run/node": "1.19.3",
-    "@remix-run/react": "1.19.3",
-    "@remix-run/serve": "1.19.3",
+    "@remix-run/css-bundle": "^2.3.1",
+    "@remix-run/express": "2.3.1",
+    "@remix-run/node": "2.3.1",
+    "@remix-run/react": "2.3.1",
+    "@remix-run/serve": "2.3.1",
     "@tanstack/react-query": "4.36.1",
     "@trpc/server": "^10.16.0",
     "aws-sdk": "2.1413.0",
@@ -99,8 +100,8 @@
   },
   "devDependencies": {
     "@element/tailwind-config": "*",
-    "@remix-run/dev": "1.19.3",
-    "@remix-run/eslint-config": "1.19.3",
+    "@remix-run/dev": "2.3.1",
+    "@remix-run/eslint-config": "2.3.1",
     "@tailwindcss/forms": "^0.5.3",
     "@types/bcryptjs": "^2.4.2",
     "@types/compression": "1.7.4",
@@ -129,11 +130,9 @@
     "nock": "^13.3.0",
     "npm-run-all": "4.1.5",
     "postcss": "^8.4.21",
-    "prettier": "^2.8.4",
-    "prettier-plugin-tailwindcss": "^0.5.0",
     "remix-flat-routes": "0.6.1",
-    "tailwindcss": "^3.3.1",
-    "typescript": "^4.9.5"
+    "tailwindcss": "3.3.2",
+    "typescript": "5.3.3"
   },
   "engines": {
     "node": ">=16"

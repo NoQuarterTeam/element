@@ -1,12 +1,11 @@
 import * as React from "react"
 import { RiAddCircleLine, RiDeleteBin4Line, RiFolder2Line } from "react-icons/ri"
+import { merge, useDisclosure } from "@element/shared"
 import { useFetcher } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 
 import * as Popover from "~/components/ui/Popover"
-
-import { merge, useDisclosure } from "@element/shared"
 import type { TimelineHabit, TimelineHabitEntry, TimelineHabitResponse } from "~/pages/api+/habits"
 import { HabitsActionMethods } from "~/pages/api+/habits"
 import { HabitActionMethods } from "~/pages/api+/habits.$id"

@@ -1,10 +1,9 @@
 import * as React from "react"
 import { BiX } from "react-icons/bi"
 import { CgSearch } from "react-icons/cg"
+import { merge } from "@element/shared"
 import { useSearchParams } from "@remix-run/react"
 import queryString from "query-string"
-
-import { merge } from "@element/shared"
 
 import { IconButton } from "./IconButton"
 import { Input, type InputProps } from "./Inputs"

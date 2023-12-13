@@ -1,8 +1,7 @@
 import * as React from "react"
+import { join } from "@element/shared"
 import * as ToastPrimitive from "@radix-ui/react-toast"
 import { ToastProvider, ToastViewport } from "@radix-ui/react-toast"
-
-import { join } from "@element/shared"
 
 import { CloseButton } from "./CloseButton"
 

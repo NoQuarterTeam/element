@@ -1,7 +1,8 @@
 import * as React from "react"
 import { RiAddLine, RiArrowDownSLine, RiArrowRightSLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri"
+import { safeReadableColor , useDisclosure } from "@element/shared"
 import { Dialog } from "@headlessui/react"
-import { json, type LoaderArgs, type SerializeFrom } from "@remix-run/node"
+import { json, type LoaderFunctionArgs, type SerializeFrom } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
 
@@ -12,9 +13,7 @@ import { Drawer } from "~/components/ui/Drawer"
 import { IconButton } from "~/components/ui/IconButton"
 import { Checkbox } from "~/components/ui/Inputs"
 import { Tooltip } from "~/components/ui/Tooltip"
-import { safeReadableColor } from "@element/shared"
 import { db } from "~/lib/db.server"
-import { useDisclosure } from "@element/shared"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
@@ -22,7 +21,7 @@ import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TimelineTask } from "~/pages/api+/tasks"
 import { getUser } from "~/services/auth/auth.server"
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request)
   const tasks = await db.task.findMany({
     select: {

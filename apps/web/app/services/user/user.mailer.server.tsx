@@ -1,12 +1,12 @@
 import type { User } from "@element/database/types"
-import ResetPasswordTemplate from "~/pages/emails+/reset-password"
 
 import { FULL_WEB_URL } from "~/lib/config.server"
 import { createToken } from "~/lib/jwt.server"
+import { mailer } from "~/lib/mailer.server"
+import ResetPasswordTemplate from "~/pages/emails+/reset-password"
+import VerifyAccountEmail from "~/pages/emails+/verify-account"
 
 import { type CurrentUser } from "../auth/auth.server"
-import VerifyAccountEmail from "~/pages/emails+/verify-account"
-import { mailer } from "~/lib/mailer.server"
 
 export async function sendResetPasswordEmail(user: User, token: string) {
   try {

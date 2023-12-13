@@ -1,4 +1,4 @@
-import { type ActionArgs, redirect } from "@remix-run/node"
+import { type ActionFunctionArgs, redirect } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 import { z } from "zod"
 
@@ -16,7 +16,7 @@ export const headers = () => {
   }
 }
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const resetSchema = z.object({ email: z.string().email("Invalid email") })
   const { data, fieldErrors } = await validateFormData(resetSchema, formData)

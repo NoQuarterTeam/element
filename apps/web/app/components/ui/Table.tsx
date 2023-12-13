@@ -1,10 +1,9 @@
 import * as React from "react"
 import { CgArrowLongDown, CgArrowLongUp } from "react-icons/cg"
 import { Prisma } from "@element/database/types"
+import { join, merge } from "@element/shared"
 import { Link as RLink, useSearchParams } from "@remix-run/react"
 import queryString from "query-string"
-
-import { join, merge } from "@element/shared"
 
 import { Button } from "./Button"
 import { NoData } from "./NoData"

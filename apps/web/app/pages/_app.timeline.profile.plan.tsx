@@ -1,4 +1,5 @@
-import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
+import { join,MAX_FREE_ELEMENTS, MAX_FREE_TASKS , useDisclosure  } from "@element/shared"
+import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { Outlet, useFetcher, useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
@@ -9,18 +10,14 @@ import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Form, FormButton } from "~/components/ui/Form"
 import { Input } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
-import { PRICE_ID } from "~/lib/config.server"
-import { FULL_WEB_URL } from "~/lib/config.server"
+import { FULL_WEB_URL,PRICE_ID  } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
-import { useDisclosure } from "@element/shared"
-import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "@element/shared"
 import { badRequest } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
-import { join } from "@element/shared"
 import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request)
   const [taskCount, elementCount, subscription] = await Promise.all([
     !user.stripeSubscriptionId
@@ -56,7 +53,7 @@ export enum ProfilePlanMethods {
   ReactivatePlan = "reactivatePlan",
 }
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getUser(request)
   const { createFlash } = await getFlashSession(request)
   const formData = await request.formData()
@@ -168,8 +165,8 @@ export default function Plan() {
                     (data?.taskCount || 0) >= MAX_FREE_TASKS
                       ? "text-red-500"
                       : (data?.taskCount || 0) > MAX_FREE_TASKS * 0.75
-                      ? "text-primary-500"
-                      : undefined,
+                        ? "text-primary-500"
+                        : undefined,
                   )}
                 >
                   {data?.taskCount}{" "}
@@ -185,8 +182,8 @@ export default function Plan() {
                     (data?.elementCount || 0) >= MAX_FREE_ELEMENTS
                       ? "text-red-500"
                       : (data?.elementCount || 0) > MAX_FREE_ELEMENTS * 0.75
-                      ? "text-primary-500"
-                      : undefined,
+                        ? "text-primary-500"
+                        : undefined,
                   )}
                 >
                   {data?.elementCount}
@@ -200,10 +197,10 @@ export default function Plan() {
 
       <hr />
 
-      <div className="w-full border-r border-b border-gray-100 text-xs dark:border-gray-600 md:text-sm">
+      <div className="w-full border-b border-r border-gray-100 text-xs dark:border-gray-600 md:text-sm">
         <div className="flex">
           <div className="flex flex-[3] border-l border-transparent p-1 md:p-2" />
-          <div className="flex flex-[2] border-t border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">
+          <div className="flex flex-[2] border-l border-t border-gray-100 p-1 dark:border-gray-600 md:p-2">
             <div className="stack space-y-0 md:space-y-2">
               <p className="text-md font-bold">Personal</p>
               <p className="text-xl font-medium">€0</p>

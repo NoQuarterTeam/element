@@ -1,12 +1,14 @@
-import React from "react"
-import Constants from "expo-constants"
+import * as React from "react"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { httpBatchLink } from "@trpc/client"
 import { createTRPCReact } from "@trpc/react-query"
-import { inferRouterInputs, inferRouterOutputs } from "@trpc/server"
-import type { AppRouter } from "@element/api"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server"
+import Constants from "expo-constants"
 import superjson from "superjson"
+
+import { type AppRouter } from "@element/api"
+import { FULL_WEB_URL } from "../config"
 
 /**
  * A set of typesafe hooks for consuming your API.
@@ -35,9 +37,10 @@ const getBaseUrl = () => {
    * you'll have to manually set it. NOTE: Port 3000 should work for most but confirm
    * you don't have anything else running on it, or you'd have to change it.
    */
-  // return "https://myelement.app"
-  const localhost = Constants.manifest?.debuggerHost?.split(":")[0]
-  if (!localhost) return "https://myelement.app"
+  // return "https://ramble.app"
+  const debuggerHost = Constants.debuggerHost ?? Constants.manifest2?.extra?.expoGo?.debuggerHost
+  const localhost = debuggerHost?.split(":")[0]
+  if (!localhost) return FULL_WEB_URL
   return `http://${localhost}:3000`
 }
 

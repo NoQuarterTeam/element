@@ -12,14 +12,13 @@ import {
   RiUser3Line,
 } from "react-icons/ri"
 import { Role } from "@element/database/types"
+import { join,useDisclosure } from "@element/shared"
 import { useFetcher, useLocation, useNavigate, useSubmit } from "@remix-run/react"
 
-import { useDisclosure } from "@element/shared"
 import { useEventListener } from "~/lib/hooks/useEventListener"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
-import { join } from "@element/shared"
 import { useMe } from "~/pages/_app"
 
 import { useTheme } from "../lib/theme"
@@ -63,7 +62,7 @@ export function Nav() {
   const elementIds = useSelectedElements((s) => s.elementIds)
   return (
     <>
-      <div className="absolute top-4 right-0 flex w-16 justify-center">
+      <div className="absolute right-0 top-4 flex w-16 justify-center">
         <IconButton
           rounded="full"
           variant="ghost"
@@ -75,7 +74,7 @@ export function Nav() {
 
       <div
         className={join(
-          "fixed top-0 bottom-0 right-0 flex flex-col items-center justify-between overflow-hidden border-l border-gray-100 bg-white pb-6 pt-4 transition-[width] duration-100 dark:border-gray-900 dark:bg-gray-800",
+          "fixed bottom-0 right-0 top-0 flex flex-col items-center justify-between overflow-hidden border-l border-gray-100 bg-white pb-6 pt-4 transition-[width] duration-100 dark:border-gray-900 dark:bg-gray-800",
           navProps.isOpen ? "w-16" : "w-0",
         )}
       >
@@ -96,7 +95,7 @@ export function Nav() {
               icon={
                 <div className="relative">
                   <RiTimeLine className="sq-4" />
-                  {!featuresSeen.includes("backlog") && <div className="sq-1.5 absolute top-0 right-0 rounded-full bg-red-500" />}
+                  {!featuresSeen.includes("backlog") && <div className="sq-1.5 absolute right-0 top-0 rounded-full bg-red-500" />}
                 </div>
               }
             />
@@ -110,7 +109,7 @@ export function Nav() {
               icon={
                 <div className="relative">
                   <RiBookLine className="sq-4" />
-                  {elementIds.length > 0 && <div className="bg-primary-500 sq-2.5 absolute -top-1 -right-1 rounded-full" />}
+                  {elementIds.length > 0 && <div className="bg-primary-500 sq-2.5 absolute -right-1 -top-1 rounded-full" />}
                 </div>
               }
             />
@@ -126,7 +125,7 @@ export function Nav() {
               icon={
                 <div className="relative">
                   <RiFocus3Line className="sq-4" />
-                  {!featuresSeen.includes("focus") && <div className="sq-1.5 absolute top-0 right-0 rounded-full bg-red-500" />}
+                  {!featuresSeen.includes("focus") && <div className="sq-1.5 absolute right-0 top-0 rounded-full bg-red-500" />}
                 </div>
               }
             />
@@ -153,13 +152,13 @@ export function Nav() {
                 <div className="relative">
                   <RiUser3Line className="sq-4" />
                   {(!featuresSeen.includes("weather") || !featuresSeen.includes("habits")) && (
-                    <div className="sq-1.5 absolute top-0 right-0 rounded-full bg-red-500" />
+                    <div className="sq-1.5 absolute right-0 top-0 rounded-full bg-red-500" />
                   )}
                 </div>
               }
             />
           </Tooltip>
-          <themeFetcher.Form action="/api/theme" method="post" replace>
+          <themeFetcher.Form action="/api/theme" method="post">
             <input type="hidden" name="theme" value={theme === "dark" ? "light" : "dark"} />
             <Tooltip side="left" label="Color mode">
               <IconButton

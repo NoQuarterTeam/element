@@ -1,9 +1,9 @@
-import { Tailwind } from "@react-email/tailwind"
-import { Html } from "@react-email/html"
+import type * as React from "react"
+import colors from "@element/tailwind-config/src/colors"
 import { Container } from "@react-email/container"
 import { Head } from "@react-email/head"
-import * as React from "react"
-import colors from "@element/tailwind-config/src/colors"
+import { Html } from "@react-email/html"
+import { Tailwind } from "@react-email/tailwind"
 
 const theme = {
   extend: {

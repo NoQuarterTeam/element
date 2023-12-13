@@ -1,6 +1,6 @@
 import Feather from "@expo/vector-icons/Feather"
 import dayjs from "dayjs"
-import { useRouter, useSearchParams } from "expo-router"
+import { useRouter, useGlobalSearchParams } from "expo-router"
 import * as React from "react"
 import { Modal, TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
@@ -42,7 +42,7 @@ interface Props {
 
 export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
   const router = useRouter()
-  const { date } = useSearchParams()
+  const { date } = useGlobalSearchParams()
 
   const [form, setForm] = React.useState<TaskFormData>({
     name: task?.name || "",
@@ -94,9 +94,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
             placeholder="Name"
             onChangeText={(name) => setForm((f) => ({ ...f, name }))}
           />
-          {fieldErrors?.name?.map((error) => (
-            <FormInputError key={error} error={error} />
-          ))}
+          {fieldErrors?.name?.map((error) => <FormInputError key={error} error={error} />)}
         </View>
         <TouchableOpacity onPress={router.back} className="p-2">
           <Feather name="x" size={24} color={colorScheme === "dark" ? "white" : "black"} />
@@ -205,12 +203,8 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
             <Text className="opacity-70">Minutes</Text>
           </View>
         </View>
-        {fieldErrors?.durationHours?.map((error) => (
-          <FormInputError key={error} error={error} />
-        ))}
-        {fieldErrors?.durationMinutes?.map((error) => (
-          <FormInputError key={error} error={error} />
-        ))}
+        {fieldErrors?.durationHours?.map((error) => <FormInputError key={error} error={error} />)}
+        {fieldErrors?.durationMinutes?.map((error) => <FormInputError key={error} error={error} />)}
       </View>
       <View>
         <FormInput

@@ -1,8 +1,7 @@
 import * as React from "react"
+import { join } from "@element/shared"
 import { Transition } from "@headlessui/react"
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
-
-import { join } from "@element/shared"
 
 import { Button } from "./Button"
 

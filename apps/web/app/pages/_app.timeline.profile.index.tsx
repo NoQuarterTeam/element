@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { useFetcher, useSubmit } from "@remix-run/react"
 import { z } from "zod"
@@ -23,7 +23,7 @@ export enum ProfileActionMethods {
   UpdateProfile = "updateProfile",
 }
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getUser(request)
   const { createFlash } = await getFlashSession(request)
   const formData = await request.formData()

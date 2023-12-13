@@ -1,8 +1,7 @@
 import * as React from "react"
+import { join, merge } from "@element/shared"
 import type { VariantProps } from "class-variance-authority"
 import { cva } from "class-variance-authority"
-
-import { join, merge } from "@element/shared"
 
 import { Spinner } from "./Spinner"
 

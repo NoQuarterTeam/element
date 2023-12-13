@@ -1,5 +1,6 @@
 import { type Task, TaskRepeat } from "@element/database/types"
-import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
+import { getRepeatingDatesBetween, MAX_FREE_TASKS } from "@element/shared"
+import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import dayjs from "dayjs"
 import { z } from "zod"
@@ -7,13 +8,11 @@ import { z } from "zod"
 import { taskItemSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
 import { getFormDataArray, validateFormData } from "~/lib/form"
-
-import { MAX_FREE_TASKS, getRepeatingDatesBetween } from "@element/shared"
 import { badRequest } from "~/lib/remix"
 import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request)
   const url = new URL(request.url)
   const backParam = url.searchParams.get("back")
@@ -47,7 +46,7 @@ export enum TasksActionMethods {
   AddTask = "addTask",
   UpdateOrder = "updateOrder",
 }
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getUser(request)
   const formData = await request.formData()
   const { createFlash } = await getFlashSession(request)
@@ -122,11 +121,19 @@ export const action = async ({ request }: ActionArgs) => {
           name: t.name as string,
           isComplete: !!t.isComplete,
         }))
+        const prevTask = await db.task.findFirst({
+          where: {
+            creatorId: { equals: user.id },
+            date: { equals: data.date },
+          },
+          orderBy: { order: "desc" },
+        })
 
         const newTask = await db.$transaction(async (transaction) => {
           const task = await transaction.task.create({
             select: { ...taskItemSelectFields, todos: { select: { ...taskItemSelectFields.todos.select, name: true } } },
             data: {
+              order: prevTask ? prevTask.order + 1 : 0,
               repeat: data.repeat || null,
               isComplete: formData.has("isComplete") ? formData.get("isComplete") !== "false" : false,
               isImportant: formData.get("isImportant") === "true",

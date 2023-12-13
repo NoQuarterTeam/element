@@ -1,10 +1,10 @@
-import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
+import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 
 import { db } from "~/lib/db.server"
 import { getUser } from "~/services/auth/auth.server"
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request)
   const elements = await db.element.findMany({
     orderBy: { name: "asc" },

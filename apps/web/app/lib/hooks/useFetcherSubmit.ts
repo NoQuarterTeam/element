@@ -5,12 +5,12 @@ interface Props<T> {
   onSuccess?: (data: T) => void
 }
 export function useFetcherSubmit<T>(props: Props<T>) {
-  const fetcher = useFetcher()
+  const fetcher = useFetcher<T>()
 
   React.useEffect(() => {
     if (!fetcher.data) return
     if (fetcher.state === "loading" && fetcher.data !== null) {
-      props.onSuccess?.(fetcher.data)
+      props.onSuccess?.(fetcher.data as T)
     }
   }, [fetcher.formMethod, fetcher.data])
 

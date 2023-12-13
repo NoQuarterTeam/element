@@ -1,10 +1,10 @@
 import * as React from "react"
+import { merge } from "@element/shared"
 import type { FormProps as RemixFormProps } from "@remix-run/react"
 import { Form as RemixForm, useActionData, useNavigation } from "@remix-run/react"
 
 import type { ActionData } from "~/lib/form"
 import { createImageUrl } from "~/lib/s3"
-import { merge } from "@element/shared"
 
 import { BrandButton } from "./BrandButton"
 import { type ButtonProps } from "./Button"

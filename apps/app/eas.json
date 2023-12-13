@@ -1,19 +1,39 @@
 {
   "build": {
-    "preview": {
+    "development": {
+      "ios": { "simulator": true },
+      "developmentClient": true,
+      "distribution": "internal",
       "channel": "development",
-      "distribution": "internal"
+      "pnpm": "8.12.0",
+      "env": {
+        "APP_VARIANT": "development"
+      }
     },
-    "staging": {
-      "channel": "staging",
-      "distribution": "store"
+    "preview": {
+      "channel": "preview",
+      "distribution": "internal",
+      "pnpm": "8.12.0",
+      "env": {
+        "APP_VARIANT": "development"
+      }
     },
     "production": {
       "channel": "production",
-      "distribution": "store"
+      "distribution": "store",
+      "pnpm": "8.12.0",
+      "env": {
+        "SENTRY_AUTH_TOKEN": "private"
+      }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "releaseStatus": "draft",
+        "track": "internal",
+        "changesNotSentForReview": true
+      }
+    }
   }
 }

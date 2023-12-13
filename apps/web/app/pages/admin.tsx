@@ -1,9 +1,8 @@
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 import { RiArrowLeftLine } from "react-icons/ri"
 import { Role } from "@element/database/types"
-import type { LoaderArgs } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
+import { json , redirect } from "@remix-run/node"
 import { useLoaderData, useSearchParams } from "@remix-run/react"
 import dayjs from "dayjs"
 import { Line, LineChart, Tooltip, XAxis, YAxis } from "recharts"
@@ -17,7 +16,7 @@ import { db } from "~/lib/db.server"
 import { getUser } from "~/services/auth/auth.server"
 
 type ActivePeriod = "all" | "year" | "month" | "week"
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request)
   if (user.role !== Role.ADMIN) throw redirect("/")
   const url = new URL(request.url)
@@ -33,10 +32,10 @@ export const loader = async ({ request }: LoaderArgs) => {
         ? dayjs(firstUser.createdAt).subtract(1, "month").format("YYYY-MM-DD")
         : dayjs().subtract(1, "year")
       : activePeriod === "year"
-      ? dayjs().subtract(1, "year")
-      : activePeriod === "month"
-      ? dayjs().subtract(1, "month")
-      : dayjs().subtract(1, "week")
+        ? dayjs().subtract(1, "year")
+        : activePeriod === "month"
+          ? dayjs().subtract(1, "month")
+          : dayjs().subtract(1, "week")
 
   const [users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg, activeUsersAgg] =
     await Promise.all([

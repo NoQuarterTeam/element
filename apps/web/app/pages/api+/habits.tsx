@@ -1,6 +1,5 @@
-import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
-import { json } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
+import { json,redirect  } from "@remix-run/node"
 import dayjs from "dayjs"
 import { z } from "zod"
 
@@ -10,7 +9,7 @@ import { badRequest } from "~/lib/remix"
 import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request)
   const url = new URL(request.url)
   const backParam = url.searchParams.get("back")
@@ -49,7 +48,7 @@ export type TimelineHabitEntry = SerializeFrom<typeof loader>["habitEntries"][0]
 export enum HabitsActionMethods {
   CreateHabit = "createHabit",
 }
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getUser(request)
   const formData = await request.formData()
   const { createFlash } = await getFlashSession(request)

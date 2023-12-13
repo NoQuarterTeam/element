@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Link, Outlet } from "@remix-run/react"
 
@@ -6,17 +6,13 @@ import { db } from "~/lib/db.server"
 import { useTheme } from "~/lib/theme"
 import { getUserSession } from "~/services/session/session.server"
 
-export const handle = {
-  disableScripts: false,
-}
-
 export const headers = () => {
   return {
     "Cache-Control": "max-age=3600, s-maxage=86400",
   }
 }
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { userId } = await getUserSession(request)
   if (!userId) return null
   const user = await db.user.findUnique({ where: { id: userId }, select: { id: true } })

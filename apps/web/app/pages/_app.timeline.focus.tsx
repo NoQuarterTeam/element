@@ -1,7 +1,8 @@
 import * as React from "react"
 import { RiArrowDownSLine, RiArrowRightSLine } from "react-icons/ri"
+import { safeReadableColor , useDisclosure } from "@element/shared"
 import { Dialog } from "@headlessui/react"
-import type { LoaderArgs, SerializeFrom } from "@remix-run/node"
+import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
@@ -10,16 +11,14 @@ import { CloseButton } from "~/components/ui/CloseButton"
 import { IconButton } from "~/components/ui/IconButton"
 import { Checkbox } from "~/components/ui/Inputs"
 import { Tooltip } from "~/components/ui/Tooltip"
-import { safeReadableColor } from "@element/shared"
 import { db } from "~/lib/db.server"
-import { useDisclosure } from "@element/shared"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { getUser } from "~/services/auth/auth.server"
 
 import { TaskActionMethods } from "./_app.timeline.$id"
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request)
 
   const tasks = await db.task.findMany({
@@ -59,7 +58,7 @@ export default function Focus() {
       <div className="fixed inset-0 bg-black/50" />
       <div className="fixed inset-0 top-0 h-screen overflow-y-auto">
         <Dialog.Panel className="relative h-full w-full bg-white dark:bg-gray-800">
-          <div className="absolute top-2 right-4">
+          <div className="absolute right-4 top-2">
             <CloseButton size="lg" onClick={() => navigate("/timeline")} />
           </div>
           <div className="my-4">

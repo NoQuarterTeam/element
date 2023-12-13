@@ -1,7 +1,6 @@
 import * as React from "react"
 import type { DropzoneOptions, FileRejection } from "react-dropzone"
 import { useDropzone } from "react-dropzone"
-
 import { merge, useDisclosure, useS3Upload } from "@element/shared"
 
 import { BrandButton } from "./BrandButton"

@@ -1,7 +1,6 @@
 import * as React from "react"
-import * as RSwitch from "@radix-ui/react-switch"
-
 import { merge } from "@element/shared"
+import * as RSwitch from "@radix-ui/react-switch"
 
 export const Switch = React.forwardRef<HTMLButtonElement, RSwitch.SwitchProps>(function Switch(props, ref) {
   return (

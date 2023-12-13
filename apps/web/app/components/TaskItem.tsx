@@ -1,13 +1,10 @@
 import * as React from "react"
 import { type Prisma } from "@element/database/types"
+import { formatDuration, join, safeReadableColor, useDisclosure } from "@element/shared"
 import { Link, useFetcher } from "@remix-run/react"
 
-import { safeReadableColor } from "@element/shared"
-import { formatDuration } from "@element/shared"
-import { useDisclosure } from "@element/shared"
 import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { join } from "@element/shared"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TimelineTask } from "~/pages/api+/tasks"
 
@@ -145,7 +142,7 @@ function _TaskItem({ task }: Props) {
                 )}
 
                 {!task.isComplete && task.description && (
-                  <div className="circle-1.5 absolute top-1 right-1 opacity-70" style={{ background: task.element.color }} />
+                  <div className="circle-1.5 absolute right-1 top-1 opacity-70" style={{ background: task.element.color }} />
                 )}
               </div>
             </div>

@@ -1,5 +1,5 @@
-import type { LoaderArgs } from "@remix-run/node"
-import { Response as NodeResponse } from "@remix-run/node"
+import type { LoaderFunctionArgs } from "@remix-run/node"
+import { installGlobals } from "@remix-run/node"
 import axios from "axios"
 import * as crypto from "crypto"
 import fs from "fs"
@@ -9,6 +9,7 @@ import sharp from "sharp"
 
 import { IS_PRODUCTION } from "~/lib/config.server"
 
+installGlobals()
 const badImageBase64 = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 
 function badImageResponse() {
@@ -28,7 +29,7 @@ function getIntOrNull(value: string | null) {
   return Number.parseInt(value)
 }
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   try {
     const url = new URL(request.url)
 
@@ -63,7 +64,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     if (exists) {
       console.log({ Cache: "HIT", src })
       const fileStream = fs.createReadStream(cachedFile)
-      return new NodeResponse(fileStream, {
+      return new Response(fileStream, {
         status: 200,
         headers: { "Content-Type": "image/webp", "Cache-Control": "public, max-age=31536000, immutable" },
       })
@@ -105,7 +106,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
     // return transformed image
     const fileStream = fs.createReadStream(cachedFile)
-    return new NodeResponse(fileStream, {
+    return new Response(fileStream, {
       status: 200,
       headers: { "Content-Type": "image/webp", "Cache-Control": "public, max-age=31536000, immutable" },
     })

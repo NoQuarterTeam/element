@@ -1,22 +1,21 @@
 import * as React from "react"
 import { RiAddCircleLine } from "react-icons/ri"
 import { InView, useInView } from "react-intersection-observer"
+import { getTotalTaskDuration,join } from "@element/shared"
 import { Draggable, Droppable } from "@hello-pangea/dnd"
 import { Link } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import deepEqual from "deep-equal"
 
-import { getTotalTaskDuration } from "@element/shared"
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useTimelineTaskDates } from "~/lib/hooks/useTimelineTaskDates"
-import { join } from "@element/shared"
+import { TASK_CACHE_KEY } from "~/lib/hooks/useTimelineTasks"
 import type { TimelineHabitResponse } from "~/pages/api+/habits"
 import type { TimelineTask } from "~/pages/api+/tasks"
 
 import { TaskItem } from "./TaskItem"
 import { IconButton } from "./ui/IconButton"
-import { TASK_CACHE_KEY } from "~/lib/hooks/useTimelineTasks"
 
 interface Props {
   day: string
@@ -86,8 +85,8 @@ function _Day(props: Props) {
                   dayjs(props.day).isSame(dayjs(), "day")
                     ? "bg-primary-100 dark:bg-primary-900/90"
                     : dayjs(props.day).day() === 6 || dayjs(props.day).day() === 0
-                    ? "bg-gray-50 dark:bg-gray-900"
-                    : "bg-white dark:bg-gray-800",
+                      ? "bg-gray-50 dark:bg-gray-900"
+                      : "bg-white dark:bg-gray-800",
                 )}
               >
                 {inView && (

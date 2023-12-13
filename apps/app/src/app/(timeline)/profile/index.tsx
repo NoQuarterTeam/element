@@ -11,11 +11,8 @@ import { Button } from "../../../components/Button"
 import { OptimizedImage } from "../../../components/OptimisedImage"
 import { ScreenView } from "../../../components/ScreenView"
 import { Text } from "../../../components/Text"
-import { VERSION } from "../../../lib/config"
+import { UPDATE_ID, VERSION } from "../../../lib/config"
 import { api, AUTH_TOKEN } from "../../../lib/utils/api"
-
-const updateId = Updates.updateId
-const updateGroup = (Constants.manifest2?.metadata as any)?.["updateGroup"]
 
 export default function Profile() {
   const { data } = api.auth.me.useQuery()
@@ -69,7 +66,7 @@ export default function Profile() {
         </View>
         <View>
           <Text className="text-center">v{VERSION}</Text>
-          <Text className="text-center opacity-60">{updateGroup?.split("-")[0] || updateId?.split("-")[0] || "dev"}</Text>
+          <Text className="text-center opacity-60">{UPDATE_ID}</Text>
         </View>
       </ScrollView>
     </ScreenView>
@@ -81,7 +78,7 @@ function ProfileLink(props: { isFirst?: boolean; isLast?: boolean; href: string;
     <Link href={props.href} asChild>
       <TouchableOpacity
         className={join(
-          "flex flex-row items-center justify-between border-x border-t border-gray-100 py-2 px-4 dark:border-gray-600",
+          "flex flex-row items-center justify-between border-x border-t border-gray-100 px-4 py-2 dark:border-gray-600",
           props.isFirst && "rounded-t-sm",
           props.isLast && "rounded-b-sm border-b",
         )}

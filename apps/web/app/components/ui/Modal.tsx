@@ -1,7 +1,6 @@
 import * as React from "react"
-import { Dialog, Transition } from "@headlessui/react"
-
 import { join } from "@element/shared"
+import { Dialog, Transition } from "@headlessui/react"
 
 import { CloseButton } from "./CloseButton"
 

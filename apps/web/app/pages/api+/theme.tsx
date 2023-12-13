@@ -1,9 +1,9 @@
-import { type ActionArgs, json, redirect } from "@remix-run/node"
+import { type ActionFunctionArgs, json, redirect } from "@remix-run/node"
 
 import { isTheme } from "~/lib/theme"
 import { getThemeSession } from "~/services/session/theme.server"
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const themeSession = await getThemeSession(request)
   const requestText = await request.text()
   const form = new URLSearchParams(requestText)

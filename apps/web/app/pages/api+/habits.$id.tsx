@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import dayjs from "dayjs"
 import { z } from "zod"
@@ -15,7 +15,7 @@ export enum HabitActionMethods {
   Delete = "delete",
   Edit = "edit",
 }
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const user = await getUser(request)
   if (!user.stripeSubscriptionId) return redirect("/timeline/profile/plan")
   const formData = await request.formData()

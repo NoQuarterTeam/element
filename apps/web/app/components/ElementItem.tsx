@@ -1,6 +1,5 @@
-import { useFetcher, useNavigation } from "@remix-run/react"
-import { matchSorter } from "match-sorter"
 import React from "react"
+import { BsArrow90DegRight } from "react-icons/bs"
 import {
   RiAddLine,
   RiArrowDownSLine,
@@ -10,15 +9,18 @@ import {
   RiEye2Line,
   RiMore2Fill,
 } from "react-icons/ri"
-
 import { isValidHex, join, useDisclosure } from "@element/shared"
+import { useFetcher, useNavigation } from "@remix-run/react"
+import { useQuery } from "@tanstack/react-query"
+import { matchSorter } from "match-sorter"
 
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { ElementActionMethods } from "~/pages/api+/elements.$id"
 import type { SidebarElement } from "~/pages/_app.timeline.elements"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
+import { type TaskElement } from "~/pages/api+/elements"
+import { ElementActionMethods } from "~/pages/api+/elements.$id"
 
 import { ColorInput } from "./ColorInput"
 import { Button } from "./ui/Button"
@@ -27,12 +29,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal
 import { Form, FormButton, FormError, InlineFormField } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
 import { Modal } from "./ui/Modal"
-import { useToast } from "./ui/Toast"
-import { useQuery } from "@tanstack/react-query"
-import { TaskElement } from "~/pages/api+/elements"
 import { Singleselect } from "./ui/ReactSelect"
 import { Spinner } from "./ui/Spinner"
-import { BsArrow90DegRight } from "react-icons/bs"
+import { useToast } from "./ui/Toast"
 
 const MAX_DEPTH = 2
 
@@ -60,37 +59,37 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
   }, [navigation, createModalProps])
 
   const updateModalProps = useDisclosure()
-  const updateFetcher = useFetcher()
+  const updateFetcher = useFetcher<{ element: { id: string } }>()
   React.useEffect(() => {
-    if (updateFetcher.type === "actionReload" && updateFetcher.data?.element) {
+    if (updateFetcher.state !== "idle" && updateFetcher.data?.element) {
       refetch()
       updateModalProps.onClose()
     }
-  }, [updateFetcher.data, updateFetcher.type, refetch])
+  }, [updateFetcher.data, updateFetcher.state, refetch])
 
   const archiveModalProps = useDisclosure()
-  const archiveFetcher = useFetcher()
+  const archiveFetcher = useFetcher<{ success: boolean }>()
   React.useEffect(() => {
-    if (archiveFetcher.type === "actionReload" && archiveFetcher.data?.success) {
+    if (archiveFetcher.state !== "idle" && archiveFetcher.data?.success) {
       refetch()
       archiveModalProps.onClose()
     }
-  }, [archiveFetcher.data, archiveFetcher.type, refetch])
+  }, [archiveFetcher.data, archiveFetcher.state, refetch])
 
-  const unarchiveFetcher = useFetcher()
+  const unarchiveFetcher = useFetcher<{ success: boolean }>()
   React.useEffect(() => {
-    if (unarchiveFetcher.type === "actionReload" && unarchiveFetcher.data?.success) {
+    if (unarchiveFetcher.state !== "idle" && unarchiveFetcher.data?.success) {
       refetch()
       archiveModalProps.onClose()
     }
-  }, [unarchiveFetcher.data, unarchiveFetcher.type, refetch])
+  }, [unarchiveFetcher.data, unarchiveFetcher.state, refetch])
 
-  const moveFetcher = useFetcher()
+  const moveFetcher = useFetcher<{ element: { id: string } | { fieldErrors: any } }>()
   React.useEffect(() => {
-    if (moveFetcher.type === "actionReload" && moveFetcher.data?.element) {
+    if (moveFetcher.state !== "idle" && moveFetcher.data?.element) {
       moveModalProps.onClose()
     }
-  }, [moveFetcher.data, moveFetcher.type])
+  }, [moveFetcher.data, moveFetcher.state])
 
   const toast = useToast()
 
@@ -221,7 +220,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
           </Form>
         </Modal>
         <Modal title="Move element to parent" size="xl" {...moveModalProps}>
-          <moveFetcher.Form method="post" replace action={`/api/elements/${element.id}`}>
+          <moveFetcher.Form method="post" action={`/api/elements/${element.id}`}>
             <div className="stack min-h-[200px] p-4">
               <MoveFormElementInput error={moveFetcher.data?.fieldErrors?.parentId} elementId={element.id} />
               <FormError />

@@ -18,6 +18,7 @@ module.exports = {
     "@typescript-eslint/ban-types": OFF,
     "@typescript-eslint/array-type": OFF,
     "@typescript-eslint/ban-ts-ignore": OFF,
+    "@typescript-eslint/no-non-null-assertion": OFF,
     "@typescript-eslint/consistent-type-imports": OFF,
     "@typescript-eslint/explicit-function-return-type": OFF,
     "@typescript-eslint/explicit-member-accessibility": OFF,

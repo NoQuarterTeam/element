@@ -1,6 +1,7 @@
 import * as React from "react"
 import { RiAddLine } from "react-icons/ri"
-import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
+import { isValidHex, MAX_FREE_ELEMENTS,randomHexColor , useDisclosure  } from "@element/shared"
+import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { useLoaderData, useNavigate, useNavigation } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
@@ -15,18 +16,15 @@ import { Form, FormButton, FormError, InlineFormField } from "~/components/ui/Fo
 import { Input } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
 import { useToast } from "~/components/ui/Toast"
-import { isValidHex, randomHexColor } from "@element/shared"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
-import { useDisclosure } from "@element/shared"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
-import { MAX_FREE_ELEMENTS } from "@element/shared"
 import { badRequest } from "~/lib/remix"
 import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getSidebarElements } from "~/services/timeline/sidebar.server"
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request)
   const elements = await getSidebarElements(user.id)
   return json(elements)
@@ -38,7 +36,7 @@ export enum ElementsActionMethods {
   CreateElement = "createElement",
 }
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getUser(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ElementsActionMethods | undefined

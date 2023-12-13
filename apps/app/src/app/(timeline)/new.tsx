@@ -9,11 +9,14 @@ import { api } from "../../lib/utils/api"
 export default function NewTask() {
   const router = useRouter()
 
-  const utils = api.useContext()
+  const utils = api.useUtils()
   const create = api.task.create.useMutation({
     onSuccess: (createdTask) => {
-      utils.task.byDate.setData({ date: dayjs(createdTask.date).format("YYYY-MM-DD") }, (old) =>
-        old ? [...old, createdTask] : [createdTask],
+      if (!createdTask.date) return
+      utils.task.byDate.setData({ date: dayjs().toDate() }, (old) =>
+        old
+          ? [...old, { ...createdTask, date: dayjs(createdTask.date).format("YYYY-MM-DD") }]
+          : [{ ...createdTask, date: dayjs(createdTask.date).format("YYYY-MM-DD") }],
       )
       router.back()
     },

@@ -1,7 +1,6 @@
 import * as React from "react"
-import * as Popover from "@radix-ui/react-popover"
-
 import { merge } from "@element/shared"
+import * as Popover from "@radix-ui/react-popover"
 
 export * from "@radix-ui/react-popover"
 

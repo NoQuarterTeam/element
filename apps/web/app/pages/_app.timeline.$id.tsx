@@ -1,5 +1,5 @@
 import { Dialog } from "@headlessui/react"
-import { type ActionArgs, json, type LoaderArgs, redirect, type SerializeFrom } from "@remix-run/node"
+import { type ActionFunctionArgs, json, type LoaderFunctionArgs, redirect, type SerializeFrom } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
 import { z } from "zod"
@@ -12,7 +12,7 @@ import { badRequest } from "~/lib/remix"
 import { getUser, requireUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireUser(request)
   const id = params.id
   if (!id) redirect("/timeline")
@@ -37,7 +37,7 @@ export enum TaskActionMethods {
   DuplicateTask = "duplicateTask",
 }
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const user = await getUser(request)
   const formData = await request.formData()
   const action = formData.get("_action") as TaskActionMethods | undefined

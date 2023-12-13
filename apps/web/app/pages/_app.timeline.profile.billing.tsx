@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs, SerializeFrom } from "@remix-run/node"
+import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import currencyjs from "currency.js"
@@ -19,7 +19,7 @@ import { stripe } from "~/lib/stripe/stripe.server"
 import { getUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUser(request)
   const [stripeCustomer, invoices] = await Promise.all([
     stripe.customers.retrieve(user.stripeCustomerId, { expand: ["tax_ids"] }),
@@ -43,7 +43,7 @@ export enum ProfileBillingMethods {
   UpdateBilling = "updateBilling",
 }
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getUser(request)
   const { createFlash } = await getFlashSession(request)
   const formData = await request.formData()

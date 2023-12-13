@@ -2,7 +2,7 @@ import * as React from "react"
 import { BiMessage } from "react-icons/bi"
 import { RiBug2Line, RiLightbulbLine } from "react-icons/ri"
 import { FeedbackType } from "@element/database/types"
-import type { ActionArgs } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { useActionData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
@@ -23,7 +23,7 @@ export enum FeedbackMethods {
   CreateFeedback = "createFeedback",
 }
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getUser(request)
   const { createFlash } = await getFlashSession(request)
   const formData = await request.formData()
@@ -72,12 +72,12 @@ export default function Feedback() {
   const title = createdFeedback
     ? "Thanks for the feedback!"
     : type
-    ? type === "IDEA"
-      ? "What could make Element better?"
-      : type === "ISSUE"
-      ? "What seems to be the problem?"
-      : "Let us know your thoughts"
-    : "What kind of feedback do you have?"
+      ? type === "IDEA"
+        ? "What could make Element better?"
+        : type === "ISSUE"
+          ? "What seems to be the problem?"
+          : "Let us know your thoughts"
+      : "What kind of feedback do you have?"
   return (
     <Modal position="center" size="md" isOpen={true} onClose={() => navigate("/timeline")} title={title}>
       {createdFeedback ? (

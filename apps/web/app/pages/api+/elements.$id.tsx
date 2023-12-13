@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { z } from "zod"
 
@@ -13,7 +13,7 @@ export enum ElementActionMethods {
   ArchiveElement = "archiveElement",
   UnarchiveElement = "unarchiveElement",
 }
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   const user = await getUser(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ElementActionMethods | undefined

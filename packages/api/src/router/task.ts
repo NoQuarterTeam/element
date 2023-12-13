@@ -38,14 +38,25 @@ const updateSchema = taskSchema.merge(
 )
 
 export const taskRouter = createTRPCRouter({
-  byDate: protectedProcedure.input(z.object({ date: z.string() })).query(({ input: { date }, ctx }) => {
-    const startOfDay = dayjs(date).startOf("day").toDate()
-    const endOfDay = dayjs(date).endOf("day").toDate()
-    return ctx.prisma.user.findUniqueOrThrow({ where: { id: ctx.user.id } }).tasks({
+  byDate: protectedProcedure.input(z.object({ date: z.date() })).query(async ({ input: { date }, ctx }) => {
+    const endOfDay = dayjs(date).endOf("day").add(20, "days").toDate()
+    const tasks = await ctx.prisma.task.findMany({
       select: timelineTaskFields,
       orderBy: [{ order: "asc" }, { createdAt: "asc" }],
-      where: { date: { gte: startOfDay, lte: endOfDay } },
+      where: { creatorId: { equals: ctx.user.id }, date: { gt: date, lte: endOfDay } },
     })
+    const groupedTasks = tasks.reduce<{ [key: string]: (typeof tasks)[number][] }>((acc, task) => {
+      const date = dayjs(task.date).format("YYYY-MM-DD")
+      if (!acc[date]) acc[date] = []
+      acc[date].push(task)
+      return acc
+    }, {})
+    return tasks.map((task) => ({
+      ...task,
+      // get real order in case there are gaps created by deleted tasks or similar orders after a duplicate
+      order: task.date ? groupedTasks[dayjs(task.date).format("YYYY-MM-DD")].findIndex((t) => t.id === task.id) : task.order,
+      date: dayjs(task.date).format("YYYY-MM-DD"),
+    }))
   }),
   byId: protectedProcedure.input(z.object({ id: z.string() })).query(({ ctx, input: { id } }) => {
     return ctx.prisma.task.findUnique({ where: { id }, select: timelineTaskFields })
@@ -55,15 +66,28 @@ export const taskRouter = createTRPCRouter({
     if (!task) throw new TRPCError({ code: "NOT_FOUND" })
     return ctx.prisma.task.update({ where: { id }, data: { isComplete: !task.isComplete } })
   }),
-  updateOrder: protectedProcedure.input(z.array(z.string())).mutation(async ({ ctx, input }) => {
-    const ids = input
-    await Promise.all(ids.map((id, order) => ctx.prisma.task.update({ where: { id }, data: { order } })))
-    return true
-  }),
-  create: protectedProcedure.input(taskSchema).mutation(({ ctx, input }) => {
+  updateOrder: protectedProcedure
+    .input(z.array(z.object({ id: z.string(), order: z.number(), date: z.string() })))
+    .mutation(async ({ ctx, input }) => {
+      const tasks = input
+      await Promise.all(
+        tasks.map((task) =>
+          ctx.prisma.task.update({
+            where: { id: task.id },
+            data: { order: task.order, date: dayjs(task.date).startOf("day").add(12, "hours").toDate() },
+          }),
+        ),
+      )
+      return true
+    }),
+  create: protectedProcedure.input(taskSchema).mutation(async ({ ctx, input }) => {
     const data = input
     const date = data.date ? dayjs(data.date).startOf("d").add(12, "hours").toDate() : undefined
-    return ctx.prisma.task.create({ select: timelineTaskFields, data: { ...data, date, creatorId: ctx.user.id } })
+    const lastTask = await ctx.prisma.task.findFirst({ where: { creatorId: ctx.user.id, date }, orderBy: { order: "desc" } })
+    return ctx.prisma.task.create({
+      select: timelineTaskFields,
+      data: { ...data, date, order: lastTask ? lastTask.order + 1 : 0, creatorId: ctx.user.id },
+    })
   }),
   update: protectedProcedure
     .input(updateSchema.merge(z.object({ id: z.string() })))
