@@ -3,7 +3,7 @@ import dayjs, { Dayjs } from "dayjs"
 
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import * as Progress from "react-native-progress"
-import { Link, useRouter } from "expo-router"
+import { Link, router, useRouter } from "expo-router"
 import { View, TouchableOpacity, useColorScheme, ScrollView } from "react-native"
 import { api, RouterOutputs } from "../../lib/utils/api"
 
@@ -16,19 +16,18 @@ import colors from "@element/tailwind-config/src/colors"
 
 import { Text } from "../../components/Text"
 import { Heading } from "../../components/Heading"
-// import { useFeatures } from "../../lib/hooks/useFeatures"
-import { PanGestureHandler } from "react-native-gesture-handler"
+
+import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   SharedValue,
   runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated"
-import { width } from "../../lib/utils/device"
+import { height } from "../../lib/utils/device"
 
 dayjs.extend(advancedFormat)
 
@@ -75,11 +74,11 @@ export default function Timeline() {
               <View className="flex flex-row bg-white dark:bg-black">
                 {days.map((day) => (
                   <View key={day} style={{ width: DAY_WIDTH }} className="border-gray-75 border-b pb-2 pt-3 dark:border-gray-700">
-                    <Text className="text-center text-black">{dayjs(day).startOf("day").format("ddd Do")}</Text>
+                    <Text className="text-center">{dayjs(day).startOf("day").format("ddd Do")}</Text>
                   </View>
                 ))}
               </View>
-              {isLoading ? null : !taskData ? null : <TaskList days={days} tasks={taskData} />}
+              {isLoading ? null : !taskData ? null : <TasksGrid days={days} tasks={taskData} />}
             </View>
           </ScrollView>
         </ScrollView>
@@ -137,13 +136,15 @@ type Tasks = NonNullable<RouterOutputs["task"]["byDate"]>
 type Task = Tasks[number]
 
 type DropTask = Pick<Task, "id" | "name" | "order"> & { date: string }
-const DAY_WIDTH = width / 5
+
+const DAY_WIDTH = 90
+
 // const MONTH_NAMES = ["jan.", "feb.", "mar.", "apr.", "may.", "jun.", "jul.", "aug.", "sept.", "oct.", "nov.", "dec."]
 
 export const getDays = (startDate: Dayjs, daysCount: number) => {
   return Array.from({ length: daysCount }).map((_, i) => startDate.add(i, "day").format("YYYY-MM-DD"))
 }
-function TaskList({ tasks, days }: { tasks: Tasks; days: string[] }) {
+function TasksGrid({ tasks, days }: { tasks: Tasks; days: string[] }) {
   const taskPositions = useSharedValue(
     tasks.reduce<{ [key: string]: DropTask }>((acc, task) => {
       acc[task.id] = { id: task.id, name: task.name, date: task.date, order: task.order }
@@ -173,12 +174,28 @@ function TaskList({ tasks, days }: { tasks: Tasks; days: string[] }) {
 
   return (
     <View className="relative">
+      {days.map((day, i) => (
+        <View
+          key={day}
+          className={join(
+            `absolute border-r border-gray-100 dark:border-gray-700`,
+            dayjs(day).isSame(dayjs(), "day")
+              ? "bg-primary-100 dark:bg-primary-900/90"
+              : dayjs(day).day() === 6 || dayjs(day).day() === 0
+                ? "bg-gray-50 dark:bg-gray-900"
+                : "bg-white dark:bg-gray-800",
+          )}
+          style={{ width: DAY_WIDTH, left: i * DAY_WIDTH, height }}
+        />
+      ))}
       {tasks.map((task) => (
         <TaskItem key={task.id} task={task} taskPositions={taskPositions} days={days} onDrop={() => handleDrop(task.id)} />
       ))}
     </View>
   )
 }
+
+const TASK_HEIGHT = 80
 
 function TaskItem({
   taskPositions,
@@ -194,11 +211,13 @@ function TaskItem({
   const position = useDerivedValue(() => {
     const column = days.findIndex((day) => day === task.date)
     const order = taskPositions.value[task.id]!.order
-    return { x: column * DAY_WIDTH, y: Math.floor(order) * DAY_WIDTH }
+    return { x: column * DAY_WIDTH, y: Math.floor(order) * TASK_HEIGHT }
   })
 
   const translateX = useSharedValue(position.value.x)
   const translateY = useSharedValue(position.value.y)
+  const offsetX = useSharedValue(position.value.x)
+  const offsetY = useSharedValue(position.value.y)
   const scale = useSharedValue(1)
   const isActive = useSharedValue(false)
 
@@ -207,25 +226,24 @@ function TaskItem({
     (newPosition) => {
       const column = days.findIndex((day) => day === newPosition.date)
       const x = column * DAY_WIDTH
-      const y = Math.floor(newPosition.order) * DAY_WIDTH
+      const y = Math.floor(newPosition.order) * TASK_HEIGHT
       translateX.value = withTiming(x)
       translateY.value = withTiming(y)
     },
   )
 
-  const gesture = useAnimatedGestureHandler<any, { startX: number; startY: number }>({
-    onStart: (_, ctx) => {
-      ctx.startX = translateX.value
-      ctx.startY = translateY.value
+  const pan = Gesture.Pan()
+    .onStart(() => {
       scale.value = withTiming(1.1)
       isActive.value = true
-    },
-    onActive: (event, ctx) => {
-      translateX.value = ctx.startX + event.translationX
-      translateY.value = ctx.startY + event.translationY
+    })
+    .onUpdate((event) => {
+      translateX.value = offsetX.value + event.translationX
+      translateY.value = offsetY.value + event.translationY
 
-      const newDate = days[Math.floor(translateX.value / DAY_WIDTH)]!
-      const newOrder = Math.floor(translateY.value / DAY_WIDTH)
+      const newDate = days[Math.floor((translateX.value + DAY_WIDTH * 0.5) / DAY_WIDTH)]!
+
+      const newOrder = Math.floor((translateY.value + TASK_HEIGHT * 0.5) / TASK_HEIGHT)
 
       const currentTask = taskPositions.value[task.id]!
       const newPositions = { ...taskPositions.value }
@@ -261,21 +279,29 @@ function TaskItem({
           })
       }
       taskPositions.value = newPositions
-    },
-    onEnd: () => {
+    })
+    .onEnd(() => {
       // move dragging task into position
       const currentTask = taskPositions.value[task.id]!
       const newDate = days.findIndex((day) => day === currentTask.date)
       const newOrder = taskPositions.value[task.id]!.order
       translateX.value = withTiming(newDate * DAY_WIDTH)
-      translateY.value = withTiming(Math.floor(newOrder) * DAY_WIDTH)
-    },
-    onFinish: () => {
+      translateY.value = withTiming(Math.floor(newOrder) * TASK_HEIGHT)
+      offsetX.value = withTiming(newDate * DAY_WIDTH)
+      offsetY.value = withTiming(Math.floor(newOrder) * TASK_HEIGHT)
+    })
+    .onFinalize(() => {
       scale.value = withTiming(1)
       isActive.value = false
       runOnJS(onDrop)()
-    },
-  })
+    })
+
+  const handleNavigate = () => {
+    router.push({ pathname: "index", params: { id: task.id } })
+  }
+
+  const elementHeight = useSharedValue(6)
+  const elementOpacity = useSharedValue(0)
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
@@ -285,13 +311,43 @@ function TaskItem({
     }
   })
 
+  const tap = Gesture.Tap().runOnJS(true).onStart(handleNavigate)
+  const longPress = Gesture.LongPress()
+    .minDuration(200)
+    .onStart(() => {
+      elementHeight.value = withTiming(20)
+      elementOpacity.value = withTiming(1)
+    })
+    .onEnd(() => {
+      elementHeight.value = withTiming(6)
+      elementOpacity.value = withTiming(0)
+    })
+
+  const gesture = Gesture.Race(Gesture.Simultaneous(pan, longPress), tap)
+
   return (
-    <Animated.View style={[{ width: DAY_WIDTH, height: DAY_WIDTH, padding: 4 }, animatedStyles]}>
-      <PanGestureHandler onGestureEvent={gesture}>
-        <Animated.View className="h-full rounded border border-gray-100 bg-white p-4 dark:border-gray-600 dark:bg-gray-900">
-          <Text>{task.name}</Text>
+    <Animated.View style={[{ width: DAY_WIDTH, height: TASK_HEIGHT, padding: 4 }, animatedStyles]}>
+      <GestureDetector gesture={gesture}>
+        <Animated.View className="flex h-full flex-col justify-between rounded border border-gray-100 bg-white dark:border-gray-900 dark:bg-gray-700">
+          <View className="p-1.5">
+            <Text numberOfLines={2} className="text-xs">
+              {task.name}
+            </Text>
+          </View>
+          <Animated.View
+            className="flex items-center justify-center rounded-b"
+            style={{ backgroundColor: task.element.color, height: elementHeight }}
+          >
+            <Animated.Text
+              style={{ fontSize: 10, opacity: elementOpacity, color: safeReadableColor(task.element.color) }}
+              numberOfLines={1}
+              className="px-1"
+            >
+              {task.element.name}
+            </Animated.Text>
+          </Animated.View>
         </Animated.View>
-      </PanGestureHandler>
+      </GestureDetector>
     </Animated.View>
   )
 }

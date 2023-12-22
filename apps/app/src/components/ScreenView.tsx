@@ -12,6 +12,7 @@ interface Props {
 
 export function ScreenView(props: Props) {
   const colorScheme = useColorScheme()
+
   return (
     <View className="px-4 pt-16">
       <View className="flex flex-row items-center space-x-2">

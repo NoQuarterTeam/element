@@ -1,22 +1,25 @@
 import dayjs from "dayjs"
 import Feather from "@expo/vector-icons/Feather"
-import { useRouter, useSearchParams } from "expo-router"
+import { useGlobalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 import { KeyboardAvoidingView, TouchableOpacity, useColorScheme, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import { TaskForm, TaskFormData } from "../../components/TaskForm"
 import { api, RouterOutputs } from "../../lib/utils/api"
 import colors from "@element/tailwind-config/src/colors"
+import { join } from "@element/shared"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 export default function TaskDetail() {
-  const { id } = useSearchParams()
-  if (typeof id !== "string") throw new Error("ID required")
+  const { id } = useGlobalSearchParams()
 
-  const { data, isLoading } = api.task.byId.useQuery({ id })
+  const router = useRouter()
+  const isModal = router.canGoBack()
+
+  const { data, isLoading } = api.task.byId.useQuery({ id: String(id) }, { enabled: !!id })
 
   return (
-    <View className="px-4 pt-6">
+    <View className={join("px-4", isModal ? "pt-6" : "pt-16")}>
       {isLoading || !data ? null : <EditTaskForm task={data} />}
       <StatusBar style="light" />
     </View>
@@ -26,7 +29,7 @@ export default function TaskDetail() {
 function EditTaskForm({ task }: { task: Task }) {
   const router = useRouter()
 
-  const utils = api.useContext()
+  const utils = api.useUtils()
   const update = api.task.update.useMutation({
     onSuccess: async (updatedTask) => {
       void utils.task.byDate.invalidate({ date: dayjs(updatedTask.date).format("YYYY-MM-DD") })

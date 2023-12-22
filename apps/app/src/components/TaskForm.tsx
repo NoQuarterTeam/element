@@ -42,6 +42,7 @@ interface Props {
 
 export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
   const router = useRouter()
+  const canGoBack = router.canGoBack()
   const { date } = useGlobalSearchParams()
 
   const [form, setForm] = React.useState<TaskFormData>({
@@ -96,7 +97,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           />
           {fieldErrors?.name?.map((error) => <FormInputError key={error} error={error} />)}
         </View>
-        <TouchableOpacity onPress={router.back} className="p-2">
+        <TouchableOpacity onPress={canGoBack ? () => router.back : () => router.push("/")} className="p-2">
           <Feather name="x" size={24} color={colorScheme === "dark" ? "white" : "black"} />
         </TouchableOpacity>
       </View>
