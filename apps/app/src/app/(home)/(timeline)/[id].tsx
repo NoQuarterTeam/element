@@ -4,8 +4,8 @@ import { useGlobalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 import { KeyboardAvoidingView, TouchableOpacity, useColorScheme, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { TaskForm, TaskFormData } from "../../components/TaskForm"
-import { api, RouterOutputs } from "../../lib/utils/api"
+import { TaskForm, TaskFormData } from "../../../components/TaskForm"
+import { api, RouterOutputs } from "../../../lib/utils/api"
 import colors from "@element/tailwind-config/src/colors"
 import { join } from "@element/shared"
 
@@ -14,12 +14,12 @@ export default function TaskDetail() {
   const { id } = useGlobalSearchParams()
 
   const router = useRouter()
-  const isModal = router.canGoBack()
+  const canGoBack = router.canGoBack()
 
   const { data, isLoading } = api.task.byId.useQuery({ id: String(id) }, { enabled: !!id })
 
   return (
-    <View className={join("px-4", isModal ? "pt-6" : "pt-16")}>
+    <View className={join("px-4", canGoBack ? "pt-6" : "pt-16")}>
       {isLoading || !data ? null : <EditTaskForm task={data} />}
       <StatusBar style="light" />
     </View>

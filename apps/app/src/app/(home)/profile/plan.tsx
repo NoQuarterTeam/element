@@ -57,8 +57,8 @@ export default function Plan() {
                       (data.taskCount || 0) >= MAX_FREE_TASKS
                         ? "text-red-500"
                         : (data.taskCount || 0) > MAX_FREE_TASKS * 0.75
-                        ? "text-primary-500"
-                        : undefined,
+                          ? "text-primary-500"
+                          : undefined,
                     )}
                   >
                     {data.taskCount}{" "}
@@ -75,8 +75,8 @@ export default function Plan() {
                       (data.elementCount || 0) >= MAX_FREE_ELEMENTS
                         ? "text-red-500"
                         : (data.elementCount || 0) > MAX_FREE_ELEMENTS * 0.75
-                        ? "text-primary-500"
-                        : undefined,
+                          ? "text-primary-500"
+                          : undefined,
                     )}
                   >
                     {data.elementCount}{" "}

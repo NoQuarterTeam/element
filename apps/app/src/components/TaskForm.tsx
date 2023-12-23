@@ -97,7 +97,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           />
           {fieldErrors?.name?.map((error) => <FormInputError key={error} error={error} />)}
         </View>
-        <TouchableOpacity onPress={canGoBack ? () => router.back : () => router.push("/")} className="p-2">
+        <TouchableOpacity onPress={canGoBack ? () => router.back() : () => router.replace("/")} className="p-2">
           <Feather name="x" size={24} color={colorScheme === "dark" ? "white" : "black"} />
         </TouchableOpacity>
       </View>

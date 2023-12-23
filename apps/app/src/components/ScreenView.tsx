@@ -1,5 +1,5 @@
-import { Link } from "expo-router"
-import { View, useColorScheme } from "react-native"
+import { Link, useRouter } from "expo-router"
+import { TouchableOpacity, View, useColorScheme } from "react-native"
 
 import Feather from "@expo/vector-icons/Feather"
 import * as React from "react"
@@ -12,13 +12,20 @@ interface Props {
 
 export function ScreenView(props: Props) {
   const colorScheme = useColorScheme()
-
+  const router = useRouter()
+  const canGoBack = router.canGoBack()
   return (
     <View className="px-4 pt-16">
       <View className="flex flex-row items-center space-x-2">
-        <Link href="../" className="mb-1 p-2" asChild>
-          <Feather name="chevron-left" size={24} color={colorScheme === "dark" ? "white" : "black"} />
-        </Link>
+        {canGoBack ? (
+          <Link href="../" className="mb-1 p-2" asChild>
+            <Feather name="chevron-left" size={24} color={colorScheme === "dark" ? "white" : "black"} />
+          </Link>
+        ) : (
+          <TouchableOpacity onPress={() => router.replace("/")} className="mb-1 p-2">
+            <Feather name="chevron-left" size={24} color={colorScheme === "dark" ? "white" : "black"} />
+          </TouchableOpacity>
+        )}
 
         <Heading className="text-3xl dark:text-white">{props.title}</Heading>
       </View>

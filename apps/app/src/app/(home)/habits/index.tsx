@@ -4,9 +4,8 @@ import Feather from "@expo/vector-icons/Feather"
 import Octicons from "@expo/vector-icons/Octicons"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
-import { Link, useRouter, useSearchParams } from "expo-router"
-import { TouchableOpacity, useColorScheme, View } from "react-native"
-import { ModalView } from "../../../components/ModalView"
+import { Link, useRouter, useGlobalSearchParams } from "expo-router"
+import { ScrollView, TouchableOpacity, useColorScheme, View } from "react-native"
 import { Text } from "../../../components/Text"
 import { api, RouterOutputs } from "../../../lib/utils/api"
 
@@ -16,38 +15,36 @@ type Habit = NonNullable<RouterOutputs["habit"]["all"]>["habits"][number]
 type HabitEntries = NonNullable<RouterOutputs["habit"]["all"]>["habitEntries"]
 
 export default function Habits() {
-  const params = useSearchParams()
+  const params = useGlobalSearchParams()
   const date = params.date as string
-  const { data } = api.habit.all.useQuery({ date })
+  const { data } = api.habit.all.useQuery({ date }, { enabled: !!date })
   const habits = data?.habits || []
   const habitEntries = data?.habitEntries || []
-  const dateLabel = dayjs(date).isSame(dayjs(), "date")
-    ? "Today"
-    : // if yesterday
-    dayjs(date).isSame(dayjs().subtract(1, "day"), "date")
-    ? "Yesterday"
-    : // if tomorrow
-    dayjs(date).isSame(dayjs().add(1, "day"), "date")
-    ? "Tomorrow"
-    : dayjs(date).format("ddd Do")
+  // const dateLabel = dayjs(date).isSame(dayjs(), "date")
+  //   ? "Today"
+  //   : // if yesterday
+  //     dayjs(date).isSame(dayjs().subtract(1, "day"), "date")
+  //     ? "Yesterday"
+  //     : // if tomorrow
+  //       dayjs(date).isSame(dayjs().add(1, "day"), "date")
+  //       ? "Tomorrow"
+  //       : dayjs(date).format("ddd Do")
 
   return (
-    <ModalView title={`Habits - ${dateLabel}`}>
-      <View className="h-full flex-1 space-y-3 pt-4">
-        {habits.map((habit) => (
-          <View key={habit.id}>
-            <HabitItem date={date} habit={habit} entries={habitEntries.filter((entry) => entry.habitId === habit.id)} />
-          </View>
-        ))}
-        <View className="absolute bottom-8 w-full items-center justify-center">
-          <Link href={`/habits/new?date=${date}`} asChild>
-            <TouchableOpacity className="bg-primary-500/90 rounded-full p-4">
-              <Feather name="plus" size={24} />
-            </TouchableOpacity>
-          </Link>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} className=" space-y-3 px-4 pt-20">
+      {habits.map((habit) => (
+        <View key={habit.id}>
+          <HabitItem date={date} habit={habit} entries={habitEntries.filter((entry) => entry.habitId === habit.id)} />
         </View>
+      ))}
+      <View className="absolute bottom-8 w-full items-center justify-center">
+        <Link href={`/habits/new?date=${date}`} asChild>
+          <TouchableOpacity className="bg-primary-500/90 rounded-full p-4">
+            <Feather name="plus" size={24} />
+          </TouchableOpacity>
+        </Link>
       </View>
-    </ModalView>
+    </ScrollView>
   )
 }
 

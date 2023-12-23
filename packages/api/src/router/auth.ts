@@ -4,20 +4,20 @@ import { z } from "zod"
 import bcrypt from "bcryptjs"
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc"
 import { createAuthToken } from "../lib/jwt"
-import { createImageUrl } from "../lib/s3"
+
 import { stripe } from "../lib/stripe"
 import { hashPassword } from "../lib/password"
 import { createTemplates } from "../lib/templates"
 
 export const authRouter = createTRPCRouter({
-  me: publicProcedure.query(({ ctx }) => (ctx.user ? { ...ctx.user, avatar: createImageUrl(ctx.user.avatar) } : null)),
+  me: publicProcedure.query(({ ctx }) => ctx.user || null),
   login: publicProcedure.input(z.object({ email: z.string().email(), password: z.string() })).mutation(async ({ ctx, input }) => {
     const user = await ctx.prisma.user.findUnique({ where: { email: input.email } })
     if (!user) throw new TRPCError({ code: "BAD_REQUEST", message: "Incorrect email or password" })
     const isSamePassword = bcrypt.compareSync(input.password, user.password)
     if (!isSamePassword) throw new TRPCError({ code: "BAD_REQUEST", message: "Incorrect email or password" })
     const token = createAuthToken({ id: user.id })
-    return { user: { ...user, avatar: createImageUrl(user.avatar) }, token }
+    return { user, token }
   }),
   registerTempAccount: publicProcedure.mutation(async ({ ctx }) => {
     const firstName = faker.name.firstName()
@@ -34,7 +34,7 @@ export const authRouter = createTRPCRouter({
     for await (const element of elements) {
       await ctx.prisma.element.create({ data: element })
     }
-    return { user: { ...user, avatar: createImageUrl(user.avatar) }, token: createAuthToken({ id: user.id }) }
+    return { user, token: createAuthToken({ id: user.id }) }
   }),
   update: protectedProcedure
     .input(
@@ -49,7 +49,7 @@ export const authRouter = createTRPCRouter({
         where: { id: ctx.user.id },
         data: input,
       })
-      return { ...user, avatar: createImageUrl(user.avatar) }
+      return user
     }),
   myPlan: protectedProcedure.query(async ({ ctx }) => {
     const user = ctx.user

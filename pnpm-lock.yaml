@@ -81,6 +81,9 @@ importers:
       expo-font:
         specifier: ~11.4.0
         version: 11.4.0(expo@49.0.21)
+      expo-haptics:
+        specifier: ~12.4.0
+        version: 12.4.0(expo@49.0.21)
       expo-image:
         specifier: ~1.3.5
         version: 1.3.5(expo@49.0.21)
@@ -105,6 +108,9 @@ importers:
       expo-updates:
         specifier: ~0.18.17
         version: 0.18.17(expo@49.0.21)
+      lucide-react-native:
+        specifier: ^0.300.0
+        version: 0.300.0(prop-types@15.8.1)(react-native-svg@13.9.0)(react-native@0.72.6)(react@18.2.0)
       nativewind:
         specifier: ^2.0.11
         version: 2.0.11(react@18.2.0)(tailwindcss@3.3.2)
@@ -8321,6 +8327,14 @@ packages:
       fontfaceobserver: 2.3.0
     dev: false
 
+  /expo-haptics@12.4.0(expo@49.0.21):
+    resolution: {integrity: sha512-eELhZOO64oJa6AtEUxosatjSENE/tQgF2rVJxDsvRdx8Vgd3uFC+FRoM3nbMVJkxDgAaP3EKOPT1zVM41sNurw==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 49.0.21(@babel/core@7.23.6)
+    dev: false
+
   /expo-head@0.0.20(expo@49.0.21)(react-dom@18.2.0)(react-native@0.72.6)(react@18.2.0):
     resolution: {integrity: sha512-K0ETFOp/I+Td1T40D8k+Nlk8zCtvUFKTVYiwUhLoCCPf4dGC0zXv/noJLgyZ8jZ+5FJLlrSTpk2Gm9bxJfqkLw==}
     peerDependencies:
@@ -10420,6 +10434,20 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
     dev: true
+
+  /lucide-react-native@0.300.0(prop-types@15.8.1)(react-native-svg@13.9.0)(react-native@0.72.6)(react@18.2.0):
+    resolution: {integrity: sha512-73sNGq2XrMjEEtro/9T0EVRrjrO0lOCykGtL+8OOuJ2NlDqn9AOIGoLh7VbmQcGDIDlykV3HMvZF043WABPCWw==}
+    peerDependencies:
+      prop-types: ^15.7.2
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+      react-native: '*'
+      react-native-svg: ^12.0.0 || ^13.0.0 || ^14.0.0
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-native: 0.72.6(@babel/core@7.23.6)(@babel/preset-env@7.23.6)(react@18.2.0)
+      react-native-svg: 13.9.0(react-native@0.72.6)(react@18.2.0)
+    dev: false
 
   /lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}

@@ -1,0 +1,71 @@
+import { Tabs } from "expo-router"
+import { useColorScheme } from "react-native"
+import { Clock, Home, UserCircle } from "lucide-react-native"
+
+import { AuthProvider } from "../../components/AuthProvider"
+import { useFeatures } from "../../lib/hooks/useFeatures"
+import { useMe } from "../../lib/hooks/useMe"
+
+import { createImageUrl, join } from "@element/shared"
+import { OptimizedImage } from "../../components/OptimisedImage"
+import { Icon } from "../../components/Icon"
+import colors from "@element/tailwind-config/src/colors"
+
+export default function HomeLayout() {
+  const colorScheme = useColorScheme()
+  const isDark = colorScheme === "dark"
+  const features = useFeatures((s) => s.features)
+  const { me } = useMe()
+  return (
+    <AuthProvider>
+      <Tabs
+        initialRouteName="(timeline)"
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: {
+            backgroundColor: colorScheme === "light" ? "white" : "black",
+            borderTopColor: colors.gray[isDark ? 700 : 200],
+          },
+          tabBarShowLabel: false,
+        }}
+      >
+        <Tabs.Screen
+          name="(timeline)"
+          options={{
+            tabBarIcon: (props) => <Icon icon={Home} size={22} color={!!props.focused && "primary"} />,
+            // tabBarLabel: "Timeline",
+          }}
+        />
+        <Tabs.Screen
+          name="habits"
+          options={{
+            href: !me || !features.includes("habits") ? null : undefined,
+            tabBarIcon: (props) => <Icon icon={Clock} size={22} color={!!props.focused && "primary"} />,
+            // tabBarLabel: "Habits",
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            // tabBarLabel: "Profile",
+            tabBarIcon: (props) =>
+              me?.avatar ? (
+                <OptimizedImage
+                  width={40}
+                  height={40}
+                  style={{ width: 26, height: 26 }}
+                  source={{ uri: createImageUrl(me.avatar) }}
+                  className={join(
+                    "rounded-full border-2 border-transparent bg-gray-100 object-cover",
+                    props.focused && "border-primary-500",
+                  )}
+                />
+              ) : (
+                <Icon icon={UserCircle} size={22} color={props.focused ? "primary" : isDark ? "white" : "black"} />
+              ),
+          }}
+        />
+      </Tabs>
+    </AuthProvider>
+  )
+}

@@ -5,36 +5,39 @@ import advancedFormat from "dayjs/plugin/advancedFormat"
 import * as Progress from "react-native-progress"
 import { Link, router, useRouter } from "expo-router"
 import { View, TouchableOpacity, useColorScheme, ScrollView } from "react-native"
-import { api, RouterOutputs } from "../../lib/utils/api"
-
-import { ScaleDecorator } from "react-native-draggable-flatlist"
+import { api, RouterOutputs } from "../../../lib/utils/api"
+import * as Haptics from "expo-haptics"
 // import Ionicons from "@expo/vector-icons/Ionicons"
-import Feather from "@expo/vector-icons/Feather"
-import Octicons from "@expo/vector-icons/Octicons"
-import { safeReadableColor, formatDuration, join } from "@element/shared"
+
+import { safeReadableColor, join } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
-import { Text } from "../../components/Text"
-import { Heading } from "../../components/Heading"
+import { Text } from "../../../components/Text"
+import { Heading } from "../../../components/Heading"
 
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   SharedValue,
   runOnJS,
+  scrollTo,
   useAnimatedReaction,
+  useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated"
-import { height } from "../../lib/utils/device"
+import { height } from "../../../lib/utils/device"
+import { Icon } from "../../../components/Icon"
+import { Calendar, Plus } from "lucide-react-native"
 
 dayjs.extend(advancedFormat)
+
+// const MONTH_NAMES = ["jan.", "feb.", "mar.", "apr.", "may.", "jun.", "jul.", "aug.", "sept.", "oct.", "nov.", "dec."]
 
 export default function Timeline() {
   const [date, _setDate] = React.useState(dayjs().startOf("day").toDate())
   const { data: taskData, isLoading } = api.task.byDate.useQuery({ date }, { staleTime: 10000 })
-  const router = useRouter()
   // const dateLabel = dayjs(date).isSame(dayjs(), "date")
   //   ? "Today"
   //   : // if yesterday
@@ -55,6 +58,18 @@ export default function Timeline() {
   // }, [date])
 
   // const { features } = useFeatures()
+
+  // const monthValue = useSharedValue(0)
+
+  const timelineRef = useAnimatedRef<ScrollView>()
+  // const timelineX = useScrollViewOffset(timelineRef)
+  // const timelineScroll = useSharedValue(0)
+
+  // useAnimatedStyle(() => {
+  //   console.log(timelineX.value)
+  //   return {}
+  // })
+
   const isDark = useColorScheme() === "dark"
   const days = React.useMemo(() => getDays(dayjs().subtract(0, "day"), 30), [])
 
@@ -62,47 +77,55 @@ export default function Timeline() {
     <View className="flex-1">
       <View className="flex w-full flex-row items-center justify-between px-4 pt-16">
         <Heading className="text-4xl">dec</Heading>
-        <TouchableOpacity onPress={() => router.push("/profile")} className="p-2">
-          <Feather name="user" size={24} color={isDark ? "white" : "black"} />
-        </TouchableOpacity>
       </View>
 
       <View>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-          <ScrollView horizontal contentContainerStyle={{ height: 1000 }}>
-            <View>
-              <View className="flex flex-row bg-white dark:bg-black">
-                {days.map((day) => (
-                  <View key={day} style={{ width: DAY_WIDTH }} className="border-gray-75 border-b pb-2 pt-3 dark:border-gray-700">
+        <ScrollView ref={timelineRef} horizontal contentContainerStyle={{ height: 1000 }}>
+          <View className="relative">
+            <View className="flex flex-row bg-white dark:bg-black">
+              {days.map((day) => (
+                <View key={day} style={{ width: DAY_WIDTH }}>
+                  <View className="border-gray-75 border-b dark:border-gray-700" style={{ height: 30 }}>
                     <Text className="text-center">{dayjs(day).startOf("day").format("ddd Do")}</Text>
                   </View>
-                ))}
-              </View>
+                  <TouchableOpacity
+                    key={day}
+                    activeOpacity={0.9}
+                    onPress={() => router.push({ pathname: "new", params: { date: day } })}
+                    style={{ height }}
+                    className={join(
+                      `border-r border-gray-100 dark:border-gray-700`,
+                      dayjs(day).isSame(dayjs(), "day")
+                        ? "bg-primary-100 dark:bg-primary-900/90"
+                        : dayjs(day).day() === 6 || dayjs(day).day() === 0
+                          ? "bg-gray-50 dark:bg-gray-900"
+                          : "bg-white dark:bg-gray-800",
+                    )}
+                  />
+                </View>
+              ))}
+            </View>
+            <View className="absolute" style={{ top: 30 }}>
               {isLoading ? null : !taskData ? null : <TasksGrid days={days} tasks={taskData} />}
             </View>
-          </ScrollView>
+          </View>
         </ScrollView>
       </View>
 
-      <View className="absolute bottom-10 left-0 right-0 space-y-4">
-        <View className="flex flex-row items-end justify-between px-5">
+      <View className="absolute bottom-4 left-0 right-0 space-y-4">
+        <View className="flex flex-row items-end justify-between px-4">
           <View className="flex-1 flex-row">
             <TouchableOpacity
-              // onPress={() => setDate(dayjs().format("YYYY-MM-DD"))}
+              onPress={() => scrollTo(timelineRef, 0, 0, true)}
               className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
             >
-              <Feather name="calendar" size={24} color={isDark ? "white" : "black"} />
+              <Icon icon={Calendar} size={24} color={isDark ? "white" : "black"} />
             </TouchableOpacity>
           </View>
-          {/* {features.includes("habits") && dayjs(date).isBefore(dayjs().add(1, "day").startOf("day")) ? (
-            <View className="flex-1 flex-row justify-center">
-              <Habits date={date} />
-            </View>
-          ) : null} */}
           <View className="flex-1 flex-row justify-end">
             <Link href={`new?date=${dayjs(date).format("YYYY-MM-DD")}`} asChild>
               <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
-                <Feather name="plus" size={24} />
+                <Icon icon={Plus} size={24} color="black" />
               </TouchableOpacity>
             </Link>
           </View>
@@ -139,8 +162,6 @@ type DropTask = Pick<Task, "id" | "name" | "order"> & { date: string }
 
 const DAY_WIDTH = 90
 
-// const MONTH_NAMES = ["jan.", "feb.", "mar.", "apr.", "may.", "jun.", "jul.", "aug.", "sept.", "oct.", "nov.", "dec."]
-
 export const getDays = (startDate: Dayjs, daysCount: number) => {
   return Array.from({ length: daysCount }).map((_, i) => startDate.add(i, "day").format("YYYY-MM-DD"))
 }
@@ -173,25 +194,11 @@ function TasksGrid({ tasks, days }: { tasks: Tasks; days: string[] }) {
   // }, [tasks])
 
   return (
-    <View className="relative">
-      {days.map((day, i) => (
-        <View
-          key={day}
-          className={join(
-            `absolute border-r border-gray-100 dark:border-gray-700`,
-            dayjs(day).isSame(dayjs(), "day")
-              ? "bg-primary-100 dark:bg-primary-900/90"
-              : dayjs(day).day() === 6 || dayjs(day).day() === 0
-                ? "bg-gray-50 dark:bg-gray-900"
-                : "bg-white dark:bg-gray-800",
-          )}
-          style={{ width: DAY_WIDTH, left: i * DAY_WIDTH, height }}
-        />
-      ))}
+    <>
       {tasks.map((task) => (
         <TaskItem key={task.id} task={task} taskPositions={taskPositions} days={days} onDrop={() => handleDrop(task.id)} />
       ))}
-    </View>
+    </>
   )
 }
 
@@ -235,6 +242,7 @@ function TaskItem({
   const pan = Gesture.Pan()
     .onStart(() => {
       scale.value = withTiming(1.1)
+      runOnJS(Haptics.selectionAsync)()
       isActive.value = true
     })
     .onUpdate((event) => {
@@ -296,12 +304,7 @@ function TaskItem({
       runOnJS(onDrop)()
     })
 
-  const handleNavigate = () => {
-    router.push({ pathname: "index", params: { id: task.id } })
-  }
-
-  const elementHeight = useSharedValue(6)
-  const elementOpacity = useSharedValue(0)
+  const handleNavigate = () => router.push({ pathname: "index", params: { id: task.id } })
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
@@ -311,19 +314,14 @@ function TaskItem({
     }
   })
 
+  // const actionHeight = useSharedValue(0)
   const tap = Gesture.Tap().runOnJS(true).onStart(handleNavigate)
-  const longPress = Gesture.LongPress()
-    .minDuration(200)
-    .onStart(() => {
-      elementHeight.value = withTiming(20)
-      elementOpacity.value = withTiming(1)
-    })
-    .onEnd(() => {
-      elementHeight.value = withTiming(6)
-      elementOpacity.value = withTiming(0)
-    })
 
-  const gesture = Gesture.Race(Gesture.Simultaneous(pan, longPress), tap)
+  const forceTouch = Gesture.ForceTouch().onStart(() => {
+    // actionHeight.value = withTiming(50)
+  })
+
+  const gesture = Gesture.Race(pan, tap, forceTouch)
 
   return (
     <Animated.View style={[{ width: DAY_WIDTH, height: TASK_HEIGHT, padding: 4 }, animatedStyles]}>
@@ -334,12 +332,9 @@ function TaskItem({
               {task.name}
             </Text>
           </View>
-          <Animated.View
-            className="flex items-center justify-center rounded-b"
-            style={{ backgroundColor: task.element.color, height: elementHeight }}
-          >
+          <Animated.View className="flex justify-center rounded-b" style={{ backgroundColor: task.element.color, height: 14 }}>
             <Animated.Text
-              style={{ fontSize: 10, opacity: elementOpacity, color: safeReadableColor(task.element.color) }}
+              style={{ fontSize: 10, opacity: 1, color: safeReadableColor(task.element.color) }}
               numberOfLines={1}
               className="px-1"
             >
@@ -349,81 +344,6 @@ function TaskItem({
         </Animated.View>
       </GestureDetector>
     </Animated.View>
-  )
-}
-
-function _TaskItemOld({
-  task,
-  drag,
-  onToggleComplete,
-  isActive,
-}: {
-  task: Tasks[number]
-  onToggleComplete: () => void
-  drag: () => void
-  isActive: boolean
-}) {
-  const [isHovered, setIsHovered] = React.useState(false)
-  const { mutate: toggleComplete } = api.task.toggleComplete.useMutation({ onMutate: onToggleComplete })
-  const handleToggleComplete = () => toggleComplete({ id: task.id })
-  const router = useRouter()
-
-  const isDark = useColorScheme() === "dark"
-
-  return (
-    <ScaleDecorator activeScale={1.01}>
-      <TouchableOpacity
-        onPress={() => router.push({ pathname: "index", params: { id: task.id } })}
-        onLongPress={drag}
-        onPressIn={() => setIsHovered(true)}
-        onPressOut={() => setIsHovered(false)}
-        delayLongPress={400}
-        activeOpacity={1}
-        disabled={isActive}
-        className="mx-4 mb-px mt-1 bg-white dark:bg-black"
-      >
-        <View
-          className={join(
-            "overflow-hidden rounded-md border border-gray-100 bg-white dark:border-gray-600 dark:bg-black",
-            task.isComplete && "opacity-60",
-          )}
-        >
-          <View className="flex flex-row space-x-2 p-3">
-            <TouchableOpacity onPress={handleToggleComplete} className="flex-shrink-0">
-              {task.isComplete ? (
-                <Octicons name="check-circle-fill" size={24} color={colors.primary[600]} />
-              ) : (
-                <Octicons name="circle" size={24} color={isDark ? colors.gray[600] : colors.gray[100]} />
-              )}
-            </TouchableOpacity>
-
-            <View className="flex-1 flex-row justify-between">
-              <Text
-                className="text-md flex flex-1 pt-0.5"
-                style={{ textDecorationLine: task.isComplete ? "line-through" : undefined }}
-              >
-                {task.name}
-              </Text>
-              {!task.isComplete && (
-                <View className="flex flex-shrink-0 flex-row items-center space-x-2">
-                  {task.startTime ? <Text className="text-xs">{task.startTime}</Text> : null}
-                  {task.durationHours || task.durationMinutes ? (
-                    <Text className="text-xs">{formatDuration(task.durationHours, task.durationMinutes)}</Text>
-                  ) : null}
-                </View>
-              )}
-            </View>
-          </View>
-          <View style={{ backgroundColor: task.element.color }} className="rounded-b-sm p-1">
-            {isHovered || isActive ? (
-              <Text style={{ color: safeReadableColor(task.element.color) }} className="text-xs">
-                {task.element.name}
-              </Text>
-            ) : null}
-          </View>
-        </View>
-      </TouchableOpacity>
-    </ScaleDecorator>
   )
 }
 
