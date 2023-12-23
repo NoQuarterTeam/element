@@ -1,4 +1,3 @@
-import dayjs from "dayjs"
 import Feather from "@expo/vector-icons/Feather"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
@@ -32,10 +31,7 @@ function EditTaskForm({ task }: { task: Task }) {
   const utils = api.useUtils()
   const update = api.task.update.useMutation({
     onSuccess: async (updatedTask) => {
-      void utils.task.byDate.invalidate({ date: dayjs(updatedTask.date).format("YYYY-MM-DD") })
-      if (!dayjs(updatedTask.date).isSame(dayjs(task.date), "date")) {
-        void utils.task.byDate.invalidate({ date: dayjs(task.date).format("YYYY-MM-DD") })
-      }
+      void utils.task.byDate.refetch()
       utils.task.byId.setData({ id: task.id }, updatedTask)
       router.back()
     },
@@ -54,7 +50,7 @@ function EditTaskForm({ task }: { task: Task }) {
 
   const deleteTask = api.task.delete.useMutation({
     onSuccess: () => {
-      void utils.task.byDate.invalidate({ date: dayjs(task.date).format("YYYY-MM-DD") })
+      void utils.task.byDate.refetch()
       router.back()
     },
   })
@@ -62,7 +58,7 @@ function EditTaskForm({ task }: { task: Task }) {
 
   const addToBacklog = api.task.update.useMutation({
     onSuccess: async (updatedTask) => {
-      void utils.task.byDate.invalidate({ date: dayjs(task.date).format("YYYY-MM-DD") })
+      void utils.task.byDate.refetch()
       utils.task.byId.setData({ id: task.id }, updatedTask)
       router.back()
     },
@@ -71,7 +67,7 @@ function EditTaskForm({ task }: { task: Task }) {
 
   const duplicate = api.task.duplicate.useMutation({
     onSuccess: async () => {
-      void utils.task.byDate.invalidate({ date: dayjs(task.date).format("YYYY-MM-DD") })
+      void utils.task.byDate.refetch()
       router.back()
     },
   })

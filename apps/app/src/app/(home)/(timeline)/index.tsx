@@ -195,7 +195,7 @@ type DropTask = Pick<Task, "id" | "name" | "order"> & { date: string }
 const DAY_WIDTH = 90
 
 function TasksGrid({ days }: { days: string[] }) {
-  const { data } = api.task.byDate.useQuery()
+  const { data, refetch } = api.task.byDate.useQuery()
   const tasks = data || []
 
   const taskPositions = useSharedValue<{ [key: string]: DropTask }>(
@@ -211,7 +211,7 @@ function TasksGrid({ days }: { days: string[] }) {
     }, {})
   }, [tasks])
 
-  const { mutate } = api.task.updateOrder.useMutation()
+  const { mutate } = api.task.updateOrder.useMutation({ onSuccess: () => refetch() })
 
   const handleDrop = (taskId: string) => {
     const newTask = taskPositions.value[taskId]!
@@ -250,7 +250,7 @@ function TaskItem({
   const position = useDerivedValue(() => {
     const taskPosition = taskPositions.value[task.id]
     const column = days.findIndex((day) => day === task.date)
-    const order = taskPosition!.order || 0
+    const order = taskPosition?.order || 0
     return { x: column * DAY_WIDTH, y: order * TASK_HEIGHT }
   })
 
