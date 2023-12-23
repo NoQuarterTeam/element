@@ -1,10 +1,10 @@
 import { Stack } from "expo-router"
-import { useColorScheme } from "react-native"
+import { useBackgroundColor } from "../../../lib/tailwind"
 
 export default function HabitsLayout() {
-  const colorScheme = useColorScheme()
+  const backgroundColor = useBackgroundColor()
   return (
-    <Stack screenOptions={{ contentStyle: { backgroundColor: colorScheme === "light" ? "white" : "black" }, headerShown: false }}>
+    <Stack screenOptions={{ contentStyle: { backgroundColor }, headerShown: false }}>
       <Stack.Screen name="index" options={{ presentation: "modal" }} />
       <Stack.Screen name="new" options={{ presentation: "modal" }} />
       <Stack.Screen name="[id]" options={{ presentation: "modal" }} />

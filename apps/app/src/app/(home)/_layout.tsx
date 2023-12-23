@@ -10,20 +10,22 @@ import { createImageUrl, join } from "@element/shared"
 import { OptimizedImage } from "../../components/OptimisedImage"
 import { Icon } from "../../components/Icon"
 import colors from "@element/tailwind-config/src/colors"
+import { useBackgroundColor } from "../../lib/tailwind"
 
 export default function HomeLayout() {
   const colorScheme = useColorScheme()
+  const backgroundColor = useBackgroundColor()
   const isDark = colorScheme === "dark"
   const features = useFeatures((s) => s.features)
   const { me } = useMe()
   return (
     <AuthProvider>
       <Tabs
-        initialRouteName="(timeline)"
+        initialRouteName="(timeline)/index"
         screenOptions={{
           headerShown: false,
           tabBarStyle: {
-            backgroundColor: colorScheme === "light" ? "white" : "black",
+            backgroundColor,
             borderTopColor: colors.gray[isDark ? 700 : 200],
           },
           tabBarShowLabel: false,

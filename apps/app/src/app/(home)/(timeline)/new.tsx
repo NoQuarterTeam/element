@@ -1,5 +1,4 @@
-import dayjs from "dayjs"
-import { useRouter } from "expo-router"
+import { useGlobalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 import { KeyboardAvoidingView, ScrollView, View } from "react-native"
 
@@ -9,16 +8,15 @@ import { join } from "@element/shared"
 
 export default function NewTask() {
   const router = useRouter()
+  const { date } = useGlobalSearchParams()
+
   const canGoBack = router.canGoBack()
   const utils = api.useUtils()
   const create = api.task.create.useMutation({
     onSuccess: (createdTask) => {
+      if (!date) return
       if (!createdTask.date) return
-      utils.task.byDate.setData({ date: dayjs().toDate() }, (old) =>
-        old
-          ? [...old, { ...createdTask, date: dayjs(createdTask.date).format("YYYY-MM-DD") }]
-          : [{ ...createdTask, date: dayjs(createdTask.date).format("YYYY-MM-DD") }],
-      )
+      utils.task.byDate.setData(undefined, (old) => (old ? [...old, createdTask] : [createdTask]))
       router.back()
     },
   })

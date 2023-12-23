@@ -126,9 +126,6 @@ importers:
       react-native:
         specifier: 0.72.6
         version: 0.72.6(@babel/core@7.23.6)(@babel/preset-env@7.23.6)(react@18.2.0)
-      react-native-draggable-flatlist:
-        specifier: ^4.0.1
-        version: 4.0.1(@babel/core@7.23.6)(react-native-gesture-handler@2.12.1)(react-native-reanimated@3.3.0)(react-native@0.72.6)
       react-native-gesture-handler:
         specifier: ^2.12.1
         version: 2.12.1(react-native@0.72.6)(react@18.2.0)
@@ -13106,21 +13103,6 @@ packages:
 
   /react-lifecycles-compat@3.0.4:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
-    dev: false
-
-  /react-native-draggable-flatlist@4.0.1(@babel/core@7.23.6)(react-native-gesture-handler@2.12.1)(react-native-reanimated@3.3.0)(react-native@0.72.6):
-    resolution: {integrity: sha512-ZO1QUTNx64KZfXGXeXcBfql67l38X7kBcJ3rxUVZzPHt5r035GnGzIC0F8rqSXp6zgnwgUYMfB6zQc5PKmPL9Q==}
-    peerDependencies:
-      react-native: '>=0.64.0'
-      react-native-gesture-handler: '>=2.0.0'
-      react-native-reanimated: '>=2.8.0'
-    dependencies:
-      '@babel/preset-typescript': 7.23.3(@babel/core@7.23.6)
-      react-native: 0.72.6(@babel/core@7.23.6)(@babel/preset-env@7.23.6)(react@18.2.0)
-      react-native-gesture-handler: 2.12.1(react-native@0.72.6)(react@18.2.0)
-      react-native-reanimated: 3.3.0(@babel/core@7.23.6)(@babel/plugin-proposal-nullish-coalescing-operator@7.18.6)(@babel/plugin-proposal-optional-chaining@7.21.0)(@babel/plugin-transform-arrow-functions@7.23.3)(@babel/plugin-transform-shorthand-properties@7.23.3)(@babel/plugin-transform-template-literals@7.23.3)(react-native@0.72.6)(react@18.2.0)
-    transitivePeerDependencies:
-      - '@babel/core'
     dev: false
 
   /react-native-gesture-handler@2.12.1(react-native@0.72.6)(react@18.2.0):

@@ -1,11 +1,7 @@
 import { Stack } from "expo-router"
-import { useColorScheme } from "react-native"
+import { useBackgroundColor } from "../../../lib/tailwind"
 
 export default function ProfileLayout() {
-  const colorScheme = useColorScheme()
-  return (
-    <Stack
-      screenOptions={{ contentStyle: { backgroundColor: colorScheme === "light" ? "white" : "black" }, headerShown: false }}
-    />
-  )
+  const backgroundColor = useBackgroundColor()
+  return <Stack screenOptions={{ contentStyle: { backgroundColor }, headerShown: false }} />
 }

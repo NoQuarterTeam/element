@@ -45,7 +45,6 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.72.6",
-    "react-native-draggable-flatlist": "^4.0.1",
     "react-native-gesture-handler": "^2.12.1",
     "react-native-modal-datetime-picker": "^14.0.1",
     "react-native-progress": "^5.0.0",

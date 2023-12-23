@@ -38,12 +38,13 @@ const updateSchema = taskSchema.merge(
 )
 
 export const taskRouter = createTRPCRouter({
-  byDate: protectedProcedure.input(z.object({ date: z.date() })).query(async ({ input: { date }, ctx }) => {
-    const endOfDay = dayjs(date).endOf("day").add(20, "days").toDate()
+  byDate: protectedProcedure.query(async ({ ctx }) => {
+    const endOfDay = dayjs().endOf("day").add(30, "days").toDate()
+    const startOfDay = dayjs().subtract(7, "days").startOf("day").toDate()
     const tasks = await ctx.prisma.task.findMany({
       select: timelineTaskFields,
       orderBy: [{ order: "asc" }, { createdAt: "asc" }],
-      where: { creatorId: { equals: ctx.user.id }, date: { gt: date, lte: endOfDay } },
+      where: { creatorId: { equals: ctx.user.id }, date: { gt: startOfDay, lte: endOfDay } },
     })
     const groupedTasks = tasks.reduce<{ [key: string]: (typeof tasks)[number][] }>((acc, task) => {
       const date = dayjs(task.date).format("YYYY-MM-DD")
@@ -81,13 +82,20 @@ export const taskRouter = createTRPCRouter({
       return true
     }),
   create: protectedProcedure.input(taskSchema).mutation(async ({ ctx, input }) => {
-    const data = input
-    const date = data.date ? dayjs(data.date).startOf("d").add(12, "hours").toDate() : undefined
-    const lastTask = await ctx.prisma.task.findFirst({ where: { creatorId: ctx.user.id, date }, orderBy: { order: "desc" } })
-    return ctx.prisma.task.create({
-      select: timelineTaskFields,
-      data: { ...data, date, order: lastTask ? lastTask.order + 1 : 0, creatorId: ctx.user.id },
+    const date = input.date ? dayjs(input.date).startOf("d").add(12, "hours").toDate() : undefined
+    const lastTask = await ctx.prisma.task.findFirst({
+      select: { order: true },
+      where: { creatorId: ctx.user.id, date },
+      orderBy: { order: "desc" },
     })
+    const createdTask = await ctx.prisma.task.create({
+      select: timelineTaskFields,
+      data: { ...input, date, order: lastTask ? lastTask.order + 1 : 0, creatorId: ctx.user.id },
+    })
+    return {
+      ...createdTask,
+      date: dayjs(createdTask.date).format("YYYY-MM-DD"),
+    }
   }),
   update: protectedProcedure
     .input(updateSchema.merge(z.object({ id: z.string() })))

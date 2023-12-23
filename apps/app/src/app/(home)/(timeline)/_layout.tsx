@@ -1,10 +1,10 @@
 import { Stack } from "expo-router"
-import { useColorScheme } from "react-native"
+import { useBackgroundColor } from "../../../lib/tailwind"
 
 export default function TimelineLayout() {
-  const colorScheme = useColorScheme()
+  const backgroundColor = useBackgroundColor()
   return (
-    <Stack screenOptions={{ contentStyle: { backgroundColor: colorScheme === "light" ? "white" : "black" }, headerShown: false }}>
+    <Stack initialRouteName="index" screenOptions={{ contentStyle: { backgroundColor }, headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="new" options={{ presentation: "modal" }} />
       <Stack.Screen name="[id]" options={{ presentation: "modal" }} />
