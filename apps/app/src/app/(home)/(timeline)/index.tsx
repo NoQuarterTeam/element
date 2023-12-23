@@ -1,19 +1,18 @@
-import * as React from "react"
 import dayjs from "dayjs"
+import * as React from "react"
 
 import advancedFormat from "dayjs/plugin/advancedFormat"
-import * as Progress from "react-native-progress"
-import { Link, router, useRouter } from "expo-router"
-import { View, TouchableOpacity, useColorScheme, ActivityIndicator } from "react-native"
-import { api, RouterOutputs } from "../../../lib/utils/api"
 import * as Haptics from "expo-haptics"
+import { Link, router } from "expo-router"
+import { ActivityIndicator, TouchableOpacity, View, useColorScheme } from "react-native"
+import { RouterOutputs, api } from "../../../lib/utils/api"
 
-import { safeReadableColor, join } from "@element/shared"
-import colors from "@element/tailwind-config/src/colors"
+import { join, safeReadableColor } from "@element/shared"
 
-import { Text } from "../../../components/Text"
 import { Heading } from "../../../components/Heading"
+import { Text } from "../../../components/Text"
 
+import { Calendar, Plus } from "lucide-react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   SharedValue,
@@ -27,7 +26,6 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated"
 import { Icon } from "../../../components/Icon"
-import { Calendar, Plus } from "lucide-react-native"
 import { height } from "../../../lib/utils/device"
 
 dayjs.extend(advancedFormat)
@@ -277,6 +275,8 @@ function TaskItem({
   const pan = Gesture.Pan()
     .activateAfterLongPress(200)
     .onStart(() => {
+      offsetX.value = translateX.value
+      offsetY.value = translateY.value
       scale.value = withTiming(1.1)
       runOnJS(Haptics.selectionAsync)()
       isActive.value = true
@@ -331,12 +331,11 @@ function TaskItem({
       const newOrder = taskPositions.value[task.id]!.order
       translateX.value = withTiming(newDate * DAY_WIDTH)
       translateY.value = withTiming(Math.floor(newOrder) * TASK_HEIGHT)
-      offsetX.value = withTiming(newDate * DAY_WIDTH)
-      offsetY.value = withTiming(Math.floor(newOrder) * TASK_HEIGHT)
     })
     .onFinalize(() => {
-      scale.value = withTiming(1)
-      isActive.value = false
+      scale.value = withTiming(1, undefined, () => {
+        isActive.value = false
+      })
       runOnJS(onDrop)()
     })
 
@@ -382,33 +381,3 @@ function TaskItem({
     </Animated.View>
   )
 }
-
-const _Habits = React.memo(function _Habits({ date }: { date: string }) {
-  const { data } = api.habit.progressCompleteByDate.useQuery({ date })
-  const progress = (data || 0) / 100
-  const router = useRouter()
-  const colorScheme = useColorScheme()
-
-  const unfilledColor = {
-    light: colors.red[500],
-    dark: colors.red[700],
-  }[colorScheme || "light"]
-
-  return (
-    <TouchableOpacity
-      onPress={() => router.push({ pathname: "habits", params: { date } })}
-      activeOpacity={0.8}
-      className="sq-14 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-600"
-    >
-      <Progress.Circle
-        thickness={5}
-        size={32}
-        animated={false}
-        borderWidth={0}
-        progress={progress}
-        unfilledColor={unfilledColor}
-        color={colorScheme === "dark" ? colors.green[600] : colors.green[500]}
-      />
-    </TouchableOpacity>
-  )
-})
