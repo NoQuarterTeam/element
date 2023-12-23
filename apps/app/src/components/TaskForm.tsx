@@ -88,7 +88,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
       <View className="flex flex-row justify-between">
         <View className="w-11/12">
           <TextInput
-            className="font-heading text-3xl dark:text-white"
+            className="font-body text-3xl dark:text-white"
             value={form.name}
             multiline
             placeholderTextColor={colorScheme === "dark" ? colors.gray[500] : colors.gray[300]}

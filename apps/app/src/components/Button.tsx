@@ -1,22 +1,27 @@
 import * as React from "react"
-import { TouchableOpacityProps, TouchableOpacity, useColorScheme } from "react-native"
-import { merge } from "@element/shared"
-import { cva, VariantProps } from "class-variance-authority"
-import { Text } from "./Text"
-import { Spinner } from "./Spinner"
+import { TouchableOpacity, type TouchableOpacityProps, useColorScheme, View } from "react-native"
+import { cva, type VariantProps } from "class-variance-authority"
 
-export const buttonStyles = cva("flex items-center justify-center rounded-sm border", {
+import { join, merge } from "@element/shared"
+
+import { Spinner } from "./Spinner"
+import { Text } from "./Text"
+
+export const buttonStyles = cva("rounded-xs flex flex-row items-center justify-center border", {
   variants: {
     size: {
-      xs: "h-10",
-      sm: "h-12",
-      md: "h-14",
-      lg: "h-16",
+      xs: "h-8 px-2",
+      sm: "h-10 px-3",
+      md: "h-12 px-4",
+      lg: "h-14 px-5",
     },
     variant: {
-      primary: "bg-primary-600 border-primary-600",
-      outline: "border-gray-100 bg-transparent dark:border-gray-600",
-      ghost: "bg-transparent border-transparent",
+      primary: "border-transparent bg-gray-900 dark:bg-white",
+      secondary: "border-transparent bg-gray-100 dark:bg-gray-800",
+      destructive: "border-transparent bg-red-500",
+      outline: "border-gray-200 dark:border-gray-700",
+      ghost: "border-transparent",
+      link: "border-transparent",
     },
   },
   defaultVariants: {
@@ -24,50 +29,77 @@ export const buttonStyles = cva("flex items-center justify-center rounded-sm bor
     size: "md",
   },
 })
-export const buttonTextStyles = cva("font-heading text-center text-lg", {
+export const buttonTextStyles = cva("font-500 text-md text-center", {
   variants: {
     size: {
       xs: "text-xs",
       sm: "text-sm",
-      md: "text-md",
+      md: "text-base",
       lg: "text-lg",
     },
     variant: {
-      primary: "text-white",
-      outline: "text-gray-900 dark:text-white",
-      ghost: "text-gray-900 dark:text-white",
+      primary: "text-white dark:text-black",
+      secondary: "text-black dark:text-white",
+      destructive: "text-white",
+      outline: "",
+      ghost: "",
+      link: "underline",
     },
   },
 })
 export type ButtonStyleProps = VariantProps<typeof buttonStyles>
 
-interface Props extends TouchableOpacityProps, ButtonStyleProps {
+export interface ButtonProps extends TouchableOpacityProps, ButtonStyleProps {
   className?: string
   textClassName?: string
   children: React.ReactNode
   isLoading?: boolean
+  leftIcon?: React.ReactNode
+  rightIcon?: React.ReactNode
 }
 
-export function Button({ variant = "primary", size = "md", isLoading, ...props }: Props) {
+export const Button = React.forwardRef(function _Button(
+  { variant = "primary", leftIcon, rightIcon, size = "md", isLoading, ...props }: ButtonProps,
+  ref,
+) {
   const colorScheme = useColorScheme()
+  const isDark = colorScheme === "dark"
   return (
     <TouchableOpacity
+      ref={ref as React.LegacyRef<TouchableOpacity>}
       {...props}
       disabled={props.disabled || isLoading}
       activeOpacity={0.7}
       className={merge(
-        buttonStyles({ variant, size, className: props.className }),
-        (props.disabled || isLoading) && "opacity-70",
+        buttonStyles({ variant, size }),
+        isLoading && "opacity-70",
+        props.disabled && "opacity-60",
+        size === "sm" || size === "xs" ? "space-x-1" : "space-x-2",
+        props.className,
       )}
     >
-      {isLoading ? (
+      {leftIcon && <View className={join(isLoading && "opacity-0")}>{leftIcon}</View>}
+      <Text className={buttonTextStyles({ variant, size, className: join(props.textClassName, isLoading && "opacity-0") })}>
+        {props.children}
+      </Text>
+
+      {isLoading && (
         <Spinner
-          size={size === "md" ? 20 : size === "lg" ? 25 : 15}
-          color={variant === "primary" ? "white" : colorScheme === "dark" ? "white" : "black"}
+          className="absolute"
+          color={
+            variant === "primary"
+              ? isDark
+                ? "black"
+                : "white"
+              : variant === "destructive"
+                ? "white"
+                : isDark
+                  ? "white"
+                  : "black"
+          }
         />
-      ) : (
-        <Text className={buttonTextStyles({ variant, className: props.textClassName })}>{props.children}</Text>
       )}
+      {rightIcon && <View className={join(isLoading && "opacity-0")}>{rightIcon}</View>}
     </TouchableOpacity>
   )
-}
+})

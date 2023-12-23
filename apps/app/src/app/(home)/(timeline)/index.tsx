@@ -17,6 +17,7 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   SharedValue,
   runOnJS,
+  scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -26,7 +27,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated"
 import { Icon } from "../../../components/Icon"
-import { height } from "../../../lib/utils/device"
+import { height, isAndroid } from "../../../lib/utils/device"
 
 dayjs.extend(advancedFormat)
 
@@ -65,14 +66,20 @@ export default function Timeline() {
   const timelineRef = useAnimatedRef<Animated.ScrollView>()
   const outerTimelineRef = useAnimatedRef<Animated.ScrollView>()
   const headerTranslateX = useSharedValue(0)
+  const timelineScrollX = useSharedValue(7 * DAY_WIDTH)
+
+  useAnimatedReaction(
+    () => timelineScrollX.value,
+    (x) => {
+      scrollTo(timelineRef, x, 0, false)
+    },
+  )
 
   const days = React.useMemo(() => getDays(dayjs().subtract(7, "days").format("YYYY-MM-DD"), 30), [])
   const months = React.useMemo(() => getMonths(dayjs().subtract(7, "days").format("YYYY-MM-DD"), 30), [])
 
-  const onScroll = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      headerTranslateX.value = -event.contentOffset.x
-    },
+  const onScroll = useAnimatedScrollHandler((e) => {
+    headerTranslateX.value = -e.contentOffset.x
   })
 
   const { isLoading } = api.task.byDate.useQuery(undefined, { staleTime: Infinity })
@@ -107,7 +114,7 @@ export default function Timeline() {
               setIsLoaded(true)
             }, 100)
           }}
-          // contentOffset={{ x: 7 * DAY_WIDTH, y: 0 }}
+          contentOffset={{ x: 7 * DAY_WIDTH, y: 0 }}
           onScroll={onScroll}
           scrollEventThrottle={16}
           ref={timelineRef}
@@ -129,7 +136,7 @@ export default function Timeline() {
               )}
             />
           ))}
-          {!isLoading && <TasksGrid days={days} />}
+          {!isLoading && <TasksGrid days={days} timelineScrollX={timelineScrollX} />}
         </Animated.ScrollView>
       </Animated.ScrollView>
 
@@ -194,7 +201,7 @@ type DropTask = Pick<Task, "id" | "name" | "order"> & { date: string }
 
 const DAY_WIDTH = 90
 
-function TasksGrid({ days }: { days: string[] }) {
+function TasksGrid({ days, timelineScrollX }: { days: string[] } & { timelineScrollX: SharedValue<number> }) {
   const { data, refetch } = api.task.byDate.useQuery()
   const tasks = data || []
 
@@ -228,7 +235,14 @@ function TasksGrid({ days }: { days: string[] }) {
   return (
     <>
       {tasks.map((task) => (
-        <TaskItem key={task.id} task={task} taskPositions={taskPositions} days={days} onDrop={() => handleDrop(task.id)} />
+        <TaskItem
+          key={task.id}
+          timelineScrollX={timelineScrollX}
+          task={task}
+          taskPositions={taskPositions}
+          days={days}
+          onDrop={() => handleDrop(task.id)}
+        />
       ))}
     </>
   )
@@ -241,11 +255,13 @@ function TaskItem({
   task,
   days,
   onDrop,
+  timelineScrollX,
 }: {
   days: string[]
   task: Omit<Tasks[number], "date"> & { date: string }
   taskPositions: SharedValue<{ [key: string]: DropTask }>
   onDrop: () => void
+  timelineScrollX: SharedValue<number>
 }) {
   const position = useDerivedValue(() => {
     const taskPosition = taskPositions.value[task.id]
@@ -278,10 +294,23 @@ function TaskItem({
       offsetX.value = translateX.value
       offsetY.value = translateY.value
       scale.value = withTiming(1.1)
-      runOnJS(Haptics.selectionAsync)()
+      if (!isAndroid) {
+        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium)
+      }
       isActive.value = true
     })
     .onUpdate((event) => {
+      // const positionX = event.absoluteX + timelineScrollX.value
+      // if (positionX < timelineScrollX.value + DAY_WIDTH / 2) {
+      //   // scroll left
+      //   timelineScrollX.value = withTiming(0, { duration: 1500 })
+      // } else if (positionX >= timelineScrollX.value + width - DAY_WIDTH / 2) {
+      //   // scroll right
+      //   timelineScrollX.value = withTiming(37 * DAY_WIDTH, { duration: 1500 })
+      // } else {
+      //   // regular move
+      //   cancelAnimation(timelineScrollX)
+      // }
       translateX.value = offsetX.value + event.translationX
       translateY.value = offsetY.value + event.translationY
 
