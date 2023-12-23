@@ -1,13 +1,12 @@
 import * as React from "react"
-import dayjs, { Dayjs } from "dayjs"
+import dayjs from "dayjs"
 
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import * as Progress from "react-native-progress"
 import { Link, router, useRouter } from "expo-router"
-import { View, TouchableOpacity, useColorScheme, ScrollView } from "react-native"
+import { View, TouchableOpacity, useColorScheme, ActivityIndicator } from "react-native"
 import { api, RouterOutputs } from "../../../lib/utils/api"
 import * as Haptics from "expo-haptics"
-// import Ionicons from "@expo/vector-icons/Ionicons"
 
 import { safeReadableColor, join } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
@@ -19,34 +18,40 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   SharedValue,
   runOnJS,
-  scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated"
-import { height } from "../../../lib/utils/device"
 import { Icon } from "../../../components/Icon"
 import { Calendar, Plus } from "lucide-react-native"
+import { height } from "../../../lib/utils/device"
 
 dayjs.extend(advancedFormat)
 
-// const MONTH_NAMES = ["jan.", "feb.", "mar.", "apr.", "may.", "jun.", "jul.", "aug.", "sept.", "oct.", "nov.", "dec."]
+export const getMonths = (startDate: string, daysCount: number) => {
+  // Include year to cater for scrolling further than 12
+  const monthsByDay = Array.from({ length: daysCount }).map(
+    (_, i) => dayjs(startDate).add(i, "day").month() + "/" + dayjs(startDate).add(i, "day").year(),
+  )
+  const uniqueMonths = monthsByDay.filter((value, index, array) => array.indexOf(value) === index)
+  return uniqueMonths.map((month) => ({
+    month: Number(month.split("/", 2)[0]),
+    year: Number(month.split("/", 2)[1]),
+  }))
+}
+
+export const getDays = (startDate: string, daysCount: number) => {
+  return Array.from({ length: daysCount }).map((_, i) => dayjs(startDate).add(i, "day").format("YYYY-MM-DD"))
+}
+const MONTH_NAMES = ["jan.", "feb.", "mar.", "apr.", "may.", "jun.", "jul.", "aug.", "sept.", "oct.", "nov.", "dec."]
 
 export default function Timeline() {
-  const [date, _setDate] = React.useState(dayjs().startOf("day").toDate())
-  const { data: taskData, isLoading } = api.task.byDate.useQuery({ date }, { staleTime: 10000 })
-  // const dateLabel = dayjs(date).isSame(dayjs(), "date")
-  //   ? "Today"
-  //   : // if yesterday
-  //     dayjs(date).isSame(dayjs().subtract(1, "day"), "date")
-  //     ? "Yesterday"
-  //     : // if tomorrow
-  //       dayjs(date).isSame(dayjs().add(1, "day"), "date")
-  //       ? "Tomorrow"
-  //       : dayjs(date).format("ddd Do MMMM")
+  const [isLoaded, setIsLoaded] = React.useState(false)
+  // const [date] = React.useState(dayjs().format("YYYY-MM-DD"))
 
   // const utils = api.useUtils()
 
@@ -59,71 +64,92 @@ export default function Timeline() {
 
   // const { features } = useFeatures()
 
-  // const monthValue = useSharedValue(0)
+  const timelineRef = useAnimatedRef<Animated.ScrollView>()
+  const outerTimelineRef = useAnimatedRef<Animated.ScrollView>()
+  const headerTranslateX = useSharedValue(0)
 
-  const timelineRef = useAnimatedRef<ScrollView>()
-  // const timelineX = useScrollViewOffset(timelineRef)
-  // const timelineScroll = useSharedValue(0)
+  const days = React.useMemo(() => getDays(dayjs().subtract(7, "days").format("YYYY-MM-DD"), 30), [])
+  const months = React.useMemo(() => getMonths(dayjs().subtract(7, "days").format("YYYY-MM-DD"), 30), [])
 
-  // useAnimatedStyle(() => {
-  //   console.log(timelineX.value)
-  //   return {}
-  // })
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      headerTranslateX.value = -event.contentOffset.x
+    },
+  })
+
+  const { isLoading } = api.task.byDate.useQuery(undefined, { staleTime: Infinity })
 
   const isDark = useColorScheme() === "dark"
-  const days = React.useMemo(() => getDays(dayjs().subtract(0, "day"), 30), [])
-
   return (
-    <View className="flex-1">
-      <View className="flex w-full flex-row items-center justify-between px-4 pt-16">
-        <Heading className="text-4xl">dec</Heading>
-      </View>
-
-      <View>
-        <ScrollView ref={timelineRef} horizontal contentContainerStyle={{ height: 1000 }}>
-          <View className="relative">
-            <View className="flex flex-row bg-white dark:bg-black">
-              {days.map((day) => (
-                <View key={day} style={{ width: DAY_WIDTH }}>
-                  <View className="border-gray-75 border-b dark:border-gray-700" style={{ height: 30 }}>
+    <View className="flex-1 pt-[70px]">
+      <Animated.View className="flex flex-row" style={{ transform: [{ translateX: headerTranslateX }] }}>
+        {months.map(({ month, year }) => (
+          <View key={`${month}-${year}`}>
+            <Animated.View>
+              <Heading className="px-4 text-4xl">{MONTH_NAMES[month]}</Heading>
+            </Animated.View>
+            <View className="flex flex-row">
+              {days
+                .filter((day) => month === dayjs(day).month() && year === dayjs(day).year())
+                .map((day) => (
+                  <View key={day} style={{ width: DAY_WIDTH }} className="border-gray-75 border-b px-1 pb-2 dark:border-gray-700">
                     <Text className="text-center">{dayjs(day).startOf("day").format("ddd Do")}</Text>
                   </View>
-                  <TouchableOpacity
-                    key={day}
-                    activeOpacity={0.9}
-                    onPress={() => router.push({ pathname: "new", params: { date: day } })}
-                    style={{ height }}
-                    className={join(
-                      `border-r border-gray-100 dark:border-gray-700`,
-                      dayjs(day).isSame(dayjs(), "day")
-                        ? "bg-primary-100 dark:bg-primary-900/90"
-                        : dayjs(day).day() === 6 || dayjs(day).day() === 0
-                          ? "bg-gray-50 dark:bg-gray-900"
-                          : "bg-white dark:bg-gray-800",
-                    )}
-                  />
-                </View>
-              ))}
-            </View>
-            <View className="absolute" style={{ top: 30 }}>
-              {isLoading ? null : !taskData ? null : <TasksGrid days={days} tasks={taskData} />}
+                ))}
             </View>
           </View>
-        </ScrollView>
-      </View>
+        ))}
+      </Animated.View>
+
+      <Animated.ScrollView ref={outerTimelineRef}>
+        <Animated.ScrollView
+          onLayout={() => {
+            setTimeout(() => {
+              timelineRef.current?.scrollTo({ x: DAY_WIDTH * 7, animated: false })
+              setIsLoaded(true)
+            }, 100)
+          }}
+          // contentOffset={{ x: 7 * DAY_WIDTH, y: 0 }}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+          ref={timelineRef}
+          horizontal
+        >
+          {days.map((day) => (
+            <TouchableOpacity
+              key={day}
+              activeOpacity={0.9}
+              onPress={() => router.push({ pathname: "new", params: { date: day } })}
+              style={{ height: 1000, width: DAY_WIDTH }}
+              className={join(
+                `border-r border-gray-100 dark:border-gray-700`,
+                dayjs(day).isSame(dayjs(), "day")
+                  ? "bg-primary-100 dark:bg-primary-900/90"
+                  : dayjs(day).day() === 6 || dayjs(day).day() === 0
+                    ? "bg-gray-50 dark:bg-gray-900"
+                    : "bg-white dark:bg-gray-800",
+              )}
+            />
+          ))}
+          {!isLoading && <TasksGrid days={days} />}
+        </Animated.ScrollView>
+      </Animated.ScrollView>
 
       <View className="absolute bottom-4 left-0 right-0 space-y-4">
         <View className="flex flex-row items-end justify-between px-4">
           <View className="flex-1 flex-row">
             <TouchableOpacity
-              onPress={() => scrollTo(timelineRef, 0, 0, true)}
+              onPress={() => {
+                timelineRef.current?.scrollTo({ x: 7 * DAY_WIDTH, animated: true })
+                outerTimelineRef.current?.scrollTo({ y: 0, animated: true })
+              }}
               className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
             >
               <Icon icon={Calendar} size={24} color={isDark ? "white" : "black"} />
             </TouchableOpacity>
           </View>
           <View className="flex-1 flex-row justify-end">
-            <Link href={`new?date=${dayjs(date).format("YYYY-MM-DD")}`} asChild>
+            <Link href={`new?date=${dayjs().format("YYYY-MM-DD")}`} asChild>
               <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
                 <Icon icon={Plus} size={24} color="black" />
               </TouchableOpacity>
@@ -150,6 +176,14 @@ export default function Timeline() {
           </View>
         </View> */}
       </View>
+      {(!isLoaded || isLoading) && (
+        <View
+          style={{ height }}
+          className="absolute left-0 right-0 top-0 flex items-center justify-center bg-white dark:bg-black"
+        >
+          <ActivityIndicator />
+        </View>
+      )}
     </View>
   )
 }
@@ -162,16 +196,22 @@ type DropTask = Pick<Task, "id" | "name" | "order"> & { date: string }
 
 const DAY_WIDTH = 90
 
-export const getDays = (startDate: Dayjs, daysCount: number) => {
-  return Array.from({ length: daysCount }).map((_, i) => startDate.add(i, "day").format("YYYY-MM-DD"))
-}
-function TasksGrid({ tasks, days }: { tasks: Tasks; days: string[] }) {
-  const taskPositions = useSharedValue(
+function TasksGrid({ days }: { days: string[] }) {
+  const { data } = api.task.byDate.useQuery()
+  const tasks = data || []
+
+  const taskPositions = useSharedValue<{ [key: string]: DropTask }>(
     tasks.reduce<{ [key: string]: DropTask }>((acc, task) => {
       acc[task.id] = { id: task.id, name: task.name, date: task.date, order: task.order }
       return acc
     }, {}),
   )
+  React.useEffect(() => {
+    taskPositions.value = tasks.reduce<{ [key: string]: DropTask }>((acc, task) => {
+      acc[task.id] = { id: task.id, name: task.name, date: task.date, order: task.order }
+      return acc
+    }, {})
+  }, [tasks])
 
   const { mutate } = api.task.updateOrder.useMutation()
 
@@ -186,13 +226,7 @@ function TasksGrid({ tasks, days }: { tasks: Tasks; days: string[] }) {
     )
   }
 
-  // React.useEffect(() => {
-  //   taskPositions.value = tasks.reduce<{ [key: string]: { id: string; date: string; order: number } }>((acc, task) => {
-  //     acc[task.id] = { id: task.id, date: dayjs(task.date).format("YYYY-MM-DD"), order: task.order }
-  //     return acc
-  //   }, {})
-  // }, [tasks])
-
+  if (tasks.length === 0) return null
   return (
     <>
       {tasks.map((task) => (
@@ -216,9 +250,10 @@ function TaskItem({
   onDrop: () => void
 }) {
   const position = useDerivedValue(() => {
+    const taskPosition = taskPositions.value[task.id]
     const column = days.findIndex((day) => day === task.date)
-    const order = taskPositions.value[task.id]!.order
-    return { x: column * DAY_WIDTH, y: Math.floor(order) * TASK_HEIGHT }
+    const order = taskPosition!.order || 0
+    return { x: column * DAY_WIDTH, y: order * TASK_HEIGHT }
   })
 
   const translateX = useSharedValue(position.value.x)
@@ -240,6 +275,7 @@ function TaskItem({
   )
 
   const pan = Gesture.Pan()
+    .activateAfterLongPress(200)
     .onStart(() => {
       scale.value = withTiming(1.1)
       runOnJS(Haptics.selectionAsync)()
@@ -314,14 +350,14 @@ function TaskItem({
     }
   })
 
-  // const actionHeight = useSharedValue(0)
   const tap = Gesture.Tap().runOnJS(true).onStart(handleNavigate)
 
-  const forceTouch = Gesture.ForceTouch().onStart(() => {
-    // actionHeight.value = withTiming(50)
-  })
+  // const actionHeight = useSharedValue(0)
+  // const forceTouch = Gesture.ForceTouch().onStart(() => {
+  //   // actionHeight.value = withTiming(50)
+  // })
 
-  const gesture = Gesture.Race(pan, tap, forceTouch)
+  const gesture = Gesture.Race(pan, tap)
 
   return (
     <Animated.View style={[{ width: DAY_WIDTH, height: TASK_HEIGHT, padding: 4 }, animatedStyles]}>
