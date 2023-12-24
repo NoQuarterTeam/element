@@ -8,10 +8,10 @@ const config = {
 }
 
 if (Updates.channel === "production") {
-  config.WEB_URL = "https://ramble.guide"
+  config.WEB_URL = "https://myelement.app"
   config.ENV = "production"
 } else if (Updates.channel === "preview") {
-  config.WEB_URL = "https://dev.ramble.guide"
+  config.WEB_URL = "https://dev.myelement.app"
   config.ENV = "preview"
 }
 
