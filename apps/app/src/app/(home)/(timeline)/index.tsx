@@ -75,8 +75,25 @@ export default function Timeline() {
   //   },
   // )
 
-  const days = React.useMemo(() => getDays(dayjs().subtract(7, "days").format("YYYY-MM-DD"), 30), [])
-  const months = React.useMemo(() => getMonths(dayjs().subtract(7, "days").format("YYYY-MM-DD"), 30), [])
+  const daysForward = 90
+  const daysBack = 30
+
+  const days = React.useMemo(() => getDays(dayjs().subtract(daysBack, "days").format("YYYY-MM-DD"), daysForward), [])
+  const months = React.useMemo(
+    () =>
+      getMonths(dayjs().subtract(daysBack, "days").format("YYYY-MM-DD"), daysForward).map(({ month, year }, index) => {
+        const dayCount =
+          index === 0
+            ? dayjs().month(month).year(year).daysInMonth() - dayjs().month(month).year(year).date() + 1
+            : dayjs().month(month).year(year).daysInMonth()
+        return {
+          month,
+          year,
+          width: dayCount * DAY_WIDTH,
+        }
+      }),
+    [],
+  )
 
   const onScroll = useAnimatedScrollHandler((e) => {
     headerTranslateX.value = -e.contentOffset.x
@@ -86,13 +103,29 @@ export default function Timeline() {
 
   const isDark = useColorScheme() === "dark"
   return (
-    <View className="flex-1 pt-[70px]">
+    <View className="flex-1 pt-14">
       <Animated.View className="flex flex-row" style={{ transform: [{ translateX: headerTranslateX }] }}>
+        {months.map(({ month, year, width }, i) => {
+          // left start is the sum of all previous months
+          const leftStart = months.slice(0, i).reduce((acc, { width }) => acc + width, 0)
+          return (
+            <View key={`${month}-${year}-${i}`} style={{ width }}>
+              <Month month={month} width={width} leftStart={leftStart} headerTranslateX={headerTranslateX} />
+            </View>
+          )
+        })}
+      </Animated.View>
+      <Animated.View className="flex flex-row" style={{ transform: [{ translateX: headerTranslateX }] }}>
+        {days.map((day) => (
+          <View key={day} style={{ width: DAY_WIDTH }} className="border-gray-75 border-b px-1 pb-2 dark:border-gray-700">
+            <Text className="text-center">{dayjs(day).startOf("day").format("ddd Do")}</Text>
+          </View>
+        ))}
+      </Animated.View>
+      {/* <Animated.View className="flex flex-row" style={{ transform: [{ translateX: headerTranslateX }] }}>
         {months.map(({ month, year }) => (
           <View key={`${month}-${year}`}>
-            <Animated.View>
-              <Heading className="px-4 text-4xl">{MONTH_NAMES[month]}</Heading>
-            </Animated.View>
+            <Heading className="px-4 pt-2 text-4xl">{MONTH_NAMES[month]}</Heading>
             <View className="flex flex-row">
               {days
                 .filter((day) => month === dayjs(day).month() && year === dayjs(day).year())
@@ -104,17 +137,17 @@ export default function Timeline() {
             </View>
           </View>
         ))}
-      </Animated.View>
+      </Animated.View> */}
 
       <Animated.ScrollView ref={outerTimelineRef}>
         <Animated.ScrollView
           onLayout={() => {
             setTimeout(() => {
-              timelineRef.current?.scrollTo({ x: DAY_WIDTH * 7, animated: false })
+              timelineRef.current?.scrollTo({ x: DAY_WIDTH * daysBack, animated: false })
               setIsLoaded(true)
             }, 100)
           }}
-          contentOffset={{ x: 7 * DAY_WIDTH, y: 0 }}
+          // contentOffset={{ x: 7 * DAY_WIDTH, y: 0 }}
           onScroll={onScroll}
           scrollEventThrottle={16}
           ref={timelineRef}
@@ -190,6 +223,43 @@ export default function Timeline() {
         </View>
       )}
     </View>
+  )
+}
+
+function Month({
+  month,
+  width,
+  leftStart,
+  headerTranslateX,
+}: {
+  month: number
+  width: number
+  leftStart: number
+  headerTranslateX: SharedValue<number>
+}) {
+  const style = useAnimatedStyle(() => {
+    // make month header stick to the left
+    let translateX = 0
+
+    if (-headerTranslateX.value > leftStart && -headerTranslateX.value < leftStart + width - DAY_WIDTH) {
+      // if month header is in view but not about to leave, stick to left
+      translateX = -headerTranslateX.value - leftStart
+    } else if (-headerTranslateX.value > leftStart + width - DAY_WIDTH - 1) {
+      // -1 to account for rounding errors
+      // if month header is in view, but is going off screen, stick to right
+      translateX = width - DAY_WIDTH
+    } else {
+      translateX = 0
+    }
+    return {
+      transform: [{ translateX }],
+    }
+  })
+
+  return (
+    <Animated.View style={[{ width: DAY_WIDTH }, style]}>
+      <Heading className="pt-2 text-center text-3xl">{MONTH_NAMES[month]}</Heading>
+    </Animated.View>
   )
 }
 
