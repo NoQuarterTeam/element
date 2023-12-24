@@ -49,13 +49,30 @@ export function shallowEqual(object1: Record<string, string | number | null>, ob
 export const getFormDataArray = (formData: FormData, field: string) =>
   [...formData.entries()]
     .filter(([key]) => key.startsWith(field))
-    .reduce((acc, [key, value]) => {
-      const [prefix, name] = key.split(".")
-      const match = prefix.match(/\[(\d+)\]$/)
-      const id = match ? Number(match[1]) : 0
-      acc[id] = {
-        ...acc[id],
-        [name]: value as string | undefined,
-      }
-      return acc
-    }, [] as Array<Record<string, string | undefined>>)
+    .reduce(
+      (acc, [key, value]) => {
+        const [prefix, name] = key.split(".")
+        const match = prefix.match(/\[(\d+)\]$/)
+        const id = match ? Number(match[1]) : 0
+        acc[id] = {
+          ...acc[id],
+          [name]: value as string | undefined,
+        }
+        return acc
+      },
+      [] as Array<Record<string, string | undefined>>,
+    )
+
+import { useActionData } from "@remix-run/react"
+
+import type { ActionDataErrorResponse } from "./form.server"
+
+export function useFormErrors<Schema extends z.ZodTypeAny>() {
+  return useActionData() as Partial<ActionDataErrorResponse<Schema>> | null
+}
+
+export const FORM_ACTION = "_action"
+
+export function FormActionInput({ value }: { value: string }) {
+  return <input type="hidden" name={FORM_ACTION} value={value} />
+}

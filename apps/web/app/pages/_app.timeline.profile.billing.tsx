@@ -16,11 +16,11 @@ import { COUNTRIES } from "~/lib/static/countries"
 import { INVOICE_STATUS } from "~/lib/static/invoiceStatus"
 import { TAX_TYPES } from "~/lib/static/taxTypes"
 import { stripe } from "~/lib/stripe/stripe.server"
-import { getUser } from "~/services/auth/auth.server"
+import { getCurrentUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
   const [stripeCustomer, invoices] = await Promise.all([
     stripe.customers.retrieve(user.stripeCustomerId, { expand: ["tax_ids"] }),
     stripe.invoices.list({ customer: user.stripeCustomerId }),
@@ -44,7 +44,7 @@ export enum ProfileBillingMethods {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
   const { createFlash } = await getFlashSession(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ProfileBillingMethods | undefined

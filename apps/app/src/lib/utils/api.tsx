@@ -37,7 +37,7 @@ const getBaseUrl = () => {
    * you'll have to manually set it. NOTE: Port 3000 should work for most but confirm
    * you don't have anything else running on it, or you'd have to change it.
    */
-  // return "https://ramble.app"
+  // return "https://myelement.app"
   const debuggerHost = Constants.debuggerHost ?? Constants.manifest2?.extra?.expoGo?.debuggerHost
   const localhost = debuggerHost?.split(":")[0]
   if (!localhost) return FULL_WEB_URL

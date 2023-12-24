@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
+
 import { Link, useParams } from "@remix-run/react"
 import { z } from "zod"
 
@@ -7,9 +7,8 @@ import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { decryptToken } from "~/lib/jwt.server"
-import { badRequest } from "~/lib/remix"
+import { badRequest, redirect } from "~/lib/remix"
 import { hashPassword } from "~/services/auth/password.server"
-import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const headers = () => {
   return {
@@ -26,12 +25,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { data, fieldErrors } = await validateFormData(resetPasswordSchema, formData)
   if (fieldErrors) return badRequest({ fieldErrors, data })
 
-  const payload = decryptToken<{ id: string }>(data.token)
+  const payload = await decryptToken<{ id: string }>(data.token)
   const hashedPassword = await hashPassword(data.password)
   await db.user.update({ where: { id: payload.id }, data: { password: hashedPassword } })
-  const { createFlash } = await getFlashSession(request)
-  return redirect("/login", {
-    headers: { "Set-Cookie": await createFlash(FlashType.Info, "Password changed") },
+
+  return redirect("/login", request, {
+    flash: { title: "Password changed" },
   })
 }
 

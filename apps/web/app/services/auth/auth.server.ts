@@ -1,10 +1,10 @@
 import { type Prisma } from "@element/database/types"
-import { redirect } from "@remix-run/node"
 
 import { db } from "~/lib/db.server"
 import type { Await } from "~/lib/helpers/types"
 
 import { getUserSession } from "../session/session.server"
+import { redirect } from "@remix-run/node"
 
 export async function requireUser(request: Request) {
   const { userId } = await getUserSession(request)
@@ -20,19 +20,30 @@ const userSelectFields = {
   lastName: true,
   avatar: true,
   role: true,
-  verifiedAt: true,
-  createdAt: true,
-  stripeSubscriptionId: true,
   stripeCustomerId: true,
+  stripeSubscriptionId: true,
+  createdAt: true,
 } satisfies Prisma.UserSelect
 
-export async function getUser(request: Request) {
+export async function getCurrentUser<T extends Prisma.UserSelect>(request: Request, select?: T) {
   const userId = await requireUser(request)
   const user = await db.user.findFirst({
-    where: { id: userId, archivedAt: { equals: null } },
-    select: userSelectFields,
+    where: { id: userId },
+    select: select ?? userSelectFields,
   })
   if (!user) throw redirect(`/login`)
-  return user
+  return user as unknown as Prisma.UserGetPayload<{ select: T }>
 }
-export type CurrentUser = Await<typeof getUser>
+export type CurrentUser = Await<typeof getCurrentUser>
+
+export async function getMaybeUser<T extends Prisma.UserSelect>(request: Request, select?: T) {
+  const { userId } = await getUserSession(request)
+  if (!userId) return null
+  const user = await db.user.findFirst({
+    where: { id: userId },
+    select: select ?? userSelectFields,
+  })
+  if (!user) return null
+  return user as unknown as Prisma.UserGetPayload<{ select: T }>
+}
+export type MayubeUser = Await<typeof getMaybeUser>

@@ -1,19 +1,19 @@
 import { type Task, TaskRepeat } from "@element/database/types"
 import { getRepeatingDatesBetween, MAX_FREE_TASKS } from "@element/shared"
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
-import { json, redirect } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import dayjs from "dayjs"
 import { z } from "zod"
 
 import { taskItemSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
 import { getFormDataArray, validateFormData } from "~/lib/form"
-import { badRequest } from "~/lib/remix"
-import { getUser } from "~/services/auth/auth.server"
+import { badRequest, redirect } from "~/lib/remix"
+import { getCurrentUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
   const url = new URL(request.url)
   const backParam = url.searchParams.get("back")
   const forwardParam = url.searchParams.get("forward")
@@ -47,7 +47,7 @@ export enum TasksActionMethods {
   UpdateOrder = "updateOrder",
 }
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
   const formData = await request.formData()
   const { createFlash } = await getFlashSession(request)
   const action = formData.get("_action") as TasksActionMethods | undefined
@@ -60,13 +60,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           if (taskCount >= MAX_FREE_TASKS) return redirect("/timeline/profile/plan/limit-task")
         }
         if (dayjs(user.createdAt).isBefore(dayjs().subtract(1, "month")) && !user.verifiedAt) {
-          return redirect("/timeline/profile", {
-            headers: {
-              "Set-Cookie": await createFlash(
-                FlashType.Info,
-                "Please verify your account",
-                "You can resend an email if you haven't received one.",
-              ),
+          return redirect("/timeline/profile", request, {
+            flash: {
+              title: "Please verify your account",
+              description: "You can resend an email if you haven't received one.",
             },
           })
         }
@@ -176,10 +173,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         })
         return json({ task: newTask })
       } catch (e: any) {
-        return json(e.message, {
-          status: 400,
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error creating task") },
-        })
+        return json(e.message)
       }
     case TasksActionMethods.UpdateOrder:
       try {
@@ -199,10 +193,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         )
         return json({ success: true })
       } catch (e: any) {
-        return json(e.message, {
-          status: 400,
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating order") },
-        })
+        return json(e.message)
       }
     default:
       return redirect("/")

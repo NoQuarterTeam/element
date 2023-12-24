@@ -12,18 +12,7 @@ module.exports = {
   serverModuleFormat: "cjs",
   serverBuildTarget: "cjs",
   tailwind: true,
-  serverDependenciesToBundle: [
-    "@element/api",
-    "@element/shared",
-    "@element/database",
-    "@element/database/types",
-    "@element/tailwind-config",
-    "@element/tailwind-config/src/colors",
-    "axios",
-    "query-string",
-    "filter-obj",
-    "split-on-first",
-  ],
+  serverDependenciesToBundle: [/@element/, /remix-utils/, "axios", "query-string", "filter-obj", "split-on-first"],
   watchPaths: ["../../packages/api"],
   routes: (defineRoutes) => {
     return flatRoutes("pages", defineRoutes)

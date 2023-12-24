@@ -1,5 +1,4 @@
+import { env } from "@element/server-env"
 import { Resend } from "resend"
 
-import { RESEND_API_KEY } from "./config.server"
-
-export const resend = new Resend(RESEND_API_KEY)
+export const resend = new Resend(env.RESEND_API_KEY)

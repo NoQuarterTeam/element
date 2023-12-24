@@ -3,7 +3,7 @@ import * as React from "react"
 import { api } from "../lib/utils/api"
 
 export function AuthProvider(props: { children: React.ReactNode }) {
-  const { data, isLoading } = api.auth.me.useQuery()
+  const { data, isLoading } = api.user.me.useQuery()
   const segments = useSegments()
   const router = useRouter()
 

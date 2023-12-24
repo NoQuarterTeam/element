@@ -1,6 +1,6 @@
 import * as React from "react"
 import { RiAddLine } from "react-icons/ri"
-import { isValidHex, MAX_FREE_ELEMENTS,randomHexColor , useDisclosure  } from "@element/shared"
+import { isValidHex, MAX_FREE_ELEMENTS, randomHexColor, useDisclosure } from "@element/shared"
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { useLoaderData, useNavigate, useNavigation } from "@remix-run/react"
@@ -15,17 +15,19 @@ import { Drawer } from "~/components/ui/Drawer"
 import { Form, FormButton, FormError, InlineFormField } from "~/components/ui/Form"
 import { Input } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
-import { useToast } from "~/components/ui/Toast"
+
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { badRequest } from "~/lib/remix"
-import { getUser } from "~/services/auth/auth.server"
+
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getSidebarElements } from "~/services/timeline/sidebar.server"
+import { getCurrentUser } from "~/services/auth/auth.server"
+import { toast } from "sonner"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
   const elements = await getSidebarElements(user.id)
   return json(elements)
 }
@@ -37,7 +39,7 @@ export enum ElementsActionMethods {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ElementsActionMethods | undefined
 
@@ -68,14 +70,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const createdElement = await db.element.create({ data: { ...data, color, creatorId: user.id } })
         return json({ element: createdElement })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error creating element") },
-        })
+        return badRequest(e.message)
       }
     default:
-      return badRequest("Invalid action", {
-        headers: { "Set-Cookie": await createFlash(FlashType.Error, "Invalid action") },
-      })
+      return badRequest("Invalid action")
   }
 }
 
@@ -103,7 +101,7 @@ export default function Elements() {
   )
   const elementIds = useSelectedElements((s) => s.elementIds)
   const navigate = useNavigate()
-  const toast = useToast()
+
   return (
     <Drawer
       isOpen={true}
@@ -124,7 +122,7 @@ export default function Elements() {
               onSubmit={(e) => {
                 if (!isValidHex(color)) {
                   e.preventDefault()
-                  return toast({ description: "Invalid color", status: "error" })
+                  return toast.error("Invalid color")
                 }
               }}
             >

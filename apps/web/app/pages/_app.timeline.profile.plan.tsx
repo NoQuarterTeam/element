@@ -1,4 +1,5 @@
-import { join,MAX_FREE_ELEMENTS, MAX_FREE_TASKS , useDisclosure  } from "@element/shared"
+import { env, FULL_WEB_URL } from "@element/server-env"
+import { join, MAX_FREE_ELEMENTS, MAX_FREE_TASKS, useDisclosure } from "@element/shared"
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { Outlet, useFetcher, useLoaderData } from "@remix-run/react"
@@ -10,15 +11,15 @@ import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Form, FormButton } from "~/components/ui/Form"
 import { Input } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
-import { FULL_WEB_URL,PRICE_ID  } from "~/lib/config.server"
+
 import { db } from "~/lib/db.server"
 import { badRequest } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
-import { getUser } from "~/services/auth/auth.server"
+import { getCurrentUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
   const [taskCount, elementCount, subscription] = await Promise.all([
     !user.stripeSubscriptionId
       ? db.task.count({
@@ -54,7 +55,7 @@ export enum ProfilePlanMethods {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
   const { createFlash } = await getFlashSession(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ProfilePlanMethods | undefined
@@ -76,15 +77,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           cancel_url: FULL_WEB_URL + "/timeline/profile/plan",
           automatic_tax: { enabled: true },
           discounts: promoCode ? [{ promotion_code: promoCodeId }] : undefined,
-          line_items: [{ price: PRICE_ID, quantity: 1 }],
+          line_items: [{ price: env.PRICE_ID, quantity: 1 }],
           mode: "subscription",
         })
         if (!session.url) return badRequest("Error creating subscription")
         return redirect(session.url)
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error joining plan") },
-        })
+        return badRequest(e.message)
       }
     case ProfilePlanMethods.CancelPlan:
       try {
@@ -92,9 +91,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: true })
         return json({ success: true })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error cancelling subscription") },
-        })
+        return badRequest(e.message)
       }
     case ProfilePlanMethods.ReactivatePlan:
       try {
@@ -102,15 +99,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: false })
         return json({ success: true })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error cancelling subscription") },
-        })
+        return badRequest(e.message)
       }
 
     default:
-      return badRequest("Invalid action", {
-        headers: { "Set-Cookie": await createFlash(FlashType.Error, "Invalid action") },
-      })
+      return badRequest("Invalid action")
   }
 }
 
@@ -220,7 +213,7 @@ export default function Plan() {
                   </Button>
                 }
                 confirmButton={
-                  <cancelFetcher.Form method="post" replace>
+                  <cancelFetcher.Form method="post">
                     <Button name="_action" value={ProfilePlanMethods.CancelPlan} colorScheme="red" type="submit">
                       Downgrade
                     </Button>

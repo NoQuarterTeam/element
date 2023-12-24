@@ -4,7 +4,7 @@ import * as trpcFetch from "@trpc/server/adapters/fetch"
 import { ZodError } from "zod"
 import superjson from "superjson"
 import { prisma, User } from "@element/database"
-import { decodeAuthToken } from "./lib/jwt"
+import { decodeAuthToken } from "@element/server-services"
 
 export async function createContext({ req }: trpcFetch.FetchCreateContextFnOptions) {
   const headers = new Headers(req.headers)

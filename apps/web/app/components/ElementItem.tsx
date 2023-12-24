@@ -31,7 +31,7 @@ import { IconButton } from "./ui/IconButton"
 import { Modal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
 import { Spinner } from "./ui/Spinner"
-import { useToast } from "./ui/Toast"
+import { toast } from "sonner"
 
 const MAX_DEPTH = 2
 
@@ -90,8 +90,6 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
       moveModalProps.onClose()
     }
   }, [moveFetcher.data, moveFetcher.state])
-
-  const toast = useToast()
 
   const matchedChildren = matchSorter(
     element.children.filter((e) => (isArchivedShown ? e : !e.archivedAt)),
@@ -191,7 +189,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
             onSubmit={(e) => {
               if (!isValidHex(newColor)) {
                 e.preventDefault()
-                return toast({ description: "Invalid color", status: "error" })
+                return toast.error("Invalid color")
               }
             }}
           >
@@ -244,7 +242,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
             onSubmit={(e) => {
               if (!isValidHex(editColor)) {
                 e.preventDefault()
-                return toast({ description: "Invalid color", status: "error" })
+                return toast.error("Invalid color")
               }
             }}
           >

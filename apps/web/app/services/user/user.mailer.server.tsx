@@ -1,12 +1,11 @@
 import type { User } from "@element/database/types"
 
-import { FULL_WEB_URL } from "~/lib/config.server"
-import { createToken } from "~/lib/jwt.server"
 import { mailer } from "~/lib/mailer.server"
 import ResetPasswordTemplate from "~/pages/emails+/reset-password"
 import VerifyAccountEmail from "~/pages/emails+/verify-account"
 
 import { type CurrentUser } from "../auth/auth.server"
+import { FULL_WEB_URL } from "@element/server-env"
 
 export async function sendResetPasswordEmail(user: User, token: string) {
   try {
@@ -26,13 +25,13 @@ export async function sendResetPasswordEmail(user: User, token: string) {
 export async function sendEmailVerification(user: CurrentUser) {
   try {
     if (!user.email) return
-    const token = createToken({ id: user.id }, { expiresIn: "30 mins" })
-    await mailer.send({
-      react: <VerifyAccountEmail link={`${FULL_WEB_URL}/api/email-verification/${token}`} />,
-      to: user.email,
-      from: "info@noquarter.co",
-      subject: "Verify account",
-    })
+    // const token = createToken({ id: user.id }, { expiresIn: "30 mins" })
+    // await mailer.send({
+    //   react: <VerifyAccountEmail link={`${FULL_WEB_URL}/api/email-verification/${token}`} />,
+    //   to: user.email,
+    //   from: "info@noquarter.co",
+    //   subject: "Verify account",
+    // })
   } catch (error) {
     console.log(error)
   }

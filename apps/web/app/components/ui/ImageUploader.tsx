@@ -1,26 +1,27 @@
 import * as React from "react"
 import type { DropzoneOptions, FileRejection } from "react-dropzone"
 import { useDropzone } from "react-dropzone"
-import { merge, useDisclosure, useS3Upload } from "@element/shared"
+import { merge, useDisclosure } from "@element/shared"
 
 import { BrandButton } from "./BrandButton"
 import { Button } from "./Button"
 import { ButtonGroup } from "./ButtonGroup"
 import { inputStyles } from "./Inputs"
 import { Modal } from "./Modal"
-import { useToast } from "./Toast"
+
+import { useS3Upload } from "~/lib/hooks/useS3"
+import { toast } from "sonner"
 
 interface Props {
-  path: string
   onSubmit: (key: string) => Promise<any> | any
   children: React.ReactNode
   dropzoneOptions?: Omit<DropzoneOptions, "multiple" | "onDrop">
   className?: string
 }
 
-export function ImageUploader({ children, path, onSubmit, dropzoneOptions, className }: Props) {
+export function ImageUploader({ children, onSubmit, dropzoneOptions, className }: Props) {
   const modalProps = useDisclosure()
-  const toast = useToast()
+
   const [image, setImage] = React.useState<{ file: File; preview: string } | null>(null)
 
   const onDrop = React.useCallback(
@@ -28,19 +29,19 @@ export function ImageUploader({ children, path, onSubmit, dropzoneOptions, class
       window.URL = window.URL || window.webkitURL
       if (rejectedFiles.length > 0) {
         const rejectedFile = rejectedFiles[0]
-        if (rejectedFile.errors[0]?.code.includes("file-too-large")) {
+        if (rejectedFile?.errors[0]?.code.includes("file-too-large")) {
           const description = `File too large, must be under ${
             (dropzoneOptions?.maxSize && `${dropzoneOptions.maxSize / 1000000}MB`) || "5MB"
           }`
-          toast({ status: "error", title: "Invalid file", description })
+          toast.error("Invalid file", { description })
         } else {
           // TODO: add remaining error handlers
-          toast({ status: "error", description: "Invalid file, please try another" })
+          toast.error("Invalid file")
         }
         return
       }
       if (files.length === 0) return
-      setImage({ file: files[0], preview: window.URL.createObjectURL(files[0]) })
+      setImage({ file: files[0]!, preview: window.URL.createObjectURL(files[0]!) })
       modalProps.onOpen()
     },
     [toast, dropzoneOptions],
@@ -51,16 +52,16 @@ export function ImageUploader({ children, path, onSubmit, dropzoneOptions, class
     onDrop,
     multiple: false,
   })
-  const [upload, { isLoading }] = useS3Upload({ path })
+  const [upload, { isLoading }] = useS3Upload()
 
   const handleSubmitImage = async () => {
     if (!image || !image.file) return
     try {
       const uploadedFile = await upload(image.file)
-      await onSubmit(uploadedFile.fileKey)
+      await onSubmit(uploadedFile)
       handleClose()
     } catch (error: any) {
-      toast({ status: "error", title: "Error uploading image", description: error.message as string })
+      toast.error("Error uploading", { description: error instanceof Error ? error.message : undefined })
     }
   }
 

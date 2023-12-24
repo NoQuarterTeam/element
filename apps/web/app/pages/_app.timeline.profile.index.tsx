@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
+
 import { useFetcher, useSubmit } from "@remix-run/react"
 import { z } from "zod"
 
@@ -9,9 +9,9 @@ import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Form, FormButton, FormError, FormField, ImageField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
-import { badRequest } from "~/lib/remix"
-import { UPLOAD_PATHS } from "~/lib/uploadPaths"
-import { getUser } from "~/services/auth/auth.server"
+import { badRequest, redirect } from "~/lib/remix"
+
+import { getCurrentUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getUserSession } from "~/services/session/session.server"
 import { sendEmailVerification } from "~/services/user/user.mailer.server"
@@ -24,7 +24,7 @@ export enum ProfileActionMethods {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
   const { createFlash } = await getFlashSession(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ProfileActionMethods | undefined
@@ -50,39 +50,27 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           await sendEmailVerification(user)
         }
         await db.user.update({ where: { id: user.id }, data: { ...data, verifiedAt: updateData.email ? null : undefined } })
-        return redirect("/timeline/profile", {
-          headers: {
-            "Set-Cookie": await createFlash(
-              FlashType.Info,
-              "Profile updated",
-              updateData.email && "Verification email sent to " + updateData.email,
-            ),
+        return redirect("/timeline/profile", request, {
+          flash: {
+            title: "Profile updated",
+            description: updateData.email ? "Verification email sent to " + updateData.email : undefined,
           },
         })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating profile") },
-        })
+        return badRequest(e.message)
       }
     case ProfileActionMethods.DeleteAcccount:
       try {
         await db.user.update({ where: { id: user.id }, data: { archivedAt: new Date() } })
         const { destroy } = await getUserSession(request)
 
-        const headers = new Headers([
-          ["Set-Cookie", await destroy()],
-          ["Set-Cookie", await createFlash(FlashType.Info, "Acccount deleted")],
-        ])
-        return redirect("/", { headers })
+        const headers = new Headers([["Set-Cookie", await destroy()]])
+        return redirect("/", request, { headers, flash: { title: "Account deleted!" } })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error deleting acccount") },
-        })
+        return badRequest(e.message)
       }
     default:
-      return badRequest("Invalid action", {
-        headers: { "Set-Cookie": await createFlash(FlashType.Error, "Invalid action") },
-      })
+      return badRequest("Invalid action")
   }
 }
 
@@ -94,7 +82,7 @@ export default function Account() {
     <div className="stack">
       <p className="text-lg font-medium">Account</p>
       {!me.verifiedAt && (
-        <verifyFetcher.Form action="/api/email-verification" method="post" replace>
+        <verifyFetcher.Form action="/api/email-verification" method="post">
           <div className="stack rounded-sm bg-orange-100 p-2 dark:bg-orange-900">
             <p className="text-md">Your account is not yet verified</p>
             <p className="text-xs">Please check your email inbox for a verification link</p>
@@ -109,13 +97,7 @@ export default function Account() {
           <FormField defaultValue={me.email} name="email" label="Email" />
           <FormField defaultValue={me.firstName} name="firstName" label="First name" />
           <FormField defaultValue={me.lastName} name="lastName" label="Last name" />
-          <ImageField
-            defaultValue={me.avatar}
-            className="sq-24 hidden text-center xl:flex"
-            label="Avatar"
-            name="avatar"
-            path={UPLOAD_PATHS.userAvatar(me.id)}
-          />
+          <ImageField defaultValue={me.avatar} className="sq-24 hidden text-center xl:flex" label="Avatar" name="avatar" />
           <FormError />
           <ButtonGroup>
             <FormButton name="_action" value={ProfileActionMethods.UpdateProfile}>

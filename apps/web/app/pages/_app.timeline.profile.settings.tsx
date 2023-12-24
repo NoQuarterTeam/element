@@ -3,15 +3,16 @@ import Cookies from "js-cookie"
 
 import { Badge } from "~/components/ui/Badge"
 import { Switch } from "~/components/ui/Switch"
-import { useToast } from "~/components/ui/Toast"
-import { useFeatures,useFeaturesSeen  } from "~/lib/hooks/useFeatures"
+
+import { useFeatures, useFeaturesSeen } from "~/lib/hooks/useFeatures"
 
 import { useMe } from "./_app"
+import { toast } from "sonner"
 export const USER_LOCATION_COOKIE_KEY = "element.user.location"
 
 export default function Settings() {
   const { features, toggle } = useFeatures()
-  const toast = useToast()
+
   const me = useMe()
   const { setFeaturesSeen } = useFeaturesSeen()
   React.useEffect(() => {
@@ -29,9 +30,9 @@ export default function Settings() {
           case error.POSITION_UNAVAILABLE:
             return
           case error.TIMEOUT:
-            return toast({ description: "The request to get user location timed out.", status: "error" })
+            return toast.error("The request to get user location timed out.")
           case error.UNKNOWN_ERROR:
-            return toast({ description: "An unknown error occurred.", status: "error" })
+            return toast.error("An unknown error occurred.")
         }
       }
       if (navigator.geolocation) {
@@ -44,7 +45,7 @@ export default function Settings() {
           toggle("weather")
         }, handleError)
       } else {
-        return toast({ description: "Geolocation is not supported by this browser.", status: "error" })
+        return toast.error("Geolocation is not supported by this browser.")
       }
     }
   }

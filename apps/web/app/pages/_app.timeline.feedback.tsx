@@ -16,7 +16,7 @@ import { Modal } from "~/components/ui/Modal"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
-import { getUser } from "~/services/auth/auth.server"
+import { getCurrentUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export enum FeedbackMethods {
@@ -24,7 +24,7 @@ export enum FeedbackMethods {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
   const { createFlash } = await getFlashSession(request)
   const formData = await request.formData()
   const action = formData.get("_action") as FeedbackMethods | undefined

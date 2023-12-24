@@ -1,6 +1,6 @@
 import * as React from "react"
 import { RiAddLine, RiArrowDownSLine, RiArrowRightSLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri"
-import { safeReadableColor , useDisclosure } from "@element/shared"
+import { safeReadableColor, useDisclosure } from "@element/shared"
 import { Dialog } from "@headlessui/react"
 import { json, type LoaderFunctionArgs, type SerializeFrom } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
@@ -19,10 +19,10 @@ import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TimelineTask } from "~/pages/api+/tasks"
-import { getUser } from "~/services/auth/auth.server"
+import { getCurrentUser } from "~/services/auth/auth.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
   const tasks = await db.task.findMany({
     select: {
       ...taskItemSelectFields,

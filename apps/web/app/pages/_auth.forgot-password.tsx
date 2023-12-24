@@ -1,4 +1,4 @@
-import { type ActionFunctionArgs, redirect } from "@remix-run/node"
+import { type ActionFunctionArgs } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 import { z } from "zod"
 
@@ -6,8 +6,7 @@ import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { createToken } from "~/lib/jwt.server"
-import { badRequest } from "~/lib/remix"
-import { FlashType, getFlashSession } from "~/services/session/flash.server"
+import { badRequest, redirect } from "~/lib/remix"
 import { sendResetPasswordEmail } from "~/services/user/user.mailer.server"
 
 export const headers = () => {
@@ -23,12 +22,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (fieldErrors) return badRequest({ fieldErrors, data })
   const user = await db.user.findUnique({ where: { email: data.email } })
   if (user) {
-    const token = createToken({ id: user.id })
+    const token = await createToken({ id: user.id })
     await sendResetPasswordEmail(user, token)
   }
-  const { createFlash } = await getFlashSession(request)
-  return redirect("/login", {
-    headers: { "Set-Cookie": await createFlash(FlashType.Info, "Reset link sent to your email") },
+
+  return redirect("/login", request, {
+    flash: { title: "Reset link sent to your email" },
   })
 }
 

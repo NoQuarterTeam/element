@@ -7,7 +7,7 @@ import { api } from "../../../lib/utils/api"
 import { Spinner } from "../../../components/Spinner"
 
 export default function Plan() {
-  const { data, isLoading } = api.auth.myPlan.useQuery()
+  const { data, isLoading } = api.user.myPlan.useQuery()
   const discountedPlanAmount = data?.subscription?.discountPercent ? 4 - (4 * 100) / data.subscription.discountPercent : null
   return (
     <ScreenView title="Plan">

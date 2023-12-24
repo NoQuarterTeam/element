@@ -1,0 +1,30 @@
+{
+  "name": "@element/emails",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "sideEffects": false,
+  "scripts": {
+    "lint:fix": "eslint --config .eslintrc.commit.js --fix --cache --ext .ts,.tsx src",
+    "lint": "eslint --config .eslintrc.js --ext .ts,.tsx src",
+    "prettier": "prettier --check src",
+    "prettier:fix": "prettier --write src",
+    "format": "pnpm run lint:fix && pnpm run prettier:fix",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@element/database": "workspace:*",
+    "@element/shared": "workspace:*",
+    "@element/tailwind-config": "workspace:*",
+    "@react-email/components": "0.0.7"
+  },
+  "devDependencies": {
+    "@element/eslint-config": "workspace:*",
+    "@typescript-eslint/eslint-plugin": "6.15.0",
+    "@typescript-eslint/parser": "6.15.0",
+    "eslint": "8.56.0",
+    "prettier": "3.1.1",
+    "tailwindcss": "3.3.2",
+    "typescript": "5.3.3"
+  }
+}

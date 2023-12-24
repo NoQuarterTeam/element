@@ -13,12 +13,12 @@ import { UPDATE_ID, VERSION } from "../../../lib/config"
 import { api, AUTH_TOKEN } from "../../../lib/utils/api"
 
 export default function Profile() {
-  const { data } = api.auth.me.useQuery()
-  const utils = api.useContext()
+  const { data } = api.user.me.useQuery()
+  const utils = api.useUtils()
   const client = useQueryClient()
 
   const handleLogout = async () => {
-    utils.auth.me.setData(undefined, null)
+    utils.user.me.setData(undefined, null)
     await AsyncStorage.setItem(AUTH_TOKEN, "")
     client.clear()
   }
@@ -59,7 +59,7 @@ export default function Profile() {
         </ProfileLink>
       </View>
       <View>
-        <Button size="sm" variant="outline" onPress={handleLogout}>
+        <Button size="sm" variant="link" onPress={handleLogout}>
           Logout
         </Button>
       </View>
@@ -81,7 +81,7 @@ function ProfileLink(props: { isFirst?: boolean; isLast?: boolean; href: string;
           props.isLast && "rounded-b-sm border-b",
         )}
       >
-        <Text className="font-body text-lg">{props.children}</Text>
+        <Text className="text-lg">{props.children}</Text>
         <Feather name="chevron-right" size={20} color={colors.gray[500]} />
       </TouchableOpacity>
     </Link>

@@ -2,7 +2,7 @@ import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
 import { RiArrowLeftLine } from "react-icons/ri"
 import { Role } from "@element/database/types"
 import type { LoaderFunctionArgs } from "@remix-run/node"
-import { json , redirect } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import { useLoaderData, useSearchParams } from "@remix-run/react"
 import dayjs from "dayjs"
 import { Line, LineChart, Tooltip, XAxis, YAxis } from "recharts"
@@ -13,11 +13,11 @@ import { Select } from "~/components/ui/Inputs"
 import { Limiter } from "~/components/ui/Limiter"
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
-import { getUser } from "~/services/auth/auth.server"
+import { getCurrentUser } from "~/services/auth/auth.server"
 
 type ActivePeriod = "all" | "year" | "month" | "week"
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
   if (user.role !== Role.ADMIN) throw redirect("/")
   const url = new URL(request.url)
   const activePeriod = (url.searchParams.get("activePeriod") || "all") as ActivePeriod

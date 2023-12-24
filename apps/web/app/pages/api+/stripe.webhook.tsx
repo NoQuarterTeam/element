@@ -1,8 +1,8 @@
+import { env } from "@element/server-env"
 import type { ActionFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import type Stripe from "stripe"
 
-import { STRIPE_WEBHOOK_SECRET } from "~/lib/config.server"
 import { db } from "~/lib/db.server"
 import { badRequest } from "~/lib/remix"
 import type { StripeEventType } from "~/lib/stripe/stripe.events.server"
@@ -11,8 +11,7 @@ import { stripe } from "~/lib/stripe/stripe.server"
 export const action = async ({ request }: ActionFunctionArgs) => {
   const signature = request.headers.get("stripe-signature")
   if (!signature || !request.body) return badRequest("Stripe signature is required")
-  const event = stripe.webhooks.constructEvent(await request.text(), signature, STRIPE_WEBHOOK_SECRET)
-
+  const event = stripe.webhooks.constructEvent(await request.text(), signature, env.STRIPE_WEBHOOK_SECRET)
   switch (event.type as StripeEventType) {
     case "customer.subscription.created":
       try {

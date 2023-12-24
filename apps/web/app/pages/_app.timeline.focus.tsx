@@ -1,6 +1,6 @@
 import * as React from "react"
 import { RiArrowDownSLine, RiArrowRightSLine } from "react-icons/ri"
-import { safeReadableColor , useDisclosure } from "@element/shared"
+import { safeReadableColor, useDisclosure } from "@element/shared"
 import { Dialog } from "@headlessui/react"
 import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
@@ -14,12 +14,12 @@ import { Tooltip } from "~/components/ui/Tooltip"
 import { db } from "~/lib/db.server"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
-import { getUser } from "~/services/auth/auth.server"
+import { getCurrentUser } from "~/services/auth/auth.server"
 
 import { TaskActionMethods } from "./_app.timeline.$id"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
 
   const tasks = await db.task.findMany({
     orderBy: { order: "asc" },

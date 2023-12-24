@@ -1,0 +1,29 @@
+{
+  "name": "@element/server-env",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "sideEffects": false,
+  "scripts": {
+    "lint:fix": "eslint --config .eslintrc.commit.js --fix --cache --ext .ts,.tsx src",
+    "lint": "eslint --config .eslintrc.js --ext .ts,.tsx src",
+    "prettier": "prettier --check src",
+    "prettier:fix": "prettier --write src",
+    "format": "pnpm run lint:fix && pnpm run prettier:fix",
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ../../../.env --"
+  },
+  "dependencies": {
+    "zod": "3.22.4"
+  },
+  "devDependencies": {
+    "@element/eslint-config": "workspace:*",
+    "@types/node": "18.19.3",
+    "@typescript-eslint/eslint-plugin": "6.15.0",
+    "@typescript-eslint/parser": "6.15.0",
+    "dotenv-cli": "7.3.0",
+    "eslint": "8.56.0",
+    "prettier": "3.1.1",
+    "typescript": "5.3.3"
+  }
+}

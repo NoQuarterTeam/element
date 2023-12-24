@@ -38,7 +38,7 @@ export enum TaskActionMethods {
 }
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-  const user = await getUser(request)
+  const user = await getCurrentUser(request)
   const formData = await request.formData()
   const action = formData.get("_action") as TaskActionMethods | undefined
   const taskId = params.id as string | undefined

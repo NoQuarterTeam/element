@@ -1,0 +1,27 @@
+{
+  "include": ["src"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "composite": false,
+    "declaration": true,
+    "declarationMap": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "sourceMap": true,
+    "lib": ["ES2021", "DOM", "ESNext"],
+    "module": "CommonJS",
+    "target": "ES2021",
+    "strict": true,
+    "skipLibCheck": true
+  }
+}

@@ -1,15 +1,14 @@
-import type { ActionFunctionArgs } from "@remix-run/node"
-import { json } from "@remix-run/node"
 import { z } from "zod"
 
-import { validateFormData } from "~/lib/form"
-import { badRequest } from "~/lib/remix"
-import { createSignedUrl } from "~/services/s3/s3.server"
+import { createSignedUrl } from "@element/server-services"
+
+import { ActionFunctionArgs, json } from "@remix-run/node"
+import { formError, validateFormData } from "~/lib/form.server"
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData()
-  const creatSignedUrlSchema = z.object({ key: z.string().min(1), contentType: z.string().min(1) })
-  const { data, fieldErrors } = await validateFormData(creatSignedUrlSchema, formData)
-  if (fieldErrors) return badRequest({ fieldErrors, data })
-  return json(createSignedUrl(data))
+  const creatSignedUrlSchema = z.object({ key: z.string().min(1) })
+  const result = await validateFormData(request, creatSignedUrlSchema)
+  if (!result.success) return formError(result)
+  const signedUrl = await createSignedUrl(result.data.key)
+  return json(signedUrl)
 }

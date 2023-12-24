@@ -3,13 +3,13 @@ import { faker } from "@faker-js/faker"
 import { z } from "zod"
 import bcrypt from "bcryptjs"
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc"
-import { createAuthToken } from "../lib/jwt"
 
 import { stripe } from "../lib/stripe"
-import { hashPassword } from "../lib/password"
-import { createTemplates } from "../lib/templates"
 
-export const authRouter = createTRPCRouter({
+import { createTemplates } from "../lib/templates"
+import { createAuthToken, hashPassword } from "@element/server-services"
+
+export const userRouter = createTRPCRouter({
   me: publicProcedure.query(({ ctx }) => ctx.user || null),
   login: publicProcedure.input(z.object({ email: z.string().email(), password: z.string() })).mutation(async ({ ctx, input }) => {
     const user = await ctx.prisma.user.findUnique({ where: { email: input.email } })
@@ -42,13 +42,11 @@ export const authRouter = createTRPCRouter({
         firstName: z.string().min(2).optional(),
         lastName: z.string().min(2).optional(),
         email: z.string().email().optional(),
+        avatar: z.string().email().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.update({
-        where: { id: ctx.user.id },
-        data: input,
-      })
+      const user = await ctx.prisma.user.update({ where: { id: ctx.user.id }, data: input })
       return user
     }),
   myPlan: protectedProcedure.query(async ({ ctx }) => {

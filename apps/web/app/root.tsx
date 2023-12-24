@@ -2,6 +2,7 @@ import "~/styles/app.css"
 import "~/styles/toast.css"
 import type * as React from "react"
 import { join } from "@element/shared"
+import { promiseHash } from "remix-utils/promise"
 import * as Tooltip from "@radix-ui/react-tooltip"
 import { cssBundleHref } from "@remix-run/css-bundle"
 import type { LinksFunction, LoaderFunctionArgs, MetaFunction, SerializeFrom } from "@remix-run/node"
@@ -9,13 +10,13 @@ import { json } from "@remix-run/node"
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
-import { Fathom } from "./components/Fathom"
-import { FlashMessage } from "./components/FlashMessage"
 import { Toaster } from "./components/ui/Toast"
-import { FULL_WEB_URL } from "./lib/config.server"
+
 import { type Theme } from "./lib/theme"
 import { getFlashSession } from "./services/session/flash.server"
 import { getThemeSession } from "./services/session/theme.server"
+import { ENV, FULL_WEB_URL } from "@element/server-env"
+import { getMaybeUser } from "./services/auth/auth.server"
 
 export const meta: MetaFunction = () => {
   return [{ title: "Element" }]
@@ -25,18 +26,17 @@ export const links: LinksFunction = () => {
   return cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []
 }
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { flash, commit } = await getFlashSession(request)
-  const { getTheme, commit: commitTheme } = await getThemeSession(request)
+  const { flashSession, themeSession, user } = await promiseHash({
+    flashSession: getFlashSession(request),
+    themeSession: getThemeSession(request),
+    user: getMaybeUser(request),
+  })
   return json(
-    {
-      flash,
-      theme: getTheme(),
-      config: { WEB_URL: FULL_WEB_URL },
-    },
+    { user, flash: flashSession.message, theme: themeSession.theme, config: { FULL_WEB_URL, ENV } },
     {
       headers: [
-        ["Set-Cookie", await commit()],
-        ["Set-Cookie", await commitTheme()],
+        ["set-cookie", await flashSession.commit()],
+        ["set-cookie", await themeSession.commit()],
       ],
     },
   )
@@ -50,15 +50,12 @@ export default function App() {
 
   return (
     <Document theme={theme}>
-      <Toaster>
-        <QueryClientProvider client={queryClient}>
-          <Tooltip.Provider>
-            <Fathom />
-            <FlashMessage flash={flash} />
-            <Outlet />
-          </Tooltip.Provider>
-        </QueryClientProvider>
-      </Toaster>
+      <Toaster flash={flash} />
+      <QueryClientProvider client={queryClient}>
+        <Tooltip.Provider>
+          <Outlet />
+        </Tooltip.Provider>
+      </QueryClientProvider>
     </Document>
   )
 }

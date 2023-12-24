@@ -1,9 +1,9 @@
+import { env } from "@element/server-env"
 import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import cookie from "cookie"
 import dayjs from "dayjs"
 
-import { OPEN_WEATHER_KEY } from "~/lib/config.server"
 import { USER_LOCATION_COOKIE_KEY } from "~/pages/_app.timeline.profile.settings"
 import { requireUser } from "~/services/auth/auth.server"
 
@@ -53,7 +53,7 @@ async function getWeatherData(request: Request) {
     const { lat, lon } = JSON.parse(userLocation)
     if (!lat || !lon) return null
     const res = await fetch(
-      `https://api.openweathermap.org/data/2.5/onecall?exclude=minutely,hourly,current,alerts&units=metric&lat=${lat}&lon=${lon}&appid=${OPEN_WEATHER_KEY}`,
+      `https://api.openweathermap.org/data/2.5/onecall?exclude=minutely,hourly,current,alerts&units=metric&lat=${lat}&lon=${lon}&appid=${env.OPEN_WEATHER_KEY}`,
     )
     const json = (await res.json()) as WeatherResponse
     if (!json.daily) return null

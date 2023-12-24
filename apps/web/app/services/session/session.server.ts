@@ -1,13 +1,12 @@
+import { IS_PRODUCTION, env } from "@element/server-env"
 import { createCookieSessionStorage } from "@remix-run/node"
-
-import { IS_PRODUCTION, SESSION_SECRET } from "~/lib/config.server"
 
 export const COOKIE_KEY = IS_PRODUCTION ? "element_session" : "element_session_dev"
 
 const userStorage = createCookieSessionStorage({
   cookie: {
     name: COOKIE_KEY,
-    secrets: [SESSION_SECRET],
+    secrets: [env.SESSION_SECRET],
     secure: IS_PRODUCTION,
     sameSite: "lax",
     path: "/",

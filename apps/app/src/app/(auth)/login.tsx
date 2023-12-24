@@ -13,10 +13,10 @@ import { api, AUTH_TOKEN } from "../../lib/utils/api"
 export default function Login() {
   const queryClient = api.useContext()
   const router = useRouter()
-  const login = api.auth.login.useMutation({
+  const login = api.user.login.useMutation({
     onSuccess: async (data) => {
       await AsyncStorage.setItem(AUTH_TOKEN, data.token)
-      queryClient.auth.me.setData(undefined, data.user)
+      queryClient.user.me.setData(undefined, data.user)
       router.replace("/")
     },
   })
@@ -24,10 +24,10 @@ export default function Login() {
     await AsyncStorage.removeItem(AUTH_TOKEN)
     login.mutate({ email, password })
   }
-  const registerTempAccount = api.auth.registerTempAccount.useMutation({
+  const registerTempAccount = api.user.registerTempAccount.useMutation({
     onSuccess: async (data) => {
       await AsyncStorage.setItem(AUTH_TOKEN, data.token)
-      queryClient.auth.me.setData(undefined, data.user)
+      queryClient.user.me.setData(undefined, data.user)
       router.replace("/")
     },
   })

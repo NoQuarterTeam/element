@@ -86,11 +86,7 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(func
         <FormFieldError>{fieldErrors}</FormFieldError>
       ) : (
         fieldErrors?.length && (
-          <ul id={props.name + "-error"}>
-            {fieldErrors?.map((error, i) => (
-              <FormFieldError key={i}>{error}</FormFieldError>
-            ))}
-          </ul>
+          <ul id={props.name + "-error"}>{fieldErrors?.map((error, i) => <FormFieldError key={i}>{error}</FormFieldError>)}</ul>
         )
       )}
     </div>
@@ -132,11 +128,7 @@ export const InlineFormField = React.forwardRef<HTMLInputElement, FormFieldProps
         <FormFieldError>{fieldErrors}</FormFieldError>
       ) : (
         fieldErrors?.length && (
-          <ul id={props.name + "-error"}>
-            {fieldErrors?.map((error, i) => (
-              <FormFieldError key={i}>{error}</FormFieldError>
-            ))}
-          </ul>
+          <ul id={props.name + "-error"}>{fieldErrors?.map((error, i) => <FormFieldError key={i}>{error}</FormFieldError>)}</ul>
         )
       )}
     </div>
@@ -144,7 +136,6 @@ export const InlineFormField = React.forwardRef<HTMLInputElement, FormFieldProps
 })
 
 interface ImageFieldProps {
-  path: string
   className?: string
   name: string
   label?: string
@@ -168,7 +159,6 @@ export function ImageField(props: ImageFieldProps) {
       <div>
         <ImageUploader
           onSubmit={setImage}
-          path={props.path}
           className={merge("h-48 w-full cursor-pointer object-cover hover:opacity-80", props.className)}
         >
           {image ? (
@@ -185,11 +175,7 @@ export function ImageField(props: ImageFieldProps) {
         <FormFieldError>{fieldErrors}</FormFieldError>
       ) : (
         fieldErrors?.length && (
-          <ul id={props.name + "-error"}>
-            {fieldErrors?.map((error, i) => (
-              <FormFieldError key={i}>{error}</FormFieldError>
-            ))}
-          </ul>
+          <ul id={props.name + "-error"}>{fieldErrors?.map((error, i) => <FormFieldError key={i}>{error}</FormFieldError>)}</ul>
         )
       )}
     </div>
