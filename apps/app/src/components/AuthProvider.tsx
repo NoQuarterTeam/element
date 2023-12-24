@@ -1,5 +1,7 @@
-import { useRouter, useSegments } from "expo-router"
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react"
+import { useRouter, useSegments } from "expo-router"
+
 import { api } from "../lib/utils/api"
 
 export function AuthProvider(props: { children: React.ReactNode }) {

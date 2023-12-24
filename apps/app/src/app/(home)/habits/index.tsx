@@ -1,13 +1,15 @@
-import colors from "@element/tailwind-config/src/colors"
+import { ScrollView, TouchableOpacity, useColorScheme, View } from "react-native"
 import { useActionSheet } from "@expo/react-native-action-sheet"
 import Feather from "@expo/vector-icons/Feather"
 import Octicons from "@expo/vector-icons/Octicons"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
-import { Link, useRouter, useGlobalSearchParams } from "expo-router"
-import { ScrollView, TouchableOpacity, useColorScheme, View } from "react-native"
+import { Link, useGlobalSearchParams, useRouter } from "expo-router"
+
+import colors from "@element/tailwind-config/src/colors"
+
 import { Text } from "../../../components/Text"
-import { api, RouterOutputs } from "../../../lib/utils/api"
+import { api, type RouterOutputs } from "../../../lib/utils/api"
 
 dayjs.extend(advancedFormat)
 

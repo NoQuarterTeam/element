@@ -1,20 +1,22 @@
-import { useRouter } from "expo-router"
 import * as React from "react"
-import * as ImagePicker from "expo-image-picker"
 import { KeyboardAvoidingView, ScrollView, TouchableOpacity, View } from "react-native"
+import * as ImagePicker from "expo-image-picker"
+import { useRouter } from "expo-router"
+import { Edit2, User2 } from "lucide-react-native"
+
+import { createImageUrl } from "@element/shared"
+
 import { Button } from "../../../components/Button"
 import { FormError } from "../../../components/FormError"
 import { FormInput } from "../../../components/FormInput"
-import { ScreenView } from "../../../components/ScreenView"
-import { api } from "../../../lib/utils/api"
-import { Spinner } from "../../../components/Spinner"
-import { useMe } from "../../../lib/hooks/useMe"
-import { createImageUrl } from "@element/shared"
-import { toast } from "../../../components/Toast"
-import { OptimizedImage } from "../../../components/OptimisedImage"
 import { Icon } from "../../../components/Icon"
-import { Edit2, User2 } from "lucide-react-native"
+import { OptimizedImage } from "../../../components/OptimisedImage"
+import { ScreenView } from "../../../components/ScreenView"
+import { Spinner } from "../../../components/Spinner"
+import { toast } from "../../../components/Toast"
+import { useMe } from "../../../lib/hooks/useMe"
 import { useS3Upload } from "../../../lib/hooks/useS3"
+import { api } from "../../../lib/utils/api"
 
 export default function Account() {
   const { me } = useMe()

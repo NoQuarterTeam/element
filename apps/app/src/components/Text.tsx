@@ -1,4 +1,5 @@
-import { TextProps, Text as RText } from "react-native"
+import { Text as RText, type TextProps } from "react-native"
+
 import { merge } from "@element/shared"
 
 export function Text(props: TextProps) {

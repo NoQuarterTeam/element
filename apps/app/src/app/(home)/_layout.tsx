@@ -1,15 +1,15 @@
-import { Tabs } from "expo-router"
 import { useColorScheme } from "react-native"
+import { Tabs } from "expo-router"
 import { Clock, Home, UserCircle } from "lucide-react-native"
 
+import { createImageUrl, join } from "@element/shared"
+import colors from "@element/tailwind-config/src/colors"
+
 import { AuthProvider } from "../../components/AuthProvider"
+import { Icon } from "../../components/Icon"
+import { OptimizedImage } from "../../components/OptimisedImage"
 import { useFeatures } from "../../lib/hooks/useFeatures"
 import { useMe } from "../../lib/hooks/useMe"
-
-import { createImageUrl, join } from "@element/shared"
-import { OptimizedImage } from "../../components/OptimisedImage"
-import { Icon } from "../../components/Icon"
-import colors from "@element/tailwind-config/src/colors"
 import { useBackgroundColor } from "../../lib/tailwind"
 
 export default function HomeLayout() {

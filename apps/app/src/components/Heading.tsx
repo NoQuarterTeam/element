@@ -1,5 +1,7 @@
-import { TextProps } from "react-native"
+import { type TextProps } from "react-native"
+
 import { merge } from "@element/shared"
+
 import { Text } from "./Text"
 
 export function Heading(props: TextProps) {

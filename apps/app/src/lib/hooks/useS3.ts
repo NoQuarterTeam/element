@@ -2,6 +2,7 @@ import * as React from "react"
 import { v4 } from "uuid"
 
 import { assetPrefix } from "@element/shared"
+
 import { api } from "../utils/api"
 
 export function useS3Upload(): [(fileUrl: string) => Promise<string>, { isLoading: boolean }] {

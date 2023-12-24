@@ -1,6 +1,7 @@
-import * as Updates from "expo-updates"
 import * as React from "react"
-import { AppState, AppStateStatus } from "react-native"
+import { AppState, type AppStateStatus } from "react-native"
+import * as Updates from "expo-updates"
+
 import { IS_DEV } from "../config"
 
 export function useCheckExpoUpdates() {

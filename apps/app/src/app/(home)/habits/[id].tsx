@@ -1,14 +1,14 @@
 import * as React from "react"
-import { useRouter, useSearchParams } from "expo-router"
-import { StatusBar } from "expo-status-bar"
 import { KeyboardAvoidingView, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
+import { useRouter, useSearchParams } from "expo-router"
+import { StatusBar } from "expo-status-bar"
 
-import { api, RouterOutputs } from "../../../lib/utils/api"
 import { Button } from "../../../components/Button"
 import { FormError } from "../../../components/FormError"
 import { FormInput } from "../../../components/FormInput"
 import { ModalView } from "../../../components/ModalView"
+import { api, type RouterOutputs } from "../../../lib/utils/api"
 
 type Habit = NonNullable<RouterOutputs["habit"]["byId"]>
 export default function HabitDetail() {

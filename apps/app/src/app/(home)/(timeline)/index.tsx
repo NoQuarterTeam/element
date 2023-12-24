@@ -1,22 +1,9 @@
-import dayjs from "dayjs"
 import * as React from "react"
-
-import advancedFormat from "dayjs/plugin/advancedFormat"
-import * as Haptics from "expo-haptics"
-import { Link, router } from "expo-router"
-import { ActivityIndicator, TouchableOpacity, View, useColorScheme } from "react-native"
-import { RouterOutputs, api } from "../../../lib/utils/api"
-
-import { join, safeReadableColor } from "@element/shared"
-
-import { Heading } from "../../../components/Heading"
-import { Text } from "../../../components/Text"
-
-import { Calendar, Plus } from "lucide-react-native"
+import { ActivityIndicator, TouchableOpacity, useColorScheme, View } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
-  SharedValue,
   runOnJS,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -25,7 +12,18 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated"
+import dayjs from "dayjs"
+import advancedFormat from "dayjs/plugin/advancedFormat"
+import * as Haptics from "expo-haptics"
+import { Link, router } from "expo-router"
+import { Calendar, Plus } from "lucide-react-native"
+
+import { join, safeReadableColor } from "@element/shared"
+
+import { Heading } from "../../../components/Heading"
 import { Icon } from "../../../components/Icon"
+import { Text } from "../../../components/Text"
+import { api, type RouterOutputs } from "../../../lib/utils/api"
 import { height, isAndroid } from "../../../lib/utils/device"
 
 dayjs.extend(advancedFormat)
@@ -187,6 +185,20 @@ export default function Timeline() {
             />
           ))}
           {!isLoading && <TasksGrid days={days} />}
+          {/* <TouchableOpacity
+            onPress={() => {
+              setDaysBack((d) => d + initialDaysBack)
+            }}
+            className="absolute left-4 top-20 rounded-full border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-black"
+          >
+            <Icon icon={ChevronLeft} size={24} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setDaysForward((d) => d + initialDaysForward)}
+            className="absolute right-4 top-20 rounded-full border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-black"
+          >
+            <Icon icon={ChevronRight} size={24} />
+          </TouchableOpacity> */}
         </Animated.ScrollView>
       </Animated.ScrollView>
 
@@ -285,6 +297,7 @@ const DAY_WIDTH = 90
 
 function TasksGrid({ days }: { days: string[] }) {
   const { data, refetch } = api.task.byDate.useQuery()
+  // eslint-disable-next-line
   const tasks = data || []
 
   const taskPositions = useSharedValue<{ [key: string]: DropTask }>(
@@ -298,7 +311,7 @@ function TasksGrid({ days }: { days: string[] }) {
       acc[task.id] = { id: task.id, name: task.name, date: task.date, order: task.order }
       return acc
     }, {})
-  }, [tasks])
+  }, [tasks, taskPositions])
 
   const { mutate } = api.task.updateOrder.useMutation({ onSuccess: () => refetch() })
 

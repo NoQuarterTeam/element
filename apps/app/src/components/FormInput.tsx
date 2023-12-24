@@ -1,6 +1,8 @@
 import { View } from "react-native"
+
 import { merge } from "@element/shared"
-import { Input, InputProps } from "./Input"
+
+import { Input, type InputProps } from "./Input"
 import { Text } from "./Text"
 
 interface Props extends InputProps {
@@ -17,9 +19,7 @@ export function FormInput({ label, error, rightElement, ...props }: Props) {
         <Input {...props} className={merge(rightElement && "flex-1")} />
         <View>{rightElement}</View>
       </View>
-      {error?.map((error) => (
-        <FormInputError key={error} error={error} />
-      ))}
+      {error?.map((error) => <FormInputError key={error} error={error} />)}
     </View>
   )
 }

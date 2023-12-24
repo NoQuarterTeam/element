@@ -1,8 +1,9 @@
-import { useRouter } from "expo-router"
-import { View, Text, TouchableOpacity, useColorScheme } from "react-native"
-import { StatusBar } from "expo-status-bar"
+import type * as React from "react"
+import { Text, TouchableOpacity, useColorScheme, View } from "react-native"
 import Feather from "@expo/vector-icons/Feather"
-import * as React from "react"
+import { useRouter } from "expo-router"
+import { StatusBar } from "expo-status-bar"
+
 import { Heading } from "./Heading"
 
 interface Props {

@@ -1,12 +1,14 @@
+import { KeyboardAvoidingView, TouchableOpacity, useColorScheme, View } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
 import Feather from "@expo/vector-icons/Feather"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
-import { KeyboardAvoidingView, TouchableOpacity, useColorScheme, View } from "react-native"
-import { ScrollView } from "react-native-gesture-handler"
-import { TaskForm, TaskFormData } from "../../../components/TaskForm"
-import { api, RouterOutputs } from "../../../lib/utils/api"
-import colors from "@element/tailwind-config/src/colors"
+
 import { join } from "@element/shared"
+import colors from "@element/tailwind-config/src/colors"
+
+import { TaskForm, type TaskFormData } from "../../../components/TaskForm"
+import { api, type RouterOutputs } from "../../../lib/utils/api"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 export default function TaskDetail() {

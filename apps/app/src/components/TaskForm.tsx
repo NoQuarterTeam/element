@@ -1,21 +1,22 @@
-import Feather from "@expo/vector-icons/Feather"
-import dayjs from "dayjs"
-import { useRouter, useGlobalSearchParams } from "expo-router"
 import * as React from "react"
 import { Modal, TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
-import ColorPicker, { Panel1, HueSlider } from "reanimated-color-picker"
+import Feather from "@expo/vector-icons/Feather"
+import dayjs from "dayjs"
+import { useGlobalSearchParams, useRouter } from "expo-router"
+import ColorPicker, { HueSlider, Panel1 } from "reanimated-color-picker"
 
+import { randomHexColor, useDisclosure } from "@element/shared"
+import colors from "@element/tailwind-config/src/colors"
+
+import { api, type RouterOutputs } from "../lib/utils/api"
 import { Button } from "./Button"
+import { FormError } from "./FormError"
 import { FormInput, FormInputError, FormInputLabel } from "./FormInput"
 import { Input } from "./Input"
 import { ModalView } from "./ModalView"
-import { api, RouterOutputs } from "../lib/utils/api"
 import { Text } from "./Text"
-import { randomHexColor, useDisclosure } from "@element/shared"
-import colors from "@element/tailwind-config/src/colors"
-import { FormError } from "./FormError"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 

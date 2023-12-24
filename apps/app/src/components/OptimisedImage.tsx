@@ -1,6 +1,7 @@
 import { Image, type ImageProps } from "expo-image"
 
 import { defaultBlurHash, srcWhitelist } from "@element/shared"
+
 import { FULL_WEB_URL } from "../lib/config"
 
 type Fit = "cover" | "contain" | "fill" | "inside" | "outside"

@@ -1,10 +1,10 @@
 import * as React from "react"
-import * as Updates from "expo-updates"
-import { Image } from "expo-image"
 import { View } from "react-native"
+import { Image } from "expo-image"
+import * as Updates from "expo-updates"
+
 import { Button } from "./Button"
 import { Heading } from "./Heading"
-
 import { Text } from "./Text"
 
 export function NewUpdate() {

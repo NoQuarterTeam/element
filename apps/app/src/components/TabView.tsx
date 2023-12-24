@@ -1,6 +1,6 @@
+import type * as React from "react"
 import { View } from "react-native"
 
-import * as React from "react"
 import { Heading } from "./Heading"
 
 interface Props {

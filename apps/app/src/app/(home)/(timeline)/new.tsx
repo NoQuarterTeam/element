@@ -1,10 +1,11 @@
+import { KeyboardAvoidingView, ScrollView, View } from "react-native"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
-import { KeyboardAvoidingView, ScrollView, View } from "react-native"
 
-import { TaskForm, TaskFormData } from "../../../components/TaskForm"
-import { api } from "../../../lib/utils/api"
 import { join } from "@element/shared"
+
+import { TaskForm, type TaskFormData } from "../../../components/TaskForm"
+import { api } from "../../../lib/utils/api"
 
 export default function NewTask() {
   const router = useRouter()
