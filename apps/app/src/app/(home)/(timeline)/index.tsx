@@ -401,7 +401,7 @@ function TaskItem({
       //   // cancelAnimation(timelineScrollX)
       // }
       translateX.value = offsetX.value + event.translationX
-      translateY.value = offsetY.value + event.translationY
+      translateY.value = Math.max(offsetY.value + event.translationY, 0)
 
       const newDate = days[Math.floor((translateX.value + DAY_WIDTH * 0.5) / DAY_WIDTH)]!
       const newOrder = Math.floor((translateY.value + TASK_HEIGHT * 0.5) / TASK_HEIGHT)
