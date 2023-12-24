@@ -17,7 +17,6 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   SharedValue,
   runOnJS,
-  scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -66,14 +65,15 @@ export default function Timeline() {
   const timelineRef = useAnimatedRef<Animated.ScrollView>()
   const outerTimelineRef = useAnimatedRef<Animated.ScrollView>()
   const headerTranslateX = useSharedValue(0)
-  const timelineScrollX = useSharedValue(7 * DAY_WIDTH)
 
-  useAnimatedReaction(
-    () => timelineScrollX.value,
-    (x) => {
-      scrollTo(timelineRef, x, 0, false)
-    },
-  )
+  // used for manually scrolling the timeline
+  // const timelineScrollX = useSharedValue(7 * DAY_WIDTH)
+  // useAnimatedReaction(
+  //   () => timelineScrollX.value,
+  //   (x) => {
+  //     scrollTo(timelineRef, x, 0, true)
+  //   },
+  // )
 
   const days = React.useMemo(() => getDays(dayjs().subtract(7, "days").format("YYYY-MM-DD"), 30), [])
   const months = React.useMemo(() => getMonths(dayjs().subtract(7, "days").format("YYYY-MM-DD"), 30), [])
@@ -136,7 +136,7 @@ export default function Timeline() {
               )}
             />
           ))}
-          {!isLoading && <TasksGrid days={days} timelineScrollX={timelineScrollX} />}
+          {!isLoading && <TasksGrid days={days} />}
         </Animated.ScrollView>
       </Animated.ScrollView>
 
@@ -201,7 +201,7 @@ type DropTask = Pick<Task, "id" | "name" | "order"> & { date: string }
 
 const DAY_WIDTH = 90
 
-function TasksGrid({ days, timelineScrollX }: { days: string[] } & { timelineScrollX: SharedValue<number> }) {
+function TasksGrid({ days }: { days: string[] }) {
   const { data, refetch } = api.task.byDate.useQuery()
   const tasks = data || []
 
@@ -235,14 +235,7 @@ function TasksGrid({ days, timelineScrollX }: { days: string[] } & { timelineScr
   return (
     <>
       {tasks.map((task) => (
-        <TaskItem
-          key={task.id}
-          timelineScrollX={timelineScrollX}
-          task={task}
-          taskPositions={taskPositions}
-          days={days}
-          onDrop={() => handleDrop(task.id)}
-        />
+        <TaskItem key={task.id} task={task} taskPositions={taskPositions} days={days} onDrop={() => handleDrop(task.id)} />
       ))}
     </>
   )
@@ -255,13 +248,11 @@ function TaskItem({
   task,
   days,
   onDrop,
-  timelineScrollX,
 }: {
   days: string[]
   task: Omit<Tasks[number], "date"> & { date: string }
   taskPositions: SharedValue<{ [key: string]: DropTask }>
   onDrop: () => void
-  timelineScrollX: SharedValue<number>
 }) {
   const position = useDerivedValue(() => {
     const taskPosition = taskPositions.value[task.id]
@@ -300,27 +291,30 @@ function TaskItem({
       isActive.value = true
     })
     .onUpdate((event) => {
+      // TODO: figure out scrolling
       // const positionX = event.absoluteX + timelineScrollX.value
       // if (positionX < timelineScrollX.value + DAY_WIDTH / 2) {
       //   // scroll left
-      //   timelineScrollX.value = withTiming(0, { duration: 1500 })
+      //   timelineScrollX.value = Math.max(timelineScrollX.value - DAY_WIDTH / 2, 0)
+      //   translateX.value = Math.max(offsetX.value + event.translationX - DAY_WIDTH / 2, 0)
       // } else if (positionX >= timelineScrollX.value + width - DAY_WIDTH / 2) {
       //   // scroll right
-      //   timelineScrollX.value = withTiming(37 * DAY_WIDTH, { duration: 1500 })
+      //   timelineScrollX.value = withTiming(timelineScrollX.value + DAY_WIDTH / 2)
+      //   translateX.value = withTiming(offsetX.value + event.translationX + DAY_WIDTH / 2)
       // } else {
       //   // regular move
-      //   cancelAnimation(timelineScrollX)
+      //   // cancelAnimation(timelineScrollX)
       // }
       translateX.value = offsetX.value + event.translationX
       translateY.value = offsetY.value + event.translationY
 
       const newDate = days[Math.floor((translateX.value + DAY_WIDTH * 0.5) / DAY_WIDTH)]!
-
       const newOrder = Math.floor((translateY.value + TASK_HEIGHT * 0.5) / TASK_HEIGHT)
 
       const currentTask = taskPositions.value[task.id]!
       const newPositions = { ...taskPositions.value }
       if (newDate === currentTask.date) {
+        // reorder current date tasks
         const taskToSwap = Object.values(taskPositions.value).find((t) => t.date === newDate && t.order === newOrder)
         if (!taskToSwap || taskToSwap.id === currentTask.id) return
         newPositions[currentTask.id]! = {
@@ -332,9 +326,9 @@ function TaskItem({
           order: currentTask.order,
         }
       } else {
+        // reorder tasks for new date
         const tasksForNewDate = Object.values(taskPositions.value).filter((t) => t.date === newDate)
         const tasksForOldDate = Object.values(taskPositions.value).filter((t) => t.date === currentTask.date)
-        // reorder tasks for new date
         const maxNewOrder = Math.min(tasksForNewDate.length, newOrder)
         const newTasksForNewDate = [
           ...tasksForNewDate.slice(0, maxNewOrder),

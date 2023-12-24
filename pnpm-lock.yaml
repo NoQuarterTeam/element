@@ -106,8 +106,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(expo@49.0.21)
       expo-updates:
-        specifier: ~0.18.17
-        version: 0.18.17(expo@49.0.21)
+        specifier: ~0.18.18
+        version: 0.18.18(expo@49.0.21)
       lucide-react-native:
         specifier: ^0.300.0
         version: 0.300.0(prop-types@15.8.1)(react-native-svg@13.9.0)(react-native@0.72.6)(react@18.2.0)
@@ -8500,8 +8500,8 @@ packages:
       expo: 49.0.21(@babel/core@7.23.6)
     dev: false
 
-  /expo-updates@0.18.17(expo@49.0.21):
-    resolution: {integrity: sha512-oyBDR94nYEtVw+iBod3N9LFqTfpLHofmUjh0lP12YZINUI89hvoAyqRe56eSnlpWkzziG6g1y4NGva0D0ViK6w==}
+  /expo-updates@0.18.18(expo@49.0.21):
+    resolution: {integrity: sha512-j9I/vCepUwJ2ZfXsqy5wG+IxXAR05+uiiPABDP9fd++09zt/r2H97abyl5sWaR1h4/0Z9wxXtI0ZssVdDXPE8A==}
     hasBin: true
     peerDependencies:
       expo: '*'
