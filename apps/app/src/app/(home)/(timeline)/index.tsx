@@ -30,9 +30,9 @@ import { height, isAndroid } from "../../../lib/utils/device"
 
 dayjs.extend(advancedFormat)
 
-export const getMonths = (startDate: string, daysCount: number) => {
+export const getMonths = (startDate: string, daysBack: number, daysForward: number) => {
   // Include year to cater for scrolling further than 12
-  const monthsByDay = Array.from({ length: daysCount }).map(
+  const monthsByDay = Array.from({ length: daysBack + daysForward }).map(
     (_, i) => dayjs(startDate).add(i, "day").month() + "/" + dayjs(startDate).add(i, "day").year(),
   )
   const uniqueMonths = monthsByDay.filter((value, index, array) => array.indexOf(value) === index)
@@ -42,8 +42,8 @@ export const getMonths = (startDate: string, daysCount: number) => {
   }))
 }
 
-export const getDays = (startDate: string, daysCount: number) => {
-  return Array.from({ length: daysCount }).map((_, i) => dayjs(startDate).add(i, "day").format("YYYY-MM-DD"))
+export const getDays = (startDate: string, daysBack: number, daysForward: number) => {
+  return Array.from({ length: daysBack + daysForward }).map((_, i) => dayjs(startDate).add(i, "day").format("YYYY-MM-DD"))
 }
 const MONTH_NAMES = ["jan.", "feb.", "mar.", "apr.", "may.", "jun.", "jul.", "aug.", "sept.", "oct.", "nov.", "dec."]
 
@@ -75,28 +75,45 @@ export default function Timeline() {
   //   },
   // )
 
-  const daysForward = 90
-  const daysBack = 30
+  const initialDaysForward = 30
+  const initialDaysBack = 14
 
-  const days = React.useMemo(() => getDays(dayjs().subtract(daysBack, "days").format("YYYY-MM-DD"), daysForward), [])
+  const [daysForward, _setDaysForward] = React.useState(initialDaysForward)
+  const [daysBack, _setDaysBack] = React.useState(initialDaysBack)
+
+  const days = React.useMemo(
+    () => getDays(dayjs().subtract(daysBack, "days").format("YYYY-MM-DD"), daysBack, daysForward),
+    [daysBack, daysForward],
+  )
   const months = React.useMemo(
     () =>
-      getMonths(dayjs().subtract(daysBack, "days").format("YYYY-MM-DD"), daysForward).map(({ month, year }, index) => {
-        const dayCount =
-          index === 0
-            ? dayjs().month(month).year(year).daysInMonth() - dayjs().month(month).year(year).date() + 1
-            : dayjs().month(month).year(year).daysInMonth()
+      getMonths(dayjs().subtract(daysBack, "days").format("YYYY-MM-DD"), daysBack, daysForward).map(({ month, year }, index) => {
+        let dayCount
+        if (index === 0) {
+          const startDate = dayjs().subtract(daysBack, "days")
+          dayCount = startDate.endOf("month").diff(startDate, "days") + 1
+        } else {
+          dayCount = dayjs().month(month).year(year).daysInMonth()
+        }
+
         return {
           month,
           year,
           width: dayCount * DAY_WIDTH,
         }
       }),
-    [],
+    [daysBack, daysForward],
   )
 
   const onScroll = useAnimatedScrollHandler((e) => {
     headerTranslateX.value = -e.contentOffset.x
+    // TODO: scroll when reached start or end of scroll view
+
+    // // if reached end of scroll view, fetch next month
+    // console.log(e.contentOffset.x, e.contentSize.width)
+    // if (e.contentOffset.x > e.contentSize.width - width - DAY_WIDTH * 2) {
+    //   // setDaysForward((d) => d + initialDaysForward)
+    // }
   })
 
   const { isLoading } = api.task.byDate.useQuery(undefined, { staleTime: Infinity })
@@ -145,7 +162,7 @@ export default function Timeline() {
             setTimeout(() => {
               timelineRef.current?.scrollTo({ x: DAY_WIDTH * daysBack, animated: false })
               setIsLoaded(true)
-            }, 100)
+            }, 1000)
           }}
           // contentOffset={{ x: 7 * DAY_WIDTH, y: 0 }}
           onScroll={onScroll}
@@ -178,7 +195,7 @@ export default function Timeline() {
           <View className="flex-1 flex-row">
             <TouchableOpacity
               onPress={() => {
-                timelineRef.current?.scrollTo({ x: 7 * DAY_WIDTH, animated: true })
+                timelineRef.current?.scrollTo({ x: daysBack * DAY_WIDTH, animated: true })
                 outerTimelineRef.current?.scrollTo({ y: 0, animated: true })
               }}
               className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
@@ -238,22 +255,17 @@ function Month({
   headerTranslateX: SharedValue<number>
 }) {
   const style = useAnimatedStyle(() => {
-    // make month header stick to the left
     let translateX = 0
-
     if (-headerTranslateX.value > leftStart && -headerTranslateX.value < leftStart + width - DAY_WIDTH) {
       // if month header is in view but not about to leave, stick to left
       translateX = -headerTranslateX.value - leftStart
     } else if (-headerTranslateX.value > leftStart + width - DAY_WIDTH - 1) {
-      // -1 to account for rounding errors
-      // if month header is in view, but is going off screen, stick to right
+      // if month header is in view, but is going off screen, stick to right (-1 to account for decimal in scroll view)
       translateX = width - DAY_WIDTH
     } else {
       translateX = 0
     }
-    return {
-      transform: [{ translateX }],
-    }
+    return { transform: [{ translateX }] }
   })
 
   return (
@@ -343,7 +355,7 @@ function TaskItem({
     (newPosition) => {
       const column = days.findIndex((day) => day === newPosition.date)
       const x = column * DAY_WIDTH
-      const y = Math.floor(newPosition.order) * TASK_HEIGHT
+      const y = newPosition.order * TASK_HEIGHT
       translateX.value = withTiming(x)
       translateY.value = withTiming(y)
     },
@@ -423,7 +435,7 @@ function TaskItem({
       const newDate = days.findIndex((day) => day === currentTask.date)
       const newOrder = taskPositions.value[task.id]!.order
       translateX.value = withTiming(newDate * DAY_WIDTH)
-      translateY.value = withTiming(Math.floor(newOrder) * TASK_HEIGHT)
+      translateY.value = withTiming(newOrder * TASK_HEIGHT)
     })
     .onFinalize(() => {
       scale.value = withTiming(1, undefined, () => {
