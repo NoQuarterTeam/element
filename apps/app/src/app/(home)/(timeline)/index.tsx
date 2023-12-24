@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ActivityIndicator, TouchableOpacity, useColorScheme, View } from "react-native"
+import { ActivityIndicator, RefreshControl, TouchableOpacity, useColorScheme, View } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   runOnJS,
@@ -114,7 +114,13 @@ export default function Timeline() {
     // }
   })
 
-  const { isLoading } = api.task.byDate.useQuery(undefined, { staleTime: Infinity })
+  const { isLoading, refetch } = api.task.byDate.useQuery(undefined, { staleTime: Infinity })
+
+  // const maxTaskCountPerDay = React.useMemo(() => {
+  //   if (!data) return 0
+  //   const taskCountPerDay = days.map((day) => data?.filter((task) => task.date === day).length || 0)
+  //   return Math.max(...taskCountPerDay)
+  // }, [data, days])
 
   const isDark = useColorScheme() === "dark"
   return (
@@ -154,7 +160,7 @@ export default function Timeline() {
         ))}
       </Animated.View> */}
 
-      <Animated.ScrollView ref={outerTimelineRef}>
+      <Animated.ScrollView ref={outerTimelineRef} refreshControl={<RefreshControl refreshing={false} onRefresh={refetch} />}>
         <Animated.ScrollView
           onLayout={() => {
             setTimeout(() => {
@@ -173,7 +179,7 @@ export default function Timeline() {
               key={day}
               activeOpacity={0.9}
               onPress={() => router.push({ pathname: "new", params: { date: day } })}
-              style={{ height: 1000, width: DAY_WIDTH }}
+              style={{ height, width: DAY_WIDTH }}
               className={join(
                 `border-r border-gray-100 dark:border-gray-700`,
                 dayjs(day).isSame(dayjs(), "day")
