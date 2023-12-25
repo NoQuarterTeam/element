@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ActivityIndicator, RefreshControl, TouchableOpacity, useColorScheme, View } from "react-native"
+import { ActivityIndicator, RefreshControl, TouchableOpacity, View } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   runOnJS,
@@ -16,7 +16,7 @@ import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import * as Haptics from "expo-haptics"
 import { Link, router } from "expo-router"
-import { Calendar, Plus } from "lucide-react-native"
+import { Calendar, Clock, Plus } from "lucide-react-native"
 
 import { join, safeReadableColor } from "@element/shared"
 
@@ -25,6 +25,7 @@ import { Icon } from "../../../components/Icon"
 import { Text } from "../../../components/Text"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
 import { height, isAndroid } from "../../../lib/utils/device"
+import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
 
 dayjs.extend(advancedFormat)
 
@@ -73,11 +74,7 @@ export default function Timeline() {
   //   },
   // )
 
-  const initialDaysForward = 30
-  const initialDaysBack = 14
-
-  const [daysForward, _setDaysForward] = React.useState(initialDaysForward)
-  const [daysBack, _setDaysBack] = React.useState(initialDaysBack)
+  const { daysBack, daysForward } = useTimelineDays()
 
   const days = React.useMemo(
     () => getDays(dayjs().subtract(daysBack, "days").format("YYYY-MM-DD"), daysBack, daysForward),
@@ -114,7 +111,7 @@ export default function Timeline() {
     // }
   })
 
-  const { isLoading, refetch } = api.task.byDate.useQuery(undefined, { staleTime: Infinity })
+  const { isLoading, refetch } = api.task.timeline.useQuery({ daysBack, daysForward }, { staleTime: Infinity })
 
   // const maxTaskCountPerDay = React.useMemo(() => {
   //   if (!data) return 0
@@ -122,9 +119,8 @@ export default function Timeline() {
   //   return Math.max(...taskCountPerDay)
   // }, [data, days])
 
-  const isDark = useColorScheme() === "dark"
   return (
-    <View className="flex-1 pt-14">
+    <View className="flex-1 pt-16">
       <Animated.View className="flex flex-row" style={{ transform: [{ translateX: headerTranslateX }] }}>
         {months.map(({ month, year, width }, i) => {
           // left start is the sum of all previous months
@@ -143,22 +139,6 @@ export default function Timeline() {
           </View>
         ))}
       </Animated.View>
-      {/* <Animated.View className="flex flex-row" style={{ transform: [{ translateX: headerTranslateX }] }}>
-        {months.map(({ month, year }) => (
-          <View key={`${month}-${year}`}>
-            <Heading className="px-4 pt-2 text-4xl">{MONTH_NAMES[month]}</Heading>
-            <View className="flex flex-row">
-              {days
-                .filter((day) => month === dayjs(day).month() && year === dayjs(day).year())
-                .map((day) => (
-                  <View key={day} style={{ width: DAY_WIDTH }} className="border-gray-75 border-b px-1 pb-2 dark:border-gray-700">
-                    <Text className="text-center">{dayjs(day).startOf("day").format("ddd Do")}</Text>
-                  </View>
-                ))}
-            </View>
-          </View>
-        ))}
-      </Animated.View> */}
 
       <Animated.ScrollView ref={outerTimelineRef} refreshControl={<RefreshControl refreshing={false} onRefresh={refetch} />}>
         <Animated.ScrollView
@@ -208,46 +188,29 @@ export default function Timeline() {
         </Animated.ScrollView>
       </Animated.ScrollView>
 
-      <View className="absolute bottom-4 left-0 right-0 space-y-4">
-        <View className="flex flex-row items-end justify-between px-4">
-          <View className="flex-1 flex-row">
-            <TouchableOpacity
-              onPress={() => {
-                timelineRef.current?.scrollTo({ x: daysBack * DAY_WIDTH, animated: true })
-                outerTimelineRef.current?.scrollTo({ y: 0, animated: true })
-              }}
-              className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
-            >
-              <Icon icon={Calendar} size={24} color={isDark ? "white" : "black"} />
-            </TouchableOpacity>
-          </View>
-          <View className="flex-1 flex-row justify-end">
-            <Link href={`new?date=${dayjs().format("YYYY-MM-DD")}`} asChild>
-              <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
-                <Icon icon={Plus} size={24} color="black" />
-              </TouchableOpacity>
-            </Link>
-          </View>
-        </View>
-        {/* <View className="border-gray-75 flex w-full flex-row items-center justify-between border-t px-8 pt-4">
-          <View>
-            <TouchableOpacity
-              onPress={() => setDate(dayjs(date).subtract(1, "day").format("YYYY-MM-DD"))}
-              className="sq-10 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-500"
-            >
-              <Ionicons name="chevron-back" color={isDark ? "white" : "black"} />
-            </TouchableOpacity>
-          </View>
-          <Text className="flex-1 text-center text-lg">{dateLabel}</Text>
-          <View>
-            <TouchableOpacity
-              onPress={() => setDate(dayjs(date).add(1, "day").format("YYYY-MM-DD"))}
-              className="sq-10 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-500"
-            >
-              <Ionicons name="chevron-forward" color={isDark ? "white" : "black"} />
-            </TouchableOpacity>
-          </View>
-        </View> */}
+      <View className="absolute bottom-4 left-4 space-y-2">
+        <Link href={`backlog`} asChild>
+          <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
+            <Icon icon={Clock} size={24} />
+          </TouchableOpacity>
+        </Link>
+        <TouchableOpacity
+          onPress={() => {
+            timelineRef.current?.scrollTo({ x: daysBack * DAY_WIDTH, animated: true })
+            outerTimelineRef.current?.scrollTo({ y: 0, animated: true })
+          }}
+          className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
+        >
+          <Icon icon={Calendar} size={24} />
+        </TouchableOpacity>
+      </View>
+
+      <View className="absolute bottom-4 right-4">
+        <Link href={`new?date=${dayjs().format("YYYY-MM-DD")}`} asChild>
+          <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
+            <Icon icon={Plus} size={24} color="black" />
+          </TouchableOpacity>
+        </Link>
       </View>
       {(!isLoaded || isLoading) && (
         <View
@@ -288,12 +251,12 @@ function Month({
 
   return (
     <Animated.View style={[{ width: DAY_WIDTH }, style]}>
-      <Heading className="pt-2 text-center text-3xl">{MONTH_NAMES[month]}</Heading>
+      <Heading className="pt-1 text-center text-3xl">{MONTH_NAMES[month]}</Heading>
     </Animated.View>
   )
 }
 
-type Tasks = NonNullable<RouterOutputs["task"]["byDate"]>
+type Tasks = NonNullable<RouterOutputs["task"]["timeline"]>
 
 type Task = Tasks[number]
 
@@ -302,7 +265,8 @@ type DropTask = Pick<Task, "id" | "name" | "order"> & { date: string }
 const DAY_WIDTH = 90
 
 function TasksGrid({ days }: { days: string[] }) {
-  const { data, refetch } = api.task.byDate.useQuery()
+  const { daysBack, daysForward } = useTimelineDays()
+  const { data, refetch } = api.task.timeline.useQuery({ daysBack, daysForward }, { staleTime: Infinity })
   // eslint-disable-next-line
   const tasks = data || []
 

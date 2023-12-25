@@ -26,7 +26,7 @@ export default function Profile() {
   }
 
   return (
-    <ScrollView className="h-full space-y-6 px-4 pt-20">
+    <ScrollView className="h-full space-y-6 px-4 pt-16">
       <View className="flex flex-row items-center space-x-4">
         {data?.avatar ? (
           <OptimizedImage

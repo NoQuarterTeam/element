@@ -32,8 +32,8 @@ export default function Habits() {
   //       : dayjs(date).format("ddd Do")
 
   return (
-    <View className="relative w-full flex-1 px-4 pt-20">
-      <Heading className="text-4xl">Habits</Heading>
+    <View className="relative w-full flex-1 px-4 pt-16">
+      <Heading className="text-3xl">Habits</Heading>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} className="space-y-3">
         {habits.map((habit) => (
           <View key={habit.id}>

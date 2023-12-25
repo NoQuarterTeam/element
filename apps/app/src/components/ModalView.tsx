@@ -5,6 +5,7 @@ import { useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
 import { Heading } from "./Heading"
+import { join } from "@element/shared"
 
 interface Props {
   title?: string
@@ -15,12 +16,16 @@ interface Props {
 export function ModalView(props: Props) {
   const router = useRouter()
   const colorScheme = useColorScheme()
+  const canGoBack = router.canGoBack()
   return (
-    <View className="h-full bg-white px-4 pt-6 dark:bg-black">
+    <View className={join("h-full bg-white px-4 dark:bg-black", canGoBack ? "pt-6" : "pt-16")}>
       <View className="flex flex-row justify-between">
         {props.title ? <Heading className="text-3xl">{props.title}</Heading> : <Text />}
 
-        <TouchableOpacity onPress={props.onBack ? props.onBack : router.back} className="p-2">
+        <TouchableOpacity
+          onPress={props.onBack ? props.onBack : canGoBack ? router.back : () => router.replace("/")}
+          className="p-2"
+        >
           <Feather name="x" size={24} color={colorScheme === "dark" ? "white" : "black"} />
         </TouchableOpacity>
       </View>

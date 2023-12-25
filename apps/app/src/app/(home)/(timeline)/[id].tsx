@@ -1,14 +1,16 @@
-import { KeyboardAvoidingView, TouchableOpacity, useColorScheme, View } from "react-native"
-import { ScrollView } from "react-native-gesture-handler"
-import Feather from "@expo/vector-icons/Feather"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
+import { ScrollView, KeyboardAvoidingView, TouchableOpacity, View } from "react-native"
 
 import { join } from "@element/shared"
-import colors from "@element/tailwind-config/src/colors"
 
+import { Clock, Copy, Trash } from "lucide-react-native"
+import { Icon } from "../../../components/Icon"
 import { TaskForm, type TaskFormData } from "../../../components/TaskForm"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
+import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
+import { Spinner } from "../../../components/Spinner"
+import { Text } from "../../../components/Text"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 export default function TaskDetail() {
@@ -21,7 +23,15 @@ export default function TaskDetail() {
 
   return (
     <View className={join("px-4", canGoBack ? "pt-6" : "pt-16")}>
-      {isLoading || !data ? null : <EditTaskForm task={data} />}
+      {isLoading ? (
+        <View className="flex flex-row items-end justify-center pt-6">
+          <Spinner />
+        </View>
+      ) : !data ? (
+        <Text className="pt-6 text-center">Task not found</Text>
+      ) : (
+        <EditTaskForm task={data} />
+      )}
       <StatusBar style="light" />
     </View>
   )
@@ -29,11 +39,11 @@ export default function TaskDetail() {
 
 function EditTaskForm({ task }: { task: Task }) {
   const router = useRouter()
-
+  const { daysBack, daysForward } = useTimelineDays()
   const utils = api.useUtils()
   const update = api.task.update.useMutation({
     onSuccess: async (updatedTask) => {
-      void utils.task.byDate.refetch()
+      void utils.task.timeline.refetch({ daysBack, daysForward })
       utils.task.byId.setData({ id: task.id }, updatedTask)
       router.back()
     },
@@ -52,7 +62,7 @@ function EditTaskForm({ task }: { task: Task }) {
 
   const deleteTask = api.task.delete.useMutation({
     onSuccess: () => {
-      void utils.task.byDate.refetch()
+      void utils.task.timeline.refetch({ daysBack, daysForward })
       router.back()
     },
   })
@@ -60,7 +70,7 @@ function EditTaskForm({ task }: { task: Task }) {
 
   const addToBacklog = api.task.update.useMutation({
     onSuccess: async (updatedTask) => {
-      void utils.task.byDate.refetch()
+      void utils.task.timeline.refetch({ daysBack, daysForward })
       utils.task.byId.setData({ id: task.id }, updatedTask)
       router.back()
     },
@@ -69,13 +79,11 @@ function EditTaskForm({ task }: { task: Task }) {
 
   const duplicate = api.task.duplicate.useMutation({
     onSuccess: async () => {
-      void utils.task.byDate.refetch()
+      void utils.task.timeline.refetch({ daysBack, daysForward })
       router.back()
     },
   })
   const handleDuplicate = () => duplicate.mutate({ id: task.id })
-
-  const colorScheme = useColorScheme()
 
   return (
     <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={100}>
@@ -93,13 +101,13 @@ function EditTaskForm({ task }: { task: Task }) {
         />
         <View className="flex w-full flex-row items-center justify-between">
           <TouchableOpacity onPress={handleDelete} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
-            <Feather name="trash" size={24} color={colors.red[500]} />
+            <Icon icon={Trash} size={24} color="red" />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleAddToBacklog} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
-            <Feather name="clock" size={24} color={colorScheme === "dark" ? "white" : "black"} />
+            <Icon icon={Clock} size={24} />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleDuplicate} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
-            <Feather name="copy" size={24} color={colorScheme === "dark" ? "white" : "black"} />
+            <Icon icon={Copy} size={24} />
           </TouchableOpacity>
         </View>
       </ScrollView>

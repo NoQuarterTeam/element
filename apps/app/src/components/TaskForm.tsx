@@ -89,7 +89,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
       <View className="flex flex-row justify-between">
         <View className="w-11/12">
           <TextInput
-            className="font-body text-3xl dark:text-white"
+            className="font-label text-3xl dark:text-white"
             value={form.name}
             multiline
             placeholderTextColor={colorScheme === "dark" ? colors.gray[500] : colors.gray[300]}
@@ -108,7 +108,9 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           error={fieldErrors?.elementId}
           input={
             <TouchableOpacity onPress={elementModalProps.onOpen} className={join(inputClassName, "flex-1")}>
-              <Text className="text-sm">{form.element.name}</Text>
+              <Text className={join("text-sm", !form.element.name && "opacity-60")}>
+                {form.element.name || "Select an element"}
+              </Text>
             </TouchableOpacity>
           }
           rightElement={
@@ -210,7 +212,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           error={fieldErrors?.startTime}
           input={
             <TouchableOpacity onPress={timeProps.onOpen} className={inputClassName}>
-              <Text className="text-sm">{form.startTime || "-"}</Text>
+              <Text className={join("text-sm", !form.startTime && "opacity-60")}>{form.startTime || "hh:mm"}</Text>
             </TouchableOpacity>
           }
         />

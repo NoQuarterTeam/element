@@ -38,24 +38,37 @@ const updateSchema = taskSchema.merge(
 )
 
 export const taskRouter = createTRPCRouter({
-  byDate: protectedProcedure.query(async ({ ctx }) => {
-    const endOfDay = dayjs().endOf("day").add(30, "days").toDate()
-    const startOfDay = dayjs().subtract(7, "days").startOf("day").toDate()
+  timeline: protectedProcedure
+    .input(z.object({ daysBack: z.number(), daysForward: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const startOfDay = dayjs().subtract(input.daysBack, "days").startOf("day").toDate()
+      const endOfDay = dayjs().endOf("day").add(input.daysForward, "days").toDate()
+      const tasks = await ctx.prisma.task.findMany({
+        select: timelineTaskFields,
+        orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+        where: { creatorId: { equals: ctx.user.id }, date: { gt: startOfDay, lte: endOfDay } },
+      })
+      const groupedTasks = tasks.reduce<{ [key: string]: (typeof tasks)[number][] }>((acc, task) => {
+        const date = dayjs(task.date).format("YYYY-MM-DD")
+        if (!acc[date]) acc[date] = []
+        acc[date].push(task)
+        return acc
+      }, {})
+      return tasks.map((task) => ({
+        ...task,
+        // get real order in case there are gaps created by deleted tasks or similar orders after a duplicate
+        order: task.date ? groupedTasks[dayjs(task.date).format("YYYY-MM-DD")].findIndex((t) => t.id === task.id) : task.order,
+        date: dayjs(task.date).format("YYYY-MM-DD"),
+      }))
+    }),
+  backlog: protectedProcedure.query(async ({ ctx }) => {
     const tasks = await ctx.prisma.task.findMany({
       select: timelineTaskFields,
       orderBy: [{ order: "asc" }, { createdAt: "asc" }],
-      where: { creatorId: { equals: ctx.user.id }, date: { gt: startOfDay, lte: endOfDay } },
+      where: { creatorId: { equals: ctx.user.id }, date: null },
     })
-    const groupedTasks = tasks.reduce<{ [key: string]: (typeof tasks)[number][] }>((acc, task) => {
-      const date = dayjs(task.date).format("YYYY-MM-DD")
-      if (!acc[date]) acc[date] = []
-      acc[date].push(task)
-      return acc
-    }, {})
     return tasks.map((task) => ({
       ...task,
-      // get real order in case there are gaps created by deleted tasks or similar orders after a duplicate
-      order: task.date ? groupedTasks[dayjs(task.date).format("YYYY-MM-DD")].findIndex((t) => t.id === task.id) : task.order,
       date: dayjs(task.date).format("YYYY-MM-DD"),
     }))
   }),

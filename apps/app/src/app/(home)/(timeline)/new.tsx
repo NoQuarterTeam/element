@@ -1,23 +1,22 @@
 import { KeyboardAvoidingView, ScrollView, View } from "react-native"
-import { useGlobalSearchParams, useRouter } from "expo-router"
+import { useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
 import { join } from "@element/shared"
 
 import { TaskForm, type TaskFormData } from "../../../components/TaskForm"
 import { api } from "../../../lib/utils/api"
+import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
 
 export default function NewTask() {
   const router = useRouter()
-  const { date } = useGlobalSearchParams()
-
+  const { daysBack, daysForward } = useTimelineDays()
   const canGoBack = router.canGoBack()
   const utils = api.useUtils()
   const create = api.task.create.useMutation({
     onSuccess: (createdTask) => {
-      if (!date) return
       if (!createdTask.date) return
-      utils.task.byDate.setData(undefined, (old) => (old ? [...old, createdTask] : [createdTask]))
+      utils.task.timeline.setData({ daysBack, daysForward }, (old) => (old ? [...old, createdTask] : [createdTask]))
       router.back()
     },
   })
