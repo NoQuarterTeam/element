@@ -21,13 +21,13 @@ const colorMap: Record<IconColors, string> = {
 }
 
 export function Icon({ icon: Comp, ...props }: Props) {
-  const colorScheme = useColorScheme()
+  const isDark = useColorScheme() === "dark"
 
   const color = !!props.color
     ? typeof props.color === "object"
-      ? props.color[colorScheme === "dark" ? "dark" : "light"]
+      ? props.color[isDark ? "dark" : "light"]
       : colorMap[props.color] || props.color
-    : colorScheme === "dark"
+    : isDark
       ? "white"
       : "black"
 

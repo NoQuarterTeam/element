@@ -6,7 +6,7 @@ import { Text } from "./Text"
 
 export function Heading(props: TextProps) {
   return (
-    <Text {...props} className={merge("font-heading", props.className)}>
+    <Text {...props} className={merge("font-heading pt-0.5", props.className)}>
       {props.children}
     </Text>
   )

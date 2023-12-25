@@ -251,7 +251,7 @@ function Month({
 
   return (
     <Animated.View style={[{ width: DAY_WIDTH }, style]}>
-      <Heading className="pt-1 text-center text-3xl">{MONTH_NAMES[month]}</Heading>
+      <Heading className="text-center text-3xl">{MONTH_NAMES[month]}</Heading>
     </Animated.View>
   )
 }
