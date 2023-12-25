@@ -7,14 +7,14 @@ import dayjs from "dayjs"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import ColorPicker, { HueSlider, Panel1 } from "reanimated-color-picker"
 
-import { randomHexColor, useDisclosure } from "@element/shared"
+import { join, randomHexColor, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
 import { api, type RouterOutputs } from "../lib/utils/api"
 import { Button } from "./Button"
 import { FormError } from "./FormError"
 import { FormInput, FormInputError, FormInputLabel } from "./FormInput"
-import { Input } from "./Input"
+import { Input, inputClassName } from "./Input"
 import { ModalView } from "./ModalView"
 import { Text } from "./Text"
 
@@ -55,7 +55,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
     date: task?.date ? dayjs(task.date).toISOString() : (date as string | undefined) || "",
     element: task?.element || { id: "", name: "", color: "" },
   })
-  const utils = api.useContext()
+  const utils = api.useUtils()
 
   const { data } = api.element.all.useQuery()
 
@@ -105,21 +105,19 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
       <View>
         <FormInput
           label="Element"
-          editable={false}
           error={fieldErrors?.elementId}
-          value={form.element?.name}
+          input={
+            <TouchableOpacity onPress={elementModalProps.onOpen} className={join(inputClassName, "flex-1")}>
+              <Text className="text-sm">{form.element.name}</Text>
+            </TouchableOpacity>
+          }
           rightElement={
-            <View className="flex flex-row space-x-2">
-              <TouchableOpacity
-                onPress={elementCreateModalProps.onOpen}
-                className="border border-gray-100 p-2.5 dark:border-gray-600"
-              >
-                <Feather name="plus" size={20} color={colorScheme === "dark" ? "white" : "black"} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={elementModalProps.onOpen} className="border border-gray-100 p-2.5 dark:border-gray-600">
-                <Feather name="edit-2" size={20} color={colorScheme === "dark" ? "white" : "black"} />
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              onPress={elementCreateModalProps.onOpen}
+              className="border border-gray-100 p-2.5 dark:border-gray-600"
+            >
+              <Feather name="plus" size={20} color={colorScheme === "dark" ? "white" : "black"} />
+            </TouchableOpacity>
           }
         />
 
@@ -167,12 +165,10 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
       <View>
         <FormInput
           label="Date"
-          editable={false}
           error={fieldErrors?.date}
-          value={dayjs(form.date).format("DD/MM/YYYY")}
-          rightElement={
-            <TouchableOpacity onPress={dateProps.onOpen} className="border border-gray-100 p-2.5 dark:border-gray-600">
-              <Feather name="edit-2" size={20} color={colorScheme === "dark" ? "white" : "black"} />
+          input={
+            <TouchableOpacity onPress={dateProps.onOpen} className={inputClassName}>
+              <Text className="text-sm">{dayjs(form.date).format("DD/MM/YYYY")}</Text>
             </TouchableOpacity>
           }
         />
@@ -188,21 +184,21 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
         <View className="flex flex-row items-center space-x-3">
           <View className="flex flex-row items-center space-x-2">
             <Input
-              className="w-11 px-1 text-center"
+              className="w-11 px-1 text-center text-sm"
               value={form.durationHours}
               keyboardType="number-pad"
               onChangeText={(durationHours) => setForm((f) => ({ ...f, durationHours }))}
             />
-            <Text className="opacity-70">Hours</Text>
+            <Text className="text-sm opacity-70">Hours</Text>
           </View>
           <View className="flex flex-row items-center space-x-2">
             <Input
-              className="w-11 px-1 text-center"
+              className="w-11 px-1 text-center text-sm"
               value={form.durationMinutes}
               keyboardType="number-pad"
               onChangeText={(durationMinutes) => setForm((f) => ({ ...f, durationMinutes }))}
             />
-            <Text className="opacity-70">Minutes</Text>
+            <Text className="text-sm opacity-70">Minutes</Text>
           </View>
         </View>
         {fieldErrors?.durationHours?.map((error) => <FormInputError key={error} error={error} />)}
@@ -211,12 +207,10 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
       <View>
         <FormInput
           label="Start time"
-          editable={false}
           error={fieldErrors?.startTime}
-          value={form.startTime}
-          rightElement={
-            <TouchableOpacity onPress={timeProps.onOpen} className="border border-gray-100 p-2.5 dark:border-gray-600">
-              <Feather name="edit-2" size={20} color={colorScheme === "dark" ? "white" : "black"} />
+          input={
+            <TouchableOpacity onPress={timeProps.onOpen} className={inputClassName}>
+              <Text className="text-sm">{form.startTime || "-"}</Text>
             </TouchableOpacity>
           }
         />

@@ -4,17 +4,17 @@ import { z } from "zod"
 import { createTRPCRouter, protectedProcedure } from "../trpc"
 
 export const habitRouter = createTRPCRouter({
-  progressCompleteByDate: protectedProcedure.input(z.object({ date: z.string() })).query(async ({ ctx, input }) => {
+  progressCompleteByDate: protectedProcedure.query(async ({ ctx }) => {
     // return percentage of habits completed on given date
     const habits = await ctx.prisma.habit.findMany({
       include: {
         entries: {
-          where: { createdAt: { gte: dayjs(input.date).startOf("d").toDate(), lte: dayjs(input.date).endOf("d").toDate() } },
+          where: { createdAt: { gte: dayjs().startOf("d").toDate(), lte: dayjs().endOf("d").toDate() } },
         },
       },
       where: {
-        OR: [{ archivedAt: { equals: null } }, { archivedAt: { gte: dayjs(input.date).endOf("day").toDate() } }],
-        startDate: { lt: dayjs(input.date).endOf("day").toDate() },
+        OR: [{ archivedAt: { equals: null } }, { archivedAt: { gte: dayjs().endOf("day").toDate() } }],
+        startDate: { lt: dayjs().endOf("day").toDate() },
         creatorId: { equals: ctx.user.id },
       },
     })
@@ -22,14 +22,15 @@ export const habitRouter = createTRPCRouter({
     const completed = habits.filter((h) => h.entries.length > 0).length
     return Math.round((completed / total) * 100)
   }),
-  all: protectedProcedure.input(z.object({ date: z.string() })).query(async ({ ctx, input }) => {
+  all: protectedProcedure.query(async ({ ctx }) => {
+    const today = dayjs().toDate()
     const [habits, habitEntries] = await Promise.all([
       ctx.prisma.habit.findMany({
         orderBy: { createdAt: "asc" },
         select: { id: true, name: true, startDate: true, archivedAt: true },
         where: {
-          OR: [{ archivedAt: { equals: null } }, { archivedAt: { gte: dayjs(input.date).endOf("day").toDate() } }],
-          startDate: { lt: dayjs(input.date).endOf("day").toDate() },
+          OR: [{ archivedAt: { equals: null } }, { archivedAt: { gte: dayjs(today).endOf("day").toDate() } }],
+          startDate: { lt: dayjs(today).endOf("day").toDate() },
           creatorId: { equals: ctx.user.id },
         },
       }),
@@ -38,8 +39,8 @@ export const habitRouter = createTRPCRouter({
         where: {
           creatorId: { equals: ctx.user.id },
           createdAt: {
-            gte: dayjs(input.date).startOf("d").toDate(),
-            lte: dayjs(input.date).endOf("d").toDate(),
+            gte: dayjs(today).startOf("d").toDate(),
+            lte: dayjs(today).endOf("d").toDate(),
           },
         },
       }),
@@ -47,9 +48,9 @@ export const habitRouter = createTRPCRouter({
     return { habits, habitEntries }
   }),
   create: protectedProcedure
-    .input(z.object({ name: z.string().min(1, { message: "Please provide a name" }), startDate: z.string() }))
+    .input(z.object({ name: z.string().min(1, { message: "Please provide a name" }) }))
     .mutation(({ ctx, input }) => {
-      const startDate = dayjs(input.startDate).startOf("day").add(12, "h").toDate()
+      const startDate = dayjs().startOf("day").add(12, "h").toDate()
       return ctx.prisma.habit.create({ data: { ...input, startDate, creatorId: ctx.user.id } })
     }),
   delete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
@@ -68,30 +69,19 @@ export const habitRouter = createTRPCRouter({
     if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
     return habit
   }),
-  update: protectedProcedure
-    .input(z.object({ id: z.string(), name: z.string() }))
-    .mutation(async ({ ctx, input: { id, ...data } }) => {
-      return ctx.prisma.habit.update({
-        where: { id },
-        data,
-      })
-    }),
-  archive: protectedProcedure.input(z.object({ id: z.string(), date: z.string() })).mutation(async ({ ctx, input }) => {
+  update: protectedProcedure.input(z.object({ id: z.string(), name: z.string() })).mutation(({ ctx, input: { id, ...data } }) => {
+    return ctx.prisma.habit.update({ where: { id }, data })
+  }),
+  archive: protectedProcedure.input(z.object({ id: z.string() })).mutation(({ ctx, input }) => {
     return ctx.prisma.habit.update({
       where: { id: input.id },
-      data: { archivedAt: dayjs(input.date).startOf("d").add(12, "h").toDate() },
+      data: { archivedAt: dayjs().startOf("d").add(12, "h").toDate() },
     })
   }),
-  toggleComplete: protectedProcedure.input(z.object({ id: z.string(), date: z.string() })).mutation(async ({ ctx, input }) => {
-    const now = dayjs()
-    const date = dayjs(input.date)
-      .set("hour", now.get("hour"))
-      .set("minute", now.get("minute"))
-      .set("second", now.get("second"))
-      .set("millisecond", now.get("millisecond"))
-      .toDate()
-    const gte = dayjs(input.date).startOf("d").toDate()
-    const lte = dayjs(input.date).endOf("d").toDate()
+  toggleComplete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+    const date = dayjs().toDate()
+    const gte = dayjs().startOf("d").toDate()
+    const lte = dayjs().endOf("d").toDate()
     const entries = await ctx.prisma.habitEntry.findMany({
       select: { id: true },
       where: { creatorId: { equals: ctx.user.id }, habitId: { equals: input.id }, createdAt: { gte, lte } },

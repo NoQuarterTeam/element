@@ -9,14 +9,15 @@ interface Props extends InputProps {
   label?: string
   error?: string[]
   rightElement?: React.ReactNode
+  input?: React.ReactNode
 }
 
-export function FormInput({ label, error, rightElement, ...props }: Props) {
+export function FormInput({ label, error, rightElement, input, ...props }: Props) {
   return (
     <View className="space-y-0.5">
       {label && <FormInputLabel label={label} />}
       <View className="flex flex-row items-center space-x-2">
-        <Input {...props} className={merge(rightElement && "flex-1")} />
+        {input || <Input {...props} className={merge(rightElement && "flex-1")} />}
         <View>{rightElement}</View>
       </View>
       {error?.map((error) => <FormInputError key={error} error={error} />)}

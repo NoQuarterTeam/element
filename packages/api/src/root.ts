@@ -1,4 +1,4 @@
-import { userRouter } from "./router/auth"
+import { userRouter } from "./router/user"
 import { taskRouter } from "./router/task"
 import { habitRouter } from "./router/habit"
 import { elementRouter } from "./router/element"

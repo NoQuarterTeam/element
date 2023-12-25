@@ -1,6 +1,6 @@
 import { useColorScheme } from "react-native"
 import { Tabs } from "expo-router"
-import { Clock, Home, UserCircle } from "lucide-react-native"
+import { CheckCircle, Home, UserCircle } from "lucide-react-native"
 
 import { createImageUrl, join } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
@@ -42,7 +42,7 @@ export default function HomeLayout() {
           name="habits"
           options={{
             href: !me || !features.includes("habits") ? null : undefined,
-            tabBarIcon: (props) => <Icon icon={Clock} size={22} color={!!props.focused && "primary"} />,
+            tabBarIcon: (props) => <Icon icon={CheckCircle} size={22} color={!!props.focused && "primary"} />,
             // tabBarLabel: "Habits",
           }}
         />

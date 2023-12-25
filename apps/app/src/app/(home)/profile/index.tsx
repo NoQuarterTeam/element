@@ -12,6 +12,7 @@ import { OptimizedImage } from "../../../components/OptimisedImage"
 import { Text } from "../../../components/Text"
 import { UPDATE_ID, VERSION } from "../../../lib/config"
 import { api, AUTH_TOKEN } from "../../../lib/utils/api"
+import { Heading } from "../../../components/Heading"
 
 export default function Profile() {
   const { data } = api.user.me.useQuery()
@@ -46,7 +47,7 @@ export default function Profile() {
           </View>
         )}
         <View>
-          <Text className="text-3xl">Hey, {data?.firstName}</Text>
+          <Heading className="text-3xl">Hey, {data?.firstName}</Heading>
           <Text>{data?.email}</Text>
         </View>
       </View>

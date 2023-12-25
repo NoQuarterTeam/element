@@ -1,7 +1,7 @@
 import * as React from "react"
 import { KeyboardAvoidingView, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { useRouter, useSearchParams } from "expo-router"
+import { useGlobalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
 import { Button } from "../../../components/Button"
@@ -12,7 +12,7 @@ import { api, type RouterOutputs } from "../../../lib/utils/api"
 
 type Habit = NonNullable<RouterOutputs["habit"]["byId"]>
 export default function HabitDetail() {
-  const { id } = useSearchParams()
+  const { id } = useGlobalSearchParams()
 
   const { data, isLoading } = api.habit.byId.useQuery({ id: id as string })
 
@@ -26,14 +26,13 @@ export default function HabitDetail() {
 
 function EditHabitForm({ habit }: { habit: Habit }) {
   const router = useRouter()
-  const params = useSearchParams()
-  const date = params.date as string
+
   const [name, setName] = React.useState(habit.name)
-  const utils = api.useContext()
+  const utils = api.useUtils()
   const updateHabit = api.habit.update.useMutation({
     onSuccess: async () => {
       void utils.habit.byId.invalidate({ id: habit.id })
-      await utils.habit.all.invalidate({ date })
+      await utils.habit.all.invalidate()
       router.back()
     },
   })

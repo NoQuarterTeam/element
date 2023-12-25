@@ -4,12 +4,13 @@ import Feather from "@expo/vector-icons/Feather"
 import Octicons from "@expo/vector-icons/Octicons"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
-import { Link, useGlobalSearchParams, useRouter } from "expo-router"
+import { Link, useRouter } from "expo-router"
 
 import colors from "@element/tailwind-config/src/colors"
 
 import { Text } from "../../../components/Text"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
+import { Heading } from "../../../components/Heading"
 
 dayjs.extend(advancedFormat)
 
@@ -17,9 +18,7 @@ type Habit = NonNullable<RouterOutputs["habit"]["all"]>["habits"][number]
 type HabitEntries = NonNullable<RouterOutputs["habit"]["all"]>["habitEntries"]
 
 export default function Habits() {
-  const params = useGlobalSearchParams()
-  const date = params.date as string
-  const { data } = api.habit.all.useQuery({ date }, { enabled: !!date })
+  const { data } = api.habit.all.useQuery()
   const habits = data?.habits || []
   const habitEntries = data?.habitEntries || []
   // const dateLabel = dayjs(date).isSame(dayjs(), "date")
@@ -33,56 +32,59 @@ export default function Habits() {
   //       : dayjs(date).format("ddd Do")
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} className=" space-y-3 px-4 pt-20">
-      {habits.map((habit) => (
-        <View key={habit.id}>
-          <HabitItem date={date} habit={habit} entries={habitEntries.filter((entry) => entry.habitId === habit.id)} />
-        </View>
-      ))}
-      <View className="absolute bottom-8 w-full items-center justify-center">
-        <Link href={`/habits/new?date=${date}`} asChild>
+    <View className="relative w-full flex-1 px-4 pt-20">
+      <Heading className="text-4xl">Habits</Heading>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} className="space-y-3">
+        {habits.map((habit) => (
+          <View key={habit.id}>
+            <HabitItem habit={habit} entries={habitEntries.filter((entry) => entry.habitId === habit.id)} />
+          </View>
+        ))}
+      </ScrollView>
+      <View className="absolute bottom-4 right-4">
+        <Link href={`/habits/new`} asChild>
           <TouchableOpacity className="bg-primary-500/90 rounded-full p-4">
             <Feather name="plus" size={24} />
           </TouchableOpacity>
         </Link>
       </View>
-    </ScrollView>
+    </View>
   )
 }
 
-function HabitItem({ habit, entries, date }: { date: string; habit: Habit; entries: HabitEntries }) {
+function HabitItem({ habit, entries }: { habit: Habit; entries: HabitEntries }) {
   const isComplete = entries.length > 0
   const colorScheme = useColorScheme()
-  const utils = api.useContext()
+  const utils = api.useUtils()
   const router = useRouter()
   const toggleComplete = api.habit.toggleComplete.useMutation({
     onMutate: () => {
-      utils.habit.all.setData({ date }, (old) => ({
+      utils.habit.all.setData(undefined, (old) => ({
         habits: old?.habits || [],
         habitEntries: old?.habitEntries?.find((entry) => entry.habitId === habit.id)
           ? old.habitEntries.filter((entry) => entry.habitId !== habit.id)
-          : [...(old?.habitEntries || []), { id: "test", createdAt: dayjs(date).toDate(), habitId: habit.id }],
+          : [...(old?.habitEntries || []), { id: "test", createdAt: dayjs().toDate(), habitId: habit.id }],
       }))
     },
     onSuccess: () => {
-      void utils.habit.progressCompleteByDate.invalidate({ date })
+      void utils.habit.progressCompleteByDate.invalidate()
     },
   })
 
   const deleteHabit = api.habit.delete.useMutation({
     onSuccess: () => {
-      void utils.habit.progressCompleteByDate.invalidate({ date })
-      void utils.habit.all.invalidate({ date })
+      void utils.habit.progressCompleteByDate.invalidate()
+      void utils.habit.all.invalidate()
     },
   })
   const archiveHabit = api.habit.archive.useMutation({
     onSuccess: () => {
-      void utils.habit.progressCompleteByDate.invalidate({ date })
-      void utils.habit.all.invalidate({ date })
+      void utils.habit.progressCompleteByDate.invalidate()
+      void utils.habit.all.invalidate()
     },
   })
 
-  const handleToggleComplete = () => toggleComplete.mutate({ id: habit.id, date })
+  const handleToggleComplete = () => toggleComplete.mutate({ id: habit.id })
 
   const { showActionSheetWithOptions } = useActionSheet()
   const handleOpenMenu = () => {
@@ -96,11 +98,11 @@ function HabitItem({ habit, entries, date }: { date: string; habit: Habit; entri
           break
         case 1:
           // Edit
-          router.push(`/habits/${habit.id}?date=${date}`)
+          router.push(`/habits/${habit.id}`)
           break
         case 2:
           // Archive
-          archiveHabit.mutate({ id: habit.id, date })
+          archiveHabit.mutate({ id: habit.id })
           break
         case destructiveButtonIndex:
           deleteHabit.mutate({ id: habit.id })
@@ -112,6 +114,7 @@ function HabitItem({ habit, entries, date }: { date: string; habit: Habit; entri
     <TouchableOpacity
       className="flex flex-row items-center justify-between py-1 pr-2"
       onPress={handleToggleComplete}
+      activeOpacity={0.8}
       onLongPress={handleOpenMenu}
     >
       <Text className="text-lg">{habit.name}</Text>

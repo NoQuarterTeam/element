@@ -1,6 +1,6 @@
 import * as React from "react"
 import { View } from "react-native"
-import { useRouter, useSearchParams } from "expo-router"
+import { useRouter } from "expo-router"
 
 import { Button } from "../../../components/Button"
 import { FormError } from "../../../components/FormError"
@@ -9,20 +9,18 @@ import { ModalView } from "../../../components/ModalView"
 import { api } from "../../../lib/utils/api"
 
 export default function NewHabit() {
-  const params = useSearchParams()
-  const date = params.date as string
   const [name, setName] = React.useState("")
-  const utils = api.useContext()
+  const utils = api.useUtils()
   const router = useRouter()
   const createHabit = api.habit.create.useMutation({
     onSuccess: async () => {
-      await utils.habit.all.invalidate({ date })
+      await utils.habit.all.invalidate()
       router.back()
     },
   })
 
   const handleCreate = () => {
-    createHabit.mutate({ name, startDate: date })
+    createHabit.mutate({ name })
   }
 
   return (
