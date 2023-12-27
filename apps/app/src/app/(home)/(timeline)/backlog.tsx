@@ -42,7 +42,12 @@ function TaskItem({ task }: { task: RouterOutputs["task"]["backlog"][number] }) 
       offsetX.value = translateX.value
     })
     .onChange((event) => {
-      translateX.value = Math.max(Math.min(offsetX.value + event.translationX, 0), -2 * buttonSize - 1)
+      translateX.value = withSpring(Math.max(Math.min(offsetX.value + event.translationX, 0), -2 * buttonSize - 1), {
+        velocity: event.velocityX,
+        // damping: 100,
+        // stiffness: 50,
+        overshootClamping: true,
+      })
     })
     .onEnd(() => {
       if (translateX.value > -2 * buttonSize) {
@@ -57,20 +62,20 @@ function TaskItem({ task }: { task: RouterOutputs["task"]["backlog"][number] }) 
   })
   return (
     <View className="relative">
-      <View className="absolute right-0 top-0 flex h-full flex-row overflow-hidden rounded">
+      <View className="absolute right-0 top-0 flex h-full flex-row">
         <TouchableOpacity
           activeOpacity={0.8}
-          style={{ width: 100 }}
-          className="flex h-full items-center justify-center bg-gray-100 p-2 dark:bg-gray-800"
+          style={{ width: buttonSize }}
+          className="flex h-full items-center justify-center rounded-l bg-gray-50 p-2 dark:bg-gray-800"
         >
-          <Text>Something</Text>
+          <Text className="text-center">Add to timeline</Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
-          style={{ width: 100 }}
-          className="flex h-full items-center justify-center bg-red-500 p-2"
+          style={{ width: buttonSize }}
+          className="flex h-full items-center justify-center rounded-r bg-red-500 p-2"
         >
-          <Text>Remove</Text>
+          <Text className="text-white">Remove</Text>
         </TouchableOpacity>
       </View>
 

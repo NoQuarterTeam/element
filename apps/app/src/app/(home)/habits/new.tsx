@@ -14,7 +14,7 @@ export default function NewHabit() {
   const router = useRouter()
   const createHabit = api.habit.create.useMutation({
     onSuccess: async () => {
-      await utils.habit.all.invalidate()
+      await utils.habit.today.invalidate()
       router.back()
     },
   })

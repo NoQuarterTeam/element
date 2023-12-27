@@ -449,21 +449,21 @@ function TaskItem({
   return (
     <Animated.View style={[{ width: DAY_WIDTH, height: TASK_HEIGHT, padding: 4 }, animatedStyles]}>
       <GestureDetector gesture={gesture}>
-        <Animated.View className="flex h-full flex-col justify-between rounded border border-gray-100 bg-white dark:border-gray-900 dark:bg-gray-700">
+        <Animated.View className="flex h-full flex-col justify-between overflow-hidden rounded border border-gray-100 bg-white dark:border-gray-900 dark:bg-gray-700">
           <View className="p-1.5">
             <Text numberOfLines={2} className="text-xs">
               {task.name}
             </Text>
           </View>
-          <Animated.View className="flex justify-center rounded-b" style={{ backgroundColor: task.element.color, height: 14 }}>
-            <Animated.Text
+          <View className="flex justify-center " style={{ backgroundColor: task.element.color, height: 14 }}>
+            <Text
               style={{ fontSize: 10, opacity: 1, color: safeReadableColor(task.element.color) }}
               numberOfLines={1}
               className="px-1"
             >
               {task.element.name}
-            </Animated.Text>
-          </Animated.View>
+            </Text>
+          </View>
         </Animated.View>
       </GestureDetector>
     </Animated.View>

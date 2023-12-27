@@ -22,7 +22,7 @@ export const habitRouter = createTRPCRouter({
     const completed = habits.filter((h) => h.entries.length > 0).length
     return Math.round((completed / total) * 100)
   }),
-  all: protectedProcedure.query(async ({ ctx }) => {
+  today: protectedProcedure.query(async ({ ctx }) => {
     const today = dayjs().toDate()
     const [habits, habitEntries] = await Promise.all([
       ctx.prisma.habit.findMany({

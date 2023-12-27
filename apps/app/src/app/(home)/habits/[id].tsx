@@ -32,7 +32,7 @@ function EditHabitForm({ habit }: { habit: Habit }) {
   const updateHabit = api.habit.update.useMutation({
     onSuccess: async () => {
       void utils.habit.byId.invalidate({ id: habit.id })
-      await utils.habit.all.invalidate()
+      await utils.habit.today.invalidate()
       router.back()
     },
   })

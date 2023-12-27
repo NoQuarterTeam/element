@@ -14,11 +14,11 @@ import { Heading } from "../../../components/Heading"
 
 dayjs.extend(advancedFormat)
 
-type Habit = NonNullable<RouterOutputs["habit"]["all"]>["habits"][number]
-type HabitEntries = NonNullable<RouterOutputs["habit"]["all"]>["habitEntries"]
+type Habit = NonNullable<RouterOutputs["habit"]["today"]>["habits"][number]
+type HabitEntries = NonNullable<RouterOutputs["habit"]["today"]>["habitEntries"]
 
 export default function Habits() {
-  const { data } = api.habit.all.useQuery()
+  const { data } = api.habit.today.useQuery()
   const habits = data?.habits || []
   const habitEntries = data?.habitEntries || []
   // const dateLabel = dayjs(date).isSame(dayjs(), "date")
@@ -59,7 +59,7 @@ function HabitItem({ habit, entries }: { habit: Habit; entries: HabitEntries }) 
   const router = useRouter()
   const toggleComplete = api.habit.toggleComplete.useMutation({
     onMutate: () => {
-      utils.habit.all.setData(undefined, (old) => ({
+      utils.habit.today.setData(undefined, (old) => ({
         habits: old?.habits || [],
         habitEntries: old?.habitEntries?.find((entry) => entry.habitId === habit.id)
           ? old.habitEntries.filter((entry) => entry.habitId !== habit.id)
@@ -74,13 +74,13 @@ function HabitItem({ habit, entries }: { habit: Habit; entries: HabitEntries }) 
   const deleteHabit = api.habit.delete.useMutation({
     onSuccess: () => {
       void utils.habit.progressCompleteToday.invalidate()
-      void utils.habit.all.invalidate()
+      void utils.habit.today.invalidate()
     },
   })
   const archiveHabit = api.habit.archive.useMutation({
     onSuccess: () => {
       void utils.habit.progressCompleteToday.invalidate()
-      void utils.habit.all.invalidate()
+      void utils.habit.today.invalidate()
     },
   })
 
