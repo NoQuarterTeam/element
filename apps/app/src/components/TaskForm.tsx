@@ -17,7 +17,7 @@ import { FormInput, FormInputError, FormInputLabel } from "./FormInput"
 import { Input, inputClassName } from "./Input"
 import { ModalView } from "./ModalView"
 import { Text } from "./Text"
-import { Plus, X } from "lucide-react-native"
+import { AlertTriangle, Plus, X } from "lucide-react-native"
 import { Icon } from "./Icon"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
@@ -29,6 +29,7 @@ export type TaskFormData = {
   durationHours: string | undefined
   durationMinutes: string | undefined
   date: string | undefined
+  isImportant: boolean
   element: {
     id: string
     name: string
@@ -56,6 +57,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
     durationMinutes: task?.durationMinutes?.toString() || "",
     date: task?.date ? dayjs(task.date).toISOString() : (date as string | undefined) || "",
     element: task?.element || { id: "", name: "", color: "" },
+    isImportant: task?.isImportant || false,
   })
   const utils = api.useUtils()
 
@@ -88,10 +90,10 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
   const colorScheme = useColorScheme()
   return (
     <View className="space-y-2">
-      <View className="flex flex-row justify-between">
-        <View className="w-11/12">
+      <View className="flex flex-row items-start justify-between">
+        <View className="flex-1">
           <TextInput
-            className="font-label text-3xl dark:text-white"
+            className="font-label text-2xl dark:text-white"
             value={form.name}
             multiline
             placeholderTextColor={colorScheme === "dark" ? colors.gray[500] : colors.gray[300]}
@@ -100,9 +102,20 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           />
           {fieldErrors?.name?.map((error) => <FormInputError key={error} error={error} />)}
         </View>
-        <TouchableOpacity onPress={canGoBack ? router.back : () => router.replace("/")} className="p-2">
-          <Icon icon={X} size={24} />
-        </TouchableOpacity>
+        <View className="flex flex-row items-center space-x-2 pt-1">
+          <TouchableOpacity
+            onPress={() => setForm((f) => ({ ...f, isImportant: !f.isImportant }))}
+            className={join(
+              "rounded-sm border border-gray-100 p-2 dark:border-gray-700",
+              form.isImportant && "bg-primary-500 border-transparent",
+            )}
+          >
+            <Icon icon={AlertTriangle} size={20} color={form.isImportant ? "white" : undefined} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={canGoBack ? router.back : () => router.replace("/")} className="p-2">
+            <Icon icon={X} size={24} />
+          </TouchableOpacity>
+        </View>
       </View>
       <View>
         <FormInput
@@ -118,7 +131,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           rightElement={
             <TouchableOpacity
               onPress={elementCreateModalProps.onOpen}
-              className="border border-gray-100 p-2.5 dark:border-gray-600"
+              className="rounded-sm border border-gray-100 p-2.5 dark:border-gray-600"
             >
               <Icon icon={Plus} size={20} />
             </TouchableOpacity>

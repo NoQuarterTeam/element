@@ -23,7 +23,7 @@ export default function HomeLayout() {
 
   const { data } = api.habit.progressCompleteToday.useQuery(undefined, { enabled: !!me && features.includes("habits") })
 
-  const progress = (data || 0) / 100
+  const progress = (data || 0.001) / 100
 
   return (
     <AuthProvider>
