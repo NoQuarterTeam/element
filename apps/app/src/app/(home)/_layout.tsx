@@ -11,6 +11,7 @@ import { OptimizedImage } from "../../components/OptimisedImage"
 import { useFeatures } from "../../lib/hooks/useFeatures"
 import { useMe } from "../../lib/hooks/useMe"
 import { useBackgroundColor } from "../../lib/tailwind"
+import { api } from "../../lib/utils/api"
 
 export default function HomeLayout() {
   const colorScheme = useColorScheme()
@@ -18,6 +19,9 @@ export default function HomeLayout() {
   const isDark = colorScheme === "dark"
   const features = useFeatures((s) => s.features)
   const { me } = useMe()
+
+  const { data } = api.habit.progressCompleteToday.useQuery(undefined, { enabled: !!me && features.includes("habits") })
+
   return (
     <AuthProvider>
       <Tabs

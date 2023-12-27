@@ -4,7 +4,7 @@ import { z } from "zod"
 import { createTRPCRouter, protectedProcedure } from "../trpc"
 
 export const habitRouter = createTRPCRouter({
-  progressCompleteByDate: protectedProcedure.query(async ({ ctx }) => {
+  progressCompleteToday: protectedProcedure.query(async ({ ctx }) => {
     // return percentage of habits completed on given date
     const habits = await ctx.prisma.habit.findMany({
       include: {
@@ -20,7 +20,7 @@ export const habitRouter = createTRPCRouter({
     })
     const total = habits.length
     const completed = habits.filter((h) => h.entries.length > 0).length
-    return Math.round((completed / total) * 100)
+    return { total, progress: Math.round((completed / total) * 100) }
   }),
   all: protectedProcedure.query(async ({ ctx }) => {
     const today = dayjs().toDate()

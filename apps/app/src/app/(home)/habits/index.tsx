@@ -67,19 +67,19 @@ function HabitItem({ habit, entries }: { habit: Habit; entries: HabitEntries }) 
       }))
     },
     onSuccess: () => {
-      void utils.habit.progressCompleteByDate.invalidate()
+      void utils.habit.progressCompleteToday.invalidate()
     },
   })
 
   const deleteHabit = api.habit.delete.useMutation({
     onSuccess: () => {
-      void utils.habit.progressCompleteByDate.invalidate()
+      void utils.habit.progressCompleteToday.invalidate()
       void utils.habit.all.invalidate()
     },
   })
   const archiveHabit = api.habit.archive.useMutation({
     onSuccess: () => {
-      void utils.habit.progressCompleteByDate.invalidate()
+      void utils.habit.progressCompleteToday.invalidate()
       void utils.habit.all.invalidate()
     },
   })
