@@ -1,7 +1,8 @@
 import { useColorScheme } from "react-native"
 import { Tabs } from "expo-router"
-import { CheckCircle, Home, UserCircle } from "lucide-react-native"
+import { Home, UserCircle } from "lucide-react-native"
 
+import * as Progress from "react-native-progress"
 import { createImageUrl, join } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
@@ -46,7 +47,17 @@ export default function HomeLayout() {
           name="habits"
           options={{
             href: !me || !features.includes("habits") ? null : undefined,
-            tabBarIcon: (props) => <Icon icon={CheckCircle} size={22} color={!!props.focused && "primary"} />,
+            tabBarIcon: (props) => (
+              <Progress.Circle
+                thickness={5}
+                size={32}
+                animated={false}
+                borderWidth={0}
+                progress={data}
+                // unfilledColor={unfilledColor}
+                color={colorScheme === "dark" ? colors.green[600] : colors.green[500]}
+              />
+            ),
             // tabBarLabel: "Habits",
           }}
         />

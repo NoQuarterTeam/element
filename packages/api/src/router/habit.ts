@@ -20,7 +20,7 @@ export const habitRouter = createTRPCRouter({
     })
     const total = habits.length
     const completed = habits.filter((h) => h.entries.length > 0).length
-    return { total, progress: Math.round((completed / total) * 100) }
+    return Math.round((completed / total) * 100)
   }),
   all: protectedProcedure.query(async ({ ctx }) => {
     const today = dayjs().toDate()
