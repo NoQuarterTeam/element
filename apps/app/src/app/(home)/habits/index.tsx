@@ -121,7 +121,7 @@ function HabitItem({ habit, entries }: { habit: Habit; entries: HabitEntries }) 
       <View className="relative">
         <Circle
           size={26}
-          color={isComplete ? colors.primary[500] : isDark ? colors.gray[800] : colors.gray[100]}
+          color={isComplete ? colors.primary[500] : isDark ? colors.gray[700] : colors.gray[100]}
           fill={isComplete ? colors.primary[500] : "transparent"}
         />
         {isComplete && (

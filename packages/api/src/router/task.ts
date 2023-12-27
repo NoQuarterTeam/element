@@ -63,10 +63,7 @@ export const taskRouter = createTRPCRouter({
       orderBy: [{ order: "asc" }, { createdAt: "asc" }],
       where: { creatorId: { equals: ctx.user.id }, date: null },
     })
-    return tasks.map((task) => ({
-      ...task,
-      date: dayjs(task.date).format("YYYY-MM-DD"),
-    }))
+    return tasks.map((task) => ({ ...task, date: dayjs(task.date).format("YYYY-MM-DD") }))
   }),
   byId: protectedProcedure.input(z.object({ id: z.string() })).query(({ ctx, input: { id } }) => {
     return ctx.prisma.task.findUnique({ where: { id }, select: timelineTaskFields })
@@ -109,6 +106,7 @@ export const taskRouter = createTRPCRouter({
   update: protectedProcedure
     .input(taskSchema.partial().merge(z.object({ id: z.string() })))
     .mutation(({ ctx, input: { id, ...data } }) => {
+      // can be set to null
       const date = data.date ? dayjs(data.date).startOf("d").add(12, "hours").toDate() : data.date
       return ctx.prisma.task.update({ where: { id }, select: timelineTaskFields, data: { ...data, date } })
     }),

@@ -252,7 +252,8 @@ function TasksGrid({ days }: { days: string[] }) {
       acc[task.id] = task
       return acc
     }, {})
-  }, [tasks, taskPositions])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tasks])
 
   // TODO: instead of refetching, update the taskPositions value
   const { mutate } = api.task.updateOrder.useMutation({
@@ -415,16 +416,15 @@ function TaskItem({
     .runOnJS(true)
     .onStart(() => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-      taskPositions.value[task.id]!.isComplete = !task.isComplete
+      taskPositions.value[task.id] = { ...taskPositions.value[task.id]!, isComplete: !taskPositions.value[task.id]!.isComplete }
       mutate({ id: task.id, isComplete: !task.isComplete })
     })
 
   const tap = Gesture.Tap().runOnJS(true).onStart(handleNavigate)
 
+  const isComplete = taskPositions.value[task.id]?.isComplete || task.isComplete
   const gesture = Gesture.Race(Gesture.Simultaneous(pan, longPress), tap)
 
-  const currentTask = taskPositions.value[task.id]
-  const isComplete = currentTask?.isComplete
   return (
     <Animated.View style={[{ width: DAY_WIDTH, height: TASK_HEIGHT, padding: 4 }, animatedStyles]}>
       <GestureDetector gesture={gesture}>

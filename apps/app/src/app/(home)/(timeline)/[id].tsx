@@ -71,11 +71,12 @@ function EditTaskForm({ task }: { task: Task }) {
   const addToBacklog = api.task.update.useMutation({
     onSuccess: async (updatedTask) => {
       void utils.task.timeline.refetch({ daysBack, daysForward })
+      void utils.task.backlog.refetch()
       utils.task.byId.setData({ id: task.id }, updatedTask)
       router.back()
     },
   })
-  const handleAddToBacklog = () => addToBacklog.mutate({ id: task.id, date: null })
+  const handleAddToBacklog = () => addToBacklog.mutate({ id: task.id, date: null, isComplete: false })
 
   const duplicate = api.task.duplicate.useMutation({
     onSuccess: async () => {
