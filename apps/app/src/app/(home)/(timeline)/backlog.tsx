@@ -2,15 +2,15 @@ import { ModalView } from "../../../components/ModalView"
 import { Text } from "../../../components/Text"
 import { RouterOutputs, api } from "../../../lib/utils/api"
 import { Spinner } from "../../../components/Spinner"
-import { FlatList, TouchableOpacity, View } from "react-native"
+import { FlatList, RefreshControl, TouchableOpacity, View } from "react-native"
 import { formatDuration, join, safeReadableColor } from "@element/shared"
 import { Icon } from "../../../components/Icon"
-import { CheckCircle, Circle } from "lucide-react-native"
+import { CheckCircle, Circle, Home, Trash } from "lucide-react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated"
 
 export default function Backlog() {
-  const { data, isLoading } = api.task.backlog.useQuery()
+  const { data, isLoading, refetch } = api.task.backlog.useQuery()
 
   return (
     <ModalView title="Backlog">
@@ -21,7 +21,7 @@ export default function Backlog() {
       ) : (
         <FlatList
           data={data}
-          // refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={onRefetch} />}
+          refreshControl={<RefreshControl refreshing={false} onRefresh={refetch} />}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={() => <View className="h-1" />}
           contentContainerStyle={{ paddingBottom: 130, paddingTop: 10 }}
@@ -32,10 +32,12 @@ export default function Backlog() {
   )
 }
 
-const buttonSize = 100
+const buttonSize = 80
+
 function TaskItem({ task }: { task: RouterOutputs["task"]["backlog"][number] }) {
   const translateX = useSharedValue(0)
   const offsetX = useSharedValue(0)
+  // const height = useSharedValue(75)
 
   const gesture = Gesture.Pan()
     .onStart(() => {
@@ -55,6 +57,16 @@ function TaskItem({ task }: { task: RouterOutputs["task"]["backlog"][number] }) 
       }
     })
 
+  const utils = api.useUtils()
+  const { mutate } = api.task.delete.useMutation({
+    onMutate: () => {
+      // height.value = withTiming(0)
+    },
+    onSuccess: () => {
+      void utils.task.backlog.invalidate()
+    },
+  })
+
   const styles = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: translateX.value }],
@@ -68,14 +80,15 @@ function TaskItem({ task }: { task: RouterOutputs["task"]["backlog"][number] }) 
           style={{ width: buttonSize }}
           className="flex h-full items-center justify-center rounded-l bg-gray-50 p-2 dark:bg-gray-800"
         >
-          <Text className="text-center">Add to timeline</Text>
+          <Icon icon={Home} size={20} />
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
+          onPress={() => mutate({ id: task.id })}
           style={{ width: buttonSize }}
           className="flex h-full items-center justify-center rounded-r bg-red-500 p-2"
         >
-          <Text className="text-white">Remove</Text>
+          <Icon icon={Trash} color="white" size={20} />
         </TouchableOpacity>
       </View>
 
@@ -83,12 +96,13 @@ function TaskItem({ task }: { task: RouterOutputs["task"]["backlog"][number] }) 
         <GestureDetector gesture={gesture}>
           <TouchableOpacity
             activeOpacity={1}
+            style={{ height: 75 }}
             className={join(
               "overflow-hidden rounded border border-gray-100 bg-white dark:border-gray-600 dark:bg-black",
               task.isComplete && "opacity-60",
             )}
           >
-            <View className="flex flex-row space-x-2 p-3">
+            <View className="flex flex-1 flex-row space-x-2 p-3">
               <TouchableOpacity className="flex-shrink-0">
                 {task.isComplete ? <Icon icon={CheckCircle} size={24} color="primary" /> : <Icon icon={Circle} size={24} />}
               </TouchableOpacity>

@@ -1,11 +1,12 @@
-import type * as React from "react"
-import { Text, TouchableOpacity, useColorScheme, View } from "react-native"
-import Feather from "@expo/vector-icons/Feather"
 import { useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
+import type * as React from "react"
+import { Text, TouchableOpacity, View } from "react-native"
 
-import { Heading } from "./Heading"
 import { join } from "@element/shared"
+import { X } from "lucide-react-native"
+import { Heading } from "./Heading"
+import { Icon } from "./Icon"
 
 interface Props {
   title?: string
@@ -15,7 +16,7 @@ interface Props {
 
 export function ModalView(props: Props) {
   const router = useRouter()
-  const colorScheme = useColorScheme()
+
   const canGoBack = router.canGoBack()
   return (
     <View className={join("h-full bg-white px-4 dark:bg-black", canGoBack ? "pt-6" : "pt-16")}>
@@ -26,7 +27,7 @@ export function ModalView(props: Props) {
           onPress={props.onBack ? props.onBack : canGoBack ? router.back : () => router.replace("/")}
           className="p-2"
         >
-          <Feather name="x" size={24} color={colorScheme === "dark" ? "white" : "black"} />
+          <Icon icon={X} size={24} />
         </TouchableOpacity>
       </View>
       {props.children}

@@ -1,11 +1,9 @@
 import { ScrollView, TouchableOpacity, View } from "react-native"
-import Feather from "@expo/vector-icons/Feather"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useQueryClient } from "@tanstack/react-query"
 import { Link } from "expo-router"
 
 import { createImageUrl, join } from "@element/shared"
-import colors from "@element/tailwind-config/src/colors"
 
 import { Button } from "../../../components/Button"
 import { OptimizedImage } from "../../../components/OptimisedImage"
@@ -13,6 +11,8 @@ import { Text } from "../../../components/Text"
 import { UPDATE_ID, VERSION } from "../../../lib/config"
 import { api, AUTH_TOKEN } from "../../../lib/utils/api"
 import { Heading } from "../../../components/Heading"
+import { ChevronRight } from "lucide-react-native"
+import { Icon } from "../../../components/Icon"
 
 export default function Profile() {
   const { data } = api.user.me.useQuery()
@@ -27,7 +27,7 @@ export default function Profile() {
 
   return (
     <ScrollView className="h-full space-y-6 px-4 pt-16">
-      <View className="flex flex-row items-center space-x-4">
+      <View className="flex flex-row items-center space-x-4 p-2">
         {data?.avatar ? (
           <OptimizedImage
             width={70}
@@ -77,14 +77,15 @@ function ProfileLink(props: { isFirst?: boolean; isLast?: boolean; href: string;
   return (
     <Link href={props.href} asChild>
       <TouchableOpacity
+        activeOpacity={0.7}
         className={join(
           "flex flex-row items-center justify-between border-x border-t border-gray-100 px-4 py-2 dark:border-gray-600",
           props.isFirst && "rounded-t-sm",
           props.isLast && "rounded-b-sm border-b",
         )}
       >
-        <Text className="text-lg">{props.children}</Text>
-        <Feather name="chevron-right" size={20} color={colors.gray[500]} />
+        <Text className="text-base">{props.children}</Text>
+        <Icon icon={ChevronRight} color={{ dark: "white", light: "gray" }} size={20} />
       </TouchableOpacity>
     </Link>
   )

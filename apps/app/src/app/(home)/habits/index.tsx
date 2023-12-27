@@ -1,7 +1,5 @@
 import { ScrollView, TouchableOpacity, useColorScheme, View } from "react-native"
 import { useActionSheet } from "@expo/react-native-action-sheet"
-import Feather from "@expo/vector-icons/Feather"
-import Octicons from "@expo/vector-icons/Octicons"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import { Link, useRouter } from "expo-router"
@@ -11,6 +9,8 @@ import colors from "@element/tailwind-config/src/colors"
 import { Text } from "../../../components/Text"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
 import { Heading } from "../../../components/Heading"
+import { Check, Circle, Plus } from "lucide-react-native"
+import { Icon } from "../../../components/Icon"
 
 dayjs.extend(advancedFormat)
 
@@ -44,7 +44,7 @@ export default function Habits() {
       <View className="absolute bottom-4 right-4">
         <Link href={`/habits/new`} asChild>
           <TouchableOpacity className="bg-primary-500/90 rounded-full p-4">
-            <Feather name="plus" size={24} />
+            <Icon icon={Plus} size={24} color="black" />
           </TouchableOpacity>
         </Link>
       </View>
@@ -54,7 +54,7 @@ export default function Habits() {
 
 function HabitItem({ habit, entries }: { habit: Habit; entries: HabitEntries }) {
   const isComplete = entries.length > 0
-  const colorScheme = useColorScheme()
+  const isDark = useColorScheme() === "dark"
   const utils = api.useUtils()
   const router = useRouter()
   const toggleComplete = api.habit.toggleComplete.useMutation({
@@ -118,11 +118,18 @@ function HabitItem({ habit, entries }: { habit: Habit; entries: HabitEntries }) 
       onLongPress={handleOpenMenu}
     >
       <Text className="text-lg">{habit.name}</Text>
-      {isComplete ? (
-        <Octicons name="check-circle-fill" size={24} color={colors.primary[600]} />
-      ) : (
-        <Octicons name="circle" size={24} color={colorScheme === "dark" ? colors.gray[600] : colors.gray[100]} />
-      )}
+      <View className="relative">
+        <Circle
+          size={26}
+          color={isComplete ? colors.primary[500] : isDark ? colors.gray[800] : colors.gray[100]}
+          fill={isComplete ? colors.primary[500] : "transparent"}
+        />
+        {isComplete && (
+          <View className="absolute left-1 top-[5px]">
+            <Icon icon={Check} size={18} strokeWidth={3} fill="transparent" color="white" />
+          </View>
+        )}
+      </View>
     </TouchableOpacity>
   )
 }

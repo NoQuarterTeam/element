@@ -2,7 +2,7 @@ import * as React from "react"
 import { Modal, TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
-import Feather from "@expo/vector-icons/Feather"
+
 import dayjs from "dayjs"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import ColorPicker, { HueSlider, Panel1 } from "reanimated-color-picker"
@@ -17,6 +17,8 @@ import { FormInput, FormInputError, FormInputLabel } from "./FormInput"
 import { Input, inputClassName } from "./Input"
 import { ModalView } from "./ModalView"
 import { Text } from "./Text"
+import { Plus, X } from "lucide-react-native"
+import { Icon } from "./Icon"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 
@@ -99,7 +101,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           {fieldErrors?.name?.map((error) => <FormInputError key={error} error={error} />)}
         </View>
         <TouchableOpacity onPress={canGoBack ? () => router.back() : () => router.replace("/")} className="p-2">
-          <Feather name="x" size={24} color={colorScheme === "dark" ? "white" : "black"} />
+          <Icon icon={X} size={24} />
         </TouchableOpacity>
       </View>
       <View>
@@ -118,7 +120,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
               onPress={elementCreateModalProps.onOpen}
               className="border border-gray-100 p-2.5 dark:border-gray-600"
             >
-              <Feather name="plus" size={20} color={colorScheme === "dark" ? "white" : "black"} />
+              <Icon icon={Plus} size={20} />
             </TouchableOpacity>
           }
         />

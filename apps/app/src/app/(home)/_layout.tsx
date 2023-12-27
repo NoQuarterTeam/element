@@ -53,8 +53,6 @@ export default function HomeLayout() {
                 thickness={4}
                 size={26}
                 animated={true}
-                fill="white"
-                // strokeCap="round"
                 borderWidth={0}
                 progress={progress === 1 ? 0.99999 : progress}
                 unfilledColor={
