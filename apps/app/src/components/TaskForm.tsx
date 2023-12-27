@@ -1,6 +1,6 @@
 import * as React from "react"
-import { Modal, TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
-import { ScrollView } from "react-native-gesture-handler"
+import { Modal, ScrollView, TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
+
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 
 import dayjs from "dayjs"
@@ -100,7 +100,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           />
           {fieldErrors?.name?.map((error) => <FormInputError key={error} error={error} />)}
         </View>
-        <TouchableOpacity onPress={canGoBack ? () => router.back() : () => router.replace("/")} className="p-2">
+        <TouchableOpacity onPress={canGoBack ? router.back : () => router.replace("/")} className="p-2">
           <Icon icon={X} size={24} />
         </TouchableOpacity>
       </View>

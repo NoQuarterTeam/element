@@ -35,10 +35,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         const editHabit = await db.habit.update({ where: { id }, data: { name: editForm.data.name } })
         return json({ habit: editHabit })
       } catch (e: any) {
-        return json(e.message, {
-          status: 400,
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error creating habit entry") },
-        })
+        return json(e.message)
       }
     case HabitActionMethods.ToggleComplete:
       try {
@@ -67,10 +64,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         }
         return json({ success: true })
       } catch (e: any) {
-        return json(e.message, {
-          status: 400,
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error creating habit entry") },
-        })
+        return json(e.message)
       }
     case HabitActionMethods.Archive:
       try {
@@ -81,20 +75,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         await db.habit.update({ where: { id }, data: { archivedAt: dayjs(archivedAt).toDate() } })
         return json({ success: true })
       } catch (e: any) {
-        return json(e.message, {
-          status: 400,
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error archiving habit") },
-        })
+        return json(e.message)
       }
     case HabitActionMethods.Delete:
       try {
         await db.habit.delete({ where: { id } })
         return json({ success: true })
       } catch (e: any) {
-        return json(e.message, {
-          status: 400,
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error archiving habit") },
-        })
+        return json(e.message)
       }
     default:
       return redirect("/")

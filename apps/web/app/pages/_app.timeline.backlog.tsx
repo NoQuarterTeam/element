@@ -118,7 +118,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
             />
           </Tooltip>
           <Tooltip label="Delete">
-            <deleteFetcher.Form method="post" replace action={`/timeline/${task.id}`}>
+            <deleteFetcher.Form method="post" action={`/timeline/${task.id}`}>
               <IconButton
                 variant="outline"
                 type="submit"
@@ -142,7 +142,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
             </div>
           </Dialog>
 
-          <updateFetcher.Form action={`/timeline/${task.id}`} replace method="post">
+          <updateFetcher.Form action={`/timeline/${task.id}`} method="post">
             <input type="hidden" name="date" value={dayjs().startOf("d").add(12, "h").format()} />
             <Tooltip label="Add to timeline">
               <IconButton

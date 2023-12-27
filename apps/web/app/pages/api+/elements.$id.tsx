@@ -35,31 +35,23 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         const updatedElement = await db.element.update({ where: { id: elementId }, data })
         return json({ element: updatedElement })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating element") },
-        })
+        return badRequest(e.message)
       }
     case ElementActionMethods.ArchiveElement:
       try {
         await db.element.update({ where: { id: elementId }, data: { archivedAt: new Date() } })
         return json({ success: true })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error archiving element") },
-        })
+        return badRequest(e.message)
       }
     case ElementActionMethods.UnarchiveElement:
       try {
         await db.element.update({ where: { id: elementId }, data: { archivedAt: null } })
         return json({ success: true })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error unarchiving element") },
-        })
+        return badRequest(e.message)
       }
     default:
-      return badRequest("Invalid action", {
-        headers: { "Set-Cookie": await createFlash(FlashType.Error, "Invalid action") },
-      })
+      return badRequest("Invalid action")
   }
 }

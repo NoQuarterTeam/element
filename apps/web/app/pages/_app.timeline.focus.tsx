@@ -81,14 +81,14 @@ export default function Focus() {
 
 function FocusItem({ task }: { task: FocusTask }) {
   const { updateTask } = useTimelineTasks()
-  const updateFetcher = useFetcher()
+  const updateFetcher = useFetcher<any>()
   React.useEffect(() => {
     if (!updateFetcher.data) return
-    if (updateFetcher.type === "actionReload" && updateFetcher.data.task) {
+    if (updateFetcher.state !== "idle" && updateFetcher.data.task) {
       updateTask(updateFetcher.data.task)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateFetcher.type, updateFetcher.data])
+  }, [updateFetcher.state, updateFetcher.data])
   const { isOpen, onToggle } = useDisclosure()
   return (
     <div className="w-full max-w-lg rounded-sm border border-gray-200 dark:border-gray-600">

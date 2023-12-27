@@ -9,7 +9,7 @@ import { taskItemSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
 import { getFormDataArray, validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
-import { getUser, requireUser } from "~/services/auth/auth.server"
+import { getCurrentUser, requireUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -93,9 +93,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         })
         return json({ task: updatedTask })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating task") },
-        })
+        return badRequest(e.message)
       }
     case TaskActionMethods.CompleteBacklogTask:
       try {
@@ -106,9 +104,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         })
         return json({ task: updatedTask })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error completing task") },
-        })
+        return badRequest(e.message)
       }
     case TaskActionMethods.DuplicateTask:
       try {
@@ -129,9 +125,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         })
         return json({ task: newTask })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error deleting task") },
-        })
+        return badRequest(e.message)
       }
     case TaskActionMethods.AddToBacklog:
       try {
@@ -142,9 +136,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         })
         return json({ task: backlogTask })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error backlogging task") },
-        })
+        return badRequest(e.message)
       }
     case TaskActionMethods.DeleteTask:
       try {
@@ -161,14 +153,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
         return json({ success: true })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error deleting task") },
-        })
+        return badRequest(e.message)
       }
     default:
-      return badRequest("Invalid action", {
-        headers: { "Set-Cookie": await createFlash(FlashType.Error, "Invalid action") },
-      })
+      return badRequest("Invalid action")
   }
 }
 

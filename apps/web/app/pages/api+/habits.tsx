@@ -51,7 +51,6 @@ export enum HabitsActionMethods {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
   const formData = await request.formData()
-  const { createFlash } = await getFlashSession(request)
   const action = formData.get("_action") as HabitsActionMethods | undefined
   switch (action) {
     case HabitsActionMethods.CreateHabit:
@@ -68,10 +67,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         })
         return json({ habit })
       } catch (e: any) {
-        return json(e.message, {
-          status: 400,
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error creating habit entry") },
-        })
+        return json(e.message)
       }
 
     default:

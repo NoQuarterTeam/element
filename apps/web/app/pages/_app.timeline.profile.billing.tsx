@@ -1,8 +1,9 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
-import { json } from "@remix-run/node"
+
 import { useLoaderData } from "@remix-run/react"
 import currencyjs from "currency.js"
 import dayjs from "dayjs"
+import { cacheHeader } from "pretty-cache-header"
 import type Stripe from "stripe"
 import { z } from "zod"
 
@@ -11,7 +12,7 @@ import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Form, FormButton, FormField, FormFieldLabel } from "~/components/ui/Form"
 import { Select } from "~/components/ui/Inputs"
 import { validateFormData } from "~/lib/form"
-import { badRequest } from "~/lib/remix"
+import { badRequest, json } from "~/lib/remix"
 import { COUNTRIES } from "~/lib/static/countries"
 import { INVOICE_STATUS } from "~/lib/static/invoiceStatus"
 import { TAX_TYPES } from "~/lib/static/taxTypes"
@@ -32,10 +33,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     email: stripeCustomer.email,
     taxId: { value: stripeCustomer.tax_ids?.data?.[0]?.value, type: stripeCustomer.tax_ids?.data?.[0]?.type },
   }
-  return json(
-    { billing, invoices: invoices.data },
-    { headers: { "Cache-Control": "private, max-age=360, stale-while-revalidate" } },
-  )
+  return json({ billing, invoices: invoices.data }, request, {
+    headers: { "Cache-Control": cacheHeader({ private: true, maxAge: "5mins", staleWhileRevalidate: "10seconds" }) },
+  })
 }
 export type ProfileBilling = SerializeFrom<typeof loader>
 
@@ -66,10 +66,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const { data, fieldErrors } = await validateFormData(billingSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
         const customer = await stripe.customers.retrieve(user.stripeCustomerId, { expand: ["tax_ids"] })
-        if (customer.deleted)
-          return badRequest("No stripe customer", {
-            headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating billing details") },
-          })
+        if (customer.deleted) return badRequest("No stripe customer")
         const oldTaxId = customer.tax_ids?.data[0]?.id
         const oldTaxValue = customer?.tax_ids?.data?.[0]?.value
         const oldTaxType = customer?.tax_ids?.data?.[0]?.type
@@ -103,20 +100,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           },
         })
 
-        return json(
-          { success: true },
-          { headers: { "Set-Cookie": await createFlash(FlashType.Info, "Billing details updated") } },
-        )
+        return json({ success: true }, request, { flash: { title: "Billing details updated" } })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error updating billing details") },
-        })
+        return badRequest(e.message)
       }
 
     default:
-      return badRequest("Invalid action", {
-        headers: { "Set-Cookie": await createFlash(FlashType.Error, "Invalid action") },
-      })
+      return badRequest("Invalid action")
   }
 }
 

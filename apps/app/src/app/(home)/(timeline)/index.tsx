@@ -24,8 +24,9 @@ import { Heading } from "../../../components/Heading"
 import { Icon } from "../../../components/Icon"
 import { Text } from "../../../components/Text"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
-import { height, isAndroid } from "../../../lib/utils/device"
+import { height } from "../../../lib/utils/device"
 import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
+import { BlurView } from "expo-blur"
 
 dayjs.extend(advancedFormat)
 
@@ -48,18 +49,6 @@ const MONTH_NAMES = ["jan.", "feb.", "mar.", "apr.", "may.", "jun.", "jul.", "au
 
 export default function Timeline() {
   const [isLoaded, setIsLoaded] = React.useState(false)
-  // const [date] = React.useState(dayjs().format("YYYY-MM-DD"))
-
-  // const utils = api.useUtils()
-
-  // React.useEffect(() => {
-  //   // prefetch next and previous dates
-  //   utils.task.byDate.prefetch({ date: dayjs(date).subtract(1, "day").format("YYYY-MM-DD") })
-  //   utils.task.byDate.prefetch({ date: dayjs(date).add(1, "day").format("YYYY-MM-DD") })
-  //   utils.habit.progressCompleteByDate.prefetch({ date: dayjs(date).subtract(1, "day").format("YYYY-MM-DD") })
-  // }, [date])
-
-  // const { features } = useFeatures()
 
   const timelineRef = useAnimatedRef<Animated.ScrollView>()
   const outerTimelineRef = useAnimatedRef<Animated.ScrollView>()
@@ -113,6 +102,7 @@ export default function Timeline() {
 
   const { isLoading, refetch } = api.task.timeline.useQuery({ daysBack, daysForward }, { staleTime: Infinity })
 
+  // TODO dynamic day height?
   // const maxTaskCountPerDay = React.useMemo(() => {
   //   if (!data) return 0
   //   const taskCountPerDay = days.map((day) => data?.filter((task) => task.date === day).length || 0)
@@ -123,7 +113,7 @@ export default function Timeline() {
     <View className="flex-1 pt-16">
       <Animated.View className="flex flex-row" style={{ transform: [{ translateX: headerTranslateX }] }}>
         {months.map(({ month, year, width }, i) => {
-          // left start is the sum of all previous months
+          // left start is the sum of all previous months' widths
           const leftStart = months.slice(0, i).reduce((acc, { width }) => acc + width, 0)
           return (
             <View key={`${month}-${year}-${i}`} style={{ width }}>
@@ -171,24 +161,10 @@ export default function Timeline() {
             />
           ))}
           {!isLoading && <TasksGrid days={days} />}
-          {/* <TouchableOpacity
-            onPress={() => {
-              setDaysBack((d) => d + initialDaysBack)
-            }}
-            className="absolute left-4 top-20 rounded-full border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-black"
-          >
-            <Icon icon={ChevronLeft} size={24} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setDaysForward((d) => d + initialDaysForward)}
-            className="absolute right-4 top-20 rounded-full border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-black"
-          >
-            <Icon icon={ChevronRight} size={24} />
-          </TouchableOpacity> */}
         </Animated.ScrollView>
       </Animated.ScrollView>
 
-      <View className="absolute bottom-4 left-4 space-y-2">
+      <View className="absolute bottom-4 right-4 space-y-2">
         <Link href={`backlog`} asChild>
           <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
             <Icon icon={Clock} size={24} />
@@ -203,9 +179,6 @@ export default function Timeline() {
         >
           <Icon icon={Calendar} size={24} />
         </TouchableOpacity>
-      </View>
-
-      <View className="absolute bottom-4 right-4">
         <Link href={`new?date=${dayjs().format("YYYY-MM-DD")}`} asChild>
           <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
             <Icon icon={Plus} size={24} color="black" />
@@ -260,8 +233,6 @@ type Tasks = NonNullable<RouterOutputs["task"]["timeline"]>
 
 type Task = Tasks[number]
 
-type DropTask = Pick<Task, "id" | "name" | "order"> & { date: string }
-
 const DAY_WIDTH = 90
 
 function TasksGrid({ days }: { days: string[] }) {
@@ -270,21 +241,23 @@ function TasksGrid({ days }: { days: string[] }) {
   // eslint-disable-next-line
   const tasks = data || []
 
-  const taskPositions = useSharedValue<{ [key: string]: DropTask }>(
-    tasks.reduce<{ [key: string]: DropTask }>((acc, task) => {
-      acc[task.id] = { id: task.id, name: task.name, date: task.date, order: task.order }
+  const taskPositions = useSharedValue<{ [key: string]: Task }>(
+    tasks.reduce<{ [key: string]: Task }>((acc, task) => {
+      acc[task.id] = task
       return acc
     }, {}),
   )
   React.useEffect(() => {
-    taskPositions.value = tasks.reduce<{ [key: string]: DropTask }>((acc, task) => {
-      acc[task.id] = { id: task.id, name: task.name, date: task.date, order: task.order }
+    taskPositions.value = tasks.reduce<{ [key: string]: Task }>((acc, task) => {
+      acc[task.id] = task
       return acc
     }, {})
   }, [tasks, taskPositions])
 
-  const { mutate } = api.task.updateOrder.useMutation({ onSuccess: () => refetch() })
-
+  // TODO: instead of refetching, update the taskPositions value
+  const { mutate } = api.task.updateOrder.useMutation({
+    onSuccess: () => refetch(),
+  })
   const handleDrop = (taskId: string) => {
     const newTask = taskPositions.value[taskId]!
     const oldTask = tasks.find((t) => t.id === taskId)!
@@ -316,7 +289,7 @@ function TaskItem({
 }: {
   days: string[]
   task: Omit<Tasks[number], "date"> & { date: string }
-  taskPositions: SharedValue<{ [key: string]: DropTask }>
+  taskPositions: SharedValue<{ [key: string]: Task }>
   onDrop: () => void
 }) {
   const position = useDerivedValue(() => {
@@ -350,10 +323,8 @@ function TaskItem({
       offsetX.value = translateX.value
       offsetY.value = translateY.value
       scale.value = withTiming(1.1)
-      if (!isAndroid) {
-        runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium)
-      }
       isActive.value = true
+      runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium)
     })
     .onUpdate((event) => {
       // TODO: figure out scrolling
@@ -437,32 +408,55 @@ function TaskItem({
     }
   })
 
+  const { mutate } = api.task.update.useMutation()
+
+  const longPress = Gesture.LongPress()
+    .minDuration(1000)
+    .runOnJS(true)
+    .onStart(() => {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+      taskPositions.value[task.id]!.isComplete = !task.isComplete
+      mutate({ id: task.id, isComplete: !task.isComplete })
+    })
+
   const tap = Gesture.Tap().runOnJS(true).onStart(handleNavigate)
 
-  // const actionHeight = useSharedValue(0)
-  // const forceTouch = Gesture.ForceTouch().onStart(() => {
-  //   // actionHeight.value = withTiming(50)
-  // })
+  const gesture = Gesture.Race(Gesture.Simultaneous(pan, longPress), tap)
 
-  const gesture = Gesture.Race(pan, tap)
-
+  const currentTask = taskPositions.value[task.id]!
   return (
     <Animated.View style={[{ width: DAY_WIDTH, height: TASK_HEIGHT, padding: 4 }, animatedStyles]}>
       <GestureDetector gesture={gesture}>
         <Animated.View className="flex h-full flex-col justify-between overflow-hidden rounded border border-gray-100 bg-white dark:border-gray-900 dark:bg-gray-700">
-          <View className="p-1.5">
-            <Text numberOfLines={2} className="text-xs">
-              {task.name}
-            </Text>
+          <View className="relative">
+            <View className="p-1.5">
+              <Text
+                numberOfLines={2}
+                className="text-xs"
+                style={{ textDecorationLine: currentTask.isComplete ? "line-through" : undefined }}
+              >
+                {task.name}
+              </Text>
+            </View>
+            {currentTask.isComplete && <BlurView intensity={currentTask.isComplete ? 6 : 0} className="absolute h-full w-full" />}
           </View>
-          <View className="flex justify-center " style={{ backgroundColor: task.element.color, height: 14 }}>
-            <Text
-              style={{ fontSize: 10, opacity: 1, color: safeReadableColor(task.element.color) }}
-              numberOfLines={1}
-              className="px-1"
-            >
-              {task.element.name}
-            </Text>
+          <View
+            className="flex justify-center "
+            style={{
+              backgroundColor: task.element.color,
+              opacity: currentTask.isComplete ? 0.4 : 1,
+              height: currentTask.isComplete ? 6 : 14,
+            }}
+          >
+            {!currentTask.isComplete && (
+              <Text
+                style={{ fontSize: 10, opacity: 1, color: safeReadableColor(task.element.color) }}
+                numberOfLines={1}
+                className="px-1"
+              >
+                {task.element.name}
+              </Text>
+            )}
           </View>
         </Animated.View>
       </GestureDetector>

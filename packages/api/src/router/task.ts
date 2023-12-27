@@ -24,18 +24,12 @@ const taskSchema = z.object({
   name: z.string().min(1, { message: "Please enter a name" }),
   elementId: z.string().min(1, { message: "Please select an element" }),
   date: nullableString,
+  isComplete: z.boolean().optional(),
   description: nullableString,
   startTime: nullableString,
   durationHours: nullableNumber,
   durationMinutes: nullableNumber,
 })
-
-const updateSchema = taskSchema.merge(
-  z.object({
-    name: z.string().min(1, { message: "Please enter a name" }).optional(),
-    elementId: z.string().min(1, { message: "Please select an element" }).optional(),
-  }),
-)
 
 export const taskRouter = createTRPCRouter({
   timeline: protectedProcedure
@@ -111,7 +105,7 @@ export const taskRouter = createTRPCRouter({
     }
   }),
   update: protectedProcedure
-    .input(updateSchema.merge(z.object({ id: z.string() })))
+    .input(taskSchema.partial().merge(z.object({ id: z.string() })))
     .mutation(({ ctx, input: { id, ...data } }) => {
       const date = data.date ? dayjs(data.date).startOf("d").add(12, "hours").toDate() : data.date
       return ctx.prisma.task.update({ where: { id }, select: timelineTaskFields, data: { ...data, date } })

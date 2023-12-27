@@ -60,9 +60,6 @@ importers:
       '@trpc/react-query':
         specifier: ^10.9.0
         version: 10.44.1(@tanstack/react-query@4.36.1)(@trpc/client@10.44.1)(@trpc/server@10.44.1)(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/server':
-        specifier: ^10.9.0
-        version: 10.44.1
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -75,6 +72,9 @@ importers:
       expo-application:
         specifier: ~5.3.1
         version: 5.3.1(expo@49.0.21)
+      expo-blur:
+        specifier: ~12.4.1
+        version: 12.4.1(expo@49.0.21)
       expo-constants:
         specifier: ~14.4.2
         version: 14.4.2(expo@49.0.21)
@@ -10242,6 +10242,14 @@ packages:
     transitivePeerDependencies:
       - expo
       - supports-color
+    dev: false
+
+  /expo-blur@12.4.1(expo@49.0.21):
+    resolution: {integrity: sha512-lGN8FS9LuGUlEriULTC62cCWyg5V7zSVQeJ6Duh1wSq8aAETinZ2/7wrT6o+Uhd/XVVxFNON2T25AGCOtMG6ew==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 49.0.21(@babel/core@7.23.6)
     dev: false
 
   /expo-constants@14.4.2(expo@49.0.21):

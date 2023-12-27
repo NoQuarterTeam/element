@@ -3,7 +3,7 @@ import { BiMessage } from "react-icons/bi"
 import { RiBug2Line, RiLightbulbLine } from "react-icons/ri"
 import { FeedbackType } from "@element/database/types"
 import type { ActionFunctionArgs } from "@remix-run/node"
-import { json, redirect } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import { useActionData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
 import { z } from "zod"
@@ -15,7 +15,7 @@ import { Textarea } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
-import { badRequest } from "~/lib/remix"
+import { badRequest, redirect } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
 import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
@@ -39,9 +39,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           where: { creatorId: { equals: user.id }, createdAt: { gte: dayjs().startOf("d").toDate() } },
         })
         if (feedbackCount >= 10) {
-          return redirect("/timeline", {
-            headers: {
-              "Set-Cookie": await createFlash(FlashType.Error, "Too many feedback requests in one day."),
+          return redirect("/timeline", request, {
+            flash: {
+              type: "error",
+              title: "Too many feedback requests in one day.",
             },
           })
         }
@@ -51,14 +52,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         })
         return json({ feedback })
       } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Error creating feedback") },
-        })
+        return badRequest(e.message)
       }
     default:
-      return badRequest("Invalid action", {
-        headers: { "Set-Cookie": await createFlash(FlashType.Error, "Invalid action") },
-      })
+      return badRequest("Invalid action")
   }
 }
 
