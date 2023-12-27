@@ -12,20 +12,20 @@ import {
   RiUser3Line,
 } from "react-icons/ri"
 import { Role } from "@element/database/types"
-import { join,useDisclosure } from "@element/shared"
+import { join, useDisclosure } from "@element/shared"
 import { useFetcher, useLocation, useNavigate, useSubmit } from "@remix-run/react"
 
 import { useEventListener } from "~/lib/hooks/useEventListener"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
-import { useMe } from "~/pages/_app"
 
 import { useTheme } from "../lib/theme"
 import { ShortcutsInfo } from "./ShortcutsInfo"
 import { IconButton } from "./ui/IconButton"
 import { Modal } from "./ui/Modal"
 import { Tooltip } from "./ui/Tooltip"
+import { useMe } from "~/lib/hooks/useUser"
 
 export function Nav() {
   const shortcutModalProps = useDisclosure()

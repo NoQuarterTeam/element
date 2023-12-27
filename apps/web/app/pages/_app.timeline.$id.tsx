@@ -46,7 +46,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const task = await db.task.findFirst({ where: { id: taskId, creatorId: { equals: user.id } } })
 
   if (!task) return badRequest("Task not found")
-  const { createFlash } = await getFlashSession(request)
   switch (action) {
     case TaskActionMethods.UpdateTask:
       try {

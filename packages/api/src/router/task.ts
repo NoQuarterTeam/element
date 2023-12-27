@@ -7,6 +7,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc"
 const timelineTaskFields = {
   id: true,
   isComplete: true,
+  isImportant: true,
   description: true,
   durationHours: true,
   durationMinutes: true,
@@ -25,6 +26,7 @@ const taskSchema = z.object({
   elementId: z.string().min(1, { message: "Please select an element" }),
   date: nullableString,
   isComplete: z.boolean().optional(),
+  isImportant: z.boolean().optional(),
   description: nullableString,
   startTime: nullableString,
   durationHours: nullableNumber,

@@ -22,8 +22,8 @@ import { SCROLL_DAYS_BACK, SCROLL_DAYS_FORWARD, useTimelineScrollDays } from "~/
 import { DATE_BACK, DATE_FORWARD, useTimelineTaskDates } from "~/lib/hooks/useTimelineTaskDates"
 import { TASK_CACHE_KEY } from "~/lib/hooks/useTimelineTasks"
 
-import { useMe } from "./_app"
 import type { TimelineTask } from "./api+/tasks"
+import { useMe } from "~/lib/hooks/useUser"
 
 dayjs.extend(advancedFormat)
 

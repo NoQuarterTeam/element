@@ -45,7 +45,6 @@ export enum ProfileBillingMethods {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
-  const { createFlash } = await getFlashSession(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ProfileBillingMethods | undefined
   switch (action) {

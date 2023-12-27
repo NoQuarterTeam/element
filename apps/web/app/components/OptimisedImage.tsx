@@ -15,7 +15,7 @@ export const transformImageSrc = (
   options: { width: number; height: number; quality?: number; fit?: Fit },
 ) =>
   src
-    ? "/api/image/?src=" +
+    ? "/api/image?src=" +
       encodeURIComponent(src) +
       `&width=${options.width || ""}&height=${options.height || ""}&quality=${options.quality || ""}&fit=${
         options.fit || "cover"

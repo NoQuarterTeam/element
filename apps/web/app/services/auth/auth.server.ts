@@ -19,6 +19,7 @@ const userSelectFields = {
   firstName: true,
   lastName: true,
   avatar: true,
+  verifiedAt: true,
   role: true,
   stripeCustomerId: true,
   stripeSubscriptionId: true,
@@ -46,4 +47,4 @@ export async function getMaybeUser<T extends Prisma.UserSelect>(request: Request
   if (!user) return null
   return user as unknown as Prisma.UserGetPayload<{ select: T }>
 }
-export type MayubeUser = Await<typeof getMaybeUser>
+export type MaybeUser = Await<typeof getMaybeUser>

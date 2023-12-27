@@ -43,7 +43,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const action = formData.get("_action") as ElementsActionMethods | undefined
 
-  const { createFlash } = await getFlashSession(request)
   switch (action) {
     case ElementsActionMethods.CreateElement:
       try {

@@ -10,7 +10,6 @@ import { db } from "~/lib/db.server"
 import { getFormDataArray, validateFormData } from "~/lib/form"
 import { badRequest, redirect } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
-import { getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
@@ -49,7 +48,7 @@ export enum TasksActionMethods {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
   const formData = await request.formData()
-  const { createFlash } = await getFlashSession(request)
+
   const action = formData.get("_action") as TasksActionMethods | undefined
 
   switch (action) {

@@ -6,7 +6,6 @@ import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
-import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export enum ElementActionMethods {
   UpdateElement = "updateElement",
@@ -21,7 +20,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (!elementId) throw badRequest("Element ID is required")
   const element = await db.element.findFirst({ where: { id: elementId, creatorId: { equals: user.id } } })
   if (!element) throw badRequest("Element not found")
-  const { createFlash } = await getFlashSession(request)
   switch (action) {
     case ElementActionMethods.UpdateElement:
       try {

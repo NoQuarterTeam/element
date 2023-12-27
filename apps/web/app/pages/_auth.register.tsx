@@ -1,12 +1,12 @@
 import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node"
-import { redirect } from "@remix-run/node"
+
 import { Link } from "@remix-run/react"
 import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
-import { badRequest } from "~/lib/remix"
+import { badRequest, redirect } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { hashPassword } from "~/services/auth/password.server"
 import { generateFakeUser } from "~/services/auth/temporary-account.server"
@@ -33,7 +33,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const action = formData.get("_action") as RegisterActionMethods | undefined
 
-  const { createFlash } = await getFlashSession(request)
   switch (action) {
     case RegisterActionMethods.Register:
       try {
@@ -59,23 +58,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         await createTemplates(user.id)
         const { setUser } = await getUserSession(request)
         await sendEmailVerification(user)
-        const { createFlash } = await getFlashSession(request)
-        const headers = new Headers([
-          ["Set-Cookie", await setUser(user.id)],
-          [
-            "Set-Cookie",
-            await createFlash(
-              FlashType.Info,
-              `Welcome to Element, ${data.firstName}!`,
-              "Check your emails to verify your account.",
-            ),
-          ],
-        ])
-        return redirect("/timeline", { headers })
-      } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Register error") },
+
+        const headers = new Headers([["Set-Cookie", await setUser(user.id)]])
+        return redirect("/timeline", request, {
+          flash: {
+            title: "Welcome to Element, " + data.firstName,
+            description: "Check your emails to verify your account.",
+          },
+          headers,
         })
+      } catch (e: any) {
+        return badRequest(e.message)
       }
     case RegisterActionMethods.RegisterTemporay:
       try {
@@ -88,23 +81,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const user = await db.user.create({ data: { ...data, stripeCustomerId: stripeCustomer.id } })
         await createTemplates(user.id)
         const { setUser } = await getUserSession(request)
-        const { createFlash } = await getFlashSession(request)
-        const headers = new Headers([
-          ["Set-Cookie", await setUser(user.id)],
-          [
-            "Set-Cookie",
-            await createFlash(
-              FlashType.Info,
-              "Welcome to Element!",
-              "This is a temporary account, change your email to convert to a permanent account.",
-            ),
-          ],
-        ])
-        return redirect("/timeline", { headers })
-      } catch (e: any) {
-        return badRequest(e.message, {
-          headers: { "Set-Cookie": await createFlash(FlashType.Error, "Register error") },
+        const headers = new Headers([["Set-Cookie", await setUser(user.id)]])
+        return redirect("/timeline", request, {
+          flash: {
+            title: "Welcome to Element, " + data.firstName,
+            description: "This is a temporary account, change your email to convert to a permanent account.",
+          },
+          headers,
         })
+      } catch (e: any) {
+        return badRequest(e.message)
       }
 
     default:

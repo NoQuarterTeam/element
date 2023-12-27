@@ -9,14 +9,12 @@ import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Form, FormButton, FormError, FormField, ImageField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
+import { useMe, useMaybeUser } from "~/lib/hooks/useUser"
 import { badRequest, redirect } from "~/lib/remix"
 
 import { getCurrentUser } from "~/services/auth/auth.server"
-import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getUserSession } from "~/services/session/session.server"
 import { sendEmailVerification } from "~/services/user/user.mailer.server"
-
-import { useMe } from "./_app"
 
 export enum ProfileActionMethods {
   DeleteAcccount = "deleteAccount",
@@ -25,7 +23,6 @@ export enum ProfileActionMethods {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
-  const { createFlash } = await getFlashSession(request)
   const formData = await request.formData()
   const action = formData.get("_action") as ProfileActionMethods | undefined
   switch (action) {
@@ -78,6 +75,7 @@ export default function Account() {
   const logoutSubmit = useSubmit()
   const me = useMe()
   const verifyFetcher = useFetcher()
+
   return (
     <div className="stack">
       <p className="text-lg font-medium">Account</p>
@@ -97,7 +95,7 @@ export default function Account() {
           <FormField defaultValue={me.email} name="email" label="Email" />
           <FormField defaultValue={me.firstName} name="firstName" label="First name" />
           <FormField defaultValue={me.lastName} name="lastName" label="Last name" />
-          <ImageField defaultValue={me.avatar} className="sq-24 hidden text-center xl:flex" label="Avatar" name="avatar" />
+          <ImageField defaultValue={me.avatar} className="sq-24 text-center" label="Avatar" name="avatar" />
           <FormError />
           <ButtonGroup>
             <FormButton name="_action" value={ProfileActionMethods.UpdateProfile}>

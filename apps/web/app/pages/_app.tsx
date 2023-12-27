@@ -1,11 +1,10 @@
 import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { type ShouldRevalidateFunction, useRouteLoaderData } from "@remix-run/react"
-import { Outlet } from "@remix-run/react"
+import { Outlet, type ShouldRevalidateFunction } from "@remix-run/react"
 
 import { useHydrated } from "~/components/ui/ClientOnly"
 import { LoadingScreen } from "~/components/ui/LoadingScreen"
-import { type CurrentUser, getCurrentUser } from "~/services/auth/auth.server"
+import { getCurrentUser } from "~/services/auth/auth.server"
 
 export const shouldRevalidate: ShouldRevalidateFunction = ({ formAction }) => {
   if (!formAction) return false
@@ -21,8 +20,4 @@ export default function TimelineLayout() {
 
   if (!isHydrated) return <LoadingScreen />
   return <Outlet />
-}
-
-export function useMe() {
-  return useRouteLoaderData("pages/_app") as CurrentUser
 }

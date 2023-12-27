@@ -18,7 +18,7 @@ import * as Haptics from "expo-haptics"
 import { Link, router } from "expo-router"
 import { Calendar, Clock, Plus } from "lucide-react-native"
 
-import { join, safeReadableColor } from "@element/shared"
+import { formatDuration, join, safeReadableColor } from "@element/shared"
 
 import { Heading } from "../../../components/Heading"
 import { Icon } from "../../../components/Icon"
@@ -100,7 +100,7 @@ export default function Timeline() {
     // }
   })
 
-  const { isLoading, refetch } = api.task.timeline.useQuery({ daysBack, daysForward }, { staleTime: Infinity })
+  const { data, isLoading, refetch } = api.task.timeline.useQuery({ daysBack, daysForward }, { staleTime: Infinity })
 
   // TODO dynamic day height?
   // const maxTaskCountPerDay = React.useMemo(() => {
@@ -160,7 +160,7 @@ export default function Timeline() {
               )}
             />
           ))}
-          {!isLoading && <TasksGrid days={days} />}
+          {!isLoading && data && <TasksGrid days={days} />}
         </Animated.ScrollView>
       </Animated.ScrollView>
 
@@ -185,7 +185,7 @@ export default function Timeline() {
           </TouchableOpacity>
         </Link>
       </View>
-      {(!isLoaded || isLoading) && (
+      {(!isLoaded || (isLoading && !data)) && (
         <View
           style={{ height }}
           className="absolute left-0 right-0 top-0 flex items-center justify-center bg-white dark:bg-black"
@@ -288,7 +288,7 @@ function TaskItem({
   onDrop,
 }: {
   days: string[]
-  task: Omit<Tasks[number], "date"> & { date: string }
+  task: Task
   taskPositions: SharedValue<{ [key: string]: Task }>
   onDrop: () => void
 }) {
@@ -423,32 +423,52 @@ function TaskItem({
 
   const gesture = Gesture.Race(Gesture.Simultaneous(pan, longPress), tap)
 
-  const currentTask = taskPositions.value[task.id]!
+  const currentTask = taskPositions.value[task.id]
+  const isComplete = currentTask?.isComplete
   return (
     <Animated.View style={[{ width: DAY_WIDTH, height: TASK_HEIGHT, padding: 4 }, animatedStyles]}>
       <GestureDetector gesture={gesture}>
-        <Animated.View className="flex h-full flex-col justify-between overflow-hidden rounded border border-gray-100 bg-white dark:border-gray-900 dark:bg-gray-700">
-          <View className="relative">
-            <View className="p-1.5">
-              <Text
-                numberOfLines={2}
-                className="text-xs"
-                style={{ textDecorationLine: currentTask.isComplete ? "line-through" : undefined }}
-              >
+        <Animated.View
+          className={join(
+            "flex h-full flex-col justify-between overflow-hidden rounded border border-gray-100 bg-white dark:border-gray-900 dark:bg-gray-700",
+            task.isImportant && !isComplete && "border-primary-400 dark:border-primary-400 border-2",
+          )}
+        >
+          <View className="relative flex-1">
+            <View className="flex-1 px-1 pt-1">
+              <Text numberOfLines={2} className="text-xs" style={{ textDecorationLine: isComplete ? "line-through" : undefined }}>
                 {task.name}
               </Text>
+              {!isComplete && task.description && (
+                <View
+                  style={{ backgroundColor: task.element.color }}
+                  className="sq-1.5 absolute right-1 top-1 rounded-full opacity-70"
+                />
+              )}
+              {isComplete && <BlurView intensity={isComplete ? 6 : 0} className="absolute h-full w-full" />}
             </View>
-            {currentTask.isComplete && <BlurView intensity={currentTask.isComplete ? 6 : 0} className="absolute h-full w-full" />}
+
+            {!isComplete && (
+              <View className="flex flex-row items-end justify-between px-1 pb-1">
+                {task.durationHours || task.durationMinutes ? (
+                  <Text className="text-xxs">{formatDuration(task.durationHours, task.durationMinutes)}</Text>
+                ) : (
+                  <View />
+                )}
+                {task.startTime ? <Text className="text-xxs">{task.startTime}</Text> : <View />}
+              </View>
+            )}
           </View>
+
           <View
-            className="flex justify-center "
+            className="flex justify-center"
             style={{
               backgroundColor: task.element.color,
-              opacity: currentTask.isComplete ? 0.4 : 1,
-              height: currentTask.isComplete ? 6 : 14,
+              opacity: isComplete ? 0.4 : 1,
+              height: isComplete ? 6 : 14,
             }}
           >
-            {!currentTask.isComplete && (
+            {!isComplete && (
               <Text
                 style={{ fontSize: 10, opacity: 1, color: safeReadableColor(task.element.color) }}
                 numberOfLines={1}

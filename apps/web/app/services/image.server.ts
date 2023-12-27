@@ -7,6 +7,7 @@ import sharp from "sharp"
 import { deleteObject, getHead, uploadStream } from "@element/server-services"
 import { s3Url, srcWhitelist } from "@element/shared"
 import { LoaderFunctionArgs } from "@remix-run/node"
+import { IS_DEV } from "@element/server-env"
 
 const badImageBase64 = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 
@@ -30,7 +31,7 @@ export async function generateImage({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const src = url.searchParams.get("src")
   if (!src) return badImageResponse()
-  if (!srcWhitelist.some((s) => src.startsWith(s))) return badImageResponse()
+  if (!IS_DEV && !srcWhitelist.some((s) => src.startsWith(s))) return badImageResponse()
   try {
     const width = getIntOrNull(url.searchParams.get("width"))
     const height = getIntOrNull(url.searchParams.get("height"))

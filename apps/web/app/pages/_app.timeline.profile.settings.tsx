@@ -6,8 +6,8 @@ import { Switch } from "~/components/ui/Switch"
 
 import { useFeatures, useFeaturesSeen } from "~/lib/hooks/useFeatures"
 
-import { useMe } from "./_app"
 import { toast } from "sonner"
+import { useMe } from "~/lib/hooks/useUser"
 export const USER_LOCATION_COOKIE_KEY = "element.user.location"
 
 export default function Settings() {

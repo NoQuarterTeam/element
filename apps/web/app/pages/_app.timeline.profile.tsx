@@ -1,6 +1,6 @@
 import type * as React from "react"
 import { RiBankCard2Line, RiMap2Line, RiSettings2Line } from "react-icons/ri"
-import { join } from "@element/shared"
+import { createImageUrl, join } from "@element/shared"
 import { NavLink, Outlet, useNavigate, useNavigation } from "@remix-run/react"
 
 import { transformImageSrc } from "~/components/OptimisedImage"
@@ -8,8 +8,7 @@ import { Avatar } from "~/components/ui/Avatar"
 import { Modal } from "~/components/ui/Modal"
 import { Spinner } from "~/components/ui/Spinner"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
-import { createImageUrl } from "~/lib/s3"
-import { useMe } from "~/pages/_app"
+import { useMe } from "~/lib/hooks/useUser"
 
 export default function Profile() {
   const me = useMe()
@@ -42,7 +41,7 @@ export default function Profile() {
                 <div className="relative">
                   <RiSettings2Line className="sq-4" />
                   {!featuresSeen.find((u) => ["weather", "habits"].includes(u)) && (
-                    <div className="sq-1.5 absolute -top-[3px] -right-[3px] rounded-full bg-red-500" />
+                    <div className="sq-1.5 absolute -right-[3px] -top-[3px] rounded-full bg-red-500" />
                   )}
                 </div>
               }
@@ -75,7 +74,7 @@ function TabLink({ children, icon, to }: { to: string; children: string; icon: R
       {({ isActive }) => (
         <span
           className={join(
-            "flex h-10 items-center justify-center py-1 px-2 font-normal md:justify-start md:px-4",
+            "flex h-10 items-center justify-center px-2 py-1 font-normal md:justify-start md:px-4",
             isActive ? "bg-gray-75 dark:bg-gray-700" : "hover:bg-gray-75 dark:hover:bg-gray-700",
           )}
         >

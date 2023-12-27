@@ -11,12 +11,13 @@ import dayjs from "dayjs"
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 import { DATE_BACK } from "~/lib/hooks/useTimelineTaskDates"
-import { useMe } from "~/pages/_app"
+
 import type { TimelineHabitResponse } from "~/pages/api+/habits"
 import type { WeatherData } from "~/pages/api+/weather"
 
 import { Habits } from "./Habits"
 import { Spinner } from "./ui/Spinner"
+import { useMe } from "~/lib/hooks/useUser"
 
 export const HEADER_HEIGHT = 120
 
@@ -65,10 +66,10 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
         isHabitsEnabled ? "h-headerHabit" : "h-header",
       )}
     >
-      <img className="sq-8 absolute top-5 left-5" src="/logo.png" alt="logo" />
+      <img className="sq-8 absolute left-5 top-5" src="/logo.png" alt="logo" />
       {months.map(({ month, year }) => (
         <div key={`${month}${year}`}>
-          <div className="sticky left-12 flex w-max items-center pt-4 pl-4">
+          <div className="sticky left-12 flex w-max items-center pl-4 pt-4">
             <h3 className="text-3xl">{MONTH_NAMES[month]}</h3>
             {isLoading && <Spinner className="ml-4 mt-1" size="sm" />}
           </div>
@@ -140,7 +141,7 @@ function _HeaderDay(props: {
                       >
                         <p className="border-b border-gray-100 p-2 dark:border-gray-600">
                           {dayjs(props.day).format("dddd Do")} -{" "}
-                          {props.weather.description[0].toUpperCase() + props.weather.description.slice(1)}
+                          {props.weather.description[0]?.toUpperCase() + props.weather.description.slice(1)}
                         </p>
                         <div className="p-2">
                           <div className="grid grid-cols-2 gap-2">
