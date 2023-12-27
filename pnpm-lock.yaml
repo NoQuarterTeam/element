@@ -136,7 +136,7 @@ importers:
         specifier: ^14.0.1
         version: 14.0.1(@react-native-community/datetimepicker@7.2.0)(react-native@0.72.6)
       react-native-progress:
-        specifier: ^5.0.0
+        specifier: ^5.0.1
         version: 5.0.1(react-native-svg@13.9.0)
       react-native-reanimated:
         specifier: 3.3.0

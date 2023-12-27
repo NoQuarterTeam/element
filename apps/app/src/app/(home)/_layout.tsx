@@ -23,6 +23,8 @@ export default function HomeLayout() {
 
   const { data } = api.habit.progressCompleteToday.useQuery(undefined, { enabled: !!me && features.includes("habits") })
 
+  const progress = (data || 0) / 100
+
   return (
     <AuthProvider>
       <Tabs
@@ -40,31 +42,32 @@ export default function HomeLayout() {
           name="(timeline)"
           options={{
             tabBarIcon: (props) => <Icon icon={Home} size={22} color={!!props.focused && "primary"} />,
-            // tabBarLabel: "Timeline",
           }}
         />
         <Tabs.Screen
           name="habits"
           options={{
             href: !me || !features.includes("habits") ? null : undefined,
-            tabBarIcon: (props) => (
+            tabBarIcon: () => (
               <Progress.Circle
-                thickness={5}
-                size={32}
-                animated={false}
+                thickness={4}
+                size={26}
+                animated={true}
+                fill="white"
+                // strokeCap="round"
                 borderWidth={0}
-                progress={data}
-                // unfilledColor={unfilledColor}
-                color={colorScheme === "dark" ? colors.green[600] : colors.green[500]}
+                progress={progress === 1 ? 0.99999 : progress}
+                unfilledColor={
+                  progress === 0 ? (isDark ? colors.red[900] : colors.red[100]) : isDark ? colors.gray[800] : colors.gray[50]
+                }
+                color={isDark ? colors.green[600] : colors.green[500]}
               />
             ),
-            // tabBarLabel: "Habits",
           }}
         />
         <Tabs.Screen
           name="profile"
           options={{
-            // tabBarLabel: "Profile",
             tabBarIcon: (props) =>
               me?.avatar ? (
                 <OptimizedImage

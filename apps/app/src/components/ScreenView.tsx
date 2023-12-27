@@ -1,9 +1,11 @@
 import type * as React from "react"
-import { TouchableOpacity, useColorScheme, View } from "react-native"
-import Feather from "@expo/vector-icons/Feather"
+import { TouchableOpacity, View } from "react-native"
+
 import { Link, useRouter } from "expo-router"
 
 import { Heading } from "./Heading"
+import { Icon } from "./Icon"
+import { ChevronLeft } from "lucide-react-native"
 
 interface Props {
   title: string
@@ -11,7 +13,6 @@ interface Props {
 }
 
 export function ScreenView(props: Props) {
-  const colorScheme = useColorScheme()
   const router = useRouter()
   const canGoBack = router.canGoBack()
   return (
@@ -19,11 +20,11 @@ export function ScreenView(props: Props) {
       <View className="flex flex-row items-center space-x-2">
         {canGoBack ? (
           <Link href="../" className="mb-1 p-2" asChild>
-            <Feather name="chevron-left" size={24} color={colorScheme === "dark" ? "white" : "black"} />
+            <Icon icon={ChevronLeft} size={24} />
           </Link>
         ) : (
           <TouchableOpacity onPress={() => router.replace("/")} className="mb-1 p-2">
-            <Feather name="chevron-left" size={24} color={colorScheme === "dark" ? "white" : "black"} />
+            <Icon icon={ChevronLeft} size={24} />
           </TouchableOpacity>
         )}
 
