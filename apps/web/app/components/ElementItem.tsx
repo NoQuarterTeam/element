@@ -32,6 +32,7 @@ import { Modal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
 import { Spinner } from "./ui/Spinner"
 import { toast } from "sonner"
+import { ActionDataErrorResponse } from "~/lib/form.server"
 
 const MAX_DEPTH = 2
 
@@ -59,9 +60,9 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
   }, [navigation, createModalProps])
 
   const updateModalProps = useDisclosure()
-  const updateFetcher = useFetcher<{ element: { id: string } }>()
+  const updateFetcher = useFetcher<ActionDataErrorResponse<any> | { success: true }>()
   React.useEffect(() => {
-    if (updateFetcher.state !== "idle" && updateFetcher.data?.element) {
+    if (updateFetcher.state !== "idle" && updateFetcher.data?.success) {
       refetch()
       updateModalProps.onClose()
     }
@@ -84,9 +85,9 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
     }
   }, [unarchiveFetcher.data, unarchiveFetcher.state, refetch])
 
-  const moveFetcher = useFetcher<{ element: { id: string } | { fieldErrors: any } }>()
+  const moveFetcher = useFetcher<ActionDataErrorResponse<any> | { success: true }>()
   React.useEffect(() => {
-    if (moveFetcher.state !== "idle" && moveFetcher.data?.element) {
+    if (moveFetcher.state !== "idle" && moveFetcher.data?.success) {
       moveModalProps.onClose()
     }
   }, [moveFetcher.data, moveFetcher.state])
@@ -220,7 +221,10 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
         <Modal title="Move element to parent" size="xl" {...moveModalProps}>
           <moveFetcher.Form method="post" action={`/api/elements/${element.id}`}>
             <div className="stack min-h-[200px] p-4">
-              <MoveFormElementInput error={moveFetcher.data?.fieldErrors?.parentId} elementId={element.id} />
+              <MoveFormElementInput
+                error={!moveFetcher.data?.success && moveFetcher.data?.fieldErrors?.parentId}
+                elementId={element.id}
+              />
               <FormError />
               <ButtonGroup>
                 <Button variant="ghost" onClick={moveModalProps.onClose}>
@@ -247,7 +251,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
           >
             <div className="stack p-4">
               <InlineFormField
-                errors={updateFetcher.data?.fieldErrors?.name}
+                errors={!updateFetcher.data?.success && updateFetcher.data?.fieldErrors?.name}
                 autoFocus
                 defaultValue={element.name}
                 name="name"
@@ -257,12 +261,12 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
               <InlineFormField
                 name="color"
                 required
-                errors={updateFetcher.data?.fieldErrors?.color}
+                errors={!updateFetcher.data?.success && updateFetcher.data?.fieldErrors?.color}
                 label="Color"
                 shouldPassProps={false}
                 input={<ColorInput name="color" value={editColor} setValue={setEditColor} />}
               />
-              <FormError error={updateFetcher.data?.formError} />
+              <FormError error={!updateFetcher.data?.success && updateFetcher.data?.formError} />
               <ButtonGroup>
                 <Button variant="ghost" onClick={updateModalProps.onClose}>
                   Cancel
@@ -322,7 +326,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
   )
 }
 
-function MoveFormElementInput({ elementId, error }: { elementId: string; error: string | string[] | undefined }) {
+function MoveFormElementInput({ elementId, error }: { elementId: string; error: false | string | string[] | undefined }) {
   const { data: elements, isLoading } = useQuery(
     ["task-elements"],
     async () => {
@@ -344,6 +348,8 @@ function MoveFormElementInput({ elementId, error }: { elementId: string; error: 
       errors={error}
       input={
         <Singleselect
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           formatOptionLabel={(option) => (
             <div className="hstack">
               <div className="sq-4 rounded-full" style={{ background: option.color }} />

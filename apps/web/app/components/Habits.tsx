@@ -16,6 +16,7 @@ import { FormButton, FormError, FormField } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
 import { Checkbox } from "./ui/Inputs"
 import { Tooltip } from "./ui/Tooltip"
+import { type Habit } from "@element/database/types"
 
 interface Props {
   habits: TimelineHabit[]
@@ -66,14 +67,14 @@ function _Habits({ habits, day, habitEntries }: Props) {
               <CloseButton />
             </Popover.Close>
           </div>
-          <div className="stack space-y-1 py-2 px-3">
+          <div className="stack space-y-1 px-3 py-2">
             {dayHabits.length === 0 ? (
               <p className="py-2 text-sm">No habits yet!</p>
             ) : (
               dayHabits.map((habit) => <HabitItem key={habit.id} habit={habit} habitEntries={habitEntries} day={day} />)
             )}
           </div>
-          <div className="flex justify-end border-t border-gray-100 py-2 px-3 dark:border-gray-600">
+          <div className="flex justify-end border-t border-gray-100 px-3 py-2 dark:border-gray-600">
             <Popover.Root open={newFormProps.isOpen} onOpenChange={newFormProps.onSetIsOpen}>
               <Popover.Anchor>
                 <Popover.Trigger asChild>
@@ -92,7 +93,7 @@ function _Habits({ habits, day, habitEntries }: Props) {
                       <CloseButton onClick={newFormProps.onClose} />
                     </Popover.Close>
                   </div>
-                  <div className="py-2 px-3">
+                  <div className="px-3 py-2">
                     <HabitForm onClose={newFormProps.onClose} day={day} />
                   </div>
                 </Popover.Content>
@@ -108,9 +109,9 @@ function _Habits({ habits, day, habitEntries }: Props) {
 function HabitForm(props: { onClose: () => void; day: string }) {
   const client = useQueryClient()
 
-  const createFetcher = useFetcher()
+  const createFetcher = useFetcher<{ habit: Habit }>()
   React.useEffect(() => {
-    if (createFetcher.type === "actionReload" && createFetcher.data?.habit) {
+    if (createFetcher.state !== "idle" && createFetcher.data?.habit) {
       const res = client.getQueryData<TimelineHabitResponse>(["habits"])
       if (!res) return
       client.setQueryData<TimelineHabitResponse>(["habits"], {
@@ -119,9 +120,9 @@ function HabitForm(props: { onClose: () => void; day: string }) {
       })
       props.onClose()
     }
-  }, [createFetcher.type, createFetcher.data])
+  }, [createFetcher.state, createFetcher.data])
   return (
-    <createFetcher.Form action="/api/habits" replace method="post">
+    <createFetcher.Form action="/api/habits" method="post">
       <div className="stack">
         <FormField required autoFocus name="name" />
         <input type="hidden" value={props.day} name="date" />
@@ -214,7 +215,7 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
             <Popover.Content side="right">
               <Popover.Arrow />
 
-              <div className="flex justify-between border-b border-gray-100 py-2 px-3 dark:border-gray-600">
+              <div className="flex justify-between border-b border-gray-100 px-3 py-2 dark:border-gray-600">
                 <p>Archive habit</p>
                 <Popover.Close asChild>
                   <CloseButton />

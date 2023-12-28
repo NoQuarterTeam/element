@@ -1,6 +1,7 @@
-import Select, { type ClassNamesConfig, type GroupBase } from "react-select"
+import Select, { type ClassNamesConfig, type GroupBase, MultiValueGenericProps } from "react-select"
+
 import Creatable from "react-select/creatable"
-import type { StateManagerProps } from "react-select/dist/declarations/src/stateManager"
+
 import { join } from "@element/shared"
 
 import { ClientOnly } from "./ClientOnly"
@@ -11,8 +12,9 @@ type Option = {
   value: string
   [key: string]: string | number
 }
-interface Props extends StateManagerProps<Option, true, GroupBase<Option>> {
+interface Props extends MultiValueGenericProps<Option, true, GroupBase<Option>> {
   onChange?: any
+  name: string
 }
 
 const classNames: ClassNamesConfig<Option> = {
@@ -43,7 +45,7 @@ const classNames: ClassNamesConfig<Option> = {
 
 const Fallback = <div className={join(inputStyles(), inputSizeStyles())} />
 
-export function Multiselect(props: Props) {
+export function Multiselect(props: any) {
   return (
     <ClientOnly fallback={Fallback}>
       {() => (
@@ -52,21 +54,22 @@ export function Multiselect(props: Props) {
           blurInputOnSelect={false}
           closeMenuOnSelect={false}
           isMulti={true}
-          name={props.name}
           classNames={classNames}
           instanceId={props.name}
           inputId={props.name}
           {...props}
+          name={props.name}
         />
       )}
     </ClientOnly>
   )
 }
 
-interface SingleProps extends StateManagerProps<Option, false> {
-  onChange?: any
-}
-export function Singleselect(props: SingleProps) {
+// interface SingleProps extends SelectProps<Option, false> {
+//   onChange?: any
+//   name?: string
+// }
+export function Singleselect(props: any) {
   return (
     <ClientOnly fallback={Fallback}>
       {() => (
@@ -93,12 +96,12 @@ export function CreatableSelect(props: Props) {
           unstyled
           blurInputOnSelect={false}
           closeMenuOnSelect={false}
-          name={props.name}
           instanceId={props.name}
           inputId={props.name}
           isMulti={true}
           classNames={classNames}
           {...props}
+          name={props.name}
         />
       )}
     </ClientOnly>

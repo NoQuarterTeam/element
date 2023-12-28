@@ -1,18 +1,15 @@
-import { extendTailwindMerge, getDefaultConfig, mergeConfigs } from "tailwind-merge"
-import { twJoin } from "tailwind-merge"
-import type { ClassNameValue } from "tailwind-merge/dist/lib/tw-join"
+import { type ClassNameValue, extendTailwindMerge, getDefaultConfig, twJoin } from "tailwind-merge"
 
-const customTwMerge = extendTailwindMerge(() => {
-  const config = getDefaultConfig()
-
-  return mergeConfigs(config, {
+const config = getDefaultConfig()
+const customTwMerge = extendTailwindMerge<"square">({
+  override: {
     classGroups: {
       square: [{ sq: config.theme.space }],
     },
     conflictingClassGroups: {
       square: ["w", "h"],
     },
-  })
+  },
 })
 
 export const merge = (...args: ClassNameValue[]) => customTwMerge(args)

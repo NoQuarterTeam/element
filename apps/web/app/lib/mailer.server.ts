@@ -1,27 +1,20 @@
 import { render } from "@react-email/render"
 import nodemailer from "nodemailer"
-import { type CreateEmailOptions } from "resend/build/src/emails/interfaces"
+import type { CreateEmailOptions } from "resend/build/src/emails/interfaces"
 
-import { resend } from "./resend.server"
 import { IS_PRODUCTION } from "@element/server-env"
 
-// DEV EMAIL
-export const DEV_EMAIL_OPTIONS: any = {
-  host: "localhost",
-  port: 1025,
-  secure: false,
-  debug: true,
-  ignoreTLS: true,
-}
+import { resend } from "./resend.server"
 
-type Props = CreateEmailOptions & { react: NonNullable<CreateEmailOptions["react"]> }
+type Props = Omit<CreateEmailOptions, "from"> & { react: React.ReactElement<unknown>; from?: string }
 class Mailer {
   async send(args: Props) {
     try {
+      const from = args.from || "info@noquarter.co"
       if (IS_PRODUCTION) {
-        await resend.sendEmail(args)
+        await resend.emails.send({ ...args, from, text: args.text || "" })
       } else {
-        await this.sendDev(args)
+        await this.sendDev({ ...args, from })
       }
     } catch (err) {
       // Sentry.captureException(err)
@@ -30,7 +23,7 @@ class Mailer {
   }
 
   private async sendDev(args: Props) {
-    const devMail = nodemailer.createTransport(DEV_EMAIL_OPTIONS)
+    const devMail = nodemailer.createTransport({ host: "localhost", port: 1025, secure: false, debug: true, ignoreTLS: true })
     const html = render(args.react, { pretty: true })
     const text = render(args.react, { plainText: true })
     return devMail.sendMail({ ...args, html, text })

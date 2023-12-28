@@ -49,7 +49,7 @@ interface FormFieldProps extends InputProps {
   label?: string
   input?: React.ReactElement
   defaultValue?: any
-  errors?: string | string[] | null
+  errors?: string | string[] | null | false
   shouldPassProps?: boolean
 }
 
@@ -181,7 +181,7 @@ export function ImageField(props: ImageFieldProps) {
   )
 }
 
-export function FormError({ error }: { error?: string }) {
+export function FormError({ error }: { error?: string | false }) {
   const form = useActionData<ActionData<any>>()
   if (!form?.formError && !error) return null
   return <FormFieldError id="form-error">{form?.formError || error}</FormFieldError>

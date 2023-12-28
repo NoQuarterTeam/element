@@ -10,9 +10,9 @@ export function getOrderBy(orderBy: string, order: string) {
   const result = object
   const arr = orderBy.split(".")
   for (let i = 0; i < arr.length - 1; i++) {
-    object = object[arr[i]] = {}
+    object = object[arr[i]!] = {}
   }
-  object[arr[arr.length - 1]] = order
+  object[arr[arr.length - 1]!] = order
   return result
 }
 

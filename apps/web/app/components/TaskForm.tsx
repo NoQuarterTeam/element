@@ -25,6 +25,7 @@ import { Checkbox, Input, Select, Textarea } from "./ui/Inputs"
 import { Modal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
 import { Tooltip } from "./ui/Tooltip"
+import { ActionDataErrorResponse } from "~/lib/form.server"
 
 type FieldErrors = {
   [Property in keyof TimelineTask]: string[]
@@ -129,8 +130,10 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
   const elementModalProps = useDisclosure()
 
   const client = useQueryClient()
-  const createElementFetcher = useFetcherSubmit<{ element: Element }>({
-    onSuccess: ({ element: createdElement }) => {
+  const createElementFetcher = useFetcherSubmit<ActionDataErrorResponse<any> | { success: true; element: Element }>({
+    onSuccess: (res) => {
+      if (!res.success) return
+      const { element: createdElement } = res
       if (!createdElement) return
       const taskElements = client.getQueryData<Element[]>(["task-elements"])
       client.setQueryData(["task-elements"], [createdElement, ...(taskElements || [])])
@@ -188,7 +191,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
               <Singleselect
                 value={element}
                 onChange={setElement}
-                formatOptionLabel={(option) => (
+                formatOptionLabel={(option: any) => (
                   <div className="hstack">
                     <div className="sq-4 rounded-full" style={{ background: option.color }} />
                     <p>{option.label}</p>
@@ -202,7 +205,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             Create
           </Button>
           <Modal title="Create an Element" size="lg" {...elementModalProps}>
-            <createElementFetcher.Form replace method="post" action="/timeline/elements">
+            <createElementFetcher.Form method="post" action="/timeline/elements">
               <div className="stack p-4">
                 <InlineFormField
                   autoFocus
@@ -210,13 +213,13 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                   label="Name"
                   size="sm"
                   required
-                  errors={createElementFetcher.data?.fieldErrors?.name}
+                  errors={!createElementFetcher.data?.success && createElementFetcher.data?.fieldErrors?.name}
                 />
 
                 <InlineFormField
                   name="color"
                   required
-                  errors={createElementFetcher.data?.fieldErrors?.color}
+                  errors={!createElementFetcher.data?.success && createElementFetcher.data?.fieldErrors?.color}
                   label="Color"
                   shouldPassProps={false}
                   input={<ColorInput name="color" value={color} setValue={setColor} />}
@@ -312,14 +315,18 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             name="repeat"
             label="Repeat"
             shouldPassProps={false}
-            errors={createUpdateFetcher.data?.fieldErrors?.repeat || createUpdateFetcher.data?.fieldErrors?.repeatEndDate}
+            errors={
+              !createElementFetcher.data?.success
+                ? createUpdateFetcher.data?.fieldErrors?.repeat || (createUpdateFetcher.data?.fieldErrors as any)?.repeatEndDate
+                : undefined
+            }
             input={
               <div className="stack w-full">
                 <Select id="repeat" name="repeat" value={repeat || ""} onChange={(e) => setRepeat(e.target.value as TaskRepeat)}>
                   <option value="">Doesn't repeat</option>
                   {Object.keys(TaskRepeat).map((key) => (
                     <option key={key} value={key}>
-                      {key.toLowerCase()[0].toUpperCase() + key.toLowerCase().slice(1)}
+                      {key.toLowerCase()[0]!.toUpperCase() + key.toLowerCase().slice(1)}
                     </option>
                   ))}
                 </Select>

@@ -52,11 +52,11 @@ export const getFormDataArray = (formData: FormData, field: string) =>
     .reduce(
       (acc, [key, value]) => {
         const [prefix, name] = key.split(".")
-        const match = prefix.match(/\[(\d+)\]$/)
+        const match = prefix!.match(/\[(\d+)\]$/)
         const id = match ? Number(match[1]) : 0
         acc[id] = {
           ...acc[id],
-          [name]: value as string | undefined,
+          [name!]: value as string | undefined,
         }
         return acc
       },

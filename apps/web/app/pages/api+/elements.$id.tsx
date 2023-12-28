@@ -31,7 +31,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
         const updatedElement = await db.element.update({ where: { id: elementId }, data })
-        return json({ element: updatedElement })
+        return json({ element: updatedElement, success: true })
       } catch (e: any) {
         return badRequest(e.message)
       }
