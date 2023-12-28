@@ -15,7 +15,6 @@ export function OnboardingCheck() {
       animationType="slide"
       presentationStyle="formSheet"
       visible={!hasSeenOnboarding}
-      // visible={true}
       onRequestClose={onClose}
       onDismiss={onClose}
     >
