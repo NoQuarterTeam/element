@@ -11,7 +11,7 @@ import { Icon } from "./Icon"
 interface Props {
   title?: string
   onBack?: () => void
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 export function ModalView(props: Props) {
@@ -19,7 +19,7 @@ export function ModalView(props: Props) {
 
   const canGoBack = router.canGoBack()
   return (
-    <View className={join("h-full bg-white px-4 dark:bg-black", canGoBack ? "pt-6" : "pt-16")}>
+    <View className={join("h-full bg-white px-4 dark:bg-black", props.onBack || canGoBack ? "pt-6" : "pt-16")}>
       <View className="flex flex-row justify-between">
         {props.title ? <Heading className="text-3xl">{props.title}</Heading> : <Text />}
 

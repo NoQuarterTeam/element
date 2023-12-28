@@ -29,6 +29,7 @@ import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
 import { BlurView } from "expo-blur"
 import { useMe } from "../../../lib/hooks/useMe"
 import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
+import { OnboardingCheck } from "../../../components/OnboardingCheck"
 
 dayjs.extend(advancedFormat)
 
@@ -119,6 +120,7 @@ export default function Timeline() {
 
   return (
     <View className="flex-1 pt-16">
+      <OnboardingCheck />
       <Animated.View className="flex flex-row" style={{ transform: [{ translateX: headerTranslateX }] }}>
         {months.map(({ month, year, width }, i) => {
           // left start is the sum of all previous months' widths

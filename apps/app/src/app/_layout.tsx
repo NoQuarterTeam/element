@@ -38,7 +38,7 @@ export default function RootLayout() {
           <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
             <SafeAreaProvider>
               <View className="flex-1 bg-white dark:bg-black">
-                <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor } }}>
+                <Stack initialRouteName="(home)" screenOptions={{ headerShown: false, contentStyle: { backgroundColor } }}>
                   <Stack.Screen name="(home)" />
                   <Stack.Screen name="(auth)" options={{ presentation: "modal" }} />
                 </Stack>
