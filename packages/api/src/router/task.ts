@@ -54,13 +54,15 @@ export const taskRouter = createTRPCRouter({
       const groupedTasks = tasks.reduce<{ [key: string]: (typeof tasks)[number][] }>((acc, task) => {
         const date = dayjs(task.date).format("YYYY-MM-DD")
         if (!acc[date]) acc[date] = []
-        acc[date].push(task)
+        acc[date]?.push(task)
         return acc
       }, {})
       return tasks.map((task) => ({
         ...task,
         // get real order in case there are gaps created by deleted tasks or similar orders after a duplicate
-        order: task.date ? groupedTasks[dayjs(task.date).format("YYYY-MM-DD")].findIndex((t) => t.id === task.id) : task.order,
+        order: task.date
+          ? groupedTasks[dayjs(task.date).format("YYYY-MM-DD")]!.findIndex((t) => t.id === task.id) || 0
+          : task.order,
         date: dayjs(task.date).format("YYYY-MM-DD"),
       }))
     }),
