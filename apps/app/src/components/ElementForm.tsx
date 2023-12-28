@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ScrollView } from "react-native"
+import { View } from "react-native"
 import { FormInput } from "./FormInput"
 import { Button } from "./Button"
 import ColorPicker, { HueSlider, Panel1, Preview } from "reanimated-color-picker"
@@ -24,7 +24,7 @@ export function ElementForm(props: Props) {
     color: props.element?.color || randomHexColor(),
   })
   return (
-    <ScrollView className="space-y-2">
+    <View className="space-y-2">
       <FormInput label="Name" value={form.name} onChangeText={(name) => setForm({ ...form, name })} />
       <ColorPicker value={form.color} onChange={({ hex }) => setForm((f) => ({ ...f, color: hex }))}>
         <Preview hideInitialColor />
@@ -37,6 +37,6 @@ export function ElementForm(props: Props) {
       >
         Save
       </Button>
-    </ScrollView>
+    </View>
   )
 }

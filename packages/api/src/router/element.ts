@@ -6,11 +6,18 @@ const elementSchema = z.object({
   name: z.string(),
   color: z.string(),
   parentId: z.string().optional(),
+  archivedAt: z.date().optional(),
 })
 
 export const elementRouter = createTRPCRouter({
   all: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.element.findMany({ where: { creatorId: { equals: ctx.user.id } } })
+    return ctx.prisma.element.findMany({
+      where: { creatorId: { equals: ctx.user.id }, archivedAt: null },
+      orderBy: { createdAt: "desc" },
+    })
+  }),
+  byId: protectedProcedure.input(z.object({ id: z.string() })).query(({ ctx, input }) => {
+    return ctx.prisma.element.findUnique({ where: { id: input.id, creatorId: { equals: ctx.user.id } } })
   }),
   create: protectedProcedure.input(elementSchema).mutation(({ ctx, input }) => {
     return ctx.prisma.element.create({ data: { ...input, creatorId: ctx.user.id } })

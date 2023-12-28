@@ -5,7 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker"
 
 import dayjs from "dayjs"
 import { useGlobalSearchParams, useRouter } from "expo-router"
-import ColorPicker, { HueSlider, Panel1 } from "reanimated-color-picker"
+import ColorPicker, { HueSlider, Panel1, Preview } from "reanimated-color-picker"
 
 import { join, randomHexColor, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
@@ -160,7 +160,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
         >
           <ModalView title="Select element" onBack={elementModalProps.onClose}>
             <ScrollView contentContainerStyle={{ paddingBottom: 100, paddingTop: 0 }} showsVerticalScrollIndicator={false}>
-              <View className="space-y-2">
+              <View className="space-y-1 pt-2">
                 {data?.map((element) => (
                   <TouchableOpacity
                     key={element.id}
@@ -284,18 +284,15 @@ function ElementForm({
       </View>
       <View>
         <FormInputLabel label="Color" />
-        <ColorPicker
-          style={{ width: "100%" }}
-          value={elementForm.color}
-          onComplete={(color) => setElementForm((f) => ({ ...f, color: color.hex }))}
-        >
+        <ColorPicker value={elementForm.color} onChange={(color) => setElementForm((f) => ({ ...f, color: color.hex }))}>
+          <Preview hideInitialColor />
           <Panel1 />
           <HueSlider />
         </ColorPicker>
       </View>
       <View>
-        <Button onPress={() => onCreate(elementForm)} disabled={isLoading}>
-          {isLoading ? "Creating..." : "Create"}
+        <Button isLoading={isLoading} onPress={() => onCreate(elementForm)} disabled={isLoading}>
+          Create
         </Button>
       </View>
     </View>

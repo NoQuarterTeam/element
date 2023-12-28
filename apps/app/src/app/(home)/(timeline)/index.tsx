@@ -183,6 +183,7 @@ export default function Timeline() {
 }
 
 function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
+  const menuButtonRotate = useSharedValue(0)
   const [isMenuActive, setIsMenuActive] = React.useState(false)
   const backlogTranslateY = useSharedValue(120)
   const elementsTranslateY = useSharedValue(60)
@@ -196,14 +197,22 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
       elementsTranslateY.value = withTiming(60, { duration: 100 })
       backlogOpacity.value = withTiming(0, { duration: 100 })
       elementsOpacity.value = withTiming(0, { duration: 100 })
+      menuButtonRotate.value = withTiming(0, { duration: 100 })
     } else {
       setIsMenuActive(true)
       backlogTranslateY.value = withTiming(0, { duration: 100 })
       elementsTranslateY.value = withTiming(0, { duration: 100 })
       backlogOpacity.value = withTiming(1, { duration: 100 })
       elementsOpacity.value = withTiming(1, { duration: 100 })
+      menuButtonRotate.value = withTiming(90, { duration: 200 })
     }
   }
+
+  const menuButtonStyles = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: menuButtonRotate.value + "deg" }],
+    }
+  })
 
   return (
     <View className="absolute bottom-4 right-4 space-y-1">
@@ -222,12 +231,14 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
           </TouchableOpacity>
         </Link>
       </Animated.View>
-      <TouchableOpacity
-        onPress={onToggleMenu}
-        className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
-      >
-        <Icon icon={isMenuActive ? X : MoreVertical} size={24} />
-      </TouchableOpacity>
+      <Animated.View style={menuButtonStyles}>
+        <TouchableOpacity
+          onPress={onToggleMenu}
+          className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
+        >
+          <Icon icon={isMenuActive ? X : MoreVertical} size={24} />
+        </TouchableOpacity>
+      </Animated.View>
       <TouchableOpacity
         onPress={onScrollToToday}
         className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"

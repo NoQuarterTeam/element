@@ -6,7 +6,6 @@ import { Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold, Poppins_900Bl
 import { Slot, SplashScreen } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
-import { NewUpdate } from "../components/NewUpdate"
 import { useCheckExpoUpdates } from "../lib/hooks/useCheckExpoUpdates"
 import { TRPCProvider } from "../lib/utils/api"
 
@@ -21,7 +20,7 @@ export default function RootLayout() {
     Poppins_700Bold,
     Poppins_900Black,
   })
-  const { isDoneChecking, isNewUpdateAvailable } = useCheckExpoUpdates()
+  const { isDoneChecking } = useCheckExpoUpdates()
 
   const onLayoutRootView = React.useCallback(() => SplashScreen.hideAsync(), [])
 
@@ -32,7 +31,9 @@ export default function RootLayout() {
     <ActionSheetProvider>
       <TRPCProvider>
         <SafeAreaProvider onLayout={onLayoutRootView}>
-          <View className="flex-1 bg-white dark:bg-black">{isNewUpdateAvailable ? <NewUpdate /> : <Slot />}</View>
+          <View className="flex-1 bg-white dark:bg-black">
+            <Slot />
+          </View>
           <StatusBar />
         </SafeAreaProvider>
       </TRPCProvider>

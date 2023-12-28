@@ -42,7 +42,11 @@ export const taskRouter = createTRPCRouter({
       const tasks = await ctx.prisma.task.findMany({
         select: timelineTaskFields,
         orderBy: [{ order: "asc" }, { createdAt: "asc" }],
-        where: { creatorId: { equals: ctx.user.id }, date: { gt: startOfDay, lte: endOfDay } },
+        where: {
+          creatorId: { equals: ctx.user.id },
+          element: { archivedAt: null },
+          date: { not: null, gt: startOfDay, lte: endOfDay },
+        },
       })
       const groupedTasks = tasks.reduce<{ [key: string]: (typeof tasks)[number][] }>((acc, task) => {
         const date = dayjs(task.date).format("YYYY-MM-DD")

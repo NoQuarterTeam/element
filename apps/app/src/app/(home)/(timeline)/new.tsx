@@ -35,7 +35,6 @@ export default function NewTask() {
     <View className={join("px-4", canGoBack ? "pt-6" : "pt-16")}>
       <ScrollView
         keyboardShouldPersistTaps="handled"
-        className="space-y-4"
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 400 }}
         showsVerticalScrollIndicator={false}
       >
