@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, ScrollView, View } from "react-native"
+import { ScrollView, View } from "react-native"
 import { useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
@@ -33,16 +33,19 @@ export default function NewTask() {
 
   return (
     <View className={join("px-4", canGoBack ? "pt-6" : "pt-16")}>
-      <KeyboardAvoidingView behavior="height" enabled keyboardVerticalOffset={0}>
-        <ScrollView className="space-y-4" contentContainerStyle={{ minHeight: "100%" }} showsVerticalScrollIndicator={false}>
-          <TaskForm
-            onSubmit={handleCreate}
-            formError={create.error?.data?.formError}
-            fieldErrors={create.error?.data?.zodError?.fieldErrors}
-            isLoading={create.isLoading}
-          />
-        </ScrollView>
-      </KeyboardAvoidingView>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        className="space-y-4"
+        contentContainerStyle={{ minHeight: "100%", paddingBottom: 400 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <TaskForm
+          onSubmit={handleCreate}
+          formError={create.error?.data?.formError}
+          fieldErrors={create.error?.data?.zodError?.fieldErrors}
+          isLoading={create.isLoading}
+        />
+      </ScrollView>
       <StatusBar style="light" />
     </View>
   )

@@ -1,6 +1,6 @@
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
-import { ScrollView, KeyboardAvoidingView, TouchableOpacity, View } from "react-native"
+import { ScrollView, TouchableOpacity, View } from "react-native"
 
 import { join } from "@element/shared"
 
@@ -87,31 +87,30 @@ function EditTaskForm({ task }: { task: Task }) {
   const handleDuplicate = () => duplicate.mutate({ id: task.id })
 
   return (
-    <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={100}>
-      <ScrollView
-        className="space-y-4"
-        contentContainerStyle={{ minHeight: "100%", paddingBottom: 100 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <TaskForm
-          formError={update.error?.data?.formError}
-          fieldErrors={update.error?.data?.zodError?.fieldErrors}
-          task={task}
-          onSubmit={handleUpdate}
-          isLoading={update.isLoading}
-        />
-        <View className="flex w-full flex-row items-center justify-between">
-          <TouchableOpacity onPress={handleDelete} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
-            <Icon icon={Trash} size={24} color="red" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleAddToBacklog} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
-            <Icon icon={Clock} size={24} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleDuplicate} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
-            <Icon icon={Copy} size={24} />
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+    <ScrollView
+      className="space-y-4"
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={{ minHeight: "100%", paddingBottom: 400 }}
+      showsVerticalScrollIndicator={false}
+    >
+      <TaskForm
+        formError={update.error?.data?.formError}
+        fieldErrors={update.error?.data?.zodError?.fieldErrors}
+        task={task}
+        onSubmit={handleUpdate}
+        isLoading={update.isLoading}
+      />
+      <View className="flex w-full flex-row items-center justify-between">
+        <TouchableOpacity onPress={handleDelete} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
+          <Icon icon={Trash} size={24} color="red" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleAddToBacklog} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
+          <Icon icon={Clock} size={24} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleDuplicate} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
+          <Icon icon={Copy} size={24} />
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   )
 }

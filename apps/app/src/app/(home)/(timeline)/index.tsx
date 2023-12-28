@@ -237,7 +237,7 @@ const DAY_WIDTH = 90
 
 function TasksGrid({ days }: { days: string[] }) {
   const { daysBack, daysForward } = useTimelineDays()
-  const { data, refetch } = api.task.timeline.useQuery({ daysBack, daysForward }, { staleTime: Infinity })
+  const { data } = api.task.timeline.useQuery({ daysBack, daysForward }, { staleTime: Infinity })
   // eslint-disable-next-line
   const tasks = data || []
 
@@ -256,9 +256,7 @@ function TasksGrid({ days }: { days: string[] }) {
   }, [tasks])
 
   // TODO: instead of refetching, update the taskPositions value
-  const { mutate } = api.task.updateOrder.useMutation({
-    onSuccess: () => refetch(),
-  })
+  const { mutate } = api.task.updateOrder.useMutation()
   const handleDrop = (taskId: string) => {
     const newTask = taskPositions.value[taskId]!
     const oldTask = tasks.find((t) => t.id === taskId)!
@@ -293,6 +291,7 @@ function TaskItem({
   taskPositions: SharedValue<{ [key: string]: Task }>
   onDrop: () => void
 }) {
+  const isComplete = useSharedValue(task.isComplete)
   const position = useDerivedValue(() => {
     const taskPosition = taskPositions.value[task.id]
     const column = days.findIndex((day) => day === task.date)
@@ -319,7 +318,7 @@ function TaskItem({
   )
 
   const pan = Gesture.Pan()
-    .activateAfterLongPress(200)
+    .activateAfterLongPress(100)
     .onStart(() => {
       offsetX.value = translateX.value
       offsetY.value = translateY.value
@@ -352,7 +351,7 @@ function TaskItem({
       const newPositions = { ...taskPositions.value }
       if (newDate === currentTask.date) {
         // reorder current date tasks
-        const taskToSwap = Object.values(taskPositions.value).find((t) => t.date === newDate && t.order === newOrder)
+        const taskToSwap = Object.values(newPositions).find((t) => t.date === newDate && t.order === newOrder)
         if (!taskToSwap || taskToSwap.id === currentTask.id) return
         newPositions[currentTask.id]! = {
           ...currentTask,
@@ -364,18 +363,23 @@ function TaskItem({
         }
       } else {
         // reorder tasks for new date
-        const tasksForNewDate = Object.values(taskPositions.value).filter((t) => t.date === newDate)
-        const tasksForOldDate = Object.values(taskPositions.value).filter((t) => t.date === currentTask.date)
+        const tasksForNewDate = Object.values(newPositions)
+          .filter((t) => t.date === newDate)
+          .sort((a, b) => a.order - b.order)
         const maxNewOrder = Math.min(tasksForNewDate.length, newOrder)
         const newTasksForNewDate = [
           ...tasksForNewDate.slice(0, maxNewOrder),
           { ...currentTask, date: newDate },
           ...tasksForNewDate.slice(maxNewOrder, tasksForNewDate.length),
         ]
+
         newTasksForNewDate.forEach((t, i) => {
           newPositions[t.id] = { ...t, order: i }
         })
         // reorder tasks for old date
+        const tasksForOldDate = Object.values(newPositions)
+          .filter((t) => t.date === currentTask.date)
+          .sort((a, b) => a.order - b.order)
         tasksForOldDate
           .filter((t) => t.id !== currentTask.id)
           .forEach((t, i) => {
@@ -416,13 +420,12 @@ function TaskItem({
     .runOnJS(true)
     .onStart(() => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-      taskPositions.value[task.id] = { ...taskPositions.value[task.id]!, isComplete: !taskPositions.value[task.id]!.isComplete }
+      isComplete.value = !isComplete.value
       mutate({ id: task.id, isComplete: !task.isComplete })
     })
 
   const tap = Gesture.Tap().runOnJS(true).onStart(handleNavigate)
 
-  const isComplete = taskPositions.value[task.id]?.isComplete || task.isComplete
   const gesture = Gesture.Race(Gesture.Simultaneous(pan, longPress), tap)
 
   return (
@@ -431,24 +434,28 @@ function TaskItem({
         <Animated.View
           className={join(
             "flex h-full flex-col justify-between overflow-hidden rounded border border-gray-100 bg-white dark:border-gray-900 dark:bg-gray-700",
-            task.isImportant && !isComplete && "border-primary-400 dark:border-primary-400 border-2",
+            task.isImportant && !isComplete.value && "border-primary-400 dark:border-primary-400 border-2",
           )}
         >
           <View className="relative flex-1">
-            <View className="flex-1 px-1 pt-1">
-              <Text numberOfLines={2} className="text-xs" style={{ textDecorationLine: isComplete ? "line-through" : undefined }}>
+            <View className="flex-1 pt-1">
+              <Text
+                numberOfLines={2}
+                className="px-1 text-xs"
+                style={{ textDecorationLine: isComplete.value ? "line-through" : undefined }}
+              >
                 {task.name}
               </Text>
-              {!isComplete && task.description && (
+              {!isComplete.value && task.description && (
                 <View
                   style={{ backgroundColor: task.element.color }}
                   className="sq-1.5 absolute right-1 top-1 rounded-full opacity-70"
                 />
               )}
-              {isComplete && <BlurView intensity={isComplete ? 6 : 0} className="absolute h-full w-full" />}
+              {isComplete.value && <BlurView intensity={isComplete.value ? 6 : 0} className="absolute h-full w-full" />}
             </View>
 
-            {!isComplete && (
+            {!isComplete.value && (
               <View className="flex flex-row items-end justify-between px-1 pb-1">
                 {task.durationHours || task.durationMinutes ? (
                   <Text className="text-xxs">{formatDuration(task.durationHours, task.durationMinutes)}</Text>
@@ -464,11 +471,11 @@ function TaskItem({
             className="flex justify-center"
             style={{
               backgroundColor: task.element.color,
-              opacity: isComplete ? 0.4 : 1,
-              height: isComplete ? 6 : 14,
+              opacity: isComplete.value ? 0.4 : 1,
+              height: isComplete.value ? 6 : 14,
             }}
           >
-            {!isComplete && (
+            {!isComplete.value && (
               <Text
                 style={{ fontSize: 10, opacity: 1, color: safeReadableColor(task.element.color) }}
                 numberOfLines={1}
