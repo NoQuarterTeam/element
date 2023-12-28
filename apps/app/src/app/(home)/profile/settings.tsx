@@ -12,7 +12,7 @@ export default function Settings() {
     <ScreenView title="Settings">
       <View>
         <View className="flex flex-row items-center justify-between p-4">
-          <Text className="text-2xl">Habits</Text>
+          <Text className="text-xl">Habits</Text>
           <Switch
             trackColor={{ true: colors.primary[600] }}
             value={features.includes("habits")}

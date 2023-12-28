@@ -7,12 +7,15 @@ import { join } from "@element/shared"
 import { TaskForm, type TaskFormData } from "../../../components/TaskForm"
 import { api } from "../../../lib/utils/api"
 import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
+import { useMe } from "../../../lib/hooks/useMe"
+import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
 
 export default function NewTask() {
   const router = useRouter()
   const { daysBack, daysForward } = useTimelineDays()
   const canGoBack = router.canGoBack()
   const utils = api.useUtils()
+  const { me } = useMe()
   const create = api.task.create.useMutation({
     onSuccess: (createdTask) => {
       if (!createdTask.date) return
@@ -21,14 +24,25 @@ export default function NewTask() {
     },
   })
 
+  const addTempTask = useTemporaryData((s) => s.addTask)
   const handleCreate = (data: TaskFormData) => {
     if (!data.element) return
-    create.mutate({
-      ...data,
-      elementId: data.element.id,
-      durationHours: Number(data.durationHours),
-      durationMinutes: Number(data.durationMinutes),
-    })
+    if (me) {
+      create.mutate({
+        ...data,
+        elementId: data.element.id,
+        durationHours: Number(data.durationHours),
+        durationMinutes: Number(data.durationMinutes),
+      })
+    } else {
+      addTempTask({
+        ...data,
+        elementId: data.element.id,
+        durationHours: Number(data.durationHours),
+        durationMinutes: Number(data.durationMinutes),
+      })
+      router.back()
+    }
   }
 
   return (

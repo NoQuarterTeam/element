@@ -8,10 +8,11 @@ import { stripe } from "../lib/stripe"
 
 import { createTemplates } from "../lib/templates"
 import { createAuthToken, hashPassword } from "@element/server-services"
+import { loginSchema, registerSchema } from "@element/server-schemas"
 
 export const userRouter = createTRPCRouter({
   me: publicProcedure.query(({ ctx }) => ctx.user || null),
-  login: publicProcedure.input(z.object({ email: z.string().email(), password: z.string() })).mutation(async ({ ctx, input }) => {
+  login: publicProcedure.input(loginSchema).mutation(async ({ ctx, input }) => {
     const user = await ctx.prisma.user.findUnique({ where: { email: input.email } })
     if (!user) throw new TRPCError({ code: "BAD_REQUEST", message: "Incorrect email or password" })
     const isSamePassword = bcrypt.compareSync(input.password, user.password)
@@ -19,21 +20,15 @@ export const userRouter = createTRPCRouter({
     const token = createAuthToken({ id: user.id })
     return { user, token }
   }),
-  registerTempAccount: publicProcedure.mutation(async ({ ctx }) => {
-    const firstName = faker.name.firstName()
-    const lastName = faker.name.lastName()
-    const email = `${firstName}.${lastName}${new Date().getMilliseconds()}@myelement.app`.toLowerCase()
-    const password = await hashPassword(faker.internet.password())
-    const data = { firstName, lastName, email, password }
+  register: publicProcedure.input(registerSchema).mutation(async ({ ctx, input }) => {
+    const existingEmail = await ctx.prisma.user.findUnique({ where: { email: input.email } })
+    if (existingEmail) throw new TRPCError({ code: "BAD_REQUEST", message: "Email already in use" })
+    const password = await hashPassword(input.password)
     const stripeCustomer = await stripe.customers.create({
-      email,
-      name: firstName + " " + lastName,
+      email: input.email,
+      name: input.firstName + " " + input.lastName,
     })
-    const user = await ctx.prisma.user.create({ data: { ...data, stripeCustomerId: stripeCustomer.id } })
-    const elements = createTemplates(user.id)
-    for await (const element of elements) {
-      await ctx.prisma.element.create({ data: element })
-    }
+    const user = await ctx.prisma.user.create({ data: { ...input, password, stripeCustomerId: stripeCustomer.id } })
     return { user, token: createAuthToken({ id: user.id }) }
   }),
   update: protectedProcedure
@@ -52,15 +47,9 @@ export const userRouter = createTRPCRouter({
   myPlan: protectedProcedure.query(async ({ ctx }) => {
     const user = ctx.user
     const [taskCount, elementCount, subscription] = await Promise.all([
+      !user.stripeSubscriptionId ? ctx.prisma.task.count({ where: { creatorId: { equals: user.id } } }) : null,
       !user.stripeSubscriptionId
-        ? ctx.prisma.task.count({
-            where: { creatorId: { equals: user.id } },
-          })
-        : null,
-      !user.stripeSubscriptionId
-        ? ctx.prisma.element.count({
-            where: { archivedAt: { equals: null }, creatorId: { equals: user.id } },
-          })
+        ? ctx.prisma.element.count({ where: { archivedAt: { equals: null }, creatorId: { equals: user.id } } })
         : null,
       user.stripeSubscriptionId ? stripe.subscriptions.retrieve(user.stripeSubscriptionId) : null,
     ])

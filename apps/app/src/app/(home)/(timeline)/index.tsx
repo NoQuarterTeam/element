@@ -27,6 +27,8 @@ import { api, type RouterOutputs } from "../../../lib/utils/api"
 import { height } from "../../../lib/utils/device"
 import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
 import { BlurView } from "expo-blur"
+import { useMe } from "../../../lib/hooks/useMe"
+import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
 
 dayjs.extend(advancedFormat)
 
@@ -100,7 +102,13 @@ export default function Timeline() {
     // }
   })
 
-  const { data, isLoading, refetch } = api.task.timeline.useQuery({ daysBack, daysForward }, { staleTime: Infinity })
+  const { me } = useMe()
+  const { data, isLoading, refetch } = api.task.timeline.useQuery(
+    { daysBack, daysForward },
+    { staleTime: Infinity, enabled: !!me },
+  )
+
+  const { tasks: tempTasks } = useTemporaryData()
 
   // TODO dynamic day height?
   // const maxTaskCountPerDay = React.useMemo(() => {
@@ -160,7 +168,7 @@ export default function Timeline() {
               )}
             />
           ))}
-          {!isLoading && data && <TasksGrid days={days} />}
+          {me ? !isLoading && data && <TasksGrid days={days} tasks={data} /> : <TasksGrid days={days} tasks={tempTasks} />}
         </Animated.ScrollView>
       </Animated.ScrollView>
 
@@ -170,7 +178,7 @@ export default function Timeline() {
           outerTimelineRef.current?.scrollTo({ y: 0, animated: true })
         }}
       />
-      {(!isLoaded || (isLoading && !data)) && (
+      {(!isLoaded || (me && isLoading && !data)) && (
         <View
           style={{ height }}
           className="absolute left-0 right-0 top-0 flex items-center justify-center bg-white dark:bg-black"
@@ -183,6 +191,7 @@ export default function Timeline() {
 }
 
 function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
+  const { me } = useMe()
   const menuButtonRotate = useSharedValue(0)
   const [isMenuActive, setIsMenuActive] = React.useState(false)
   const backlogTranslateY = useSharedValue(120)
@@ -216,29 +225,33 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
 
   return (
     <View className="absolute bottom-4 right-4 space-y-1">
-      <Animated.View style={{ opacity: backlogOpacity, transform: [{ translateY: backlogTranslateY }] }}>
-        <Link href={`backlog`} asChild>
-          <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
-            <Icon icon={Clock} size={24} />
-          </TouchableOpacity>
-        </Link>
-      </Animated.View>
+      {me && (
+        <View className="space-y-1">
+          <Animated.View style={{ opacity: backlogOpacity, transform: [{ translateY: backlogTranslateY }] }}>
+            <Link href={`backlog`} asChild>
+              <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
+                <Icon icon={Clock} size={24} />
+              </TouchableOpacity>
+            </Link>
+          </Animated.View>
 
-      <Animated.View style={{ opacity: elementsOpacity, transform: [{ translateY: elementsTranslateY }] }}>
-        <Link href={`elements`} asChild>
-          <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
-            <Icon icon={Book} size={24} />
-          </TouchableOpacity>
-        </Link>
-      </Animated.View>
-      <Animated.View style={menuButtonStyles}>
-        <TouchableOpacity
-          onPress={onToggleMenu}
-          className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
-        >
-          <Icon icon={isMenuActive ? X : MoreVertical} size={24} />
-        </TouchableOpacity>
-      </Animated.View>
+          <Animated.View style={{ opacity: elementsOpacity, transform: [{ translateY: elementsTranslateY }] }}>
+            <Link href={`elements`} asChild>
+              <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
+                <Icon icon={Book} size={24} />
+              </TouchableOpacity>
+            </Link>
+          </Animated.View>
+          <Animated.View style={menuButtonStyles}>
+            <TouchableOpacity
+              onPress={onToggleMenu}
+              className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
+            >
+              <Icon icon={isMenuActive ? X : MoreVertical} size={24} />
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
+      )}
       <TouchableOpacity
         onPress={onScrollToToday}
         className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
@@ -292,12 +305,7 @@ type Task = Tasks[number]
 
 const DAY_WIDTH = 90
 
-function TasksGrid({ days }: { days: string[] }) {
-  const { daysBack, daysForward } = useTimelineDays()
-  const { data } = api.task.timeline.useQuery({ daysBack, daysForward }, { staleTime: Infinity })
-  // eslint-disable-next-line
-  const tasks = data || []
-
+function TasksGrid({ days, tasks }: { days: string[]; tasks: Task[] }) {
   const taskPositions = useSharedValue<{ [key: string]: Task }>(
     tasks.reduce<{ [key: string]: Task }>((acc, task) => {
       acc[task.id] = task
@@ -312,7 +320,8 @@ function TasksGrid({ days }: { days: string[] }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasks])
 
-  // TODO: instead of refetching, update the taskPositions value
+  const { me } = useMe()
+  const updateTempTaskOrder = useTemporaryData((s) => s.updateOrder)
   const { mutate } = api.task.updateOrder.useMutation()
   const handleDrop = (taskId: string) => {
     const newTask = taskPositions.value[taskId]!
@@ -320,9 +329,20 @@ function TasksGrid({ days }: { days: string[] }) {
     const oldDate = oldTask.date
     const newDate = newTask.date
     const tasksToUpdate = tasks.filter((t) => t.date === oldDate || t.date === newDate)
-    mutate(
-      tasksToUpdate.map((t) => ({ id: t.id, order: taskPositions.value[t.id]!.order, date: taskPositions.value[t.id]!.date })),
-    )
+
+    if (me) {
+      mutate(
+        tasksToUpdate.map((t) => ({ id: t.id, order: taskPositions.value[t.id]!.order, date: taskPositions.value[t.id]!.date })),
+      )
+    } else {
+      updateTempTaskOrder(
+        tasksToUpdate.map((t) => ({
+          ...t,
+          order: taskPositions.value[t.id]!.order,
+          date: dayjs(taskPositions.value[t.id]!.date).format("YYYY-MM-DD"),
+        })),
+      )
+    }
   }
 
   if (tasks.length === 0) return null
@@ -472,13 +492,19 @@ function TaskItem({
 
   const { mutate } = api.task.update.useMutation()
 
+  const { me } = useMe()
+  const { updateTask } = useTemporaryData()
   const longPress = Gesture.LongPress()
     .minDuration(1000)
     .runOnJS(true)
     .onStart(() => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
       isComplete.value = !isComplete.value
-      mutate({ id: task.id, isComplete: !task.isComplete })
+      if (me) {
+        mutate({ id: task.id, isComplete: !task.isComplete })
+      } else {
+        updateTask({ isComplete: !task.isComplete })
+      }
     })
 
   const tap = Gesture.Tap().runOnJS(true).onStart(handleNavigate)

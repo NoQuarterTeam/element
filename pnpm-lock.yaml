@@ -560,9 +560,15 @@ importers:
       '@element/database':
         specifier: workspace:*
         version: link:../database
+      '@element/server-schemas':
+        specifier: workspace:*
+        version: link:../server/schemas
       '@element/server-services':
         specifier: workspace:*
         version: link:../server/services
+      '@element/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@trpc/server':
         specifier: ^10.16.0
         version: 10.44.1

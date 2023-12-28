@@ -8,6 +8,8 @@
   "dependencies": {
     "@element/database": "workspace:*",
     "@element/server-services": "workspace:*",
+    "@element/server-schemas": "workspace:*",
+    "@element/shared": "workspace:*",
     "@trpc/server": "^10.16.0",
     "bcryptjs": "^2.4.3",
     "dayjs": "1.11.10",

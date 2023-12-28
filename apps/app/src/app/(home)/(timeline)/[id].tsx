@@ -11,26 +11,38 @@ import { api, type RouterOutputs } from "../../../lib/utils/api"
 import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
 import { Spinner } from "../../../components/Spinner"
 import { Text } from "../../../components/Text"
+import { useMe } from "../../../lib/hooks/useMe"
+import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
+import { Alert } from "react-native"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 export default function TaskDetail() {
   const { id } = useGlobalSearchParams()
-
+  const { me } = useMe()
   const router = useRouter()
   const canGoBack = router.canGoBack()
 
-  const { data, isLoading } = api.task.byId.useQuery({ id: String(id) }, { enabled: !!id })
+  const { data, isLoading } = api.task.byId.useQuery({ id: String(id) }, { enabled: !!id && !!me })
+
+  const tempTasks = useTemporaryData((s) => s.tasks)
+  const temporaryTask = tempTasks.find((t) => t.id === id)
 
   return (
     <View className={join("px-4", canGoBack ? "pt-6" : "pt-16")}>
-      {isLoading ? (
-        <View className="flex flex-row items-end justify-center pt-6">
-          <Spinner />
-        </View>
-      ) : !data ? (
-        <Text className="pt-6 text-center">Task not found</Text>
+      {me ? (
+        isLoading ? (
+          <View className="flex flex-row items-end justify-center pt-6">
+            <Spinner />
+          </View>
+        ) : !data ? (
+          <Text className="pt-6 text-center">Task not found</Text>
+        ) : (
+          <EditTaskForm task={data} />
+        )
+      ) : temporaryTask ? (
+        <EditTaskForm task={temporaryTask} />
       ) : (
-        <EditTaskForm task={data} />
+        <Text className="pt-6 text-center">Task not found</Text>
       )}
       <StatusBar style="light" />
     </View>
@@ -38,26 +50,41 @@ export default function TaskDetail() {
 }
 
 function EditTaskForm({ task }: { task: Task }) {
+  const { me } = useMe()
   const router = useRouter()
   const { daysBack, daysForward } = useTimelineDays()
   const utils = api.useUtils()
+  const tempActions = useTemporaryData()
+
   const update = api.task.update.useMutation({
     onSuccess: async (updatedTask) => {
       void utils.task.timeline.refetch({ daysBack, daysForward })
       utils.task.byId.setData({ id: task.id }, updatedTask)
+
       router.back()
     },
   })
 
-  const handleUpdate = (updateTask: TaskFormData) => {
-    update.mutate({
-      id: task.id,
-      ...updateTask,
-      elementId: updateTask.element.id,
-      date: updateTask.date,
-      durationHours: Number(updateTask.durationHours),
-      durationMinutes: Number(updateTask.durationMinutes),
-    })
+  const handleUpdate = (data: TaskFormData) => {
+    if (me) {
+      update.mutate({
+        id: task.id,
+        ...data,
+        elementId: data.element.id,
+        date: data.date,
+        durationHours: Number(data.durationHours),
+        durationMinutes: Number(data.durationMinutes),
+      })
+    } else {
+      tempActions.updateTask({
+        id: task.id,
+        ...data,
+        elementId: data.element.id,
+        durationHours: Number(data.durationHours),
+        durationMinutes: Number(data.durationMinutes),
+      })
+      router.back()
+    }
   }
 
   const deleteTask = api.task.delete.useMutation({
@@ -66,7 +93,14 @@ function EditTaskForm({ task }: { task: Task }) {
       router.back()
     },
   })
-  const handleDelete = () => deleteTask.mutate({ id: task.id })
+  const handleDelete = () => {
+    if (me) {
+      deleteTask.mutate({ id: task.id })
+    } else {
+      tempActions.deleteTask(task.id)
+      router.back()
+    }
+  }
 
   const addToBacklog = api.task.update.useMutation({
     onSuccess: async (updatedTask) => {
@@ -76,7 +110,10 @@ function EditTaskForm({ task }: { task: Task }) {
       router.back()
     },
   })
-  const handleAddToBacklog = () => addToBacklog.mutate({ id: task.id, date: null, isComplete: false })
+  const handleAddToBacklog = () => {
+    if (!me) return Alert.alert("You must have an account to add a task to the backlog")
+    addToBacklog.mutate({ id: task.id, date: null, isComplete: false })
+  }
 
   const duplicate = api.task.duplicate.useMutation({
     onSuccess: async () => {
@@ -84,7 +121,14 @@ function EditTaskForm({ task }: { task: Task }) {
       router.back()
     },
   })
-  const handleDuplicate = () => duplicate.mutate({ id: task.id })
+  const handleDuplicate = () => {
+    if (me) {
+      duplicate.mutate({ id: task.id })
+    } else {
+      tempActions.addTask({ ...task, elementId: task.element.id })
+      router.back()
+    }
+  }
 
   return (
     <ScrollView

@@ -19,6 +19,8 @@ import { ModalView } from "./ModalView"
 import { Text } from "./Text"
 import { AlertTriangle, Plus, X } from "lucide-react-native"
 import { Icon } from "./Icon"
+import { useMe } from "../lib/hooks/useMe"
+import { useTemporaryData } from "../lib/hooks/useTemporaryTasks"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 
@@ -61,7 +63,8 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
   })
   const utils = api.useUtils()
 
-  const { data } = api.element.all.useQuery()
+  const { me } = useMe()
+  const { data } = api.element.all.useQuery(undefined, { enabled: !!me })
 
   const elementCreateModalProps = useDisclosure()
   const createElement = api.element.create.useMutation()
@@ -82,6 +85,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
     timeProps.onClose()
     setForm((f) => ({ ...f, startTime: dayjs(startTime).format("HH:mm") }))
   }
+  const tempElements = useTemporaryData((s) => s.elements)
   const dateProps = useDisclosure()
   const handlePickDate = (date: Date) => {
     dateProps.onClose()
@@ -96,6 +100,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
             className="font-label text-2xl dark:text-white"
             value={form.name}
             multiline
+            autoFocus={!task}
             placeholderTextColor={colorScheme === "dark" ? colors.gray[500] : colors.gray[300]}
             placeholder="Name"
             onChangeText={(name) => setForm((f) => ({ ...f, name }))}
@@ -129,12 +134,14 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
             </TouchableOpacity>
           }
           rightElement={
-            <TouchableOpacity
-              onPress={elementCreateModalProps.onOpen}
-              className="rounded-sm border border-gray-100 p-2.5 dark:border-gray-600"
-            >
-              <Icon icon={Plus} size={20} />
-            </TouchableOpacity>
+            me && (
+              <TouchableOpacity
+                onPress={elementCreateModalProps.onOpen}
+                className="rounded-sm border border-gray-100 p-2.5 dark:border-gray-600"
+              >
+                <Icon icon={Plus} size={20} />
+              </TouchableOpacity>
+            )
           }
         />
 
@@ -161,7 +168,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           <ModalView title="Select element" onBack={elementModalProps.onClose}>
             <ScrollView contentContainerStyle={{ paddingBottom: 100, paddingTop: 0 }} showsVerticalScrollIndicator={false}>
               <View className="space-y-1 pt-2">
-                {data?.map((element) => (
+                {(me ? data : tempElements)?.map((element) => (
                   <TouchableOpacity
                     key={element.id}
                     className="flex flex-row items-center space-x-2 p-1"

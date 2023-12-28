@@ -1,4 +1,4 @@
-import { Prisma } from "@element/database"
+import { Prisma } from "@element/database/types"
 import { TRPCError } from "@trpc/server"
 import dayjs from "dayjs"
 import { z } from "zod"
@@ -18,19 +18,22 @@ const timelineTaskFields = {
   element: { select: { id: true, name: true, color: true } },
 } satisfies Prisma.TaskSelect
 
-const nullableString = z.preprocess((v) => (v === "" ? null : v), z.string().nullable()).optional()
-const nullableNumber = z.preprocess((v) => (v === 0 ? null : v), z.number().nullable()).optional()
+export const NullableFormString = z.preprocess((v) => (v === "" ? null : v), z.string().nullish())
 
+export const NullableFormNumber = z.preprocess(
+  (v) => (v === "" ? null : v),
+  z.coerce.number({ invalid_type_error: "Not a number" }).nullish(),
+)
 const taskSchema = z.object({
   name: z.string().min(1, { message: "Please enter a name" }),
   elementId: z.string().min(1, { message: "Please select an element" }),
-  date: nullableString,
+  date: NullableFormString,
   isComplete: z.boolean().optional(),
   isImportant: z.boolean().optional(),
-  description: nullableString,
-  startTime: nullableString,
-  durationHours: nullableNumber,
-  durationMinutes: nullableNumber,
+  description: NullableFormString,
+  startTime: NullableFormString,
+  durationHours: NullableFormNumber,
+  durationMinutes: NullableFormNumber,
 })
 
 export const taskRouter = createTRPCRouter({
@@ -69,8 +72,10 @@ export const taskRouter = createTRPCRouter({
     })
     return tasks.map((task) => ({ ...task, date: dayjs(task.date).format("YYYY-MM-DD") }))
   }),
-  byId: protectedProcedure.input(z.object({ id: z.string() })).query(({ ctx, input: { id } }) => {
-    return ctx.prisma.task.findUnique({ where: { id }, select: timelineTaskFields })
+  byId: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input: { id } }) => {
+    const task = await ctx.prisma.task.findUnique({ where: { id }, select: timelineTaskFields })
+    if (!task) return null
+    return { ...task, date: task.date ? dayjs(task.date).format("YYYY-MM-DD") : null }
   }),
   toggleComplete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input: { id } }) => {
     const task = await ctx.prisma.task.findUnique({ where: { id } })
@@ -109,10 +114,15 @@ export const taskRouter = createTRPCRouter({
   }),
   update: protectedProcedure
     .input(taskSchema.partial().merge(z.object({ id: z.string() })))
-    .mutation(({ ctx, input: { id, ...data } }) => {
+    .mutation(async ({ ctx, input: { id, ...data } }) => {
       // can be set to null
       const date = data.date ? dayjs(data.date).startOf("d").add(12, "hours").toDate() : data.date
-      return ctx.prisma.task.update({ where: { id }, select: timelineTaskFields, data: { ...data, date } })
+      const task = await ctx.prisma.task.update({ where: { id }, select: timelineTaskFields, data: { ...data, date } })
+
+      return {
+        ...task,
+        date: task.date ? dayjs(task.date).format("YYYY-MM-DD") : null,
+      }
     }),
   duplicate: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input: { id } }) => {
     const taskToDupe = await ctx.prisma.task.findUniqueOrThrow({ where: { id }, include: { todos: true } })

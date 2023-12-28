@@ -25,10 +25,15 @@ export function ElementForm(props: Props) {
   })
   return (
     <View className="space-y-2">
-      <FormInput label="Name" value={form.name} onChangeText={(name) => setForm({ ...form, name })} />
+      <FormInput
+        autoFocus={!!!props.element}
+        label="Name"
+        value={form.name}
+        onChangeText={(name) => setForm({ ...form, name })}
+      />
       <ColorPicker value={form.color} onChange={({ hex }) => setForm((f) => ({ ...f, color: hex }))}>
         <Preview hideInitialColor />
-        <Panel1 />
+        <Panel1 style={{ height: 100 }} />
         <HueSlider />
       </ColorPicker>
       <Button

@@ -3,6 +3,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import { Link, useRouter } from "expo-router"
+import * as Haptics from "expo-haptics"
 
 import colors from "@element/tailwind-config/src/colors"
 
@@ -90,6 +91,9 @@ function HabitItem({ habit, entries }: { habit: Habit; entries: HabitEntries }) 
   const handleOpenMenu = () => {
     const options = ["Cancel", "Edit", "Archive", "Delete"]
     const destructiveButtonIndex = 3
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+
     const cancelButtonIndex = 0
     showActionSheetWithOptions({ options, cancelButtonIndex, destructiveButtonIndex }, (selectedIndex) => {
       switch (selectedIndex) {

@@ -15,13 +15,10 @@ export default function NewHabit() {
   const createHabit = api.habit.create.useMutation({
     onSuccess: async () => {
       await utils.habit.today.invalidate()
+      void utils.habit.progressCompleteToday.invalidate()
       router.back()
     },
   })
-
-  const handleCreate = () => {
-    createHabit.mutate({ name })
-  }
 
   return (
     <ModalView title="New habit">
@@ -35,7 +32,7 @@ export default function NewHabit() {
         />
         <View className="space-y-1">
           <View>
-            <Button isLoading={createHabit.isLoading} size="sm" onPress={handleCreate}>
+            <Button isLoading={createHabit.isLoading} size="sm" onPress={() => createHabit.mutate({ name })}>
               Create
             </Button>
           </View>

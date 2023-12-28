@@ -11,40 +11,41 @@ import { Text } from "../../components/Text"
 import { api, AUTH_TOKEN } from "../../lib/utils/api"
 import { ModalView } from "../../components/ModalView"
 
-export default function Login() {
-  const queryClient = api.useUtils()
-  const router = useRouter()
+export default function Register() {
   const [form, setForm] = React.useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
   })
-  const login = api.user.login.useMutation({
+  const queryClient = api.useUtils()
+  const router = useRouter()
+  const register = api.user.register.useMutation({
     onSuccess: async (data) => {
       await AsyncStorage.setItem(AUTH_TOKEN, data.token)
       queryClient.user.me.setData(undefined, data.user)
       router.replace("/")
     },
   })
+
   const handleLogin = async () => {
     await AsyncStorage.removeItem(AUTH_TOKEN)
-    login.mutate(form)
+    register.mutate(form)
   }
 
   return (
-    <ModalView title="Login">
+    <ModalView title="Register">
       <ScrollView contentContainerStyle={{ paddingBottom: 400 }} showsHorizontalScrollIndicator={false}>
         <View className="space-y-1">
           <View>
             <FormInput
               autoCapitalize="none"
               autoComplete="email"
+              keyboardType="email-address"
               label="Email"
               value={form.email}
-              keyboardType="email-address"
               onChangeText={(v) => setForm((f) => ({ ...f, email: v }))}
-              error={login.error?.data?.zodError?.fieldErrors.email}
+              error={register.error?.data?.zodError?.fieldErrors.email}
             />
           </View>
           <View>
@@ -53,17 +54,34 @@ export default function Login() {
               label="Password"
               value={form.password}
               onChangeText={(v) => setForm((f) => ({ ...f, password: v }))}
-              error={login.error?.data?.zodError?.fieldErrors.password}
+              error={register.error?.data?.zodError?.fieldErrors.password}
             />
           </View>
           <View>
-            <Button isLoading={login.isLoading} disabled={login.isLoading} onPress={handleLogin}>
-              Login
+            <FormInput
+              label="First name"
+              value={form.firstName}
+              onChangeText={(v) => setForm((f) => ({ ...f, firstName: v }))}
+              error={register.error?.data?.zodError?.fieldErrors.firstName}
+            />
+          </View>
+          <View>
+            <FormInput
+              secureTextEntry
+              label="Last name"
+              value={form.lastName}
+              onChangeText={(v) => setForm((f) => ({ ...f, lastName: v }))}
+              error={register.error?.data?.zodError?.fieldErrors.lastName}
+            />
+          </View>
+          <View>
+            <Button isLoading={register.isLoading} disabled={register.isLoading} onPress={handleLogin}>
+              Register
             </Button>
           </View>
-          {login.error?.data?.formError && (
+          {register.error?.data?.formError && (
             <View>
-              <FormError error={login.error.data.formError} />
+              <FormError error={register.error.data.formError} />
             </View>
           )}
         </View>
@@ -73,8 +91,8 @@ export default function Login() {
           <View className="ml-3 h-px flex-1 bg-gray-100 dark:bg-gray-600"></View>
         </View>
         <View className="space-y-2">
-          <Link href="/register" asChild replace>
-            <Button variant="outline">Register</Button>
+          <Link href="/login" asChild replace>
+            <Button variant="outline">Login</Button>
           </Link>
         </View>
       </ScrollView>
