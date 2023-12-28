@@ -16,7 +16,7 @@ import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import * as Haptics from "expo-haptics"
 import { Link, router } from "expo-router"
-import { Calendar, Clock, Plus } from "lucide-react-native"
+import { Book, Calendar, Clock, MoreVertical, Plus, X } from "lucide-react-native"
 
 import { formatDuration, join, safeReadableColor } from "@element/shared"
 
@@ -164,27 +164,12 @@ export default function Timeline() {
         </Animated.ScrollView>
       </Animated.ScrollView>
 
-      <View className="absolute bottom-4 right-4 space-y-2">
-        <Link href={`backlog`} asChild>
-          <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
-            <Icon icon={Clock} size={24} />
-          </TouchableOpacity>
-        </Link>
-        <TouchableOpacity
-          onPress={() => {
-            timelineRef.current?.scrollTo({ x: daysBack * DAY_WIDTH, animated: true })
-            outerTimelineRef.current?.scrollTo({ y: 0, animated: true })
-          }}
-          className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
-        >
-          <Icon icon={Calendar} size={24} />
-        </TouchableOpacity>
-        <Link href={`new?date=${dayjs().format("YYYY-MM-DD")}`} asChild>
-          <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
-            <Icon icon={Plus} size={24} color="black" />
-          </TouchableOpacity>
-        </Link>
-      </View>
+      <TimelineActions
+        onScrollToToday={() => {
+          timelineRef.current?.scrollTo({ x: daysBack * DAY_WIDTH, animated: true })
+          outerTimelineRef.current?.scrollTo({ y: 0, animated: true })
+        }}
+      />
       {(!isLoaded || (isLoading && !data)) && (
         <View
           style={{ height }}
@@ -193,6 +178,67 @@ export default function Timeline() {
           <ActivityIndicator />
         </View>
       )}
+    </View>
+  )
+}
+
+function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
+  const [isMenuActive, setIsMenuActive] = React.useState(false)
+  const backlogTranslateY = useSharedValue(120)
+  const elementsTranslateY = useSharedValue(60)
+  const backlogOpacity = useSharedValue(0)
+  const elementsOpacity = useSharedValue(0)
+
+  const onToggleMenu = () => {
+    if (isMenuActive) {
+      setIsMenuActive(false)
+      backlogTranslateY.value = withTiming(120, { duration: 100 })
+      elementsTranslateY.value = withTiming(60, { duration: 100 })
+      backlogOpacity.value = withTiming(0, { duration: 100 })
+      elementsOpacity.value = withTiming(0, { duration: 100 })
+    } else {
+      setIsMenuActive(true)
+      backlogTranslateY.value = withTiming(0, { duration: 100 })
+      elementsTranslateY.value = withTiming(0, { duration: 100 })
+      backlogOpacity.value = withTiming(1, { duration: 100 })
+      elementsOpacity.value = withTiming(1, { duration: 100 })
+    }
+  }
+
+  return (
+    <View className="absolute bottom-4 right-4 space-y-1">
+      <Animated.View style={{ opacity: backlogOpacity, transform: [{ translateY: backlogTranslateY }] }}>
+        <Link href={`backlog`} asChild>
+          <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
+            <Icon icon={Clock} size={24} />
+          </TouchableOpacity>
+        </Link>
+      </Animated.View>
+
+      <Animated.View style={{ opacity: elementsOpacity, transform: [{ translateY: elementsTranslateY }] }}>
+        <Link href={`elements`} asChild>
+          <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
+            <Icon icon={Book} size={24} />
+          </TouchableOpacity>
+        </Link>
+      </Animated.View>
+      <TouchableOpacity
+        onPress={onToggleMenu}
+        className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
+      >
+        <Icon icon={isMenuActive ? X : MoreVertical} size={24} />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={onScrollToToday}
+        className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
+      >
+        <Icon icon={Calendar} size={24} />
+      </TouchableOpacity>
+      <Link href={`new?date=${dayjs().format("YYYY-MM-DD")}`} asChild>
+        <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
+          <Icon icon={Plus} size={24} color="black" />
+        </TouchableOpacity>
+      </Link>
     </View>
   )
 }
@@ -456,7 +502,7 @@ function TaskItem({
             </View>
 
             {!isComplete.value && (
-              <View className="flex flex-row items-end justify-between px-1 pb-1">
+              <View className="flex flex-row items-end justify-between px-1 pb-0.5">
                 {task.durationHours || task.durationMinutes ? (
                   <Text className="text-xxs">{formatDuration(task.durationHours, task.durationMinutes)}</Text>
                 ) : (

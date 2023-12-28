@@ -238,7 +238,6 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
           <updateFetcher.Form
             action={`/api/elements/${element.id}`}
             method="post"
-            replace
             onSubmit={(e) => {
               if (!isValidHex(editColor)) {
                 e.preventDefault()

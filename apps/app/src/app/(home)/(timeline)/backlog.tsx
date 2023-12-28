@@ -31,6 +31,11 @@ export default function Backlog() {
           data={data}
           refreshControl={<RefreshControl refreshing={false} onRefresh={refetch} />}
           keyExtractor={(item) => item.id}
+          ListEmptyComponent={() => (
+            <View className="pt-4">
+              <Text className="text-center">Backlog is empty</Text>
+            </View>
+          )}
           ItemSeparatorComponent={() => <View className="h-1" />}
           contentContainerStyle={{ paddingBottom: 130, paddingTop: 10 }}
           renderItem={({ item }) => <TaskItem task={item} />}

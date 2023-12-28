@@ -8,6 +8,8 @@ export default function TimelineLayout() {
     <Stack initialRouteName="index" screenOptions={{ contentStyle: { backgroundColor }, headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="backlog" options={{ presentation: "modal" }} />
+      <Stack.Screen name="elements" options={{ presentation: "modal" }} />
+      <Stack.Screen name="new-element" options={{ presentation: "modal" }} />
       <Stack.Screen name="new" options={{ presentation: "modal" }} />
       <Stack.Screen name="[id]" options={{ presentation: "modal" }} />
     </Stack>

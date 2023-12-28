@@ -11,7 +11,7 @@ import { Text } from "../../components/Text"
 import { api, AUTH_TOKEN } from "../../lib/utils/api"
 
 export default function Login() {
-  const queryClient = api.useContext()
+  const queryClient = api.useUtils()
   const router = useRouter()
   const login = api.user.login.useMutation({
     onSuccess: async (data) => {
