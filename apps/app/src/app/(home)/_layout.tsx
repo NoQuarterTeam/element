@@ -21,9 +21,11 @@ export default function HomeLayout() {
   const features = useFeatures((s) => s.features)
   const { me } = useMe()
 
-  const { data } = api.habit.progressCompleteToday.useQuery(undefined, { enabled: !!me && features.includes("habits") })
+  const { data, isLoading } = api.habit.progressCompleteToday.useQuery(undefined, {
+    enabled: !!me && features.includes("habits"),
+  })
 
-  const progress = (data || 0.001) / 100
+  const progress = isLoading ? 0.001 : (data || 0) / 100
 
   return (
     <AuthProvider>

@@ -89,7 +89,7 @@ function TaskItem({ task }: { task: RouterOutputs["task"]["backlog"][number] }) 
     <View className="relative">
       <View className="absolute right-0 top-0 flex h-full flex-row">
         <TouchableOpacity
-          activeOpacity={0.8}
+          activeOpacity={0.5}
           onPress={() => updateTask({ id: task.id, date: dayjs().format("YYYY-MM-DD") })}
           style={{ width: buttonSize }}
           className="flex h-full items-center justify-center rounded-l bg-gray-50 p-2 dark:bg-gray-800"
