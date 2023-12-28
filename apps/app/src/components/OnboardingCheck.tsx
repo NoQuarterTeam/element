@@ -1,9 +1,10 @@
 import { Modal, View } from "react-native"
-import { ModalView } from "./ModalView"
-import { Text } from "./Text"
+import { useRouter } from "expo-router"
+
 import { useOnboarding } from "../lib/hooks/useOnboarding"
 import { Button } from "./Button"
-import { useRouter } from "expo-router"
+import { ModalView } from "./ModalView"
+import { Text } from "./Text"
 
 export function OnboardingCheck() {
   const { hasSeenOnboarding, setHasSeenOnboarding } = useOnboarding()

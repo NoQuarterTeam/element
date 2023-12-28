@@ -5,18 +5,18 @@ import { cva } from "class-variance-authority"
 
 import { Spinner } from "./Spinner"
 
-export const buttonStyles = cva("font-semibold flex center border border-transparent transition-colors duration-200", {
+export const buttonStyles = cva("center flex border border-transparent font-semibold transition-colors duration-200", {
   variants: {
     size: {
-      xs: "text-xs px-2",
-      sm: "text-sm px-2",
+      xs: "px-2 text-xs",
+      sm: "px-2 text-sm",
       md: "text-md px-4",
-      lg: "text-lg px-5",
+      lg: "px-5 text-lg",
     },
     variant: {
       solid: "border-transparent",
       outline: "bg-transparent",
-      ghost: "bg-transparent border-transparent",
+      ghost: "border-transparent bg-transparent",
     },
     colorScheme: {
       gray: "text-black dark:text-white",
@@ -24,7 +24,7 @@ export const buttonStyles = cva("font-semibold flex center border border-transpa
       red: "text-white",
     },
     disabled: {
-      true: "relative opacity-70 pointer-events-none",
+      true: "pointer-events-none relative opacity-70",
     },
     rounded: {
       xs: "rounded-xs",
@@ -72,12 +72,12 @@ export const buttonStyles = cva("font-semibold flex center border border-transpa
     {
       colorScheme: ["red"],
       variant: ["solid"],
-      className: "bg-red-500 hover:bg-red-600 active:bg-red-700 text-white",
+      className: "bg-red-500 text-white hover:bg-red-600 active:bg-red-700",
     },
     {
       colorScheme: "red",
       variant: ["ghost", "outline"],
-      className: "hover:bg-red-500/10 active:bg-red-500/20 text-red-500",
+      className: "text-red-500 hover:bg-red-500/10 active:bg-red-500/20",
     },
     {
       colorScheme: "red",

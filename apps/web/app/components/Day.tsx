@@ -1,7 +1,7 @@
 import * as React from "react"
 import { RiAddCircleLine } from "react-icons/ri"
 import { InView, useInView } from "react-intersection-observer"
-import { getTotalTaskDuration,join } from "@element/shared"
+import { getTotalTaskDuration, join } from "@element/shared"
 import { Draggable, Droppable } from "@hello-pangea/dnd"
 import { Link } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"

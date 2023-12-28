@@ -1,5 +1,4 @@
 import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node"
-
 import { Link } from "@remix-run/react"
 import { z } from "zod"
 
@@ -10,7 +9,6 @@ import { badRequest, redirect } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { hashPassword } from "~/services/auth/password.server"
 import { generateFakeUser } from "~/services/auth/temporary-account.server"
-import { FlashType, getFlashSession } from "~/services/session/flash.server"
 import { getUserSession } from "~/services/session/session.server"
 import { createTemplates } from "~/services/timeline/templates.server"
 import { sendEmailVerification } from "~/services/user/user.mailer.server"
@@ -67,8 +65,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           },
           headers,
         })
-      } catch (e: any) {
-        return badRequest(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     case RegisterActionMethods.RegisterTemporay:
       try {
@@ -89,8 +91,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           },
           headers,
         })
-      } catch (e: any) {
-        return badRequest(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
 
     default:

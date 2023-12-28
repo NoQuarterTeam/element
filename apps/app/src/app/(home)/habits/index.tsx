@@ -2,16 +2,16 @@ import { ScrollView, TouchableOpacity, useColorScheme, View } from "react-native
 import { useActionSheet } from "@expo/react-native-action-sheet"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
-import { Link, useRouter } from "expo-router"
 import * as Haptics from "expo-haptics"
+import { Link, useRouter } from "expo-router"
+import { Check, Circle, Plus } from "lucide-react-native"
 
 import colors from "@element/tailwind-config/src/colors"
 
+import { Heading } from "../../../components/Heading"
+import { Icon } from "../../../components/Icon"
 import { Text } from "../../../components/Text"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
-import { Heading } from "../../../components/Heading"
-import { Check, Circle, Plus } from "lucide-react-native"
-import { Icon } from "../../../components/Icon"
 
 dayjs.extend(advancedFormat)
 

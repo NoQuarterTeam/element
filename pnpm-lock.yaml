@@ -452,6 +452,9 @@ importers:
         specifier: 4.4.4
         version: 4.4.4(@types/react@18.2.31)(react@18.2.0)
     devDependencies:
+      '@element/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/config/eslint
       '@element/tailwind-config':
         specifier: workspace:*
         version: link:../../packages/config/tailwind

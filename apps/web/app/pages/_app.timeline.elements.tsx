@@ -5,6 +5,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@rem
 import { json, redirect } from "@remix-run/node"
 import { useLoaderData, useNavigate, useNavigation } from "@remix-run/react"
 import { matchSorter } from "match-sorter"
+import { toast } from "sonner"
 import { z } from "zod"
 
 import { ColorInput } from "~/components/ColorInput"
@@ -15,16 +16,12 @@ import { Drawer } from "~/components/ui/Drawer"
 import { Form, FormButton, FormError, InlineFormField } from "~/components/ui/Form"
 import { Input } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
-
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { badRequest } from "~/lib/remix"
-
-import { FlashType, getFlashSession } from "~/services/session/flash.server"
-import { getSidebarElements } from "~/services/timeline/sidebar.server"
 import { getCurrentUser } from "~/services/auth/auth.server"
-import { toast } from "sonner"
+import { getSidebarElements } from "~/services/timeline/sidebar.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)

@@ -12,7 +12,7 @@ export function useFetcherSubmit<T>(props: Props<T>) {
     if (fetcher.state === "loading" && fetcher.data !== null) {
       props.onSuccess?.(fetcher.data as T)
     }
-  }, [fetcher.formMethod, fetcher.data])
+  }, [fetcher.formMethod, fetcher.data, fetcher.state, props])
 
   return fetcher
 }

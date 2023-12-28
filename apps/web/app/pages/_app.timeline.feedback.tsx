@@ -17,7 +17,6 @@ import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest, redirect } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
-import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export enum FeedbackMethods {
   CreateFeedback = "createFeedback",

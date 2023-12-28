@@ -21,9 +21,9 @@ import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelecte
 import { SCROLL_DAYS_BACK, SCROLL_DAYS_FORWARD, useTimelineScrollDays } from "~/lib/hooks/useTimelineScrollDays"
 import { DATE_BACK, DATE_FORWARD, useTimelineTaskDates } from "~/lib/hooks/useTimelineTaskDates"
 import { TASK_CACHE_KEY } from "~/lib/hooks/useTimelineTasks"
+import { useMe } from "~/lib/hooks/useUser"
 
 import type { TimelineTask } from "./api+/tasks"
-import { useMe } from "~/lib/hooks/useUser"
 
 dayjs.extend(advancedFormat)
 
@@ -79,6 +79,7 @@ function _Timeline() {
       client.setQueryData([TASK_CACHE_KEY], [...res])
     }
     UpdateAfterSelectElements()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elementIds])
 
   const timelineRef = React.useRef<HTMLDivElement>(null)

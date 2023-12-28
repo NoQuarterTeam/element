@@ -1,10 +1,10 @@
 import { type Prisma } from "@element/database/types"
+import { redirect } from "@remix-run/node"
 
 import { db } from "~/lib/db.server"
 import type { Await } from "~/lib/helpers/types"
 
 import { getUserSession } from "../session/session.server"
-import { redirect } from "@remix-run/node"
 
 export async function requireUser(request: Request) {
   const { userId } = await getUserSession(request)

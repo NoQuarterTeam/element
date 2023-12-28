@@ -21,6 +21,7 @@ module.exports = {
     "react/function-component-definition": ERROR,
     "@typescript-eslint/no-unused-vars": [ERROR, { args: "none", argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
     "react/prop-types": OFF,
+    "@typescript-eslint/no-explicit-any": OFF,
     "react/no-unescaped-entities": OFF,
   },
   settings: {

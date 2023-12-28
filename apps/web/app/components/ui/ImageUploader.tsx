@@ -2,15 +2,15 @@ import * as React from "react"
 import type { DropzoneOptions, FileRejection } from "react-dropzone"
 import { useDropzone } from "react-dropzone"
 import { merge, useDisclosure } from "@element/shared"
+import { toast } from "sonner"
+
+import { useS3Upload } from "~/lib/hooks/useS3"
 
 import { BrandButton } from "./BrandButton"
 import { Button } from "./Button"
 import { ButtonGroup } from "./ButtonGroup"
 import { inputStyles } from "./Inputs"
 import { Modal } from "./Modal"
-
-import { useS3Upload } from "~/lib/hooks/useS3"
-import { toast } from "sonner"
 
 interface Props {
   onSubmit: (key: string) => Promise<any> | any
@@ -44,6 +44,7 @@ export function ImageUploader({ children, onSubmit, dropzoneOptions, className }
       setImage({ file: files[0]!, preview: window.URL.createObjectURL(files[0]!) })
       modalProps.onOpen()
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [toast, dropzoneOptions],
   )
   const { getRootProps, getInputProps } = useDropzone({

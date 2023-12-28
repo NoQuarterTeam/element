@@ -1,19 +1,19 @@
+import { ScrollView, TouchableOpacity, View } from "react-native"
+import { Alert } from "react-native"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
-import { ScrollView, TouchableOpacity, View } from "react-native"
+import { Clock, Copy, Trash } from "lucide-react-native"
 
 import { join } from "@element/shared"
 
-import { Clock, Copy, Trash } from "lucide-react-native"
 import { Icon } from "../../../components/Icon"
-import { TaskForm, type TaskFormData } from "../../../components/TaskForm"
-import { api, type RouterOutputs } from "../../../lib/utils/api"
-import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
 import { Spinner } from "../../../components/Spinner"
+import { TaskForm, type TaskFormData } from "../../../components/TaskForm"
 import { Text } from "../../../components/Text"
 import { useMe } from "../../../lib/hooks/useMe"
 import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
-import { Alert } from "react-native"
+import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
+import { api, type RouterOutputs } from "../../../lib/utils/api"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 export default function TaskDetail() {

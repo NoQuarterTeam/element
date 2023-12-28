@@ -13,7 +13,9 @@ import { isValidHex, join, useDisclosure } from "@element/shared"
 import { useFetcher, useNavigation } from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
 import { matchSorter } from "match-sorter"
+import { toast } from "sonner"
 
+import { type ActionDataErrorResponse } from "~/lib/form.server"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
@@ -31,8 +33,6 @@ import { IconButton } from "./ui/IconButton"
 import { Modal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
 import { Spinner } from "./ui/Spinner"
-import { toast } from "sonner"
-import { ActionDataErrorResponse } from "~/lib/form.server"
 
 const MAX_DEPTH = 2
 
@@ -66,7 +66,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
       refetch()
       updateModalProps.onClose()
     }
-  }, [updateFetcher.data, updateFetcher.state, refetch])
+  }, [updateFetcher.data, updateFetcher.state, refetch, updateModalProps])
 
   const archiveModalProps = useDisclosure()
   const archiveFetcher = useFetcher<{ success: boolean }>()
@@ -75,7 +75,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
       refetch()
       archiveModalProps.onClose()
     }
-  }, [archiveFetcher.data, archiveFetcher.state, refetch])
+  }, [archiveFetcher.data, archiveFetcher.state, archiveModalProps, refetch])
 
   const unarchiveFetcher = useFetcher<{ success: boolean }>()
   React.useEffect(() => {
@@ -83,14 +83,14 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
       refetch()
       archiveModalProps.onClose()
     }
-  }, [unarchiveFetcher.data, unarchiveFetcher.state, refetch])
+  }, [unarchiveFetcher.data, unarchiveFetcher.state, refetch, archiveModalProps])
 
   const moveFetcher = useFetcher<ActionDataErrorResponse<any> | { success: true }>()
   React.useEffect(() => {
     if (moveFetcher.state !== "idle" && moveFetcher.data?.success) {
       moveModalProps.onClose()
     }
-  }, [moveFetcher.data, moveFetcher.state])
+  }, [moveFetcher.data, moveFetcher.state, moveModalProps])
 
   const matchedChildren = matchSorter(
     element.children.filter((e) => (isArchivedShown ? e : !e.archivedAt)),

@@ -1,11 +1,13 @@
 import * as React from "react"
 import { View } from "react-native"
-import { FormInput } from "./FormInput"
-import { Button } from "./Button"
 import ColorPicker, { HueSlider, Panel1, Preview } from "reanimated-color-picker"
+
 import { type Element } from "@element/database/types"
 import { randomHexColor } from "@element/shared"
-import { RouterInputs } from "../lib/utils/api"
+
+import { type RouterInputs } from "../lib/utils/api"
+import { Button } from "./Button"
+import { FormInput } from "./FormInput"
 
 type Props = { isLoading: boolean } & (
   | {

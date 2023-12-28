@@ -18,7 +18,7 @@ export const useTimelineTaskDates = create<{
       dayjs(date).isAfter(dayjs(dateForward))
         ? { dateForward: date }
         : dayjs(date).isBefore(dayjs(dateBack))
-        ? { dateBack: date }
-        : {},
+          ? { dateBack: date }
+          : {},
     ),
 }))

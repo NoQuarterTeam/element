@@ -2,19 +2,19 @@ import { ScrollView, TouchableOpacity, View } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useQueryClient } from "@tanstack/react-query"
 import { Link } from "expo-router"
+import { ChevronRight } from "lucide-react-native"
 
 import { createImageUrl, join } from "@element/shared"
 
 import { Button } from "../../../components/Button"
+import { Heading } from "../../../components/Heading"
+import { Icon } from "../../../components/Icon"
+import { LoginPlaceholder } from "../../../components/LoginPlaceholder"
 import { OptimizedImage } from "../../../components/OptimisedImage"
 import { Text } from "../../../components/Text"
 import { UPDATE_ID, VERSION } from "../../../lib/config"
-import { api, AUTH_TOKEN } from "../../../lib/utils/api"
-import { Heading } from "../../../components/Heading"
-import { ChevronRight } from "lucide-react-native"
-import { Icon } from "../../../components/Icon"
 import { useMe } from "../../../lib/hooks/useMe"
-import { LoginPlaceholder } from "../../../components/LoginPlaceholder"
+import { api, AUTH_TOKEN } from "../../../lib/utils/api"
 
 export default function Profile() {
   const { me } = useMe()

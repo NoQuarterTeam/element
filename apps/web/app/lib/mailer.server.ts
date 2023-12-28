@@ -1,8 +1,7 @@
+import { IS_PRODUCTION } from "@element/server-env"
 import { render } from "@react-email/render"
 import nodemailer from "nodemailer"
 import type { CreateEmailOptions } from "resend/build/src/emails/interfaces"
-
-import { IS_PRODUCTION } from "@element/server-env"
 
 import { resend } from "./resend.server"
 

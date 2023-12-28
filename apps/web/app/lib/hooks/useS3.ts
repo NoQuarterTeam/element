@@ -1,7 +1,6 @@
 "use client"
 import * as React from "react"
 // import { useAuthenticityToken } from "remix-utils/csrf/react"
-
 import { assetPrefix } from "@element/shared"
 
 export type UploadFile = {

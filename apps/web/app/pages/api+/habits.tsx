@@ -7,7 +7,6 @@ import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
-import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
@@ -66,8 +65,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           data: { creatorId: user.id, name: createForm.data.name, startDate: dayjs(date).toDate() },
         })
         return json({ habit })
-      } catch (e: any) {
-        return json(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
 
     default:

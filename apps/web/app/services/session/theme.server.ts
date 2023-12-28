@@ -1,10 +1,9 @@
+import { env, IS_PRODUCTION } from "@element/server-env"
+import { createCookieSessionStorage } from "@remix-run/node"
 import { createTypedSessionStorage } from "remix-utils/typed-session"
 import { z } from "zod"
 
-import { env, IS_PRODUCTION } from "@element/server-env"
-
 import { isTheme, type Theme } from "~/lib/theme"
-import { createCookieSessionStorage } from "@remix-run/node"
 
 const THEME_COOKIE_KEY = IS_PRODUCTION ? "element_session_theme" : "element_session_dev_theme"
 

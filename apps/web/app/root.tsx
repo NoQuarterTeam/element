@@ -1,22 +1,21 @@
-import "~/styles/app.css"
-import "~/styles/toast.css"
 import type * as React from "react"
+import { ENV, FULL_WEB_URL } from "@element/server-env"
 import { join } from "@element/shared"
-import { promiseHash } from "remix-utils/promise"
 import * as Tooltip from "@radix-ui/react-tooltip"
 import { cssBundleHref } from "@remix-run/css-bundle"
 import type { LinksFunction, LoaderFunctionArgs, MetaFunction, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { promiseHash } from "remix-utils/promise"
+import "~/styles/app.css"
+import "~/styles/toast.css"
 
 import { Toaster } from "./components/ui/Toast"
-
 import { type Theme } from "./lib/theme"
+import { getMaybeUser } from "./services/auth/auth.server"
 import { getFlashSession } from "./services/session/flash.server"
 import { getThemeSession } from "./services/session/theme.server"
-import { ENV, FULL_WEB_URL } from "@element/server-env"
-import { getMaybeUser } from "./services/auth/auth.server"
 
 export const meta: MetaFunction = () => {
   return [{ title: "Element" }]

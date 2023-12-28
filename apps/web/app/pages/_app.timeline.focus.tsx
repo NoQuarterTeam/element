@@ -12,11 +12,13 @@ import { IconButton } from "~/components/ui/IconButton"
 import { Checkbox } from "~/components/ui/Inputs"
 import { Tooltip } from "~/components/ui/Tooltip"
 import { db } from "~/lib/db.server"
+import { type ActionDataErrorResponse } from "~/lib/form.server"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { getCurrentUser } from "~/services/auth/auth.server"
 
 import { TaskActionMethods } from "./_app.timeline.$id"
+import { type TimelineTask } from "./api+/tasks"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
@@ -51,6 +53,7 @@ export default function Focus() {
   const setFeaturesSeen = useFeaturesSeen((s) => s.setFeaturesSeen)
   React.useEffect(() => {
     setFeaturesSeen(["focus"])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -81,10 +84,10 @@ export default function Focus() {
 
 function FocusItem({ task }: { task: FocusTask }) {
   const { updateTask } = useTimelineTasks()
-  const updateFetcher = useFetcher<any>()
+  const updateFetcher = useFetcher<ActionDataErrorResponse<any> | { success: true; task: TimelineTask }>()
   React.useEffect(() => {
     if (!updateFetcher.data) return
-    if (updateFetcher.state !== "idle" && updateFetcher.data.task) {
+    if (updateFetcher.state !== "idle" && updateFetcher.data.success) {
       updateTask(updateFetcher.data.task)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

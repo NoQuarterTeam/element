@@ -10,7 +10,6 @@ import { db } from "~/lib/db.server"
 import { getFormDataArray, validateFormData } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser, requireUser } from "~/services/auth/auth.server"
-import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireUser(request)

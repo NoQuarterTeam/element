@@ -1,12 +1,10 @@
 import * as React from "react"
 import Cookies from "js-cookie"
+import { toast } from "sonner"
 
 import { Badge } from "~/components/ui/Badge"
 import { Switch } from "~/components/ui/Switch"
-
 import { useFeatures, useFeaturesSeen } from "~/lib/hooks/useFeatures"
-
-import { toast } from "sonner"
 import { useMe } from "~/lib/hooks/useUser"
 export const USER_LOCATION_COOKIE_KEY = "element.user.location"
 
@@ -24,14 +22,14 @@ export default function Settings() {
       Cookies.remove(USER_LOCATION_COOKIE_KEY)
       toggle("weather")
     } else {
-      function handleError(error: any) {
+      const handleError: PositionErrorCallback = (error) => {
         switch (error.code) {
           case error.PERMISSION_DENIED:
           case error.POSITION_UNAVAILABLE:
             return
           case error.TIMEOUT:
             return toast.error("The request to get user location timed out.")
-          case error.UNKNOWN_ERROR:
+          default:
             return toast.error("An unknown error occurred.")
         }
       }

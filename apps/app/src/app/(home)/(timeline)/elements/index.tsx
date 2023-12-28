@@ -1,11 +1,12 @@
 import { FlatList, TouchableOpacity, View } from "react-native"
+import { Link } from "expo-router"
+import { Plus } from "lucide-react-native"
+
+import { Icon } from "../../../../components/Icon"
 import { ModalView } from "../../../../components/ModalView"
-import { RouterOutputs, api } from "../../../../lib/utils/api"
 import { Spinner } from "../../../../components/Spinner"
 import { Text } from "../../../../components/Text"
-import { Icon } from "../../../../components/Icon"
-import { Plus } from "lucide-react-native"
-import { Link } from "expo-router"
+import { api, type RouterOutputs } from "../../../../lib/utils/api"
 
 export default function Elements() {
   const { data, isLoading } = api.element.all.useQuery()

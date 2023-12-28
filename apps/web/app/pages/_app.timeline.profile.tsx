@@ -64,7 +64,7 @@ export default function Profile() {
   )
 }
 
-function TabLink({ children, icon, to }: { to: string; children: string; icon: React.ReactElement<any> | undefined }) {
+function TabLink({ children, icon, to }: { to: string; children: string; icon: React.ReactElement<unknown> | undefined }) {
   const navigation = useNavigation()
 
   const isLoading = navigation.state === "loading" && !navigation.formData && navigation.location.pathname.includes(to)

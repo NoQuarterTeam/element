@@ -32,22 +32,34 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         if (fieldErrors) return badRequest({ fieldErrors, data })
         const updatedElement = await db.element.update({ where: { id: elementId }, data })
         return json({ element: updatedElement, success: true })
-      } catch (e: any) {
-        return badRequest(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     case ElementActionMethods.ArchiveElement:
       try {
         await db.element.update({ where: { id: elementId }, data: { archivedAt: new Date() } })
         return json({ success: true })
-      } catch (e: any) {
-        return badRequest(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     case ElementActionMethods.UnarchiveElement:
       try {
         await db.element.update({ where: { id: elementId }, data: { archivedAt: null } })
         return json({ success: true })
-      } catch (e: any) {
-        return badRequest(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     default:
       return badRequest("Invalid action")

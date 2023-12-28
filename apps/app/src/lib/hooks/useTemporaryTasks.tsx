@@ -1,9 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import dayjs from "dayjs"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
-import { RouterInputs, RouterOutputs } from "../utils/api"
-import { Element } from "@element/database/types"
-import dayjs from "dayjs"
+
+import { type Element } from "@element/database/types"
+
+import { type RouterInputs, type RouterOutputs } from "../utils/api"
 
 export const initialElement: Element[] = [
   {

@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/node"
-import { redirect } from "~/lib/remix"
 
+import { redirect } from "~/lib/remix"
 import { getUserSession } from "~/services/session/session.server"
 
 export const action = async ({ request }: ActionFunctionArgs) => {

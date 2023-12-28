@@ -3,19 +3,19 @@ import { merge } from "@element/shared"
 import { cva, type VariantProps } from "class-variance-authority"
 
 export const inputStyles = cva(
-  "text-base block w-full border text-black dark:text-white placeholder-gray-500 transition-colors focus:border-primary-500 focus:bg-transparent focus:ring-transparent rounded-xs focus:ring-primary-500 ring-0 focus:ring-2",
+  "focus:border-primary-500 rounded-xs focus:ring-primary-500 block w-full border text-base text-black placeholder-gray-500 ring-0 transition-colors focus:bg-transparent focus:ring-2 focus:ring-transparent dark:text-white",
   {
     variants: {
       variant: {
         solid: "border-transparent bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10",
-        outline: "bg-transparent border-black/10 hover:border-black/40 dark:border-white/10 dark:hover:border-white/20",
+        outline: "border-black/10 bg-transparent hover:border-black/40 dark:border-white/10 dark:hover:border-white/20",
         ghost: "border-transparent bg-transparent hover:border-black/10 dark:hover:border-white/10",
       },
       size: {
-        xs: "text-xs px-2 py-1",
-        sm: "text-sm px-3 py-1.5",
+        xs: "px-2 py-1 text-xs",
+        sm: "px-3 py-1.5 text-sm",
         md: "text-md px-4 py-2",
-        lg: "text-lg px-5 py-3",
+        lg: "px-5 py-3 text-lg",
       },
     },
     defaultVariants: {
@@ -82,19 +82,22 @@ const lineHeightMap = {
 export function Textarea({ variant, size, ...props }: TextareaProps) {
   const ref = React.useRef<HTMLTextAreaElement>(null)
   // Dealing with Textarea Height
-  const calcHeight = (value: string) => {
-    if (!ref.current) return
-    const numberOfLineBreaks = (value.match(/\n/g) || []).length
-    const lineHeight = lineHeightMap[size || "sm"]
-    // min-height + lines x line-height + padding + border
-    const newHeight = lineHeight + numberOfLineBreaks * lineHeight + paddingMap[size || "sm"] * 2 + 2
-    ref.current.style.height = `${newHeight}px`
-  }
+  const calcHeight = React.useCallback(
+    (value: string) => {
+      if (!ref.current) return
+      const numberOfLineBreaks = (value.match(/\n/g) || []).length
+      const lineHeight = lineHeightMap[size || "sm"]
+      // min-height + lines x line-height + padding + border
+      const newHeight = lineHeight + numberOfLineBreaks * lineHeight + paddingMap[size || "sm"] * 2 + 2
+      ref.current.style.height = `${newHeight}px`
+    },
+    [size],
+  )
 
   React.useEffect(() => {
     if (!ref.current) return
     calcHeight(ref.current.value)
-  }, [])
+  }, [calcHeight])
 
   return (
     <textarea

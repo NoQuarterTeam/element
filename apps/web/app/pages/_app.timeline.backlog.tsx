@@ -42,6 +42,7 @@ export default function Backlog() {
   const setFeaturesSeen = useFeaturesSeen((s) => s.setFeaturesSeen)
   React.useEffect(() => {
     setFeaturesSeen(["backlog"])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

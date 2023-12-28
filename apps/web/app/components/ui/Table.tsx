@@ -96,7 +96,7 @@ export function Table<T extends DataType>(props: Props<T>) {
             </div>
           ))}
 
-          <div className="flex items-center justify-between border-t border-gray-700 bg-gray-900 py-3 px-4">
+          <div className="flex items-center justify-between border-t border-gray-700 bg-gray-900 px-4 py-3">
             <p className="w-100% text-sm">
               {props.count} {props.count === 1 ? "item" : "items"}
             </p>
@@ -125,7 +125,7 @@ function Header({
   onClick?: () => void
 }) {
   const sharedClassName = join(
-    "flex items-center min-w-auto text-sm h-auto font-700",
+    "min-w-auto font-700 flex h-auto items-center text-sm",
     className,
     isButton ? "cursor-pointer" : "cursor-default",
   )
@@ -153,7 +153,7 @@ export function Column<T extends DataType>(_: ColumnProps<T>) {
 
 function _ColumnField<T>({ isLast, hasNoLink, href, className, ...props }: ColumnProps<T> & { href?: string; isLast?: boolean }) {
   const sharedClassName = merge(
-    "flex flex-1 items-center h-12 overflow-x-auto text-sm",
+    "flex h-12 flex-1 items-center overflow-x-auto text-sm",
     isLast ? "justify-end" : "justify-start",
     className,
   )

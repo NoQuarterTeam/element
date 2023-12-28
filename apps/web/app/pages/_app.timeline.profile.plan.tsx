@@ -11,12 +11,10 @@ import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Form, FormButton } from "~/components/ui/Form"
 import { Input } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
-
 import { db } from "~/lib/db.server"
 import { badRequest } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { getCurrentUser } from "~/services/auth/auth.server"
-import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
@@ -81,24 +79,36 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         })
         if (!session.url) return badRequest("Error creating subscription")
         return redirect(session.url)
-      } catch (e: any) {
-        return badRequest(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     case ProfilePlanMethods.CancelPlan:
       try {
         if (!user.stripeSubscriptionId) return badRequest("No subscription")
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: true })
         return json({ success: true })
-      } catch (e: any) {
-        return badRequest(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     case ProfilePlanMethods.ReactivatePlan:
       try {
         if (!user.stripeSubscriptionId) return badRequest("No subscription")
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: false })
         return json({ success: true })
-      } catch (e: any) {
-        return badRequest(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
 
     default:

@@ -1,6 +1,5 @@
-import { jwtVerify, SignJWT } from "jose"
-
 import { env } from "@element/server-env"
+import { jwtVerify, SignJWT } from "jose"
 
 type Payload = Record<string, unknown>
 

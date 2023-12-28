@@ -1,4 +1,4 @@
-import { IS_PRODUCTION, env } from "@element/server-env"
+import { env,IS_PRODUCTION } from "@element/server-env"
 import { createCookieSessionStorage } from "@remix-run/node"
 
 export const COOKIE_KEY = IS_PRODUCTION ? "element_session" : "element_session_dev"
@@ -19,7 +19,7 @@ export async function getUserSession(request: Request) {
   const session = await userStorage.getSession(request.headers.get("Cookie"))
   const commit = () => userStorage.commitSession(session)
   const destroy = () => userStorage.destroySession(session)
-  let userId: string | null = session.get("userId") || null
+  const userId: string | null = session.get("userId") || null
   const setUser = (id: string) => {
     session.set("userId", id)
     return commit()

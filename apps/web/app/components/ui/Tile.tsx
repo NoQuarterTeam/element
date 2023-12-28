@@ -12,7 +12,7 @@ export function Tile({ children, ...props }: DivProps) {
 
 export function TileHeader({ children, ...props }: DivProps) {
   return (
-    <div {...props} className={merge("flex w-full items-center justify-between px-4 pt-4 pb-0 md:px-6", props.className)}>
+    <div {...props} className={merge("flex w-full items-center justify-between px-4 pb-0 pt-4 md:px-6", props.className)}>
       {children}
     </div>
   )

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef,useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useRevalidator } from "@remix-run/react"
 
 export function useRefetchOnFocus() {
@@ -11,6 +11,7 @@ export function useRefetchOnFocus() {
       revalidator.revalidate()
     }
     shouldRefetch.current = true
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible])
 }
 

@@ -1,7 +1,7 @@
-import { SerializeFrom } from "@remix-run/node"
+import { type SerializeFrom } from "@remix-run/node"
 import { useRouteLoaderData } from "@remix-run/react"
-import { loader as appLoader } from "~/pages/_app"
 
+import { type loader as appLoader } from "~/pages/_app"
 import { type loader as rootLoader } from "~/root"
 
 export function useMaybeUser() {

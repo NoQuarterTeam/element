@@ -1,26 +1,24 @@
 import * as React from "react"
 import { Modal, ScrollView, TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
-
 import DateTimePickerModal from "react-native-modal-datetime-picker"
-
 import dayjs from "dayjs"
 import { useGlobalSearchParams, useRouter } from "expo-router"
+import { AlertTriangle, Plus, X } from "lucide-react-native"
 import ColorPicker, { HueSlider, Panel1, Preview } from "reanimated-color-picker"
 
 import { join, randomHexColor, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
+import { useMe } from "../lib/hooks/useMe"
+import { useTemporaryData } from "../lib/hooks/useTemporaryTasks"
 import { api, type RouterOutputs } from "../lib/utils/api"
 import { Button } from "./Button"
 import { FormError } from "./FormError"
 import { FormInput, FormInputError, FormInputLabel } from "./FormInput"
+import { Icon } from "./Icon"
 import { Input, inputClassName } from "./Input"
 import { ModalView } from "./ModalView"
 import { Text } from "./Text"
-import { AlertTriangle, Plus, X } from "lucide-react-native"
-import { Icon } from "./Icon"
-import { useMe } from "../lib/hooks/useMe"
-import { useTemporaryData } from "../lib/hooks/useTemporaryTasks"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 

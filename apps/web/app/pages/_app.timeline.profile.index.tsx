@@ -1,5 +1,4 @@
 import type { ActionFunctionArgs } from "@remix-run/node"
-
 import { useFetcher, useSubmit } from "@remix-run/react"
 import { z } from "zod"
 
@@ -9,9 +8,8 @@ import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Form, FormButton, FormError, FormField, ImageField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
 import { validateFormData } from "~/lib/form"
-import { useMe, useMaybeUser } from "~/lib/hooks/useUser"
+import { useMe } from "~/lib/hooks/useUser"
 import { badRequest, redirect } from "~/lib/remix"
-
 import { getCurrentUser } from "~/services/auth/auth.server"
 import { getUserSession } from "~/services/session/session.server"
 import { sendEmailVerification } from "~/services/user/user.mailer.server"
@@ -38,7 +36,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const { data, fieldErrors } = await validateFormData(updateSchema, formData)
         if (fieldErrors) return badRequest({ fieldErrors, data })
         // Dont need to update email address if the same as the current one
-        let updateData: Partial<typeof data> = { ...data }
+        const updateData: Partial<typeof data> = { ...data }
         if (data.email === user.email) delete updateData.email
         if (data.avatar === "") updateData.avatar = null
         if (updateData.email) {
@@ -53,8 +51,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             description: updateData.email ? "Verification email sent to " + updateData.email : undefined,
           },
         })
-      } catch (e: any) {
-        return badRequest(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     case ProfileActionMethods.DeleteAcccount:
       try {
@@ -63,8 +65,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
         const headers = new Headers([["Set-Cookie", await destroy()]])
         return redirect("/", request, { headers, flash: { title: "Account deleted!" } })
-      } catch (e: any) {
-        return badRequest(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     default:
       return badRequest("Invalid action")

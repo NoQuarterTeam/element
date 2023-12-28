@@ -1,8 +1,9 @@
-import { useRouter } from "expo-router"
 import type * as React from "react"
 import { ScrollView, View } from "react-native"
-import { Text } from "./Text"
+import { useRouter } from "expo-router"
+
 import { Button } from "./Button"
+import { Text } from "./Text"
 
 interface Props {
   text: string

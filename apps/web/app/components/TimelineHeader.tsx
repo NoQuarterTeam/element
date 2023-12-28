@@ -11,13 +11,12 @@ import dayjs from "dayjs"
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 import { DATE_BACK } from "~/lib/hooks/useTimelineTaskDates"
-
+import { useMe } from "~/lib/hooks/useUser"
 import type { TimelineHabitResponse } from "~/pages/api+/habits"
 import type { WeatherData } from "~/pages/api+/weather"
 
 import { Habits } from "./Habits"
 import { Spinner } from "./ui/Spinner"
-import { useMe } from "~/lib/hooks/useUser"
 
 export const HEADER_HEIGHT = 120
 
@@ -111,7 +110,7 @@ function _HeaderDay(props: {
           dayjs(dayjs(props.day).format("YYYY-MM-DD")).isSame(dayjs(e.createdAt).format("YYYY-MM-DD"), "date"),
         )) ||
       [],
-    [props.day, props.habitEntries],
+    [props.day, props.habitEntries, props.habits, props.isHabitsEnabled],
   )
   return (
     <InView>

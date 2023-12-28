@@ -1,5 +1,4 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
-
 import { useLoaderData } from "@remix-run/react"
 import currencyjs from "currency.js"
 import dayjs from "dayjs"
@@ -18,7 +17,6 @@ import { INVOICE_STATUS } from "~/lib/static/invoiceStatus"
 import { TAX_TYPES } from "~/lib/static/taxTypes"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { getCurrentUser } from "~/services/auth/auth.server"
-import { FlashType, getFlashSession } from "~/services/session/flash.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
@@ -100,8 +98,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         })
 
         return json({ success: true }, request, { flash: { title: "Billing details updated" } })
-      } catch (e: any) {
-        return badRequest(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
 
     default:

@@ -19,13 +19,13 @@ import { useEventListener } from "~/lib/hooks/useEventListener"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
+import { useMe } from "~/lib/hooks/useUser"
 
 import { useTheme } from "../lib/theme"
 import { ShortcutsInfo } from "./ShortcutsInfo"
 import { IconButton } from "./ui/IconButton"
 import { Modal } from "./ui/Modal"
 import { Tooltip } from "./ui/Tooltip"
-import { useMe } from "~/lib/hooks/useUser"
 
 export function Nav() {
   const shortcutModalProps = useDisclosure()

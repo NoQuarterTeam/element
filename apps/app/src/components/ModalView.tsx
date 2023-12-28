@@ -1,10 +1,11 @@
-import { useRouter } from "expo-router"
-import { StatusBar } from "expo-status-bar"
 import type * as React from "react"
 import { Text, TouchableOpacity, View } from "react-native"
+import { useRouter } from "expo-router"
+import { StatusBar } from "expo-status-bar"
+import { X } from "lucide-react-native"
 
 import { join } from "@element/shared"
-import { X } from "lucide-react-native"
+
 import { Heading } from "./Heading"
 import { Icon } from "./Icon"
 

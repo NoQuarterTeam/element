@@ -71,7 +71,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             name: z.string(),
             elementId: z.string().uuid(),
             date: z
-              .preprocess((d) => (d ? dayjs(d as any).toDate() : undefined), z.date(), {
+              .preprocess((d) => (d ? dayjs(d as string).toDate() : undefined), z.date(), {
                 errorMap: () => ({ message: "Invalid date" }),
               })
               .nullable()
@@ -82,7 +82,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               .optional()
               .nullable(),
             repeatEndDate: z
-              .preprocess((d) => (d ? dayjs(d as any).toDate() : undefined), z.date())
+              .preprocess((d) => (d ? dayjs(d as string).toDate() : undefined), z.date())
               .optional()
               .nullable(),
             durationHours: z
@@ -171,8 +171,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           return task
         })
         return json({ task: newTask })
-      } catch (e: any) {
-        return json(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     case TasksActionMethods.UpdateOrder:
       try {
@@ -191,8 +195,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           ),
         )
         return json({ success: true })
-      } catch (e: any) {
-        return json(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     default:
       return redirect("/")

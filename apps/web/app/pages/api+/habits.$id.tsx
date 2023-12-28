@@ -32,8 +32,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         if (editForm.fieldErrors) return badRequest(editForm)
         const editHabit = await db.habit.update({ where: { id }, data: { name: editForm.data.name } })
         return json({ habit: editHabit })
-      } catch (e: any) {
-        return json(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     case HabitActionMethods.ToggleComplete:
       try {
@@ -61,8 +65,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
           await db.habitEntry.create({ data: { creatorId: user.id, habitId: id, createdAt: date } })
         }
         return json({ success: true })
-      } catch (e: any) {
-        return json(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     case HabitActionMethods.Archive:
       try {
@@ -72,15 +80,23 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         const archivedAt = archiveForm.data.archivedAt
         await db.habit.update({ where: { id }, data: { archivedAt: dayjs(archivedAt).toDate() } })
         return json({ success: true })
-      } catch (e: any) {
-        return json(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     case HabitActionMethods.Delete:
       try {
         await db.habit.delete({ where: { id } })
         return json({ success: true })
-      } catch (e: any) {
-        return json(e.message)
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          return badRequest(e.message)
+        } else {
+          return badRequest("Something went wrong")
+        }
       }
     default:
       return redirect("/")

@@ -1,11 +1,10 @@
 import type * as React from "react"
 import { TouchableOpacity, View } from "react-native"
-
 import { useRouter } from "expo-router"
+import { ChevronLeft } from "lucide-react-native"
 
 import { Heading } from "./Heading"
 import { Icon } from "./Icon"
-import { ChevronLeft } from "lucide-react-native"
 
 interface Props {
   title: string

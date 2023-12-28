@@ -1,5 +1,6 @@
 import * as React from "react"
 import { RiAddCircleLine, RiDeleteBin4Line, RiFolder2Line } from "react-icons/ri"
+import { type Habit } from "@element/database/types"
 import { merge, useDisclosure } from "@element/shared"
 import { useFetcher } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
@@ -16,7 +17,6 @@ import { FormButton, FormError, FormField } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
 import { Checkbox } from "./ui/Inputs"
 import { Tooltip } from "./ui/Tooltip"
-import { type Habit } from "@element/database/types"
 
 interface Props {
   habits: TimelineHabit[]
@@ -120,6 +120,7 @@ function HabitForm(props: { onClose: () => void; day: string }) {
       })
       props.onClose()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createFetcher.state, createFetcher.data])
   return (
     <createFetcher.Form action="/api/habits" method="post">

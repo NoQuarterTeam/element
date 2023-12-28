@@ -14,6 +14,7 @@ import Animated, {
 } from "react-native-reanimated"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
+import { BlurView } from "expo-blur"
 import * as Haptics from "expo-haptics"
 import { Link, router } from "expo-router"
 import { Book, Calendar, Clock, MoreVertical, Plus, X } from "lucide-react-native"
@@ -22,14 +23,13 @@ import { formatDuration, join, safeReadableColor } from "@element/shared"
 
 import { Heading } from "../../../components/Heading"
 import { Icon } from "../../../components/Icon"
+import { OnboardingCheck } from "../../../components/OnboardingCheck"
 import { Text } from "../../../components/Text"
-import { api, type RouterOutputs } from "../../../lib/utils/api"
-import { height } from "../../../lib/utils/device"
-import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
-import { BlurView } from "expo-blur"
 import { useMe } from "../../../lib/hooks/useMe"
 import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
-import { OnboardingCheck } from "../../../components/OnboardingCheck"
+import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
+import { api, type RouterOutputs } from "../../../lib/utils/api"
+import { height } from "../../../lib/utils/device"
 
 dayjs.extend(advancedFormat)
 
