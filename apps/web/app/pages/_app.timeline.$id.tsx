@@ -7,7 +7,9 @@ import { z } from "zod"
 import { TaskForm } from "~/components/TaskForm"
 import { taskItemSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
-import { getFormDataArray, validateFormData } from "~/lib/form"
+import { FORM_ACTION } from "~/lib/form"
+import { formError, getFormDataArray, validateFormData } from "~/lib/form.server"
+
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser, requireUser } from "~/services/auth/auth.server"
 
@@ -38,8 +40,9 @@ export enum TaskActionMethods {
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
-  const formData = await request.formData()
-  const action = formData.get("_action") as TaskActionMethods | undefined
+  const clonedRequest = request.clone()
+  const formData = await clonedRequest.formData()
+  const action = formData.get(FORM_ACTION) as TaskActionMethods | undefined
   const taskId = params.id as string | undefined
   if (!taskId) return badRequest("Task ID is required")
   const task = await db.task.findFirst({ where: { id: taskId, creatorId: { equals: user.id } } })
@@ -48,7 +51,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (action) {
     case TaskActionMethods.UpdateTask:
       try {
-        const updateSchema = z.object({
+        const schema = z.object({
           name: z.string().optional(),
           date: z
             .preprocess((d) => (d ? dayjs(d as any).toDate() : undefined), z.date(), {
@@ -63,9 +66,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
           elementId: z.string().uuid().optional(),
         })
         const hasTodos = formData.has("hasTodos")
-        const { data, fieldErrors } = await validateFormData(updateSchema, formData)
-
-        if (fieldErrors) return badRequest({ fieldErrors, data })
+        const result = await validateFormData(request, schema)
+        if (!result.success) return formError(result)
 
         const todos =
           hasTodos &&
@@ -73,6 +75,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
             name: t.name as string,
             isComplete: !!t.isComplete,
           }))
+        const data = result.data
         const updatedTask = await db.task.update({
           select: taskItemSelectFields,
           where: { id: taskId },

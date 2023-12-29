@@ -96,3 +96,30 @@ export async function createActions<Action extends string>(request: Request, act
 
   return actions[formAction]()
 }
+
+export function shallowEqual(object1: Record<string, string | number | null>, object2: Record<string, string | number | null>) {
+  const keys1 = Object.keys(object1)
+  const keys2 = Object.keys(object2)
+  if (keys1.length !== keys2.length) return false
+  for (const key of keys1) {
+    if (object1[key] !== object2[key]) return false
+  }
+  return true
+}
+
+export const getFormDataArray = (formData: FormData, field: string) =>
+  [...formData.entries()]
+    .filter(([key]) => key.startsWith(field))
+    .reduce(
+      (acc, [key, value]) => {
+        const [prefix, name] = key.split(".")
+        const match = prefix!.match(/\[(\d+)\]$/)
+        const id = match ? Number(match[1]) : 0
+        acc[id] = {
+          ...acc[id],
+          [name!]: value as string | undefined,
+        }
+        return acc
+      },
+      [] as Array<Record<string, string | undefined>>,
+    )

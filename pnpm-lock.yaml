@@ -217,9 +217,15 @@ importers:
       '@element/database':
         specifier: workspace:*
         version: link:../../packages/database
+      '@element/emails':
+        specifier: workspace:*
+        version: link:../../packages/emails
       '@element/server-env':
         specifier: workspace:*
         version: link:../../packages/server/env
+      '@element/server-schemas':
+        specifier: workspace:*
+        version: link:../../packages/server/schemas
       '@element/server-services':
         specifier: workspace:*
         version: link:../../packages/server/services
@@ -262,51 +268,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.0.5
         version: 1.0.7(@types/react-dom@18.2.14)(@types/react@18.2.31)(react-dom@18.2.0)(react@18.2.0)
-      '@react-email/button':
-        specifier: 0.0.10
-        version: 0.0.10
-      '@react-email/column':
-        specifier: 0.0.7
-        version: 0.0.7
-      '@react-email/container':
-        specifier: 0.0.8
-        version: 0.0.8
-      '@react-email/font':
-        specifier: ^0.0.3
-        version: 0.0.3
-      '@react-email/head':
-        specifier: 0.0.5
-        version: 0.0.5
-      '@react-email/heading':
-        specifier: 0.0.9
-        version: 0.0.9(@types/react@18.2.31)
-      '@react-email/hr':
-        specifier: 0.0.5
-        version: 0.0.5
-      '@react-email/html':
-        specifier: 0.0.4
-        version: 0.0.4
-      '@react-email/img':
-        specifier: 0.0.5
-        version: 0.0.5
-      '@react-email/link':
-        specifier: 0.0.5
-        version: 0.0.5
-      '@react-email/render':
-        specifier: 0.0.7
-        version: 0.0.7
-      '@react-email/tailwind':
-        specifier: 0.0.9
-        version: 0.0.9
-      '@react-email/text':
-        specifier: 0.0.5
-        version: 0.0.5
       '@remix-run/css-bundle':
         specifier: ^2.3.1
         version: 2.3.1
-      '@remix-run/express':
-        specifier: 2.3.1
-        version: 2.3.1(express@4.18.2)(typescript@5.3.3)
       '@remix-run/node':
         specifier: 2.3.1
         version: 2.3.1(typescript@5.3.3)
@@ -334,15 +298,9 @@ importers:
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
-      compression:
-        specifier: 1.7.4
-        version: 1.7.4
       cookie:
         specifier: 0.5.0
         version: 0.5.0
-      cross-env:
-        specifier: 7.0.3
-        version: 7.0.3
       currency.js:
         specifier: 2.0.4
         version: 2.0.4
@@ -382,15 +340,12 @@ importers:
       limax:
         specifier: 4.1.0
         version: 4.1.0
+      lucide-react:
+        specifier: ^0.303.0
+        version: 0.303.0(react@18.2.0)
       match-sorter:
         specifier: 6.3.1
         version: 6.3.1
-      morgan:
-        specifier: 1.10.0
-        version: 1.10.0
-      nodemailer:
-        specifier: 6.9.6
-        version: 6.9.6
       polished:
         specifier: 4.2.2
         version: 4.2.2
@@ -5214,13 +5169,6 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@react-email/button@0.0.10:
-    resolution: {integrity: sha512-S8r7NGTxXoxvw5kCdMzpwXdBHhYAhrYM9sylK6xr+2M9osrjHQOPLBoV3I/po9xdzN3WyRcZqQixH0wPeXy2Gw==}
-    engines: {node: '>=16.0.0'}
-    dependencies:
-      react: 18.2.0
-    dev: false
-
   /@react-email/button@0.0.9:
     resolution: {integrity: sha512-eYWQ1X4RFlkKYYSPgSrT6rk98wuLOieEAGENrp9j37t1v/1C+jMmBu0UjZvwHsHWdbOMRjbVDFeMI/+MxWKSEg==}
     engines: {node: '>=16.0.0'}
@@ -5274,12 +5222,6 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@react-email/font@0.0.3:
-    resolution: {integrity: sha512-lhUDMX3bGGXOAY1uviH3OKn2aG6VR+NQf4RqmynHm+Vx+G9eXLJFUDiDeaVJSQFh0+7zCQK8eUGD/+DbEntmtw==}
-    dependencies:
-      react: 18.2.0
-    dev: false
-
   /@react-email/head@0.0.5:
     resolution: {integrity: sha512-s84OxJxZMee2z5b1a+RVwY1NOSUNNf1ecjPf6n64aZmMNcNUyn4gOl7RO6xbfBrZko7TigBwsFB1Cgjxtn/ydg==}
     engines: {node: '>=16.0.0'}
@@ -5293,16 +5235,6 @@ packages:
     dependencies:
       '@radix-ui/react-slot': 1.0.0(react@18.2.0)
       react: 18.2.0
-    dev: false
-
-  /@react-email/heading@0.0.9(@types/react@18.2.31):
-    resolution: {integrity: sha512-xzkcGlm+/aFrNlJZBKzxRKkRYJ2cRx92IqmSKAuGnwuKQ/uMKomXzPsHPu3Dclmnhn3wVKj4uprkgQOoxP6uXQ==}
-    engines: {node: '>=16.0.0'}
-    dependencies:
-      '@radix-ui/react-slot': 1.0.2(@types/react@18.2.31)(react@18.2.0)
-      react: 18.2.0
-    transitivePeerDependencies:
-      - '@types/react'
     dev: false
 
   /@react-email/hr@0.0.5:
@@ -5375,18 +5307,6 @@ packages:
     engines: {node: '>=16.0.0'}
     dependencies:
       html-react-parser: 3.0.9(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      tw-to-css: 0.0.11
-    transitivePeerDependencies:
-      - ts-node
-    dev: false
-
-  /@react-email/tailwind@0.0.9:
-    resolution: {integrity: sha512-hVGMTVjg2u51TU8dMInc8l3R6+O2t54sx0mzQnJ2mOLwJQkfibh3HA4lmEa0V1qlv8mT/nti0vzC6QshdCxqjg==}
-    engines: {node: '>=16.0.0'}
-    dependencies:
-      html-react-parser: 4.0.0(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       tw-to-css: 0.0.11
@@ -8554,14 +8474,6 @@ packages:
       yaml: 1.10.2
     dev: false
 
-  /cross-env@7.0.3:
-    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
-    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
-    hasBin: true
-    dependencies:
-      cross-spawn: 7.0.3
-    dev: false
-
   /cross-fetch@3.1.8:
     resolution: {integrity: sha512-cvA+JwZoU0Xq+h6WkMvAUqPEYy92Obet6UdKLfW60qn99ftItKjB5T+BkyWOFWe2pUyfQ+IJHmpOTznqk1M6Kg==}
     dependencies:
@@ -11297,13 +11209,6 @@ packages:
       htmlparser2: 8.0.1
     dev: false
 
-  /html-dom-parser@4.0.0:
-    resolution: {integrity: sha512-TUa3wIwi80f5NF8CVWzkopBVqVAtlawUzJoLwVLHns0XSJGynss4jiY0mTWpiDOsuyw+afP+ujjMgRh9CoZcXw==}
-    dependencies:
-      domhandler: 5.0.3
-      htmlparser2: 9.0.0
-    dev: false
-
   /html-react-parser@3.0.9(react@18.2.0):
     resolution: {integrity: sha512-gOPZmaCMXNYu7Y9+58k2tLhTMXQ+QN8ctNFijzLuBxJaLZ6TsN+tUpN+MhbI+6nGaBCRGT2rpw6y/AqkTFZckg==}
     peerDependencies:
@@ -11311,18 +11216,6 @@ packages:
     dependencies:
       domhandler: 5.0.3
       html-dom-parser: 3.1.3
-      react: 18.2.0
-      react-property: 2.0.0
-      style-to-js: 1.1.3
-    dev: false
-
-  /html-react-parser@4.0.0(react@18.2.0):
-    resolution: {integrity: sha512-OzlOavs9lLyBxoRiXbXfODIX/nSShukMtdx3+WSMjon/FF1gJZRq0rBELoR5OswfbN56C0oKpAii7i3yzO/uVQ==}
-    peerDependencies:
-      react: 0.14 || 15 || 16 || 17 || 18
-    dependencies:
-      domhandler: 5.0.3
-      html-dom-parser: 4.0.0
       react: 18.2.0
       react-property: 2.0.0
       style-to-js: 1.1.3
@@ -11361,15 +11254,6 @@ packages:
 
   /htmlparser2@8.0.2:
     resolution: {integrity: sha512-GYdjWKDkbRLkZ5geuHs5NY1puJ+PXwP7+fHPRz06Eirsb9ugf6d8kkXav6ADhcODhFFPMIXyxkxSuMf3D6NCFA==}
-    dependencies:
-      domelementtype: 2.3.0
-      domhandler: 5.0.3
-      domutils: 3.1.0
-      entities: 4.5.0
-    dev: false
-
-  /htmlparser2@9.0.0:
-    resolution: {integrity: sha512-uxbSI98wmFT/G4P2zXx4OVx04qWUmyFPrD2/CNepa2Zo3GPNaCaaxElDgwUrwYWkK1nr9fft0Ya8dws8coDLLQ==}
     dependencies:
       domelementtype: 2.3.0
       domhandler: 5.0.3
@@ -12508,6 +12392,14 @@ packages:
       react-native-svg: 13.9.0(react-native@0.72.6)(react@18.2.0)
     dev: false
 
+  /lucide-react@0.303.0(react@18.2.0):
+    resolution: {integrity: sha512-B0B9T3dLEFBYPCUlnUS1mvAhW1craSbF9HO+JfBjAtpFUJ7gMIqmEwNSclikY3RiN2OnCkj/V1ReAQpaHae8Bg==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
@@ -13634,11 +13526,6 @@ packages:
   /node-stream-zip@1.15.0:
     resolution: {integrity: sha512-LN4fydt9TqhZhThkZIVQnF9cwjU3qmUH9h78Mx/K7d3VvfRqqwthLwJEUOEL0QPZ0XQmNN7be5Ggit5+4dq3Bw==}
     engines: {node: '>=0.12.0'}
-
-  /nodemailer@6.9.6:
-    resolution: {integrity: sha512-s7pDtWwe5fLMkQUhw8TkWB/wnZ7SRdd9HRZslq/s24hlZvBP3j32N/ETLmnqTpmj4xoBZL9fOWyCIZ7r2HORHg==}
-    engines: {node: '>=6.0.0'}
-    dev: false
 
   /nodemailer@6.9.7:
     resolution: {integrity: sha512-rUtR77ksqex/eZRLmQ21LKVH5nAAsVicAtAYudK7JgwenEDZ0UIQ1adUGqErz7sMkWYxWTTU1aeP2Jga6WQyJw==}

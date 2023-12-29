@@ -1,3 +1,4 @@
+import { sendAccountVerificationEmail } from "@element/server-services"
 import type { ActionFunctionArgs } from "@remix-run/node"
 import { useFetcher, useSubmit } from "@remix-run/react"
 import { z } from "zod"
@@ -7,12 +8,13 @@ import { Button } from "~/components/ui/Button"
 import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Form, FormButton, FormError, FormField, ImageField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
-import { validateFormData } from "~/lib/form"
+import { FORM_ACTION } from "~/lib/form"
+import { formError, validateFormData } from "~/lib/form.server"
 import { useMe } from "~/lib/hooks/useUser"
+import { createToken } from "~/lib/jwt.server"
 import { badRequest, redirect } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
 import { getUserSession } from "~/services/session/session.server"
-import { sendEmailVerification } from "~/services/user/user.mailer.server"
 
 export enum ProfileActionMethods {
   DeleteAcccount = "deleteAccount",
@@ -21,20 +23,22 @@ export enum ProfileActionMethods {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
-  const formData = await request.formData()
-  const action = formData.get("_action") as ProfileActionMethods | undefined
+  const clonedRequest = request.clone()
+  const formData = await clonedRequest.formData()
+  const action = formData.get(FORM_ACTION) as ProfileActionMethods | undefined
   switch (action) {
     case ProfileActionMethods.UpdateProfile:
       try {
-        const updateSchema = z.object({
+        const schema = z.object({
           email: z.string().min(3).email("Invalid email").optional(),
           firstName: z.string().min(2, "Must be at least 2 characters").optional(),
           lastName: z.string().min(2, "Must be at least 2 characters").optional(),
           avatar: z.string().nullable().optional(),
         })
 
-        const { data, fieldErrors } = await validateFormData(updateSchema, formData)
-        if (fieldErrors) return badRequest({ fieldErrors, data })
+        const result = await validateFormData(request, schema)
+        if (!result.success) return formError(result)
+        const data = result.data
         // Dont need to update email address if the same as the current one
         const updateData: Partial<typeof data> = { ...data }
         if (data.email === user.email) delete updateData.email
@@ -42,7 +46,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         if (updateData.email) {
           const existing = await db.user.findFirst({ where: { email: { equals: updateData.email } } })
           if (existing) return badRequest({ data, formError: "User with these details already exists" })
-          await sendEmailVerification(user)
+          const token = await createToken({ id: user.id })
+          await sendAccountVerificationEmail(user, token)
         }
         await db.user.update({ where: { id: user.id }, data: { ...data, verifiedAt: updateData.email ? null : undefined } })
         return redirect("/timeline/profile", request, {
@@ -86,7 +91,7 @@ export default function Account() {
     <div className="stack">
       <p className="text-lg font-medium">Account</p>
       {!me.verifiedAt && (
-        <verifyFetcher.Form action="/api/email-verification" method="post">
+        <verifyFetcher.Form action="/api/verify" method="post">
           <div className="stack rounded-sm bg-orange-100 p-2 dark:bg-orange-900">
             <p className="text-md">Your account is not yet verified</p>
             <p className="text-xs">Please check your email inbox for a verification link</p>
@@ -123,10 +128,10 @@ export default function Account() {
           Permanently delete your account and all of its contents. This action is not reversible - please continue with caution.
         </p>
         <AlertDialog
-          triggerButton={<Button colorScheme="red">Delete account</Button>}
+          triggerButton={<Button variant="destructive">Delete account</Button>}
           confirmButton={
             <Form method="post" replace>
-              <Button name="_action" value={ProfileActionMethods.DeleteAcccount} colorScheme="red" type="submit">
+              <Button name="_action" value={ProfileActionMethods.DeleteAcccount} variant="destructive" type="submit">
                 Delete account
               </Button>
             </Form>

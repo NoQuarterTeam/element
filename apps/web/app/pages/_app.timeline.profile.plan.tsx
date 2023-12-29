@@ -12,6 +12,7 @@ import { Form, FormButton } from "~/components/ui/Form"
 import { Input } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
 import { db } from "~/lib/db.server"
+import { FORM_ACTION } from "~/lib/form"
 import { badRequest } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { getCurrentUser } from "~/services/auth/auth.server"
@@ -54,8 +55,9 @@ export enum ProfilePlanMethods {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
-  const formData = await request.formData()
-  const action = formData.get("_action") as ProfilePlanMethods | undefined
+  const clonedRequest = request.clone()
+  const formData = await clonedRequest.formData()
+  const action = formData.get(FORM_ACTION) as ProfilePlanMethods | undefined
   switch (action) {
     case ProfilePlanMethods.JoinPlan:
       try {
@@ -215,7 +217,7 @@ export default function Plan() {
                   <Button
                     size="xs"
                     isLoading={cancelFetcher.state !== "idle"}
-                    colorScheme={!data?.subscription || data?.subscription?.isCancelled ? "gray" : "primary"}
+                    variant={!data?.subscription || data?.subscription?.isCancelled ? "secondary" : "primary"}
                     disabled={!data?.subscription || data?.subscription?.isCancelled}
                   >
                     {data?.subscription ? "Downgrade" : "Current plan"}
@@ -223,7 +225,7 @@ export default function Plan() {
                 }
                 confirmButton={
                   <cancelFetcher.Form method="post">
-                    <Button name="_action" value={ProfilePlanMethods.CancelPlan} colorScheme="red" type="submit">
+                    <Button name="_action" value={ProfilePlanMethods.CancelPlan} variant="destructive" type="submit">
                       Downgrade
                     </Button>
                   </cancelFetcher.Form>
@@ -239,12 +241,12 @@ export default function Plan() {
               </p>
 
               {!data?.subscription ? (
-                <Button size="xs" onClick={joinPlanProps.onOpen} colorScheme="primary">
+                <Button size="xs" onClick={joinPlanProps.onOpen} variant="primary">
                   Upgrade
                 </Button>
               ) : data.subscription.isCancelled ? (
                 <Form method="post" replace>
-                  <FormButton name="_action" value={ProfilePlanMethods.ReactivatePlan} size="xs" colorScheme="primary">
+                  <FormButton name="_action" value={ProfilePlanMethods.ReactivatePlan} size="xs" variant="primary">
                     Reactivate
                   </FormButton>
                 </Form>

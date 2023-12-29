@@ -17,11 +17,12 @@ import { Form, FormButton, FormError, InlineFormField } from "~/components/ui/Fo
 import { Input } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
 import { db } from "~/lib/db.server"
-import { validateFormData } from "~/lib/form"
+import { formError, validateFormData } from "~/lib/form.server"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
 import { getSidebarElements } from "~/services/timeline/sidebar.server"
+import { FORM_ACTION } from "~/lib/form"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
@@ -37,8 +38,9 @@ export enum ElementsActionMethods {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
-  const formData = await request.formData()
-  const action = formData.get("_action") as ElementsActionMethods | undefined
+  const clonedRequest = request.clone()
+  const formData = await clonedRequest.formData()
+  const action = formData.get(FORM_ACTION) as ElementsActionMethods | undefined
 
   switch (action) {
     case ElementsActionMethods.CreateElement:
@@ -49,14 +51,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           })
           if (elementCount >= MAX_FREE_ELEMENTS) return redirect("/timeline/profile/plan/limit-element")
         }
-        const createSchema = z.object({
+        const schema = z.object({
           name: z.string().min(1),
           color: z.string().min(1),
           parentId: z.string().nullable().optional(),
         })
 
-        const { data, fieldErrors } = await validateFormData(createSchema, formData)
-        if (fieldErrors) return badRequest({ fieldErrors, data })
+        const result = await validateFormData(request, schema)
+        if (!result.success) return formError(result)
+        const data = result.data
         let color = data.color
         if (!color && data.parentId) {
           const parent = await db.element.findUniqueOrThrow({ where: { id: data.parentId } })
@@ -108,7 +111,7 @@ export default function Elements() {
       <div className="relative h-screen overflow-y-scroll pb-48">
         <div className="flex items-center justify-between space-x-2 pb-4 pl-4 pr-3 pt-1">
           <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" variant="outline" />
-          <Button colorScheme="primary" leftIcon={<RiAddLine />} onClick={createModalProps.onOpen}>
+          <Button variant="primary" leftIcon={<RiAddLine />} onClick={createModalProps.onOpen}>
             Add
           </Button>
           <Modal title="Create an Element" size="xl" {...createModalProps}>

@@ -13,7 +13,7 @@ export default function Subscribed() {
       <div className="stack space-y-6 p-6">
         <h1 className="w-max text-3xl">You're all set!</h1>
         <p>Your account is now verified</p>
-        <Button colorScheme="primary" onClick={() => navigate("/timeline")}>
+        <Button variant="primary" onClick={() => navigate("/timeline")}>
           Let's get going
         </Button>
       </div>

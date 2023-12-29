@@ -1,8 +1,8 @@
 import type { User } from "@element/database/types"
 import { FULL_WEB_URL } from "@element/server-env"
 
-import { ResetPasswordEmail, VerifyAccountEmail } from "../../../../emails/src"
 import { mailer } from "../lib/mailer.server"
+import { ResetPasswordEmail, VerifyAccountEmail } from "@element/emails"
 export async function sendResetPasswordEmail(user: Pick<User, "email">, token: string) {
   try {
     if (!user.email) return

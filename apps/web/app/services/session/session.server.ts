@@ -1,9 +1,11 @@
-import { env,IS_PRODUCTION } from "@element/server-env"
+import { env, IS_PRODUCTION } from "@element/server-env"
 import { createCookieSessionStorage } from "@remix-run/node"
+import { createTypedSessionStorage } from "remix-utils/typed-session"
+import { z } from "zod"
 
-export const COOKIE_KEY = IS_PRODUCTION ? "element_session" : "element_session_dev"
+const COOKIE_KEY = IS_PRODUCTION ? "element" : "element_session_dev"
 
-const userStorage = createCookieSessionStorage({
+const storage = createCookieSessionStorage({
   cookie: {
     name: COOKIE_KEY,
     secrets: [env.SESSION_SECRET],
@@ -15,14 +17,16 @@ const userStorage = createCookieSessionStorage({
   },
 })
 
+const userStorage = createTypedSessionStorage({ sessionStorage: storage, schema: z.object({ userId: z.string().optional() }) })
+
 export async function getUserSession(request: Request) {
   const session = await userStorage.getSession(request.headers.get("Cookie"))
   const commit = () => userStorage.commitSession(session)
   const destroy = () => userStorage.destroySession(session)
-  const userId: string | null = session.get("userId") || null
   const setUser = (id: string) => {
     session.set("userId", id)
     return commit()
   }
+  const userId = session.get("userId") || null
   return { commit, destroy, session, setUser, userId }
 }

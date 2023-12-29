@@ -7,7 +7,9 @@ import { z } from "zod"
 
 import { taskItemSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
-import { getFormDataArray, validateFormData } from "~/lib/form"
+import { FORM_ACTION } from "~/lib/form"
+import { formError, getFormDataArray, validateFormData } from "~/lib/form.server"
+
 import { badRequest, redirect } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
 
@@ -47,9 +49,9 @@ export enum TasksActionMethods {
 }
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
-  const formData = await request.formData()
-
-  const action = formData.get("_action") as TasksActionMethods | undefined
+  const clonedRequest = request.clone()
+  const formData = await clonedRequest.formData()
+  const action = formData.get(FORM_ACTION) as TasksActionMethods | undefined
 
   switch (action) {
     case TasksActionMethods.AddTask:
@@ -66,7 +68,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             },
           })
         }
-        const createSchema = z
+        const schema = z
           .object({
             name: z.string(),
             elementId: z.string().uuid(),
@@ -110,9 +112,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               })
           })
 
-        const { data, fieldErrors } = await validateFormData(createSchema, formData)
-        if (fieldErrors) return badRequest({ data, fieldErrors })
-
+        const result = await validateFormData(request, schema)
+        if (!result.success) return formError(result)
+        const data = result.data
         const todos = getFormDataArray(formData, "todos").map((t) => ({
           name: t.name as string,
           isComplete: !!t.isComplete,

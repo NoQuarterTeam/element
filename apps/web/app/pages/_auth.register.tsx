@@ -1,17 +1,17 @@
+import { registerSchema } from "@element/server-schemas"
+import { hashPassword, sendAccountVerificationEmail } from "@element/server-services"
 import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node"
 import { Link } from "@remix-run/react"
-import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
-import { validateFormData } from "~/lib/form"
+import { FORM_ACTION } from "~/lib/form"
+import { formError, validateFormData } from "~/lib/form.server"
+import { createToken } from "~/lib/jwt.server"
 import { badRequest, redirect } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
-import { hashPassword } from "~/services/auth/password.server"
-import { generateFakeUser } from "~/services/auth/temporary-account.server"
 import { getUserSession } from "~/services/session/session.server"
 import { createTemplates } from "~/services/timeline/templates.server"
-import { sendEmailVerification } from "~/services/user/user.mailer.server"
 
 export const meta: MetaFunction = () => {
   return [{ title: "Register" }]
@@ -28,21 +28,18 @@ enum RegisterActionMethods {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData()
-  const action = formData.get("_action") as RegisterActionMethods | undefined
+  const clonedRequest = request.clone()
+  const formData = await clonedRequest.formData()
+  const action = formData.get(FORM_ACTION) as RegisterActionMethods | undefined
 
   switch (action) {
     case RegisterActionMethods.Register:
       try {
         if (formData.get("passwordConfirmation")) return redirect("/")
-        const registerSchema = z.object({
-          email: z.string().min(3).email("Invalid email"),
-          password: z.string().min(8, "Must be at least 8 characters"),
-          firstName: z.string().min(2, "Must be at least 2 characters"),
-          lastName: z.string().min(2, "Must be at least 2 characters"),
-        })
-        const { data, fieldErrors } = await validateFormData(registerSchema, formData)
-        if (fieldErrors) return badRequest({ fieldErrors, data })
+
+        const result = await validateFormData(request, registerSchema)
+        if (!result.success) return formError(result)
+        const data = result.data
 
         const email = data.email.toLowerCase().trim()
         const existing = await db.user.findFirst({ where: { email } })
@@ -55,39 +52,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const user = await db.user.create({ data: { ...data, email, password, stripeCustomerId: stripeCustomer.id } })
         await createTemplates(user.id)
         const { setUser } = await getUserSession(request)
-        await sendEmailVerification(user)
+        const token = await createToken({ id: user.id })
+        await sendAccountVerificationEmail(user, token)
 
         const headers = new Headers([["Set-Cookie", await setUser(user.id)]])
         return redirect("/timeline", request, {
           flash: {
             title: "Welcome to Element, " + data.firstName,
             description: "Check your emails to verify your account.",
-          },
-          headers,
-        })
-      } catch (e: unknown) {
-        if (e instanceof Error) {
-          return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
-        }
-      }
-    case RegisterActionMethods.RegisterTemporay:
-      try {
-        if (formData.get("passwordConfirmation")) return redirect("/")
-        const data = await generateFakeUser()
-        const stripeCustomer = await stripe.customers.create({
-          email: data.email,
-          name: data.firstName + " " + data.lastName,
-        })
-        const user = await db.user.create({ data: { ...data, stripeCustomerId: stripeCustomer.id } })
-        await createTemplates(user.id)
-        const { setUser } = await getUserSession(request)
-        const headers = new Headers([["Set-Cookie", await setUser(user.id)]])
-        return redirect("/timeline", request, {
-          flash: {
-            title: "Welcome to Element, " + data.firstName,
-            description: "This is a temporary account, change your email to convert to a permanent account.",
           },
           headers,
         })
@@ -132,27 +104,6 @@ export default function Register() {
           </div>
         </div>
       </Form>
-      <div>
-        <div className="flex items-center justify-center py-4">
-          <div className="mr-3 flex-grow border-t border-gray-300 dark:border-gray-700" aria-hidden="true"></div>
-          <div className="opacity-50">or</div>
-          <div className="ml-3 flex-grow border-t border-gray-300 dark:border-gray-700" aria-hidden="true"></div>
-        </div>
-        <Form method="post" replace>
-          <input name="passwordConfirmation" className="hidden" />
-          <FormButton
-            variant="outline"
-            colorScheme="gray"
-            type="submit"
-            name="_action"
-            value={RegisterActionMethods.RegisterTemporay}
-            className="w-full"
-          >
-            Create a temporary account
-          </FormButton>
-        </Form>
-        <p className="pt-1 text-center text-xs opacity-60">This can be converted to a real account later on</p>
-      </div>
     </div>
   )
 }

@@ -1,13 +1,15 @@
+import { sendAccountVerificationEmail } from "@element/server-services"
 import { type ActionFunctionArgs } from "@remix-run/node"
 
+import { createToken } from "~/lib/jwt.server"
 import { redirect } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
-import { sendEmailVerification } from "~/services/user/user.mailer.server"
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
   if (user.verifiedAt) return redirect("/")
-  await sendEmailVerification(user)
+  const token = await createToken({ id: user.id })
+  await sendAccountVerificationEmail(user, token)
 
   return redirect("/timeline/profile", request, {
     flash: {

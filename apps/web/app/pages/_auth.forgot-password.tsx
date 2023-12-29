@@ -1,13 +1,13 @@
+import { sendResetPasswordEmail } from "@element/server-services"
 import { type ActionFunctionArgs } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
-import { validateFormData } from "~/lib/form"
+import { formError, validateFormData } from "~/lib/form.server"
 import { createToken } from "~/lib/jwt.server"
-import { badRequest, redirect } from "~/lib/remix"
-import { sendResetPasswordEmail } from "~/services/user/user.mailer.server"
+import { redirect } from "~/lib/remix"
 
 export const headers = () => {
   return {
@@ -16,24 +16,20 @@ export const headers = () => {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData()
-  const resetSchema = z.object({ email: z.string().email("Invalid email") })
-  const { data, fieldErrors } = await validateFormData(resetSchema, formData)
-  if (fieldErrors) return badRequest({ fieldErrors, data })
-  const user = await db.user.findUnique({ where: { email: data.email } })
+  const schema = z.object({ email: z.string().email("Invalid email") })
+  const result = await validateFormData(request, schema)
+  if (!result.success) return formError(result)
+  const user = await db.user.findUnique({ where: { email: result.data.email } })
   if (user) {
     const token = await createToken({ id: user.id })
     await sendResetPasswordEmail(user, token)
   }
-
-  return redirect("/login", request, {
-    flash: { title: "Reset link sent to your email" },
-  })
+  return redirect("/login", request, { flash: { title: "Reset link sent to your email" } })
 }
 
 export default function ForgotPassword() {
   return (
-    <Form method="post">
+    <Form>
       <div className="stack">
         <h1 className="text-4xl font-bold">Forgot password?</h1>
         <p>Enter your email below to receive your password reset instructions.</p>

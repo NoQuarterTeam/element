@@ -1,3 +1,5 @@
+import { loginSchema } from "@element/server-schemas"
+import { comparePasswords } from "@element/server-services"
 import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { Link, useSearchParams } from "@remix-run/react"
@@ -5,9 +7,8 @@ import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
-import { validateFormData } from "~/lib/form"
+import { formError, validateFormData } from "~/lib/form.server"
 import { badRequest } from "~/lib/remix"
-import { comparePasswords } from "~/services/auth/password.server"
 import { getUserSession } from "~/services/session/session.server"
 
 export const meta: MetaFunction = () => {
@@ -20,15 +21,11 @@ export const headers = () => {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData()
-  const loginSchema = z.object({
-    email: z.string().min(3).email("Invalid email"),
-    password: z.string().min(8, "Must be at least 8 characters"),
-    redirectTo: z.string().nullable().optional(),
-  })
-  const { data, fieldErrors } = await validateFormData(loginSchema, formData)
+  const schema = z.object({ redirectTo: z.string().nullable().optional() })
+  const result = await validateFormData(request, loginSchema.merge(schema))
+  if (!result.success) return formError(result)
+  const data = result.data
   const redirectTo = data.redirectTo
-  if (fieldErrors) return badRequest({ fieldErrors, data })
   const user = await db.user.findUnique({ where: { email: data.email } })
   if (!user) return badRequest({ formError: "Incorrect email or password" })
   if (user.archivedAt) return badRequest({ formError: "Incorrect email or password" })

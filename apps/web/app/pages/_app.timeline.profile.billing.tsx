@@ -10,7 +10,8 @@ import { Badge } from "~/components/ui/Badge"
 import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Form, FormButton, FormField, FormFieldLabel } from "~/components/ui/Form"
 import { Select } from "~/components/ui/Inputs"
-import { validateFormData } from "~/lib/form"
+import { FORM_ACTION } from "~/lib/form"
+import { formError, validateFormData } from "~/lib/form.server"
 import { badRequest, json } from "~/lib/remix"
 import { COUNTRIES } from "~/lib/static/countries"
 import { INVOICE_STATUS } from "~/lib/static/invoiceStatus"
@@ -43,12 +44,13 @@ export enum ProfileBillingMethods {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
-  const formData = await request.formData()
-  const action = formData.get("_action") as ProfileBillingMethods | undefined
+  const clonedRequest = request.clone()
+  const formData = await clonedRequest.formData()
+  const action = formData.get(FORM_ACTION) as ProfileBillingMethods | undefined
   switch (action) {
     case ProfileBillingMethods.UpdateBilling:
       try {
-        const billingSchema = z.object({
+        const schema = z.object({
           email: z.string().min(3).email("Invalid email"),
           name: z.string().min(2, "Must be at least 2 characters"),
           address1: z.string().nullable().optional(),
@@ -60,8 +62,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           taxId: z.string().nullable().optional(),
           taxType: z.string().nullable().optional(),
         })
-        const { data, fieldErrors } = await validateFormData(billingSchema, formData)
-        if (fieldErrors) return badRequest({ fieldErrors, data })
+        const result = await validateFormData(request, schema)
+        if (!result.success) return formError(result)
+        const data = result.data
         const customer = await stripe.customers.retrieve(user.stripeCustomerId, { expand: ["tax_ids"] })
         if (customer.deleted) return badRequest("No stripe customer")
         const oldTaxId = customer.tax_ids?.data[0]?.id
@@ -192,7 +195,7 @@ export default function Billing() {
               <p className="text-sm">{dayjs.unix(invoice.created).format("MMM DD, YYYY")}</p>
               <div className="hstack">
                 <p className="text-right text-sm">
-                  <Badge colorScheme={invoice.status === "open" ? "primary" : "gray"}>
+                  <Badge colorScheme={invoice.status === "open" ? "orange" : "gray"}>
                     {INVOICE_STATUS[invoice.status || "draft"]}
                   </Badge>
                 </p>

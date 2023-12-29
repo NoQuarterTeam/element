@@ -209,7 +209,7 @@ export function Pagination(props: PaginationProps) {
           <Button
             size="xs"
             key={page}
-            variant={currentPage === page + 1 ? "solid" : "ghost"}
+            variant={currentPage === page + 1 ? "primary" : "ghost"}
             onClick={() => handleSetPage(page + 1)}
           >
             {page + 1}

@@ -167,7 +167,7 @@ function _TaskItem({ task }: Props) {
                   </Button>
                   <ButtonGroup>
                     <Button onClick={() => handleDelete(false)}>Delete this task</Button>
-                    <Button colorScheme="red" onClick={() => handleDelete(true)}>
+                    <Button variant="destructive" onClick={() => handleDelete(true)}>
                       Delete all future
                     </Button>
                   </ButtonGroup>

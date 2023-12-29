@@ -1,6 +1,8 @@
+"use client"
 import * as React from "react"
-import { merge } from "@element/shared"
 import { cva, type VariantProps } from "class-variance-authority"
+
+import { merge } from "@element/shared"
 
 import { type ButtonProps, buttonStyles } from "./Button"
 import { Spinner } from "./Spinner"
@@ -9,13 +11,17 @@ export const iconbuttonStyles = cva("px-0", {
   variants: {
     size: {
       xs: "sq-7",
-      sm: "sq-9",
-      md: "sq-11",
-      lg: "sq-12",
+      sm: "sq-8",
+      md: "sq-9",
+      lg: "sq-11",
+    },
+    rounded: {
+      true: "rounded-full",
     },
   },
   defaultVariants: {
-    size: "sm",
+    size: "md",
+    rounded: false,
   },
 })
 export type IconButtonStyleProps = VariantProps<typeof iconbuttonStyles>
@@ -23,7 +29,7 @@ export type IconButtonStyleProps = VariantProps<typeof iconbuttonStyles>
 export type IconButtonProps = IconButtonStyleProps & ButtonProps & { icon: React.ReactNode; "aria-label": string }
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(function _IconButton(
-  { variant, size, rounded, colorScheme, isLoading, disabled, icon, ...props },
+  { variant = "secondary", rounded, size, isLoading, disabled, icon, ...props },
   ref,
 ) {
   return (
@@ -32,7 +38,11 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(f
       type="button"
       disabled={disabled || isLoading}
       {...props}
-      className={merge(buttonStyles({ colorScheme, rounded, disabled, variant }), iconbuttonStyles({ size }), props.className)}
+      className={merge(
+        buttonStyles({ size, disabled: disabled || isLoading, variant }),
+        iconbuttonStyles({ size, rounded }),
+        props.className,
+      )}
     >
       <div className="center h-full w-full">{isLoading ? <Spinner size="xs" /> : icon}</div>
     </button>

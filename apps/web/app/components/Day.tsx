@@ -119,11 +119,11 @@ function _Day(props: Props) {
                         tabIndex={dayjs(props.day).isSame(dayjs(), "day") ? 1 : -1}
                       >
                         <IconButton
-                          rounded="full"
                           className="opacity-0 outline-none focus:opacity-100 group-hover/day:opacity-100"
                           variant="ghost"
-                          size="md"
+                          size="lg"
                           tabIndex={-1}
+                          rounded
                           icon={<RiAddCircleLine className="sq-5" />}
                           aria-label="new task"
                         />

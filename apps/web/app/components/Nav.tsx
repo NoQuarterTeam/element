@@ -64,7 +64,7 @@ export function Nav() {
     <>
       <div className="absolute right-0 top-4 flex w-16 justify-center">
         <IconButton
-          rounded="full"
+          rounded
           variant="ghost"
           icon={<FiChevronsLeft className="sq-4" />}
           aria-label="close sidebar"
@@ -80,7 +80,7 @@ export function Nav() {
       >
         <div className="vstack space-y-1">
           <IconButton
-            rounded="full"
+            rounded
             icon={<FiChevronsRight className="sq-4" />}
             aria-label="close nav"
             variant="ghost"
@@ -88,7 +88,7 @@ export function Nav() {
           />
           <Tooltip side="left" label="Backlog">
             <IconButton
-              rounded="full"
+              rounded
               variant="ghost"
               aria-label="open backlog"
               onClick={() => navigate("backlog")}
@@ -102,7 +102,7 @@ export function Nav() {
           </Tooltip>
           <Tooltip side="left" label="Elements">
             <IconButton
-              rounded="full"
+              rounded
               variant="ghost"
               aria-label="open element sidebar"
               onClick={() => navigate("elements")}
@@ -116,7 +116,7 @@ export function Nav() {
           </Tooltip>
           <Tooltip side="left" label="Focus mode">
             <IconButton
-              rounded="full"
+              rounded
               variant="ghost"
               aria-label="open focus mode"
               onClick={() => {
@@ -135,7 +135,7 @@ export function Nav() {
         <div className="stack space-y-1">
           {/* <Tooltip side="left" label="Dashboard" >
             <IconButton
-              rounded="full"
+              rounded
               variant="ghost"
               aria-label="open dashboard"
               onClick={() => navigate("/dashboard")}
@@ -144,7 +144,7 @@ export function Nav() {
           </Tooltip> */}
           <Tooltip side="left" label="Profile">
             <IconButton
-              rounded="full"
+              rounded
               aria-label="Profile"
               variant="ghost"
               onClick={() => navigate("profile")}
@@ -163,7 +163,7 @@ export function Nav() {
             <Tooltip side="left" label="Color mode">
               <IconButton
                 type="submit"
-                rounded="full"
+                rounded
                 aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
                 variant="ghost"
                 icon={theme === "dark" ? <RiSunLine className="sq-4" /> : <RiMoonLine className="sq-4" />}
@@ -173,7 +173,7 @@ export function Nav() {
 
           <Tooltip side="left" label="Shortcuts">
             <IconButton
-              rounded="full"
+              rounded
               onClick={shortcutModalProps.onOpen}
               aria-label="Shortcuts"
               variant="ghost"
@@ -182,7 +182,7 @@ export function Nav() {
           </Tooltip>
           <Tooltip side="left" label="Give feedback">
             <IconButton
-              rounded="full"
+              rounded
               onClick={() => navigate("feedback")}
               aria-label="Give feedback"
               variant="ghost"
@@ -192,7 +192,7 @@ export function Nav() {
           {me.role === Role.ADMIN && (
             <Tooltip side="left" label="Admin">
               <IconButton
-                rounded="full"
+                rounded
                 onClick={() => navigate("/admin")}
                 aria-label="Admin"
                 variant="ghost"
@@ -203,7 +203,7 @@ export function Nav() {
 
           <Tooltip side="left" label="Logout">
             <IconButton
-              rounded="full"
+              rounded
               variant="ghost"
               aria-label="logout"
               onClick={() => logoutSubmit(null, { method: "post", action: "/logout" })}

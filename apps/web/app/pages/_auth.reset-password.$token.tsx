@@ -1,13 +1,13 @@
+import { hashPassword } from "@element/server-services"
 import type { ActionFunctionArgs } from "@remix-run/node"
 import { Link, useParams } from "@remix-run/react"
 import { z } from "zod"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
-import { validateFormData } from "~/lib/form"
+import { formError, validateFormData } from "~/lib/form.server"
 import { decryptToken } from "~/lib/jwt.server"
-import { badRequest, redirect } from "~/lib/remix"
-import { hashPassword } from "~/services/auth/password.server"
+import { redirect } from "~/lib/remix"
 
 export const headers = () => {
   return {
@@ -16,14 +16,13 @@ export const headers = () => {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData()
-  const resetPasswordSchema = z.object({
+  const schema = z.object({
     token: z.string(),
     password: z.string().min(8, "Must be at least 8 characters"),
   })
-  const { data, fieldErrors } = await validateFormData(resetPasswordSchema, formData)
-  if (fieldErrors) return badRequest({ fieldErrors, data })
-
+  const result = await validateFormData(request, schema)
+  if (!result.success) return formError(result)
+  const data = result.data
   const payload = await decryptToken<{ id: string }>(data.token)
   const hashedPassword = await hashPassword(data.password)
   await db.user.update({ where: { id: payload.id }, data: { password: hashedPassword } })

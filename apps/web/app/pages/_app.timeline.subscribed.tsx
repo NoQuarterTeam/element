@@ -13,7 +13,7 @@ export default function Subscribed() {
       <div className="stack space-y-6 p-6">
         <h1 className="w-max text-3xl">Welcome to Element Pro!</h1>
         <p>You can now create unlimited tasks and elements</p>
-        <Button colorScheme="primary" onClick={() => navigate("/timeline")}>
+        <Button variant="primary" onClick={() => navigate("/timeline")}>
           Let's get started
         </Button>
       </div>

@@ -14,9 +14,10 @@ import { Form, FormButton, FormField } from "~/components/ui/Form"
 import { Textarea } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
 import { db } from "~/lib/db.server"
-import { validateFormData } from "~/lib/form"
+import { formError, validateFormData } from "~/lib/form.server"
 import { badRequest, redirect } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
+import { FORM_ACTION } from "~/lib/form"
 
 export enum FeedbackMethods {
   CreateFeedback = "createFeedback",
@@ -24,15 +25,17 @@ export enum FeedbackMethods {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
-  const formData = await request.formData()
-  const action = formData.get("_action") as FeedbackMethods | undefined
+  const clonedRequest = request.clone()
+  const formData = await clonedRequest.formData()
+  const action = formData.get(FORM_ACTION) as FeedbackMethods | undefined
 
   switch (action) {
     case FeedbackMethods.CreateFeedback:
       try {
-        const createSchema = z.object({ content: z.string().min(1), type: z.nativeEnum(FeedbackType) })
-        const { data, fieldErrors } = await validateFormData(createSchema, formData)
-        if (fieldErrors) return badRequest({ fieldErrors, data })
+        const schema = z.object({ content: z.string().min(1), type: z.nativeEnum(FeedbackType) })
+        const result = await validateFormData(request, schema)
+        const data = result.data
+        if (!result.success) return formError(result)
         const feedbackCount = await db.feedback.count({
           where: { creatorId: { equals: user.id }, createdAt: { gte: dayjs().startOf("d").toDate() } },
         })

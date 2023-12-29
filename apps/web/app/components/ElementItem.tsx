@@ -123,7 +123,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
             <IconButton
               className={join("absolute")}
               style={{ left: props.depth === 0 ? "10px" : `${10 + props.depth * 15}px` }}
-              rounded="full"
+              rounded
               size="xs"
               aria-label="expand"
               onClick={expandProps.onToggle}
@@ -140,7 +140,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                 aria-label="more"
                 size="xs"
                 variant="ghost"
-                rounded="full"
+                rounded
                 icon={<RiMore2Fill className="sq-4" />}
               />
             </DropdownMenuTrigger>
@@ -273,7 +273,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                 </Button>
                 <Button
                   type="submit"
-                  colorScheme="primary"
+                  variant="primary"
                   isLoading={updateFetcher.state !== "idle"}
                   name="_action"
                   value={ElementActionMethods.UpdateElement}
@@ -294,7 +294,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                 Cancel
               </Button>
               <Button
-                colorScheme="red"
+                variant="destructive"
                 isLoading={archiveFetcher.state !== "idle"}
                 onClick={() =>
                   archiveFetcher.submit(

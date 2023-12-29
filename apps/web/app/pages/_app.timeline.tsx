@@ -171,8 +171,9 @@ function _Timeline() {
           <div className="vstack">
             <Tooltip label="Create task">
               <IconButton
-                size="md"
-                rounded="full"
+                size="lg"
+                variant="secondary"
+                rounded
                 onClick={() => navigate("new")}
                 aria-label="Create task"
                 icon={<RiAddCircleLine className="sq-5" />}
@@ -180,8 +181,9 @@ function _Timeline() {
             </Tooltip>
             <Tooltip label="Jump to today">
               <IconButton
-                size="md"
-                rounded="full"
+                variant="secondary"
+                size="lg"
+                rounded
                 onClick={handleJumpToToday}
                 aria-label="Jump to today"
                 icon={<RiCalendarEventLine className="sq-4" />}

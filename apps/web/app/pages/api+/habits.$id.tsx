@@ -4,7 +4,8 @@ import dayjs from "dayjs"
 import { z } from "zod"
 
 import { db } from "~/lib/db.server"
-import { validateFormData } from "~/lib/form"
+import { FORM_ACTION } from "~/lib/form"
+import { formError, validateFormData } from "~/lib/form.server"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
 
@@ -17,8 +18,9 @@ export enum HabitActionMethods {
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
   if (!user.stripeSubscriptionId) return redirect("/timeline/profile/plan")
-  const formData = await request.formData()
-  const action = formData.get("_action") as HabitActionMethods | undefined
+  const clonedRequest = request.clone()
+  const formData = await clonedRequest.formData()
+  const action = formData.get(FORM_ACTION) as HabitActionMethods | undefined
   const id = params.id
   if (!id) throw badRequest("ID required")
   const habit = await db.habit.findUnique({ where: { id } })
@@ -27,10 +29,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (action) {
     case HabitActionMethods.Edit:
       try {
-        const editSchema = z.object({ name: z.string() })
-        const editForm = await validateFormData(editSchema, formData)
-        if (editForm.fieldErrors) return badRequest(editForm)
-        const editHabit = await db.habit.update({ where: { id }, data: { name: editForm.data.name } })
+        const schema = z.object({ name: z.string() })
+        const result = await validateFormData(request, schema)
+        if (!result.success) return formError(result)
+        const editHabit = await db.habit.update({ where: { id }, data: { name: result.data.name } })
         return json({ habit: editHabit })
       } catch (e: unknown) {
         if (e instanceof Error) {
@@ -41,9 +43,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       }
     case HabitActionMethods.ToggleComplete:
       try {
-        const toggleSchema = z.object({ date: z.string() })
-        const { data, fieldErrors } = await validateFormData(toggleSchema, formData)
-        if (fieldErrors) return badRequest({ fieldErrors })
+        const schema = z.object({ date: z.string() })
+        const result = await validateFormData(request, schema)
+        if (!result.success) return formError(result)
+        const data = result.data
         const now = dayjs()
         const date = dayjs(data.date)
           .set("hour", now.get("hour"))
@@ -74,10 +77,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       }
     case HabitActionMethods.Archive:
       try {
-        const archiveSchema = z.object({ archivedAt: z.string() })
-        const archiveForm = await validateFormData(archiveSchema, formData)
-        if (archiveForm.fieldErrors) return badRequest(archiveForm)
-        const archivedAt = archiveForm.data.archivedAt
+        const schema = z.object({ archivedAt: z.string() })
+        const result = await validateFormData(request, schema)
+        if (!result.success) return formError(result)
+        const archivedAt = result.data.archivedAt
         await db.habit.update({ where: { id }, data: { archivedAt: dayjs(archivedAt).toDate() } })
         return json({ success: true })
       } catch (e: unknown) {

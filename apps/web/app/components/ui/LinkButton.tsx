@@ -1,32 +1,42 @@
-import { join, merge } from "@element/shared"
+import * as React from "react"
 import { Link, type LinkProps } from "@remix-run/react"
 
-import { buttonSizeStyles, type ButtonStyleProps, buttonStyles } from "./Button"
+import { merge } from "@element/shared"
+import { ButtonStyleProps, buttonSizeStyles, buttonStyles } from "./Button"
 import { Spinner } from "./Spinner"
 
 interface LinkButtonProps extends ButtonStyleProps, LinkProps {
   isLoading?: boolean
   leftIcon?: React.ReactNode
+  rightIcon?: React.ReactNode
 }
 
-export function LinkButton({ variant, size, isLoading, leftIcon, disabled, colorScheme, ...props }: LinkButtonProps) {
+export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(function _LinkButton(
+  { variant = "primary", size, isLoading, leftIcon, rightIcon, disabled, ...props },
+  ref,
+) {
   return (
-    <div className={join("inline-block", disabled && "cursor-not-allowed")}>
-      <Link
-        style={{ pointerEvents: disabled ? "none" : undefined }}
-        {...props}
-        className={merge(buttonStyles({ size, colorScheme, variant, disabled }), buttonSizeStyles({ size }), props.className)}
-      >
-        <div className={join("center", isLoading && "opacity-0")} aria-hidden={isLoading}>
+    <Link
+      ref={ref}
+      {...props}
+      className={merge(
+        buttonStyles({ size, variant, disabled }),
+        buttonSizeStyles({ size }),
+        disabled && "pointer-events-none",
+        props.className,
+      )}
+    >
+      {isLoading ? (
+        <div className="center absolute inset-0">
+          <Spinner size="sm" color={variant === "primary" || variant === "destructive" ? "white" : "black"} />
+        </div>
+      ) : (
+        <>
           {leftIcon && <span className="mr-2">{leftIcon}</span>}
           {props.children}
-        </div>
-        {isLoading && (
-          <div className="center absolute inset-0">
-            <Spinner size={size} />
-          </div>
-        )}
-      </Link>
-    </div>
+          {rightIcon && <span className="ml-2">{rightIcon}</span>}
+        </>
+      )}
+    </Link>
   )
-}
+})

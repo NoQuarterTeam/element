@@ -104,7 +104,7 @@ function FocusItem({ task }: { task: FocusTask }) {
               <IconButton
                 variant="outline"
                 onClick={onToggle}
-                rounded="full"
+                rounded
                 size="xs"
                 aria-label="show description"
                 icon={isOpen ? <RiArrowRightSLine /> : <RiArrowDownSLine />}

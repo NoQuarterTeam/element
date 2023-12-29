@@ -203,7 +203,7 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
             <Tooltip label="Archive">
               <Popover.Trigger asChild>
                 <IconButton
-                  rounded="full"
+                  rounded
                   variant="ghost"
                   aria-label="archive habit"
                   size="xs"
@@ -229,7 +229,12 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
                 <Popover.Close asChild>
                   <Button size="sm">Cancel</Button>
                 </Popover.Close>
-                <Button size="sm" colorScheme="red" onClick={handleArchiveHabit} isLoading={archiveHabitFetcher.state !== "idle"}>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={handleArchiveHabit}
+                  isLoading={archiveHabitFetcher.state !== "idle"}
+                >
                   Archive
                 </Button>
               </div>
@@ -241,7 +246,7 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
             <Tooltip label="Delete">
               <Popover.Trigger asChild>
                 <IconButton
-                  rounded="full"
+                  rounded
                   variant="ghost"
                   aria-label="delete habit"
                   size="xs"
@@ -267,7 +272,7 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
                 <Popover.Close asChild>
                   <Button>Cancel</Button>
                 </Popover.Close>
-                <Button colorScheme="red" onClick={handleDeleteHabit} isLoading={archiveHabitFetcher.state !== "idle"}>
+                <Button variant="destructive" onClick={handleDeleteHabit} isLoading={archiveHabitFetcher.state !== "idle"}>
                   Delete
                 </Button>
               </div>

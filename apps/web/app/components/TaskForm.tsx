@@ -26,6 +26,7 @@ import { Checkbox, Input, Select, Textarea } from "./ui/Inputs"
 import { Modal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
 import { Tooltip } from "./ui/Tooltip"
+import { FORM_ACTION } from "~/lib/form"
 
 type FieldErrors = {
   [Property in keyof TimelineTask]: string[]
@@ -55,6 +56,8 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
 
   const createUpdateFetcher = useFetcherSubmit<CreateUpdateRes>({
     onSuccess: ({ task: createUpdateTask }) => {
+      console.log({ createUpdateTask })
+
       if (!createUpdateTask) return
       if (task) {
         updateTask(createUpdateTask)
@@ -155,7 +158,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
     <createUpdateFetcher.Form method="post" action={task ? `/timeline/${task.id}` : "/api/tasks"}>
       <div className="flex w-full items-start justify-between">
         <input
-          className="w-full border-none bg-transparent pb-1 pl-3 pt-3 text-2xl text-gray-900 focus:outline-none dark:text-gray-100 md:pl-5 md:pt-5 md:text-4xl"
+          className="w-full border-none bg-transparent pb-1 pl-3 pt-3 text-2xl text-gray-900 outline-none focus:outline-none focus:ring-transparent dark:text-gray-100 md:pl-5 md:pt-5 md:text-4xl"
           required
           name="name"
           placeholder="Name"
@@ -164,8 +167,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
         />
         <div className="flex justify-end space-x-1 p-3 md:p-5">
           <Button
-            colorScheme={isImportant ? "primary" : "gray"}
-            variant={isImportant ? "solid" : "outline"}
+            variant={isImportant ? "brand" : "outline"}
             onClick={() => setIsImportant(!isImportant)}
             leftIcon={<HiOutlineExclamation />}
             size="xs"
@@ -230,10 +232,10 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                     Cancel
                   </Button>
                   <Button
-                    name="_action"
+                    name={FORM_ACTION}
                     value={ElementsActionMethods.CreateElement}
                     type="submit"
-                    colorScheme="primary"
+                    variant="primary"
                     isLoading={createElementFetcher.state !== "idle"}
                   >
                     Create
@@ -502,7 +504,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                     </Button>
                     <ButtonGroup>
                       <Button onClick={() => handleDelete(false)}>Delete this task</Button>
-                      <Button colorScheme="red" onClick={() => handleDelete(true)}>
+                      <Button variant="destructive" onClick={() => handleDelete(true)}>
                         Delete all future
                       </Button>
                     </ButtonGroup>
@@ -518,7 +520,6 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
               Cancel
             </Button>
             <FormButton
-              name="_action"
               value={task ? TaskActionMethods.UpdateTask : TasksActionMethods.AddTask}
               isLoading={createUpdateFetcher.state !== "idle"}
             >

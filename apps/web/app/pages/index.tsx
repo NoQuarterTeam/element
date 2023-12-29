@@ -58,7 +58,7 @@ export default function HomeLayout() {
               <themeFetcher.Form action="/api/theme" method="post">
                 <input type="hidden" name="theme" value={isDark ? "light" : "dark"} />
                 <IconButton
-                  rounded="full"
+                  rounded
                   type="submit"
                   aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
                   variant="ghost"
@@ -68,7 +68,7 @@ export default function HomeLayout() {
               <LinkButton size="md" variant="ghost" to="/login">
                 Login
               </LinkButton>
-              <LinkButton size="md" colorScheme="primary" to="/register">
+              <LinkButton size="md" variant="primary" to="/register">
                 Join now
               </LinkButton>
             </div>
@@ -77,7 +77,7 @@ export default function HomeLayout() {
               <DropdownMenuTrigger asChild>
                 <IconButton
                   size="md"
-                  rounded="full"
+                  rounded
                   className="inline-block md:hidden"
                   aria-label={`Toggle open menu`}
                   icon={<RiMenuLine className="sq-5" />}
@@ -112,7 +112,7 @@ export default function HomeLayout() {
               </Badge>
               <h1 className="text-5xl leading-tight">A better way to plan your life</h1>
               <h2 className="text-lg font-normal">Plan your day consciously and stay in your element.</h2>
-              <LinkButton to="/register" size="lg" colorScheme="primary">
+              <LinkButton to="/register" size="lg" variant="primary">
                 Join now for free
               </LinkButton>
             </div>
@@ -194,7 +194,7 @@ export default function HomeLayout() {
               </div>
             </div>
             <div className="center">
-              <LinkButton size="md" colorScheme="primary" to="/register">
+              <LinkButton size="md" variant="primary" to="/register">
                 Join now
               </LinkButton>
             </div>

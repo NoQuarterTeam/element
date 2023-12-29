@@ -49,7 +49,7 @@ export default function Backlog() {
     <Drawer isOpen={true} size="md" onClose={() => navigate("/timeline")} title="Backlog">
       <div className="relative h-screen overflow-scroll px-4 pb-40">
         <div className="items-center justify-between">
-          <Button colorScheme="primary" leftIcon={<RiAddLine />} onClick={createModalProps.onOpen}>
+          <Button variant="primary" leftIcon={<RiAddLine />} onClick={createModalProps.onOpen}>
             Add
           </Button>
 
@@ -100,7 +100,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
               <IconButton
                 variant="outline"
                 onClick={onToggle}
-                rounded="full"
+                rounded
                 size="xs"
                 aria-label="show description"
                 icon={isOpen ? <RiArrowRightSLine /> : <RiArrowDownSLine />}
@@ -112,7 +112,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
             <IconButton
               variant="outline"
               onClick={editModalProps.onOpen}
-              rounded="full"
+              rounded
               size="xs"
               aria-label="edit"
               icon={<RiEditLine />}
@@ -125,7 +125,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
                 type="submit"
                 name="_action"
                 value={TaskActionMethods.DeleteTask}
-                rounded="full"
+                rounded
                 size="xs"
                 aria-label="delete"
                 icon={<RiDeleteBinLine />}
@@ -149,7 +149,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
               <IconButton
                 variant="outline"
                 type="submit"
-                rounded="full"
+                rounded
                 name="_action"
                 value={TaskActionMethods.UpdateTask}
                 size="xs"

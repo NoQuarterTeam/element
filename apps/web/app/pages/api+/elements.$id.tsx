@@ -3,7 +3,8 @@ import { json } from "@remix-run/node"
 import { z } from "zod"
 
 import { db } from "~/lib/db.server"
-import { validateFormData } from "~/lib/form"
+import { FORM_ACTION } from "~/lib/form"
+import { formError, validateFormData } from "~/lib/form.server"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
 
@@ -14,8 +15,9 @@ export enum ElementActionMethods {
 }
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
-  const formData = await request.formData()
-  const action = formData.get("_action") as ElementActionMethods | undefined
+  const clonedRequest = request.clone()
+  const formData = await clonedRequest.formData()
+  const action = formData.get(FORM_ACTION) as ElementActionMethods | undefined
   const elementId = params.id as string | undefined
   if (!elementId) throw badRequest("Element ID is required")
   const element = await db.element.findFirst({ where: { id: elementId, creatorId: { equals: user.id } } })
@@ -23,13 +25,14 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (action) {
     case ElementActionMethods.UpdateElement:
       try {
-        const updateSchema = z.object({
+        const schema = z.object({
           name: z.string().min(1).optional(),
           color: z.string().min(1).optional(),
           parentId: z.string().min(1).optional(),
         })
-        const { data, fieldErrors } = await validateFormData(updateSchema, formData)
-        if (fieldErrors) return badRequest({ fieldErrors, data })
+        const result = await validateFormData(request, schema)
+        if (!result.success) return formError(result)
+        const data = result.data
         const updatedElement = await db.element.update({ where: { id: elementId }, data })
         return json({ element: updatedElement, success: true })
       } catch (e: unknown) {
