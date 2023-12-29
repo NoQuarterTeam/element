@@ -18,16 +18,14 @@ function _DropContainer({ children, tasks }: Props) {
 
   // Ordering
   const updateOrderFetcher = useFetcher()
-  const handleReorder = React.useCallback(
-    (orderedTasks: ReorderTask[]) => {
-      updateOrder(orderedTasks)
-      updateOrderFetcher.submit(
-        { _action: "updateOrder", tasks: JSON.stringify(orderedTasks) },
-        { method: "post", action: "/api/tasks" },
-      )
-    },
-    [updateOrderFetcher, updateOrder],
-  )
+  const handleReorder = React.useCallback((orderedTasks: ReorderTask[]) => {
+    updateOrder(orderedTasks)
+    updateOrderFetcher.submit(
+      { _action: "updateOrder", tasks: JSON.stringify(orderedTasks) },
+      { method: "post", action: "/api/tasks" },
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const onDragEnd = React.useCallback(
     ({ source, destination }: DropResult) => {
@@ -41,11 +39,12 @@ function _DropContainer({ children, tasks }: Props) {
         // If moving to other day
         const sourceList = getDayTasksAndOrder(tasks, source)
         const destinationList = getDayTasksAndOrder(tasks, destination)
-        const result = moveTasks(sourceList, destinationList, source, destination)
-        handleReorder(result.flat())
+        const result = moveTasks(sourceList, destinationList, source, destination).flat()
+        handleReorder(result)
       }
     },
-    [tasks, handleReorder],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [tasks],
   )
 
   return <DragDropContext onDragEnd={onDragEnd}>{children}</DragDropContext>
