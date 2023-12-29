@@ -49,7 +49,7 @@ export function Modal({ isOpen, size = "xl", onClose, position = "top", ...props
             >
               <Dialog.Panel
                 className={join(
-                  "relative w-full overflow-hidden rounded-sm bg-white shadow-xl transition-all dark:bg-gray-700",
+                  "relative w-full rounded-sm bg-white shadow-xl transition-all dark:bg-gray-700",
                   size === "sm" && "max-w-sm",
                   size === "md" && "max-w-md",
                   size === "lg" && "max-w-lg",

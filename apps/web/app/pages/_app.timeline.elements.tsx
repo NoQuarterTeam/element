@@ -2,27 +2,27 @@ import * as React from "react"
 import { isValidHex, MAX_FREE_ELEMENTS, randomHexColor, useDisclosure } from "@element/shared"
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
-import { useLoaderData, useNavigate, useNavigation } from "@remix-run/react"
+import { useLoaderData, useNavigate } from "@remix-run/react"
 import { Plus } from "lucide-react"
 import { matchSorter } from "match-sorter"
 import { toast } from "sonner"
-import { z } from "zod"
 
 import { ColorInput } from "~/components/ColorInput"
 import { ElementItem } from "~/components/ElementItem"
 import { Button } from "~/components/ui/Button"
 import { ButtonGroup } from "~/components/ui/ButtonGroup"
 import { Drawer } from "~/components/ui/Drawer"
-import { Form, FormButton, FormError, InlineFormField } from "~/components/ui/Form"
+import { FormError, InlineFormField, useFetcher } from "~/components/ui/Form"
 import { Input } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
 import { db } from "~/lib/db.server"
 import { FORM_ACTION } from "~/lib/form"
-import { formError, validateFormData } from "~/lib/form.server"
+import { ActionDataSuccessResponse, formError, formSuccess, validateFormData } from "~/lib/form.server"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
 import { getSidebarElements } from "~/services/timeline/sidebar.server"
+import { elementSchema } from "@element/server-schemas"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
@@ -45,19 +45,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (action) {
     case ElementsActionMethods.CreateElement:
       try {
-        if (!user.stripeSubscriptionId) {
+        if (!user.stripeSubscriptionId && user.role !== "ADMIN") {
           const elementCount = await db.element.count({
             where: { archivedAt: { equals: null }, creatorId: { equals: user.id } },
           })
           if (elementCount >= MAX_FREE_ELEMENTS) return redirect("/timeline/profile/plan/limit-element")
         }
-        const schema = z.object({
-          name: z.string().min(1),
-          color: z.string().min(1),
-          parentId: z.string().nullable().optional(),
-        })
-
-        const result = await validateFormData(request, schema)
+        const result = await validateFormData(request, elementSchema)
         if (!result.success) return formError(result)
         const data = result.data
         let color = data.color
@@ -67,7 +61,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         }
         if (!color) color = randomHexColor()
         const createdElement = await db.element.create({ data: { ...data, color, creatorId: user.id } })
-        return json({ element: createdElement })
+        return formSuccess({ element: createdElement })
       } catch (e: any) {
         return badRequest(e.message)
       }
@@ -82,16 +76,13 @@ export default function Elements() {
   const achiveProps = useDisclosure()
   const [color, setColor] = React.useState(randomHexColor())
   const createModalProps = useDisclosure()
-  const createFetcher = useNavigation()
-  React.useEffect(() => {
-    if (
-      createFetcher.state === "loading" &&
-      !!createFetcher.formData &&
-      createFetcher.formAction === createFetcher.location.pathname
-    ) {
-      createModalProps.onClose()
-    }
-  }, [createFetcher, createModalProps])
+  const createFetcher = useFetcher<ActionDataSuccessResponse<object>>({
+    onFinish: (data) => {
+      if (data.success) {
+        createModalProps.onClose()
+      }
+    },
+  })
 
   const matchedMyElements = matchSorter(
     elements.filter((e) => (achiveProps.isOpen ? e : !e.archivedAt)),
@@ -115,9 +106,8 @@ export default function Elements() {
             Add
           </Button>
           <Modal title="Create an Element" size="xl" {...createModalProps}>
-            <Form
-              method="post"
-              replace
+            <createFetcher.Form
+              method="POST"
               onSubmit={(e) => {
                 if (!isValidHex(color)) {
                   e.preventDefault()
@@ -139,12 +129,10 @@ export default function Elements() {
                   <Button variant="ghost" onClick={createModalProps.onClose}>
                     Cancel
                   </Button>
-                  <FormButton name="_action" value={ElementsActionMethods.CreateElement}>
-                    Create
-                  </FormButton>
+                  <createFetcher.FormButton value={ElementsActionMethods.CreateElement}>Create</createFetcher.FormButton>
                 </ButtonGroup>
               </div>
-            </Form>
+            </createFetcher.Form>
           </Modal>
         </div>
 

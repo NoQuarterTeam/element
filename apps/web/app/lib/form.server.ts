@@ -20,9 +20,9 @@ export type ActionDataErrorResponse<Schema extends z.ZodTypeAny> = {
   data?: z.infer<Schema>
 }
 
-export type ActionDataSuccessResponse = {
+export type ActionDataSuccessResponse<T extends undefined | object> = {
   success: true
-}
+} & T
 
 export type FieldErrors<T> = {
   [Property in keyof T]: string[]
@@ -54,6 +54,9 @@ export async function validateFormData<Schema extends z.ZodTypeAny>(
 
 export function formError<Schema extends z.ZodTypeAny>(args: Omit<ActionDataErrorResponse<Schema>, "success">) {
   return json({ ...args, success: false }, { status: 400 })
+}
+export function formSuccess<T extends undefined | object>(args?: Omit<ActionDataSuccessResponse<T>, "success">) {
+  return json({ ...args, success: true }, { status: 200 })
 }
 
 type ZodInput = z.ZodTypeAny

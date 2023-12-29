@@ -7,8 +7,7 @@ import dayjs from "dayjs"
 import { AlertTriangle, Clock, Copy, Plus, Trash } from "lucide-react"
 
 import { FORM_ACTION } from "~/lib/form"
-import { type ActionDataErrorResponse } from "~/lib/form.server"
-import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
+import { ActionDataSuccessResponse, type ActionDataErrorResponse } from "~/lib/form.server"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { TaskActionMethods, type TaskDetail } from "~/pages/_app.timeline.$id"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
@@ -19,22 +18,13 @@ import { TasksActionMethods } from "~/pages/api+/tasks"
 import { ColorInput } from "./ColorInput"
 import { Button } from "./ui/Button"
 import { ButtonGroup } from "./ui/ButtonGroup"
-import { FormButton, FormError, InlineFormField } from "./ui/Form"
+import { FormButton, FormError, InlineFormField, useFetcher } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
 import { Checkbox, Input, Select, Textarea } from "./ui/Inputs"
 import { Modal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
 import { Tooltip } from "./ui/Tooltip"
 
-type FieldErrors = {
-  [Property in keyof TimelineTask]: string[]
-} & { elementId: string[] }
-
-type CreateUpdateRes = {
-  task?: TaskDetail
-  formError?: string
-  fieldErrors?: FieldErrors
-}
 interface FormProps {
   onClose: () => void
   task?: TaskDetail
@@ -52,18 +42,16 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
   const [repeatEndDate, setRepeatEndDate] = React.useState<string>(dayjs().add(1, "week").format("YYYY-MM-DD"))
   const [date, setDate] = React.useState(day || (task ? dayjs(task.date).format("YYYY-MM-DD") : dayjs().format("YYYY-MM-DD")))
 
-  const createUpdateFetcher = useFetcherSubmit<CreateUpdateRes>({
-    onSuccess: ({ task: createUpdateTask }) => {
-      console.log({ createUpdateTask })
-
-      if (!createUpdateTask) return
+  const createUpdateFetcher = useFetcher<ActionDataErrorResponse<any> | ActionDataSuccessResponse<{ task: TimelineTask }>>({
+    onFinish: (data) => {
+      if (!data.success) return
       if (task) {
-        updateTask(createUpdateTask)
+        updateTask(data.task)
       } else {
         if (repeat) {
           refetch()
         } else {
-          addTask(createUpdateTask)
+          addTask(data.task)
         }
       }
       setTimeout(onClose, 100)
@@ -71,16 +59,15 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
   })
 
   const deleteModalProps = useDisclosure()
-  const deleteSubmit = useFetcherSubmit<{ success: boolean }>({
-    onSuccess: (data) => {
-      if (data.success && task) {
-        if (task.repeat || task.repeatParentId) {
-          refetch()
-        } else {
-          removeTask(task)
-        }
-        onClose()
+  const deleteSubmit = useFetcher<ActionDataSuccessResponse<object>>({
+    onFinish: (data) => {
+      if (!data.success || !task) return
+      if (task.repeat || task.repeatParentId) {
+        refetch()
+      } else {
+        removeTask(task)
       }
+      onClose()
     },
   })
   const handleDelete = (shouldDeleteFuture: boolean) => {
@@ -91,22 +78,22 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
     )
   }
 
-  const duplicateSubmit = useFetcherSubmit<{ task: TimelineTask }>({
-    onSuccess: ({ task: dupeTask }) => {
-      if (!dupeTask) return
-      addTask(dupeTask)
+  const duplicateSubmit = useFetcher<ActionDataErrorResponse<any> | ActionDataSuccessResponse<{ task: TimelineTask }>>({
+    onFinish: (res) => {
+      if (!res.success) return
+      addTask(res.task)
       setTimeout(onClose, 100)
     },
   })
   const handleDuplicate = () => {
     if (!task) return
-    duplicateSubmit.submit({ _action: TaskActionMethods.DuplicateTask }, { method: "post", action: `/timeline/${task.id}` })
+    duplicateSubmit.submit({ [FORM_ACTION]: TaskActionMethods.DuplicateTask }, { method: "post", action: `/timeline/${task.id}` })
   }
 
-  const addToBacklogSubmit = useFetcherSubmit<{ task: TimelineTask }>({
-    onSuccess: ({ task: backlogTask }) => {
-      if (!backlogTask) return
-      removeTask(backlogTask)
+  const addToBacklogSubmit = useFetcher<ActionDataErrorResponse<any> | ActionDataSuccessResponse<{ task: TimelineTask }>>({
+    onFinish: (res) => {
+      if (!res.success) return
+      removeTask(res.task)
       setTimeout(onClose, 100)
     },
   })
@@ -131,11 +118,10 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
   const elementModalProps = useDisclosure()
 
   const client = useQueryClient()
-  const createElementFetcher = useFetcherSubmit<ActionDataErrorResponse<any> | { success: true; element: Element }>({
-    onSuccess: (res) => {
+  const createElementFetcher = useFetcher<ActionDataErrorResponse<any> | ActionDataSuccessResponse<{ element: Element }>>({
+    onFinish: (res) => {
       if (!res.success) return
       const { element: createdElement } = res
-      if (!createdElement) return
       const taskElements = client.getQueryData<Element[]>(["task-elements"])
       client.setQueryData(["task-elements"], [createdElement, ...(taskElements || [])])
       elementModalProps.onClose()
@@ -186,7 +172,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             required
             label="Element"
             name="element"
-            errors={createUpdateFetcher.data?.fieldErrors?.elementId}
+            errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.elementId}
             input={
               <Singleselect
                 value={element}
@@ -252,7 +238,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             value={date}
             onChange={(e) => setDate(e.target.value)}
             label="Date"
-            errors={createUpdateFetcher.data?.fieldErrors?.date}
+            errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.date}
           />
         )}
 
@@ -260,7 +246,10 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
           name="durationHours"
           label="Duration"
           shouldPassProps={false}
-          errors={createUpdateFetcher.data?.fieldErrors?.durationHours || createUpdateFetcher.data?.fieldErrors?.durationMinutes}
+          errors={
+            (!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.durationHours) ||
+            (!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.durationMinutes)
+          }
           input={
             <div className="hstack">
               <div className="hstack space-x-1">
@@ -295,7 +284,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             name="startTime"
             defaultValue={task?.startTime}
             label="Start time"
-            errors={createUpdateFetcher.data?.fieldErrors?.startTime}
+            errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.startTime}
           />
           {/* <Tooltip label="Notifications">
             <IconButton
@@ -316,7 +305,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             label="Repeat"
             shouldPassProps={false}
             errors={
-              !createElementFetcher.data?.success
+              !createUpdateFetcher.data?.success
                 ? createUpdateFetcher.data?.fieldErrors?.repeat || (createUpdateFetcher.data?.fieldErrors as any)?.repeatEndDate
                 : undefined
             }
@@ -363,7 +352,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
           defaultValue={task?.description}
           label="Description"
           input={<Textarea />}
-          errors={createUpdateFetcher.data?.fieldErrors?.description}
+          errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.description}
         />
         <InlineFormField
           name="todos"
@@ -456,7 +445,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
           }
         />
 
-        <FormError error={createUpdateFetcher.data?.formError} />
+        <FormError error={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.formError} />
 
         <div className="flex justify-between pt-4">
           {task ? (

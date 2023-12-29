@@ -1,10 +1,9 @@
+import { updateElementSchema } from "@element/server-schemas"
 import type { ActionFunctionArgs } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import { z } from "zod"
 
 import { db } from "~/lib/db.server"
 import { FORM_ACTION } from "~/lib/form"
-import { formError, validateFormData } from "~/lib/form.server"
+import { formError, formSuccess, validateFormData } from "~/lib/form.server"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
 
@@ -20,21 +19,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const action = formData.get(FORM_ACTION) as ElementActionMethods | undefined
   const elementId = params.id as string | undefined
   if (!elementId) throw badRequest("Element ID is required")
-  const element = await db.element.findFirst({ where: { id: elementId, creatorId: { equals: user.id } } })
-  if (!element) throw badRequest("Element not found")
+  await db.element.findFirstOrThrow({ where: { id: elementId, creatorId: { equals: user.id } } })
+
   switch (action) {
     case ElementActionMethods.UpdateElement:
       try {
-        const schema = z.object({
-          name: z.string().min(1).optional(),
-          color: z.string().min(1).optional(),
-          parentId: z.string().min(1).optional(),
-        })
-        const result = await validateFormData(request, schema)
+        const result = await validateFormData(request, updateElementSchema)
         if (!result.success) return formError(result)
         const data = result.data
         const updatedElement = await db.element.update({ where: { id: elementId }, data })
-        return json({ element: updatedElement, success: true })
+        return formSuccess({ element: updatedElement })
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
@@ -45,7 +39,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case ElementActionMethods.ArchiveElement:
       try {
         await db.element.update({ where: { id: elementId }, data: { archivedAt: new Date() } })
-        return json({ success: true })
+        return formSuccess()
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
@@ -56,7 +50,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case ElementActionMethods.UnarchiveElement:
       try {
         await db.element.update({ where: { id: elementId }, data: { archivedAt: null } })
-        return json({ success: true })
+        return formSuccess()
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)

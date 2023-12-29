@@ -8,7 +8,7 @@ import { z } from "zod"
 import { taskItemSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
 import { FORM_ACTION } from "~/lib/form"
-import { formError, getFormDataArray, validateFormData } from "~/lib/form.server"
+import { formError, formSuccess, getFormDataArray, validateFormData } from "~/lib/form.server"
 import { badRequest, redirect } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
 
@@ -57,7 +57,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       try {
         if (!user.stripeSubscriptionId) {
           const taskCount = await db.task.count({ where: { creatorId: { equals: user.id } } })
-          if (taskCount >= MAX_FREE_TASKS) return redirect("/timeline/profile/plan/limit-task")
+          if (taskCount >= MAX_FREE_TASKS && user.role !== "ADMIN") return redirect("/timeline/profile/plan/limit-task")
         }
         if (dayjs(user.createdAt).isBefore(dayjs().subtract(1, "month")) && !user.verifiedAt) {
           return redirect("/timeline/profile", request, {
@@ -171,7 +171,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           }
           return task
         })
-        return json({ task: newTask })
+        return formSuccess({ task: newTask })
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
@@ -195,7 +195,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             }),
           ),
         )
-        return json({ success: true })
+        return formSuccess()
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)

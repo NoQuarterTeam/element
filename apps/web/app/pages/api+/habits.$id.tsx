@@ -1,11 +1,11 @@
 import type { ActionFunctionArgs } from "@remix-run/node"
-import { json, redirect } from "@remix-run/node"
+import { redirect } from "@remix-run/node"
 import dayjs from "dayjs"
 import { z } from "zod"
 
 import { db } from "~/lib/db.server"
 import { FORM_ACTION } from "~/lib/form"
-import { formError, validateFormData } from "~/lib/form.server"
+import { formError, formSuccess, validateFormData } from "~/lib/form.server"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
 
@@ -33,7 +33,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         const result = await validateFormData(request, schema)
         if (!result.success) return formError(result)
         const editHabit = await db.habit.update({ where: { id }, data: { name: result.data.name } })
-        return json({ habit: editHabit })
+        return formSuccess({ habit: editHabit })
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
@@ -67,7 +67,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         } else {
           await db.habitEntry.create({ data: { creatorId: user.id, habitId: id, createdAt: date } })
         }
-        return json({ success: true })
+        return formSuccess()
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
@@ -82,7 +82,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         if (!result.success) return formError(result)
         const archivedAt = result.data.archivedAt
         await db.habit.update({ where: { id }, data: { archivedAt: dayjs(archivedAt).toDate() } })
-        return json({ success: true })
+        return formSuccess()
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
@@ -93,7 +93,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case HabitActionMethods.Delete:
       try {
         await db.habit.delete({ where: { id } })
-        return json({ success: true })
+        return formSuccess()
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)

@@ -44,15 +44,6 @@ export function useFetcher<T>(
 } {
   const fetcher = useRemixFetcher<T>({ key: props?.key })
 
-  function Form({ children, ...rest }: RemixFormProps) {
-    return (
-      <fetcher.Form method="POST" replace {...rest}>
-        {children}
-        {/* <AuthenticityTokenInput /> */}
-      </fetcher.Form>
-    )
-  }
-
   const FormButton = React.forwardRef<HTMLButtonElement, ButtonProps>(function _FormButton(rest, ref) {
     return (
       <Button
@@ -68,14 +59,14 @@ export function useFetcher<T>(
   })
 
   React.useEffect(() => {
-    if (!fetcher.data || !props?.onFinish) return
-    if (fetcher.state === "loading" && fetcher.data) {
+    if (!props?.onFinish) return
+    if (fetcher.state !== "idle" && fetcher.data) {
       props.onFinish(fetcher.data as T)
     }
-  }, [fetcher.state, props, fetcher.data])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetcher.state, fetcher.data])
 
-  // @ts-expect-error - this is fine
-  return { ...fetcher, Form, FormButton }
+  return { ...fetcher, FormButton }
 }
 
 export function FormFieldLabel(

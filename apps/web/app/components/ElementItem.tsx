@@ -1,12 +1,12 @@
 import React from "react"
 import { isValidHex, join, useDisclosure } from "@element/shared"
-import { useFetcher, useNavigation } from "@remix-run/react"
+import {} from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
 import { ChevronDown, ChevronRight, CornerUpRight, Edit2, Eye, MoreVertical, Plus, Trash } from "lucide-react"
 import { matchSorter } from "match-sorter"
 import { toast } from "sonner"
 
-import { type ActionDataErrorResponse } from "~/lib/form.server"
+import { ActionDataSuccessResponse, type ActionDataErrorResponse } from "~/lib/form.server"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
@@ -19,7 +19,7 @@ import { ColorInput } from "./ColorInput"
 import { Button } from "./ui/Button"
 import { ButtonGroup } from "./ui/ButtonGroup"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuTrigger } from "./ui/DropdownMenu"
-import { Form, FormButton, FormError, InlineFormField } from "./ui/Form"
+import { FormButton, FormError, InlineFormField, useFetcher } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
 import { Modal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
@@ -43,45 +43,48 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
   const createModalProps = useDisclosure()
   const moveModalProps = useDisclosure()
 
-  const navigation = useNavigation()
-  React.useEffect(() => {
-    if (navigation.state === "loading" && !!navigation.formData && navigation.formAction === navigation.location.pathname) {
-      createModalProps.onClose()
-    }
-  }, [navigation, createModalProps])
+  const createFetcher = useFetcher<ActionDataSuccessResponse<object>>({
+    onFinish: (data) => {
+      if (data.success) {
+        createModalProps.onClose()
+      }
+    },
+  })
 
   const updateModalProps = useDisclosure()
-  const updateFetcher = useFetcher<ActionDataErrorResponse<any> | { success: true }>()
-  React.useEffect(() => {
-    if (updateFetcher.state !== "idle" && updateFetcher.data?.success) {
-      refetch()
-      updateModalProps.onClose()
-    }
-  }, [updateFetcher.data, updateFetcher.state, refetch, updateModalProps])
+  const updateFetcher = useFetcher<ActionDataErrorResponse<any> | { success: true }>({
+    onFinish: (data) => {
+      if (data.success) {
+        refetch()
+        updateModalProps.onClose()
+      }
+    },
+  })
 
   const archiveModalProps = useDisclosure()
-  const archiveFetcher = useFetcher<{ success: boolean }>()
-  React.useEffect(() => {
-    if (archiveFetcher.state !== "idle" && archiveFetcher.data?.success) {
-      refetch()
-      archiveModalProps.onClose()
-    }
-  }, [archiveFetcher.data, archiveFetcher.state, archiveModalProps, refetch])
+  const archiveFetcher = useFetcher<{ success: boolean }>({
+    onFinish: (data) => {
+      if (data.success) {
+        refetch()
+      }
+    },
+  })
 
-  const unarchiveFetcher = useFetcher<{ success: boolean }>()
-  React.useEffect(() => {
-    if (unarchiveFetcher.state !== "idle" && unarchiveFetcher.data?.success) {
-      refetch()
-      archiveModalProps.onClose()
-    }
-  }, [unarchiveFetcher.data, unarchiveFetcher.state, refetch, archiveModalProps])
+  const unarchiveFetcher = useFetcher<{ success: boolean }>({
+    onFinish: (data) => {
+      if (data.success) {
+        refetch()
+      }
+    },
+  })
 
-  const moveFetcher = useFetcher<ActionDataErrorResponse<any> | { success: true }>()
-  React.useEffect(() => {
-    if (moveFetcher.state !== "idle" && moveFetcher.data?.success) {
-      moveModalProps.onClose()
-    }
-  }, [moveFetcher.data, moveFetcher.state, moveModalProps])
+  const moveFetcher = useFetcher<ActionDataErrorResponse<any> | { success: true }>({
+    onFinish: (data) => {
+      if (data.success) {
+        moveModalProps.onClose()
+      }
+    },
+  })
 
   const matchedChildren = matchSorter(
     element.children.filter((e) => (isArchivedShown ? e : !e.archivedAt)),
@@ -175,9 +178,8 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
           </DropdownMenu>
         </div>
         <Modal title="Create a child element" size="xl" {...createModalProps}>
-          <Form
-            method="post"
-            replace
+          <createFetcher.Form
+            method="POST"
             onSubmit={(e) => {
               if (!isValidHex(newColor)) {
                 e.preventDefault()
@@ -201,17 +203,15 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                 <Button variant="ghost" onClick={createModalProps.onClose}>
                   Cancel
                 </Button>
-                <FormButton name="_action" value={ElementsActionMethods.CreateElement}>
-                  Create
-                </FormButton>
+                <createFetcher.FormButton value={ElementsActionMethods.CreateElement}>Create</createFetcher.FormButton>
               </ButtonGroup>
               <FormError />
             </div>
-          </Form>
+          </createFetcher.Form>
         </Modal>
         <Modal title="Move element to parent" size="xl" {...moveModalProps}>
           <moveFetcher.Form method="post" action={`/api/elements/${element.id}`}>
-            <div className="stack min-h-[200px] p-4">
+            <div className="stack p-4">
               <MoveFormElementInput
                 error={!moveFetcher.data?.success && moveFetcher.data?.fieldErrors?.parentId}
                 elementId={element.id}

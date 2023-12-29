@@ -8,7 +8,7 @@ import { TaskForm } from "~/components/TaskForm"
 import { taskItemSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
 import { FORM_ACTION } from "~/lib/form"
-import { formError, getFormDataArray, validateFormData } from "~/lib/form.server"
+import { formError, formSuccess, getFormDataArray, validateFormData } from "~/lib/form.server"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser, requireUser } from "~/services/auth/auth.server"
 
@@ -91,7 +91,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
             todos: todos ? { deleteMany: {}, createMany: { data: todos } } : undefined,
           },
         })
-        return json({ task: updatedTask })
+        return formSuccess({ task: updatedTask })
       } catch (e: any) {
         return badRequest(e.message)
       }
@@ -102,7 +102,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
           where: { id: taskId },
           data: { date: dayjs().startOf("d").add(12, "h").toDate(), isComplete: true },
         })
-        return json({ task: updatedTask })
+        return formSuccess({ task: updatedTask })
       } catch (e: any) {
         return badRequest(e.message)
       }
@@ -123,7 +123,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
             id: undefined,
           },
         })
-        return json({ task: newTask })
+        return formSuccess({ task: newTask })
       } catch (e: any) {
         return badRequest(e.message)
       }
@@ -134,7 +134,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
           select: taskItemSelectFields,
           data: { date: null, isComplete: false },
         })
-        return json({ task: backlogTask })
+        return formSuccess({ task: backlogTask })
       } catch (e: any) {
         return badRequest(e.message)
       }
@@ -151,7 +151,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
           await transaction.task.delete({ where: { id: taskId } })
         })
 
-        return json({ success: true })
+        return formSuccess()
       } catch (e: any) {
         return badRequest(e.message)
       }

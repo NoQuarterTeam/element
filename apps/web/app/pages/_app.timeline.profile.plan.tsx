@@ -13,6 +13,7 @@ import { Input } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
 import { db } from "~/lib/db.server"
 import { FORM_ACTION } from "~/lib/form"
+import { formSuccess } from "~/lib/form.server"
 import { badRequest } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { getCurrentUser } from "~/services/auth/auth.server"
@@ -92,7 +93,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       try {
         if (!user.stripeSubscriptionId) return badRequest("No subscription")
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: true })
-        return json({ success: true })
+        return formSuccess()
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
@@ -104,7 +105,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       try {
         if (!user.stripeSubscriptionId) return badRequest("No subscription")
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: false })
-        return json({ success: true })
+        return formSuccess()
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)

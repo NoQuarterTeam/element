@@ -1,9 +1,8 @@
 import * as React from "react"
 import { type Prisma } from "@element/database/types"
 import { formatDuration, join, safeReadableColor, useDisclosure } from "@element/shared"
-import { Link, useFetcher } from "@remix-run/react"
+import { Link } from "@remix-run/react"
 
-import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TimelineTask } from "~/pages/api+/tasks"
@@ -11,6 +10,9 @@ import { type TimelineTask } from "~/pages/api+/tasks"
 import { Button } from "./ui/Button"
 import { ButtonGroup } from "./ui/ButtonGroup"
 import { Modal } from "./ui/Modal"
+import { ActionDataSuccessResponse } from "~/lib/form.server"
+import { useFetcher } from "./ui/Form"
+import { FORM_ACTION } from "~/lib/form"
 
 export const taskItemSelectFields = {
   id: true,
@@ -42,10 +44,10 @@ function _TaskItem({ task }: Props) {
   const deleteFetcher = useFetcher()
   const toggleCompleteFetcher = useFetcher()
 
-  const dupeFetcher = useFetcherSubmit<{ task: TimelineTask }>({
-    onSuccess: ({ task: dupeTask }) => {
-      if (!dupeTask) return
-      addTask(dupeTask)
+  const dupeFetcher = useFetcher<ActionDataSuccessResponse<{ task: TimelineTask }>>({
+    onFinish: (res) => {
+      if (!res.success) return
+      addTask(res.task)
     },
   })
 
@@ -53,7 +55,7 @@ function _TaskItem({ task }: Props) {
     if (event.metaKey) {
       event.preventDefault()
       // Duplicate
-      dupeFetcher.submit({ _action: TaskActionMethods.DuplicateTask }, { action: `/timeline/${task.id}`, method: "post" })
+      dupeFetcher.submit({ [FORM_ACTION]: TaskActionMethods.DuplicateTask }, { action: `/timeline/${task.id}`, method: "POST" })
     } else if (event.shiftKey) {
       event.preventDefault()
       // Delete
@@ -67,16 +69,16 @@ function _TaskItem({ task }: Props) {
       // Toggle complete
       updateTask({ ...task, isComplete: !task.isComplete })
       toggleCompleteFetcher.submit(
-        { _action: TaskActionMethods.UpdateTask, isComplete: String(!task.isComplete) },
-        { action: `/timeline/${task.id}`, method: "post" },
+        { [FORM_ACTION]: TaskActionMethods.UpdateTask, isComplete: String(!task.isComplete) },
+        { action: `/timeline/${task.id}`, method: "POST" },
       )
     }
   }
 
   const handleDelete = async (shouldDeleteFuture: boolean) => {
     deleteFetcher.submit(
-      { _action: TaskActionMethods.DeleteTask, shouldDeleteFuture: shouldDeleteFuture ? "true" : "false" },
-      { action: `/timeline/${task.id}`, method: "post" },
+      { [FORM_ACTION]: TaskActionMethods.DeleteTask, shouldDeleteFuture: shouldDeleteFuture ? "true" : "false" },
+      { action: `/timeline/${task.id}`, method: "POST" },
     )
     await new Promise((res) => setTimeout(res, 500))
     if (shouldDeleteFuture) {

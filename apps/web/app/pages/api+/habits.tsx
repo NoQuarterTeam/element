@@ -5,7 +5,7 @@ import { z } from "zod"
 
 import { db } from "~/lib/db.server"
 import { FORM_ACTION } from "~/lib/form"
-import { formError, validateFormData } from "~/lib/form.server"
+import { formError, formSuccess, validateFormData } from "~/lib/form.server"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
 
@@ -66,7 +66,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const habit = await db.habit.create({
           data: { creatorId: user.id, name: result.data.name, startDate: dayjs(date).toDate() },
         })
-        return json({ habit })
+        return formSuccess({ habit })
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)

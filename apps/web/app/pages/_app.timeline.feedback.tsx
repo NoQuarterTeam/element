@@ -1,7 +1,6 @@
 import * as React from "react"
 import { FeedbackType } from "@element/database/types"
 import type { ActionFunctionArgs } from "@remix-run/node"
-import { json } from "@remix-run/node"
 import { useActionData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
 import { Bug, Lightbulb, MessageCircle } from "lucide-react"
@@ -14,7 +13,7 @@ import { Textarea } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
 import { db } from "~/lib/db.server"
 import { FORM_ACTION } from "~/lib/form"
-import { formError, validateFormData } from "~/lib/form.server"
+import { formError, formSuccess, validateFormData } from "~/lib/form.server"
 import { badRequest, redirect } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
 
@@ -50,7 +49,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           data: { ...data, creatorId: user.id },
           select: { id: true },
         })
-        return json({ feedback })
+        return formSuccess({ feedback })
       } catch (e: any) {
         return badRequest(e.message)
       }
