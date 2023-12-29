@@ -5,13 +5,26 @@ import * as Tooltip from "@radix-ui/react-tooltip"
 import { cssBundleHref } from "@remix-run/css-bundle"
 import type { LinksFunction, LoaderFunctionArgs, MetaFunction, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from "@remix-run/react"
+import {
+  isRouteErrorResponse,
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLoaderData,
+  useRouteError,
+} from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { Frown } from "lucide-react"
 import { promiseHash } from "remix-utils/promise"
 import "~/styles/app.css"
 import "~/styles/toast.css"
 
+import { LinkButton } from "./components/ui/LinkButton"
 import { Toaster } from "./components/ui/Toast"
+import { useConfig } from "./lib/hooks/useConfig"
 import { type Theme } from "./lib/theme"
 import { getMaybeUser } from "./services/auth/auth.server"
 import { getFlashSession } from "./services/session/flash.server"
@@ -59,14 +72,53 @@ export default function App() {
   )
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
-  console.error("Boundary:", error)
+export function ErrorBoundary() {
+  const error = useRouteError()
+  const isCatchError = isRouteErrorResponse(error)
+  const config = useConfig()
+
   return (
     <Document theme="dark">
-      <div className="vstack h-screen justify-center p-20">
-        <img alt="logo" src="/logo.png" className="sq-24" />
-        <h1>Oops, there was an error.</h1>
-        {/* <p>{error.message}</p> */}
+      <h1 className="p-6 text-3xl">Element</h1>
+      <div className="flex flex-col overflow-scroll px-32 pt-40">
+        {isCatchError ? (
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <h1 className="text-9xl">{error.status}</h1>
+              <p className="text-lg">
+                {error.status === 404
+                  ? "The page you're looking for doesn't exist"
+                  : error.data.message || "Something's gone wrong here"}
+              </p>
+            </div>
+            {error.status === 404 && <LinkButton to="/">Take me home</LinkButton>}
+          </div>
+        ) : error instanceof Error ? (
+          <div className="max-w-4xl space-y-6">
+            <Frown className="sq-20" />
+            <h1 className="text-3xl">Oops, there was an error!</h1>
+            <p>{error.message}</p>
+            {config.ENV !== "production" && error.stack ? (
+              <>
+                <hr />
+                <div className="rounded-xs bg-gray-200 p-4 dark:bg-gray-700 ">
+                  <pre className="overflow-scroll text-sm">{error.stack}</pre>
+                </div>
+              </>
+            ) : (
+              <>
+                <hr />
+                <p>We have been notified and will fix the issue as soon as possible.</p>
+              </>
+            )}
+          </div>
+        ) : (
+          <div>
+            <h1 className="text-6xl">Sorry, an unknown error has occured!</h1>
+            <hr />
+            <p>We have been notified and will fix the issue as soon as possible.</p>
+          </div>
+        )}
       </div>
     </Document>
   )

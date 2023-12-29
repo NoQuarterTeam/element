@@ -1,13 +1,12 @@
 import * as React from "react"
-import { BiPlus } from "react-icons/bi"
-import { HiOutlineExclamation } from "react-icons/hi"
-import { RiAddLine, RiDeleteBinLine, RiFileCopyLine, RiTimeLine } from "react-icons/ri"
 import { type Element, TaskRepeat } from "@element/database/types"
 import { getRepeatingDatesBetween, join, randomHexColor, useDisclosure } from "@element/shared"
 import { useSearchParams } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
+import { AlertTriangle, Clock, Copy, Plus, Trash } from "lucide-react"
 
+import { FORM_ACTION } from "~/lib/form"
 import { type ActionDataErrorResponse } from "~/lib/form.server"
 import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
@@ -26,7 +25,6 @@ import { Checkbox, Input, Select, Textarea } from "./ui/Inputs"
 import { Modal } from "./ui/Modal"
 import { Singleselect } from "./ui/ReactSelect"
 import { Tooltip } from "./ui/Tooltip"
-import { FORM_ACTION } from "~/lib/form"
 
 type FieldErrors = {
   [Property in keyof TimelineTask]: string[]
@@ -169,7 +167,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
           <Button
             variant={isImportant ? "brand" : "outline"}
             onClick={() => setIsImportant(!isImportant)}
-            leftIcon={<HiOutlineExclamation />}
+            leftIcon={<AlertTriangle size={16} />}
             size="xs"
           >
             <span className="hidden md:block">Important</span>
@@ -203,7 +201,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
               />
             }
           />
-          <Button className="ml-2" onClick={elementModalProps.onOpen} variant="outline" leftIcon={<RiAddLine className="sq-4" />}>
+          <Button className="ml-2" onClick={elementModalProps.onOpen} variant="outline" leftIcon={<Plus size={16} />}>
             Create
           </Button>
           <Modal title="Create an Element" size="lg" {...elementModalProps}>
@@ -303,7 +301,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             <IconButton
               size="sm"
               variant="outline"
-              icon={<RiNotification2Line />}
+              icon={<RiNotification2Line size={68}/>}
               aria-label="send notifications"
               // onClick={() => {
 
@@ -451,7 +449,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                     }, 50)
                   }}
                 >
-                  <BiPlus />
+                  <Plus />
                 </Button>
               )}
             </div>
@@ -468,7 +466,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                   <IconButton
                     variant="outline"
                     isLoading={deleteSubmit.state === "submitting"}
-                    icon={<RiDeleteBinLine className="fill-red-500" />}
+                    icon={<Trash className="text-red-500" size={16} />}
                     aria-label="delete task"
                     onClick={task.repeat || task.repeatParentId ? deleteModalProps.onOpen : () => handleDelete(false)}
                   />
@@ -478,7 +476,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                     <IconButton
                       isLoading={addToBacklogSubmit.state === "submitting"}
                       variant="outline"
-                      icon={<RiTimeLine />}
+                      icon={<Clock size={16} />}
                       aria-label="Add to backlog"
                       onClick={handleToBacklog}
                     />
@@ -488,7 +486,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                   <IconButton
                     isLoading={duplicateSubmit.state === "submitting"}
                     variant="outline"
-                    icon={<RiFileCopyLine />}
+                    icon={<Copy size={16} />}
                     aria-label="duplicate task"
                     onClick={handleDuplicate}
                   />

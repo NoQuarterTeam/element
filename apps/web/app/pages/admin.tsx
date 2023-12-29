@@ -1,10 +1,9 @@
-import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"
-import { RiArrowLeftLine } from "react-icons/ri"
 import { Role } from "@element/database/types"
 import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { useLoaderData, useSearchParams } from "@remix-run/react"
 import dayjs from "dayjs"
+import { ArrowDown, ArrowLeft, ArrowUp } from "lucide-react"
 import { Line, LineChart, Tooltip, XAxis, YAxis } from "recharts"
 
 import { Badge } from "~/components/ui/Badge"
@@ -120,7 +119,7 @@ export default function Admin() {
       <div className="space-y-6 p-2 md:p-6">
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <LinkButton to="/timeline" variant="outline" leftIcon={<RiArrowLeftLine />}>
+            <LinkButton to="/timeline" variant="outline" leftIcon={<ArrowLeft size={16} />}>
               Back to timeline
             </LinkButton>
           </div>
@@ -141,7 +140,7 @@ export default function Admin() {
             <div className="hstack">
               <p className="text-3xl">{taskCountThisMonth}</p>
               <div className="hstack text-sm opacity-50">
-                {percentageChange < 0 ? <IoMdArrowDropdown className="sq-5" /> : <IoMdArrowDropup className="sq-5" />}
+                {percentageChange < 0 ? <ArrowDown className="sq-5" /> : <ArrowUp className="sq-5" />}
                 {Math.abs(percentageChange)}%
               </div>
             </div>
@@ -164,7 +163,13 @@ export default function Admin() {
                 <p className="col-span-4 truncate">{user.email}</p>
                 <p className="col-span-1">{user._count.tasks}</p>
                 <div className="col-span-1">
-                  {user.stripeSubscriptionId ? <Badge colorScheme="red">Pro</Badge> : <Badge>Free</Badge>}
+                  {user.stripeSubscriptionId ? (
+                    <Badge size="sm" colorScheme="red">
+                      Pro
+                    </Badge>
+                  ) : (
+                    <Badge size="sm">Free</Badge>
+                  )}
                 </div>
                 <p className="col-span-1 flex justify-end">{dayjs(user.createdAt).format("DD/MM/YYYY")}</p>
               </div>

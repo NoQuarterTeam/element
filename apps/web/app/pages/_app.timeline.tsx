@@ -1,10 +1,10 @@
 import * as React from "react"
-import { RiAddCircleLine, RiCalendarEventLine } from "react-icons/ri"
 import { useInView } from "react-intersection-observer"
 import { Outlet, useNavigate } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
+import { Calendar, PlusCircle } from "lucide-react"
 
 import { Day, DAY_WIDTH } from "~/components/Day"
 import { DropContainer } from "~/components/DropContainer"
@@ -176,7 +176,7 @@ function _Timeline() {
                 rounded
                 onClick={() => navigate("new")}
                 aria-label="Create task"
-                icon={<RiAddCircleLine className="sq-5" />}
+                icon={<PlusCircle size={18} />}
               />
             </Tooltip>
             <Tooltip label="Jump to today">
@@ -186,7 +186,7 @@ function _Timeline() {
                 rounded
                 onClick={handleJumpToToday}
                 aria-label="Jump to today"
-                icon={<RiCalendarEventLine className="sq-4" />}
+                icon={<Calendar size={16} />}
               />
             </Tooltip>
           </div>

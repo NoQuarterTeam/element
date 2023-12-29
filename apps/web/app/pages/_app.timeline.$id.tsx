@@ -9,7 +9,6 @@ import { taskItemSelectFields } from "~/components/TaskItem"
 import { db } from "~/lib/db.server"
 import { FORM_ACTION } from "~/lib/form"
 import { formError, getFormDataArray, validateFormData } from "~/lib/form.server"
-
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser, requireUser } from "~/services/auth/auth.server"
 

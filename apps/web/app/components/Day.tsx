@@ -1,5 +1,4 @@
 import * as React from "react"
-import { RiAddCircleLine } from "react-icons/ri"
 import { InView, useInView } from "react-intersection-observer"
 import { getTotalTaskDuration, join } from "@element/shared"
 import { Draggable, Droppable } from "@hello-pangea/dnd"
@@ -7,6 +6,7 @@ import { Link } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import deepEqual from "deep-equal"
+import { PlusCircle } from "lucide-react"
 
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useTimelineTaskDates } from "~/lib/hooks/useTimelineTaskDates"
@@ -124,7 +124,7 @@ function _Day(props: Props) {
                           size="lg"
                           tabIndex={-1}
                           rounded
-                          icon={<RiAddCircleLine className="sq-5" />}
+                          icon={<PlusCircle className="sq-5" />}
                           aria-label="new task"
                         />
                       </Link>

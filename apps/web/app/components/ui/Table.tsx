@@ -1,8 +1,8 @@
 import * as React from "react"
-import { CgArrowLongDown, CgArrowLongUp } from "react-icons/cg"
 import { Prisma } from "@element/database/types"
 import { join, merge } from "@element/shared"
 import { Link as RLink, useSearchParams } from "@remix-run/react"
+import { ArrowDown, ArrowUp } from "lucide-react"
 import queryString from "query-string"
 
 import { Button } from "./Button"
@@ -65,11 +65,7 @@ export function Table<T extends DataType>(props: Props<T>) {
                 {header}
                 {orderBy && !!sortKey && orderBy === sortKey && (
                   <div className="center ml-2">
-                    {order === Prisma.SortOrder.asc ? (
-                      <CgArrowLongUp />
-                    ) : order === Prisma.SortOrder.desc ? (
-                      <CgArrowLongDown />
-                    ) : null}
+                    {order === Prisma.SortOrder.asc ? <ArrowUp /> : order === Prisma.SortOrder.desc ? <ArrowDown /> : null}
                   </div>
                 )}
               </Header>

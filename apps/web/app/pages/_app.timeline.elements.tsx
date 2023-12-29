@@ -1,9 +1,9 @@
 import * as React from "react"
-import { RiAddLine } from "react-icons/ri"
 import { isValidHex, MAX_FREE_ELEMENTS, randomHexColor, useDisclosure } from "@element/shared"
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { useLoaderData, useNavigate, useNavigation } from "@remix-run/react"
+import { Plus } from "lucide-react"
 import { matchSorter } from "match-sorter"
 import { toast } from "sonner"
 import { z } from "zod"
@@ -17,12 +17,12 @@ import { Form, FormButton, FormError, InlineFormField } from "~/components/ui/Fo
 import { Input } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
 import { db } from "~/lib/db.server"
+import { FORM_ACTION } from "~/lib/form"
 import { formError, validateFormData } from "~/lib/form.server"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
 import { getSidebarElements } from "~/services/timeline/sidebar.server"
-import { FORM_ACTION } from "~/lib/form"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
@@ -111,7 +111,7 @@ export default function Elements() {
       <div className="relative h-screen overflow-y-scroll pb-48">
         <div className="flex items-center justify-between space-x-2 pb-4 pl-4 pr-3 pt-1">
           <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" variant="outline" />
-          <Button variant="primary" leftIcon={<RiAddLine />} onClick={createModalProps.onOpen}>
+          <Button variant="primary" leftIcon={<Plus size={16} />} onClick={createModalProps.onOpen}>
             Add
           </Button>
           <Modal title="Create an Element" size="xl" {...createModalProps}>

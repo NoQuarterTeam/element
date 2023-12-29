@@ -1,12 +1,10 @@
 import * as React from "react"
-import { BsSunrise, BsThermometerHalf } from "react-icons/bs"
-import { RiWindyLine } from "react-icons/ri"
-import { TbDroplet, TbLocation } from "react-icons/tb"
 import { InView } from "react-intersection-observer"
 import { join } from "@element/shared"
 import * as HoverCard from "@radix-ui/react-hover-card"
 import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
+import { Droplet, MousePointer, Sunrise, Thermometer, Wind } from "lucide-react"
 
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
 import { useFeatures } from "~/lib/hooks/useFeatures"
@@ -144,25 +142,25 @@ function _HeaderDay(props: {
                         </p>
                         <div className="p-2">
                           <div className="grid grid-cols-2 gap-2">
-                            <WeatherStat icon={<BsThermometerHalf className="sq-3.5" />} label="Temp">
+                            <WeatherStat icon={<Thermometer className="sq-3.5" />} label="Temp">
                               <div className="flex h-full flex-col justify-between">
                                 <p className="text-2xl">{props.weather.temp.max}°</p>
                                 <p className="text-xs">Min: {props.weather.temp.min}°</p>
                               </div>
                             </WeatherStat>
-                            <WeatherStat icon={<BsSunrise className="sq-3.5" />} label="Sunrise">
+                            <WeatherStat icon={<Sunrise className="sq-3.5" />} label="Sunrise">
                               <div className="flex h-full flex-col justify-between">
                                 <p className="text-2xl">{dayjs(props.weather.sunrise).format("HH:mm")}</p>
                                 <p className="text-xs">Sunset: {dayjs(props.weather.sunset).format("HH:mm")}</p>
                               </div>
                             </WeatherStat>
-                            <WeatherStat icon={<TbDroplet className="sq-3.5" />} label="Rain">
+                            <WeatherStat icon={<Droplet className="sq-3.5" />} label="Rain">
                               <div className="flex h-full flex-col justify-between">
                                 <p className="text-2xl">{props.weather.rain} mm</p>
                                 <p className="text-xs">Chance: {props.weather.chanceOfRain}%</p>
                               </div>
                             </WeatherStat>
-                            <WeatherStat icon={<RiWindyLine className="sq-3.5" />} label="Wind">
+                            <WeatherStat icon={<Wind className="sq-3.5" />} label="Wind">
                               <div className="flex h-full flex-col justify-between">
                                 <div>
                                   <div className="hstack">
@@ -170,7 +168,7 @@ function _HeaderDay(props: {
                                       {props.weather.windSpeed}
                                       <span className="text-lg">km/h</span>
                                     </p>
-                                    <TbLocation
+                                    <MousePointer
                                       className="sq-4 opacity-60"
                                       style={{ transform: `rotate(${135 + props.weather.windDirection}deg)` }}
                                     />

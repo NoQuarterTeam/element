@@ -1,11 +1,10 @@
 import * as React from "react"
-import { BiMessage } from "react-icons/bi"
-import { RiBug2Line, RiLightbulbLine } from "react-icons/ri"
 import { FeedbackType } from "@element/database/types"
 import type { ActionFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useActionData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
+import { Bug, Lightbulb, MessageCircle } from "lucide-react"
 import { z } from "zod"
 
 import { Button } from "~/components/ui/Button"
@@ -14,10 +13,10 @@ import { Form, FormButton, FormField } from "~/components/ui/Form"
 import { Textarea } from "~/components/ui/Inputs"
 import { Modal } from "~/components/ui/Modal"
 import { db } from "~/lib/db.server"
+import { FORM_ACTION } from "~/lib/form"
 import { formError, validateFormData } from "~/lib/form.server"
 import { badRequest, redirect } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
-import { FORM_ACTION } from "~/lib/form"
 
 export enum FeedbackMethods {
   CreateFeedback = "createFeedback",
@@ -101,21 +100,21 @@ export default function Feedback() {
       ) : (
         <div className="vstack px-4 py-8">
           <ButtonGroup>
-            <Button className="sq-24" onClick={() => setType("ISSUE")}>
+            <Button variant="secondary" className="sq-24" onClick={() => setType("ISSUE")}>
               <div className="vstack">
-                <RiBug2Line className="sq-4" />
+                <Bug className="sq-4" />
                 <p>Issue</p>
               </div>
             </Button>
-            <Button className="sq-24" onClick={() => setType("IDEA")}>
+            <Button variant="secondary" className="sq-24" onClick={() => setType("IDEA")}>
               <div className="vstack">
-                <RiLightbulbLine className="sq-4" />
+                <Lightbulb className="sq-4" />
                 <p>Idea</p>
               </div>
             </Button>
-            <Button className="sq-24" onClick={() => setType("OTHER")}>
+            <Button variant="secondary" className="sq-24" onClick={() => setType("OTHER")}>
               <div className="vstack">
-                <BiMessage className="sq-4" />
+                <MessageCircle className="sq-4" />
 
                 <p>Other</p>
               </div>

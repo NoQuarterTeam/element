@@ -1,7 +1,7 @@
 import * as React from "react"
-import { BiChevronRight } from "react-icons/bi"
 import { merge } from "@element/shared"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
+import { ChevronRight } from "lucide-react"
 
 const DropdownMenu = DropdownMenuPrimitive.Root
 
@@ -31,7 +31,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
     {...props}
   >
     {children}
-    <BiChevronRight className="ml-auto h-4 w-4" />
+    <ChevronRight className="ml-auto h-4 w-4" />
   </DropdownMenuPrimitive.SubTrigger>
 ))
 DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayName

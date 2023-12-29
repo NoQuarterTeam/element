@@ -1,7 +1,7 @@
 import type * as React from "react"
-import { RiBankCard2Line, RiMap2Line, RiSettings2Line } from "react-icons/ri"
 import { createImageUrl, join } from "@element/shared"
 import { NavLink, Outlet, useNavigate, useNavigation } from "@remix-run/react"
+import { CreditCard, Map, Settings } from "lucide-react"
 
 import { transformImageSrc } from "~/components/OptimisedImage"
 import { Avatar } from "~/components/ui/Avatar"
@@ -39,7 +39,7 @@ export default function Profile() {
               to="settings"
               icon={
                 <div className="relative">
-                  <RiSettings2Line className="sq-4" />
+                  <Settings className="sq-4" />
                   {!featuresSeen.find((u) => ["weather", "habits"].includes(u)) && (
                     <div className="sq-1.5 absolute -right-[3px] -top-[3px] rounded-full bg-red-500" />
                   )}
@@ -48,10 +48,10 @@ export default function Profile() {
             >
               Settings
             </TabLink>
-            <TabLink to="plan" icon={<RiMap2Line className="sq-4" />}>
+            <TabLink to="plan" icon={<Map className="sq-4" />}>
               Plan
             </TabLink>
-            <TabLink to="billing" icon={<RiBankCard2Line className="sq-4" />}>
+            <TabLink to="billing" icon={<CreditCard className="sq-4" />}>
               Billing
             </TabLink>
           </div>

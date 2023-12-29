@@ -1,8 +1,8 @@
-import { RiMenuLine, RiMoonLine, RiSunLine } from "react-icons/ri"
 import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "@element/shared"
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { Link, useFetcher } from "@remix-run/react"
+import { Menu, Moon, Sun } from "lucide-react"
 
 import { Badge } from "~/components/ui/Badge"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "~/components/ui/DropdownMenu"
@@ -62,7 +62,7 @@ export default function HomeLayout() {
                   type="submit"
                   aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
                   variant="ghost"
-                  icon={isDark ? <RiSunLine className="sq-4" /> : <RiMoonLine className="sq-4" />}
+                  icon={isDark ? <Sun className="sq-4" /> : <Moon className="sq-4" />}
                 />
               </themeFetcher.Form>
               <LinkButton size="md" variant="ghost" to="/login">
@@ -80,7 +80,7 @@ export default function HomeLayout() {
                   rounded
                   className="inline-block md:hidden"
                   aria-label={`Toggle open menu`}
-                  icon={<RiMenuLine className="sq-5" />}
+                  icon={<Menu className="sq-5" />}
                   variant="ghost"
                 />
               </DropdownMenuTrigger>

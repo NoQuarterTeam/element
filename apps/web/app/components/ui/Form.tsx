@@ -1,22 +1,22 @@
 import * as React from "react"
 import { createImageUrl, merge } from "@element/shared"
+import { type SerializeFrom } from "@remix-run/node"
 import {
+  type Fetcher,
   type FetcherWithComponents,
   type FormProps as RemixFormProps,
   useFetcher as useRemixFetcher,
   useFetchers,
-  Fetcher,
 } from "@remix-run/react"
 import { Form as RemixForm, useActionData, useNavigation } from "@remix-run/react"
+import { type z } from "zod"
 
 import { FORM_ACTION, useFormErrors } from "~/lib/form"
+import { type ActionDataErrorResponse } from "~/lib/form.server"
 
 import { Button, type ButtonProps } from "./Button"
 import { ImageUploader } from "./ImageUploader"
 import { Input, type InputProps } from "./Inputs"
-import { SerializeFrom } from "@remix-run/node"
-import { z } from "zod"
-import { ActionDataErrorResponse } from "~/lib/form.server"
 
 export const Form = React.forwardRef(function _Form(props: RemixFormProps, ref: React.ForwardedRef<HTMLFormElement> | null) {
   const form = useFormErrors()
@@ -89,7 +89,7 @@ export function FormFieldLabel(
     <label
       htmlFor={props.name}
       {...props}
-      className={merge("flex font-normal text-gray-700 dark:text-gray-100", props.className)}
+      className={merge("flex text-sm font-normal text-gray-700 dark:text-gray-100", props.className)}
     >
       {props.children}
       {props.required && <span className="pl-0.5 text-red-500">*</span>}

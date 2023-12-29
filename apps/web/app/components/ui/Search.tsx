@@ -1,8 +1,7 @@
 import * as React from "react"
-import { BiX } from "react-icons/bi"
-import { CgSearch } from "react-icons/cg"
 import { merge } from "@element/shared"
 import { useSearchParams } from "@remix-run/react"
+import { SearchIcon, X } from "lucide-react"
 import queryString from "query-string"
 
 import { IconButton } from "./IconButton"
@@ -36,7 +35,7 @@ export function Search({ placeholder, name = "search", ...props }: InputProps) {
   return (
     <form className="relative w-full" onSubmit={handleSubmit}>
       <div className="center absolute left-2 top-0 h-full">
-        <IconButton type="submit" aria-label="search" variant="ghost" icon={<CgSearch />} />
+        <IconButton type="submit" aria-label="search" variant="ghost" icon={<SearchIcon size={16} />} />
       </div>
       <Input
         name={name}
@@ -48,7 +47,9 @@ export function Search({ placeholder, name = "search", ...props }: InputProps) {
         className={merge("px-14", props.className)}
       />
       <div className="center absolute right-2 top-0 h-full">
-        {!!isPendingSearch && <IconButton onClick={clearSearch} aria-label="clear search" variant="ghost" icon={<BiX />} />}
+        {!!isPendingSearch && (
+          <IconButton onClick={clearSearch} aria-label="clear search" variant="ghost" icon={<X size={16} />} />
+        )}
       </div>
     </form>
   )

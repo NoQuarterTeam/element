@@ -367,9 +367,6 @@ importers:
       react-dropzone:
         specifier: 14.2.3
         version: 14.2.3(react@18.2.0)
-      react-icons:
-        specifier: 4.11.0
-        version: 4.11.0(react@18.2.0)
       react-intersection-observer:
         specifier: ^9.4.3
         version: 9.5.3(react@18.2.0)
@@ -15069,14 +15066,6 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
       react-fast-compare: 3.2.2
       shallowequal: 1.1.0
-    dev: false
-
-  /react-icons@4.11.0(react@18.2.0):
-    resolution: {integrity: sha512-V+4khzYcE5EBk/BvcuYRq6V/osf11ODUM2J8hg2FDSswRrGvqiYUYPRy4OdrWaQOBj4NcpJfmHZLNaD+VH0TyA==}
-    peerDependencies:
-      react: '*'
-    dependencies:
-      react: 18.2.0
     dev: false
 
   /react-intersection-observer@9.5.3(react@18.2.0):

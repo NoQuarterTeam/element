@@ -1,10 +1,10 @@
 import * as React from "react"
-import { RiArrowLeftLine } from "react-icons/ri"
 import { getMinutesFromTasks, getTotalTaskDuration, merge } from "@element/shared"
 import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
+import { ArrowLeft } from "lucide-react"
 
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
@@ -114,7 +114,7 @@ export default function Dashboard() {
   return (
     <div className="stack p-4 md:p-6">
       <div className="block">
-        <LinkButton to="/timeline" variant="ghost" leftIcon={<RiArrowLeftLine />}>
+        <LinkButton to="/timeline" variant="ghost" leftIcon={<ArrowLeft size={16} />}>
           Back to timeline
         </LinkButton>
       </div>

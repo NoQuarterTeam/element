@@ -1,10 +1,10 @@
 import * as React from "react"
-import { RiAddLine, RiArrowDownSLine, RiArrowRightSLine, RiDeleteBinLine, RiEditLine } from "react-icons/ri"
 import { safeReadableColor, useDisclosure } from "@element/shared"
 import { Dialog } from "@headlessui/react"
 import { json, type LoaderFunctionArgs, type SerializeFrom } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
+import { ChevronDown, ChevronRight, Edit2, Plus, Trash } from "lucide-react"
 
 import { TaskForm } from "~/components/TaskForm"
 import { taskItemSelectFields } from "~/components/TaskItem"
@@ -49,7 +49,7 @@ export default function Backlog() {
     <Drawer isOpen={true} size="md" onClose={() => navigate("/timeline")} title="Backlog">
       <div className="relative h-screen overflow-scroll px-4 pb-40">
         <div className="items-center justify-between">
-          <Button variant="primary" leftIcon={<RiAddLine />} onClick={createModalProps.onOpen}>
+          <Button variant="primary" leftIcon={<Plus size={16} />} onClick={createModalProps.onOpen}>
             Add
           </Button>
 
@@ -103,7 +103,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
                 rounded
                 size="xs"
                 aria-label="show description"
-                icon={isOpen ? <RiArrowRightSLine /> : <RiArrowDownSLine />}
+                icon={isOpen ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
               />
             </Tooltip>
           )}
@@ -115,7 +115,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
               rounded
               size="xs"
               aria-label="edit"
-              icon={<RiEditLine />}
+              icon={<Edit2 size={16} />}
             />
           </Tooltip>
           <Tooltip label="Delete">
@@ -128,7 +128,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
                 rounded
                 size="xs"
                 aria-label="delete"
-                icon={<RiDeleteBinLine />}
+                icon={<Trash size={16} />}
               />
             </deleteFetcher.Form>
           </Tooltip>
@@ -154,7 +154,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
                 value={TaskActionMethods.UpdateTask}
                 size="xs"
                 aria-label="add to timeline"
-                icon={<RiAddLine />}
+                icon={<Plus size={16} />}
               />
             </Tooltip>
           </updateFetcher.Form>

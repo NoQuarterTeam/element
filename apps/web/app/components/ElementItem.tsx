@@ -1,17 +1,8 @@
 import React from "react"
-import { BsArrow90DegRight } from "react-icons/bs"
-import {
-  RiAddLine,
-  RiArrowDownSLine,
-  RiArrowRightSLine,
-  RiDeleteBinLine,
-  RiEdit2Line,
-  RiEye2Line,
-  RiMore2Fill,
-} from "react-icons/ri"
 import { isValidHex, join, useDisclosure } from "@element/shared"
 import { useFetcher, useNavigation } from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
+import { ChevronDown, ChevronRight, CornerUpRight, Edit2, Eye, MoreVertical, Plus, Trash } from "lucide-react"
 import { matchSorter } from "match-sorter"
 import { toast } from "sonner"
 
@@ -128,7 +119,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
               aria-label="expand"
               onClick={expandProps.onToggle}
               variant="ghost"
-              icon={expandProps.isOpen ? <RiArrowDownSLine className="sq-4" /> : <RiArrowRightSLine className="sq-4" />}
+              icon={expandProps.isOpen ? <ChevronDown className="sq-4" /> : <ChevronRight className="sq-4" />}
             />
           )}
         </div>
@@ -141,7 +132,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                 size="xs"
                 variant="ghost"
                 rounded
-                icon={<RiMore2Fill className="sq-4" />}
+                icon={<MoreVertical className="sq-4" />}
               />
             </DropdownMenuTrigger>
 
@@ -149,16 +140,16 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
               <DropdownMenuContent side="left" align="start" className="z-[200]">
                 {props.depth < MAX_DEPTH && (
                   <DropdownMenuItem onClick={createModalProps.onOpen}>
-                    <RiAddLine className="sq-3 mr-2" />
+                    <Plus className="sq-3 mr-2" />
                     <span>Create child</span>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={moveModalProps.onOpen}>
-                  <BsArrow90DegRight className="sq-3 mr-2" />
+                  <CornerUpRight className="sq-3 mr-2" />
                   <span>Move</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={updateModalProps.onOpen}>
-                  <RiEdit2Line className="sq-3 mr-2" />
+                  <Edit2 className="sq-3 mr-2" />
                   <span>Edit</span>
                 </DropdownMenuItem>
                 {element.archivedAt ? (
@@ -170,12 +161,12 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
                       )
                     }
                   >
-                    <RiEye2Line className="sq-3 mr-2" />
+                    <Eye className="sq-3 mr-2" />
                     <span>Unarchive</span>
                   </DropdownMenuItem>
                 ) : (
                   <DropdownMenuItem onClick={archiveModalProps.onOpen}>
-                    <RiDeleteBinLine className="sq-3 mr-2" />
+                    <Trash className="sq-3 mr-2" />
                     <span>Archive</span>
                   </DropdownMenuItem>
                 )}

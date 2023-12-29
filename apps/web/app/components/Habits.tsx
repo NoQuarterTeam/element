@@ -1,10 +1,10 @@
 import * as React from "react"
-import { RiAddCircleLine, RiDeleteBin4Line, RiFolder2Line } from "react-icons/ri"
 import { type Habit } from "@element/database/types"
 import { merge, useDisclosure } from "@element/shared"
 import { useFetcher } from "@remix-run/react"
 import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
+import { Folder, PlusCircle, Trash } from "lucide-react"
 
 import * as Popover from "~/components/ui/Popover"
 import type { TimelineHabit, TimelineHabitEntry, TimelineHabitResponse } from "~/pages/api+/habits"
@@ -38,7 +38,7 @@ function _Habits({ habits, day, habitEntries }: Props) {
       <Popover.Trigger className="center w-full rounded-full px-2 py-1.5 hover:bg-black/10 dark:hover:bg-gray-700">
         <div className="hstack center space-x-0.5">
           {dayHabits.length === 0 ? (
-            <RiAddCircleLine className="sq-3" />
+            <PlusCircle className="sq-3" />
           ) : (
             dayHabits
               .map((habit) => (
@@ -202,13 +202,7 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
           <Popover.Anchor>
             <Tooltip label="Archive">
               <Popover.Trigger asChild>
-                <IconButton
-                  rounded
-                  variant="ghost"
-                  aria-label="archive habit"
-                  size="xs"
-                  icon={<RiFolder2Line className="sq-3.5" />}
-                />
+                <IconButton rounded variant="ghost" aria-label="archive habit" size="xs" icon={<Folder className="sq-3.5" />} />
               </Popover.Trigger>
             </Tooltip>
           </Popover.Anchor>
@@ -245,13 +239,7 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
           <Popover.Anchor>
             <Tooltip label="Delete">
               <Popover.Trigger asChild>
-                <IconButton
-                  rounded
-                  variant="ghost"
-                  aria-label="delete habit"
-                  size="xs"
-                  icon={<RiDeleteBin4Line className="sq-3.5" />}
-                />
+                <IconButton rounded variant="ghost" aria-label="delete habit" size="xs" icon={<Trash className="sq-3.5" />} />
               </Popover.Trigger>
             </Tooltip>
           </Popover.Anchor>

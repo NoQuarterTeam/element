@@ -1,19 +1,20 @@
-import { BiMessage } from "react-icons/bi"
-import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi"
-import {
-  RiBookLine,
-  RiDashboard3Line,
-  RiFocus3Line,
-  RiLogoutCircleRLine,
-  RiMoonLine,
-  RiQuestionLine,
-  RiSunLine,
-  RiTimeLine,
-  RiUser3Line,
-} from "react-icons/ri"
 import { Role } from "@element/database/types"
 import { join, useDisclosure } from "@element/shared"
 import { useFetcher, useLocation, useNavigate, useSubmit } from "@remix-run/react"
+import {
+  Book,
+  ChevronsLeft,
+  ChevronsRight,
+  Clock,
+  Focus,
+  HelpCircle,
+  LayoutDashboard,
+  LogOut,
+  MessageCircle,
+  Moon,
+  Sun,
+  User,
+} from "lucide-react"
 
 import { useEventListener } from "~/lib/hooks/useEventListener"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
@@ -66,7 +67,7 @@ export function Nav() {
         <IconButton
           rounded
           variant="ghost"
-          icon={<FiChevronsLeft className="sq-4" />}
+          icon={<ChevronsLeft className="sq-4" />}
           aria-label="close sidebar"
           onClick={navProps.onToggle}
         />
@@ -81,7 +82,7 @@ export function Nav() {
         <div className="vstack space-y-1">
           <IconButton
             rounded
-            icon={<FiChevronsRight className="sq-4" />}
+            icon={<ChevronsRight className="sq-4" />}
             aria-label="close nav"
             variant="ghost"
             onClick={navProps.onToggle}
@@ -94,7 +95,7 @@ export function Nav() {
               onClick={() => navigate("backlog")}
               icon={
                 <div className="relative">
-                  <RiTimeLine className="sq-4" />
+                  <Clock className="sq-4" />
                   {!featuresSeen.includes("backlog") && <div className="sq-1.5 absolute right-0 top-0 rounded-full bg-red-500" />}
                 </div>
               }
@@ -108,7 +109,7 @@ export function Nav() {
               onClick={() => navigate("elements")}
               icon={
                 <div className="relative">
-                  <RiBookLine className="sq-4" />
+                  <Book className="sq-4" />
                   {elementIds.length > 0 && <div className="bg-primary-500 sq-2.5 absolute -right-1 -top-1 rounded-full" />}
                 </div>
               }
@@ -124,7 +125,7 @@ export function Nav() {
               }}
               icon={
                 <div className="relative">
-                  <RiFocus3Line className="sq-4" />
+                  <Focus className="sq-4" />
                   {!featuresSeen.includes("focus") && <div className="sq-1.5 absolute right-0 top-0 rounded-full bg-red-500" />}
                 </div>
               }
@@ -150,7 +151,7 @@ export function Nav() {
               onClick={() => navigate("profile")}
               icon={
                 <div className="relative">
-                  <RiUser3Line className="sq-4" />
+                  <User className="sq-4" />
                   {(!featuresSeen.includes("weather") || !featuresSeen.includes("habits")) && (
                     <div className="sq-1.5 absolute right-0 top-0 rounded-full bg-red-500" />
                   )}
@@ -166,7 +167,7 @@ export function Nav() {
                 rounded
                 aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
                 variant="ghost"
-                icon={theme === "dark" ? <RiSunLine className="sq-4" /> : <RiMoonLine className="sq-4" />}
+                icon={theme === "dark" ? <Sun className="sq-4" /> : <Moon className="sq-4" />}
               />
             </Tooltip>
           </themeFetcher.Form>
@@ -177,7 +178,7 @@ export function Nav() {
               onClick={shortcutModalProps.onOpen}
               aria-label="Shortcuts"
               variant="ghost"
-              icon={<RiQuestionLine className="sq-4" />}
+              icon={<HelpCircle className="sq-4" />}
             />
           </Tooltip>
           <Tooltip side="left" label="Give feedback">
@@ -186,7 +187,7 @@ export function Nav() {
               onClick={() => navigate("feedback")}
               aria-label="Give feedback"
               variant="ghost"
-              icon={<BiMessage className="sq-4" />}
+              icon={<MessageCircle className="sq-4" />}
             />
           </Tooltip>
           {me.role === Role.ADMIN && (
@@ -196,7 +197,7 @@ export function Nav() {
                 onClick={() => navigate("/admin")}
                 aria-label="Admin"
                 variant="ghost"
-                icon={<RiDashboard3Line className="sq-4" />}
+                icon={<LayoutDashboard className="sq-4" />}
               />
             </Tooltip>
           )}
@@ -207,7 +208,7 @@ export function Nav() {
               variant="ghost"
               aria-label="logout"
               onClick={() => logoutSubmit(null, { method: "post", action: "/logout" })}
-              icon={<RiLogoutCircleRLine className="sq-4" />}
+              icon={<LogOut className="sq-4" />}
             />
           </Tooltip>
         </div>

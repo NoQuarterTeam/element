@@ -1,11 +1,11 @@
 import * as React from "react"
-import { RiArrowDownSLine, RiArrowRightSLine } from "react-icons/ri"
 import { safeReadableColor, useDisclosure } from "@element/shared"
 import { Dialog } from "@headlessui/react"
 import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
+import { ChevronDown, ChevronRight } from "lucide-react"
 
 import { CloseButton } from "~/components/ui/CloseButton"
 import { IconButton } from "~/components/ui/IconButton"
@@ -107,7 +107,7 @@ function FocusItem({ task }: { task: FocusTask }) {
                 rounded
                 size="xs"
                 aria-label="show description"
-                icon={isOpen ? <RiArrowRightSLine /> : <RiArrowDownSLine />}
+                icon={isOpen ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
               />
             </Tooltip>
           )}
