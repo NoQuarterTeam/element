@@ -1,7 +1,7 @@
 import { ConfigContext, ExpoConfig } from "expo/config"
 
 const VERSION = "1.0.7"
-const BUILD = 20
+const BUILD = 21
 
 const IS_DEV = process.env.APP_VARIANT === "development"
 
@@ -37,7 +37,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
     icon: "./assets/icon.png",
     bundleIdentifier: IS_DEV ? "co.noquarter.element.dev" : "co.noquarter.element",
     infoPlist: {
-      CFBundleDisplayName: "Element",
+      CFBundleDisplayName: IS_DEV ? "Element (dev)" : "Element",
     },
     buildNumber: BUILD.toString(),
   },
