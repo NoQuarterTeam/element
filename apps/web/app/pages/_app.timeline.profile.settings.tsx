@@ -49,9 +49,9 @@ export default function Settings() {
   }
 
   return (
-    <div className="stack">
+    <div className="space-y-2">
       <p className="text-lg font-medium">Settings</p>
-      <div className="stack">
+      <div className="space-y-2">
         <div className="hstack">
           <p className="text-sm">Weather</p>
         </div>
@@ -59,7 +59,7 @@ export default function Settings() {
         <Switch onCheckedChange={handleToggleWeather} defaultChecked={features.includes("weather")} />
       </div>
       <hr />
-      <div className="stack">
+      <div className="space-y-2">
         <div className="hstack">
           <p className="text-sm">Habits</p>
           <Badge size="sm" colorScheme="red">

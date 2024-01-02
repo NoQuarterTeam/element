@@ -129,11 +129,11 @@ export default function Plan() {
   const discountedPlanAmount = data?.subscription?.discountPercent ? 4 - (4 * 100) / data.subscription.discountPercent : null
 
   return (
-    <div className="stack">
+    <div className="space-y-2">
       <p className="text-lg font-medium">Plan</p>
       <Outlet />
       {data?.subscription ? (
-        <div className="stack">
+        <div className="space-y-2">
           <p className="text-lg">
             You are currently on the <b>Pro</b> plan
           </p>
@@ -157,7 +157,7 @@ export default function Plan() {
           ) : null}
         </div>
       ) : (
-        <div className="stack">
+        <div className="space-y-2">
           <p className="text-lg">
             You are currently on the <b>Personal</b> plan
           </p>
@@ -207,7 +207,7 @@ export default function Plan() {
         <div className="flex">
           <div className="flex flex-[3] border-l border-transparent p-1 md:p-2" />
           <div className="flex flex-[2] border-l border-t border-gray-100 p-1 dark:border-gray-600 md:p-2">
-            <div className="stack space-y-0 md:space-y-2">
+            <div className="space-y-0 md:space-y-2">
               <p className="text-md font-bold">Personal</p>
               <p className="text-xl font-medium">€0</p>
               <AlertDialog
@@ -236,7 +236,7 @@ export default function Plan() {
             </div>
           </div>
           <div className="flex flex-[2] border-l border-t border-gray-100 p-1 dark:border-gray-600 md:p-2">
-            <div className="stack space-y-0 md:space-y-2">
+            <div className="space-y-0 md:space-y-2">
               <p className="text-md font-bold">Pro</p>
               <p className="whitespace-nowrap text-xl font-medium">
                 €4 <span className="whitespace-nowrap text-xs font-thin opacity-70">per month</span>
@@ -259,7 +259,7 @@ export default function Plan() {
               )}
               <Modal size="sm" title="Join Pro" {...joinPlanProps}>
                 <Form replace method="post">
-                  <div className="stack p-4">
+                  <div className="space-y-2 p-4">
                     <Input name="promoCode" placeholder="Have a promo code?" />
                     <ButtonGroup>
                       <Button variant="ghost" onClick={joinPlanProps.onClose}>

@@ -143,7 +143,7 @@ export default function Elements() {
                 }
               }}
             >
-              <div className="stack p-4">
+              <div className="space-y-2 p-4">
                 <InlineFormField autoFocus name="name" label="Name" required />
                 <InlineFormField
                   name="color"
@@ -164,7 +164,7 @@ export default function Elements() {
           </Modal>
         </div>
 
-        <div className="stack space-y-px">
+        <div className="space-y-px">
           {matchedMyElements.map((element) => (
             <ElementItem key={element.id} {...{ element }} search={search} depth={0} isArchivedShown={achiveProps.isOpen} />
           ))}

@@ -77,18 +77,3 @@
 .react-control {
   min-height: 34px !important;
 }
-
-@layer components {
-  .stack {
-    @apply space-y-2;
-  }
-  .hstack {
-    @apply flex flex-row items-center space-x-2;
-  }
-  .vstack {
-    @apply flex flex-col items-center space-y-2;
-  }
-  .center {
-    @apply flex items-center justify-center;
-  }
-}

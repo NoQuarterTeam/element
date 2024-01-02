@@ -60,7 +60,6 @@ function EditTaskForm({ task }: { task: Task }) {
     onSuccess: async (updatedTask) => {
       void utils.task.timeline.refetch({ daysBack, daysForward })
       utils.task.byId.setData({ id: task.id }, updatedTask)
-
       router.back()
     },
   })

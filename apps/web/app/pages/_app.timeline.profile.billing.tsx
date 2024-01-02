@@ -121,16 +121,16 @@ export default function Billing() {
   const billing = data?.billing
   const invoices = data?.invoices || []
   return (
-    <div className="stack">
+    <div className="space-y-2">
       <p className="text-lg font-medium">Billing</p>
       <Form replace method="post">
-        <div className="stack">
+        <div className="space-y-2">
           <p className="w-full text-sm font-semibold">Details</p>
           <FormField label="Billing name" defaultValue={billing?.name || ""} name="name" />
           <FormField label="Billing email" defaultValue={billing?.email || ""} name="email" />
           <div className="flex-wrap justify-between md:flex-nowrap">
             <FormFieldLabel htmlFor="address1">Billing address</FormFieldLabel>
-            <div className="stack space-y-1">
+            <div className="space-y-1">
               <FormField placeholder="Address 1" defaultValue={billing?.address?.line1 || ""} name="address1" />
               <FormField placeholder="Address 2" defaultValue={billing?.address?.line2 || ""} name="address2" />
               <div className="hstack items-start">
@@ -185,7 +185,7 @@ export default function Billing() {
       </Form>
       <hr />
       <p className="w-full text-sm font-semibold">Invoices</p>
-      <div className="stack">
+      <div className="space-y-2">
         {invoices.length === 0 ? (
           <div className="center h-24">
             <p className="text-center">No invoices yet</p>

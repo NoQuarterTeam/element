@@ -52,7 +52,7 @@ export const taskRouter = createTRPCRouter({
         },
       })
       const groupedTasks = tasks.reduce<{ [key: string]: (typeof tasks)[number][] }>((acc, task) => {
-        const date = dayjs(task.date).format("YYYY-MM-DD")
+        const date = dayjs(task.date).startOf("day").format("YYYY-MM-DD")
         if (!acc[date]) acc[date] = []
         acc[date]?.push(task)
         return acc
@@ -61,9 +61,11 @@ export const taskRouter = createTRPCRouter({
         ...task,
         // get real order in case there are gaps created by deleted tasks or similar orders after a duplicate
         order: task.date
-          ? groupedTasks[dayjs(task.date).format("YYYY-MM-DD")]!.findIndex((t) => t.id === task.id) || 0
+          ? groupedTasks[dayjs(task.date).startOf("day").add(12, "hours").format("YYYY-MM-DD")]!.findIndex(
+              (t) => t.id === task.id,
+            ) || 0
           : task.order,
-        date: dayjs(task.date).format("YYYY-MM-DD"),
+        date: dayjs(task.date).startOf("day").add(12, "hours").format("YYYY-MM-DD"),
       }))
     }),
   backlog: protectedProcedure.query(async ({ ctx }) => {
@@ -72,12 +74,12 @@ export const taskRouter = createTRPCRouter({
       orderBy: [{ order: "asc" }, { createdAt: "asc" }],
       where: { creatorId: { equals: ctx.user.id }, date: null },
     })
-    return tasks.map((task) => ({ ...task, date: dayjs(task.date).format("YYYY-MM-DD") }))
+    return tasks.map((task) => ({ ...task, date: dayjs(task.date).startOf("day").add(12, "hours").format("YYYY-MM-DD") }))
   }),
   byId: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input: { id } }) => {
     const task = await ctx.prisma.task.findUnique({ where: { id }, select: timelineTaskFields })
     if (!task) return null
-    return { ...task, date: task.date ? dayjs(task.date).format("YYYY-MM-DD") : null }
+    return { ...task, date: task.date ? dayjs(task.date).startOf("day").add(12, "hours").format("YYYY-MM-DD") : null }
   }),
   toggleComplete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input: { id } }) => {
     const task = await ctx.prisma.task.findUnique({ where: { id } })
@@ -111,7 +113,7 @@ export const taskRouter = createTRPCRouter({
     })
     return {
       ...createdTask,
-      date: dayjs(createdTask.date).format("YYYY-MM-DD"),
+      date: dayjs(createdTask.date).startOf("day").add(12, "hours").format("YYYY-MM-DD"),
     }
   }),
   update: protectedProcedure
@@ -123,7 +125,7 @@ export const taskRouter = createTRPCRouter({
 
       return {
         ...task,
-        date: task.date ? dayjs(task.date).format("YYYY-MM-DD") : null,
+        date: task.date ? dayjs(task.date).startOf("days").add(12, "hours").format("YYYY-MM-DD") : null,
       }
     }),
   duplicate: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input: { id } }) => {
