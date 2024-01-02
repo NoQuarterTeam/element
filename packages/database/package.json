@@ -8,8 +8,11 @@
   ],
   "sideEffects": false,
   "dependencies": {
-    "@prisma/client": "5.7.0",
-    "prisma": "5.7.0"
+    "@planetscale/database": "^1.13.0",
+    "@prisma/adapter-planetscale": "^5.7.1",
+    "@prisma/client": "5.7.1",
+    "@element/server-env": "workspace:*",
+    "prisma": "5.7.1"
   },
   "devDependencies": {
     "@types/node": "^18.15.3"
@@ -18,9 +21,10 @@
     "schema": "./schema.prisma"
   },
   "scripts": {
-    "db:migrate": "prisma migrate dev",
-    "db:push": "prisma db push",
-    "db:generate": "prisma generate",
-    "postinstall": "prisma generate"
+    "dev": "pnpm with-env prisma studio",
+    "db:push": "pnpm with-env prisma db push && pnpm generate",
+    "generate": "pnpm with-env prisma generate",
+    "with-env": "dotenv -e ../../.env --",
+    "postinstall": "pnpm generate"
   }
 }

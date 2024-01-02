@@ -4,9 +4,8 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
-  relationMode = "prisma"
-  url          = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -15,7 +14,7 @@ enum Role {
 }
 
 model User {
-  id                   String       @id @default(uuid())
+  id                   String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email                String       @unique
   password             String
   firstName            String
@@ -24,10 +23,10 @@ model User {
   avatar               String?
   stripeCustomerId     String       @unique
   stripeSubscriptionId String?      @unique
-  createdAt            DateTime     @default(now())
-  updatedAt            DateTime     @default(now()) @updatedAt
-  archivedAt           DateTime?
-  verifiedAt           DateTime?
+  createdAt            DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
+  archivedAt           DateTime?    @db.Timestamptz(6)
+  verifiedAt           DateTime?    @db.Timestamptz(6)
   tasks                Task[]
   elements             Element[]
   habits               Habit[]
@@ -43,7 +42,7 @@ enum TaskRepeat {
 }
 
 model Task {
-  id              String      @id @default(uuid())
+  id              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name            String
   description     String?
   date            DateTime?
@@ -57,76 +56,71 @@ model Task {
   order           Int         @default(50)
   todos           Todo[]
   repeatChildren  Task[]      @relation(name: "RepeatChildren")
-  repeatParentId  String?
-  repeatParent    Task?       @relation(name: "RepeatChildren", fields: [repeatParentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  creatorId       String
+  repeatParentId  String?     @db.Uuid
+  repeatParent    Task?       @relation(name: "RepeatChildren", fields: [repeatParentId], references: [id], onDelete: SetNull)
+  creatorId       String      @db.Uuid
   creator         User        @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  elementId       String
+  elementId       String      @db.Uuid
   element         Element     @relation(fields: [elementId], references: [id], onDelete: Cascade)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @default(now()) @updatedAt
+  createdAt       DateTime    @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
 
   @@index([date])
   @@index([elementId])
-  @@index([repeatParentId])
   @@index([creatorId])
 }
 
 model Todo {
-  id         String   @id @default(uuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name       String
   isComplete Boolean  @default(false)
-  taskId     String
+  taskId     String   @db.Uuid
   task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now()) @updatedAt
-
-  @@index([taskId])
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
 }
 
 model Element {
-  id         String    @id @default(uuid())
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name       String
   color      String
   archivedAt DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @default(now()) @updatedAt
+  createdAt  DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
   children   Element[] @relation(name: "ChildElements")
-  parent     Element?  @relation(name: "ChildElements", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  parentId   String?
+  parent     Element?  @relation(name: "ChildElements", fields: [parentId], references: [id], onDelete: SetNull)
+  parentId   String?   @db.Uuid
   creator    User      @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  creatorId  String
+  creatorId  String    @db.Uuid
   tasks      Task[]
 
-  @@index([name])
   @@index([parentId])
   @@index([creatorId])
 }
 
 model Habit {
-  id          String       @id @default(uuid())
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String
   description String?
   archivedAt  DateTime?
   startDate   DateTime
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @default(now()) @updatedAt
-  creatorId   String
+  createdAt   DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
+  creatorId   String       @db.Uuid
   creator     User         @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   entries     HabitEntry[]
 
-  @@index([archivedAt])
   @@index([startDate])
   @@index([creatorId])
 }
 
 model HabitEntry {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-  habitId   String
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  habitId   String   @db.Uuid
   habit     Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
-  creatorId String
+  creatorId String   @db.Uuid
   creator   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
   @@index([createdAt])
@@ -141,13 +135,11 @@ enum FeedbackType {
 }
 
 model Feedback {
-  id        String       @id @default(uuid())
+  id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   content   String
   type      FeedbackType
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @default(now()) @updatedAt
-  creatorId String
+  createdAt DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime     @default(now()) @updatedAt @db.Timestamptz(6)
+  creatorId String       @db.Uuid
   creator   User         @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-
-  @@index([creatorId])
 }
