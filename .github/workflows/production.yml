@@ -1,0 +1,53 @@
+name: production
+on:
+  push:
+    paths:
+      - "apps/app/**"
+      - "packages/shared/**"
+      - "packages/database/**"
+      - "packages/config/**"
+    branches:
+      - main
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  update:
+    name: EAS Update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for EXPO_TOKEN
+        run: |
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2.4.0
+        with:
+          version: 8
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16.x
+          cache: pnpm
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: pnpm install --ignore-scripts
+
+      - name: Create preview
+        uses: expo/expo-github-action/preview@v8
+        with:
+          working-directory: apps/expo
+          command: eas update --branch production --message "${{ github.event.head_commit.message }}"

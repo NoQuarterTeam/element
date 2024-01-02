@@ -1,0 +1,25 @@
+name: ⏩ Sync branches
+on:
+  push:
+    branches:
+      - main
+      - develop
+jobs:
+  sync:
+    name: ⏩ Sync branches
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
+      - name: 🪪 Set git name+email
+        run: |
+          git config user.name "Jack (GitHub Actions)"
+          git config user.email "jack@noquarter.co"
+      - name: 🛣 Merge
+        run: |
+          echo "🪜 Merging origin/main -> develop"
+          git checkout develop
+          git merge "origin/main"
+          git push
