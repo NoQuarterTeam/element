@@ -1,12 +1,12 @@
-import { json, type ActionFunctionArgs } from "@remix-run/node"
+import { type ActionFunctionArgs } from "@remix-run/node"
 import { Trash, X } from "lucide-react"
+import { useFetcher } from "~/components/ui/Form"
 
 import { IconButton } from "~/components/ui/IconButton"
 import { Tooltip } from "~/components/ui/Tooltip"
 import { db } from "~/lib/db.server"
-import { getFormDataArray } from "~/lib/form.server"
+import { ActionDataSuccessResponse, formSuccess, getFormDataArray } from "~/lib/form.server"
 
-import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
 import { useSelectedTasks } from "~/lib/hooks/useSelectedTasks"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 
@@ -17,9 +17,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const tasks = getFormDataArray(formData, TASKS_KEY).map((t) => ({
     id: t.id as string,
   }))
-  if (tasks.length === 0) return null
+  if (tasks.length === 0) return formSuccess()
   await db.task.deleteMany({ where: { id: { in: tasks.map((t) => t.id) } } })
-  return json({ success: true })
+  return formSuccess()
 }
 
 const ACTION_URL = "/api/tasks/delete-many"
@@ -28,8 +28,9 @@ export function DeleteManyTasks() {
   const { removeTasks } = useTimelineTasks()
   const { taskIds, clearSelection } = useSelectedTasks()
 
-  const fetcher = useFetcherSubmit({
-    onSuccess: () => {
+  const fetcher = useFetcher<ActionDataSuccessResponse<object>>({
+    onFinish: (res) => {
+      if (!res.success) return
       clearSelection()
       removeTasks(taskIds)
     },
