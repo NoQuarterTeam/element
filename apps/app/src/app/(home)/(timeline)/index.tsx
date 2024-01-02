@@ -226,7 +226,7 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
   })
 
   return (
-    <View className="absolute bottom-4 right-4 space-y-1">
+    <View pointerEvents="box-none" className="absolute bottom-4 right-4 space-y-1">
       {me && (
         <View className="space-y-1">
           <Animated.View style={{ opacity: backlogOpacity, transform: [{ translateY: backlogTranslateY }] }}>
