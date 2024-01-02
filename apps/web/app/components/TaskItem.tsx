@@ -1,7 +1,7 @@
 import * as React from "react"
 import { type Prisma } from "@element/database/types"
 import { formatDuration, join, safeReadableColor, useDisclosure } from "@element/shared"
-import { Link } from "@remix-run/react"
+import { Link, useNavigation } from "@remix-run/react"
 
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
@@ -74,6 +74,8 @@ function _TaskItem({ task }: Props) {
       )
     }
   }
+  const navigation = useNavigation()
+  const isNavigatingToItem = navigation.location?.pathname.includes(task.id) && navigation.state === "loading"
 
   const handleDelete = async (shouldDeleteFuture: boolean) => {
     deleteFetcher.submit(
@@ -91,14 +93,15 @@ function _TaskItem({ task }: Props) {
   const deleteModalProps = useDisclosure()
 
   return (
-    <div className="w-day z-[1]  p-2 pb-0" tabIndex={-1}>
-      <Link to={task.id} onClick={handleClick} prefetch="intent" tabIndex={-1} className="">
+    <div className="w-day z-[1] p-2 pb-0" tabIndex={-1}>
+      <Link to={task.id} onClick={handleClick} prefetch="intent" tabIndex={-1}>
         <div
           className={join(
             "group/task-item relative w-full cursor-pointer overflow-hidden rounded-md border border-gray-100 bg-white outline-none dark:border-gray-900 dark:bg-gray-700",
             task.isImportant &&
               !task.isComplete &&
               "border-primary-400 shadow-primary-400 dark:border-primary-400 shadow-[0_0_0_1px_black]",
+            isNavigatingToItem && "animate-pulse-fast",
           )}
         >
           <div
