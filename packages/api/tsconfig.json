@@ -1,5 +1,5 @@
 {
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["src"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "composite": false,
@@ -15,6 +15,7 @@
     "preserveWatchOutput": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "jsx": "react-jsx",
     "sourceMap": true,
     "lib": ["ES2021", "DOM"],
     "module": "CommonJS",

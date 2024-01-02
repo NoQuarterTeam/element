@@ -4,13 +4,23 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "sideEffects": false,
-  "scripts": {},
+  "scripts": {
+    "lint:fix": "eslint --config .eslintrc.commit.js --fix --cache --ext .ts,.tsx src",
+    "lint": "eslint --config .eslintrc.js --ext .ts,.tsx src",
+    "prettier": "prettier --check src",
+    "prettier:fix": "prettier --write src",
+    "format": "pnpm run lint:fix && pnpm run prettier:fix",
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ../../.env --"
+  },
   "dependencies": {
     "@element/database": "workspace:*",
     "@element/server-services": "workspace:*",
+    "@element/emails": "workspace:*",
+    "@element/server-env": "workspace:*",
     "@element/server-schemas": "workspace:*",
     "@element/shared": "workspace:*",
-    "@trpc/server": "^10.16.0",
+    "@trpc/server": "10.16.0",
     "bcryptjs": "^2.4.3",
     "dayjs": "1.11.10",
     "jsonwebtoken": "9.0.2",
@@ -18,6 +28,7 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
+    "@element/eslint-config": "workspace:*",
     "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "9.0.5",
     "@types/node": "^18.15.3"

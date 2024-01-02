@@ -1,4 +1,5 @@
 import { env, FULL_WEB_URL } from "@element/server-env"
+import { stripe } from "@element/server-services"
 import { join, MAX_FREE_ELEMENTS, MAX_FREE_TASKS, useDisclosure } from "@element/shared"
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
@@ -15,7 +16,7 @@ import { db } from "~/lib/db.server"
 import { FORM_ACTION } from "~/lib/form"
 import { formSuccess } from "~/lib/form.server"
 import { badRequest } from "~/lib/remix"
-import { stripe } from "~/lib/stripe/stripe.server"
+
 import { getCurrentUser } from "~/services/auth/auth.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

@@ -1,3 +1,4 @@
+import { stripe } from "@element/server-services"
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import currencyjs from "currency.js"
@@ -16,7 +17,7 @@ import { badRequest, json } from "~/lib/remix"
 import { COUNTRIES } from "~/lib/static/countries"
 import { INVOICE_STATUS } from "~/lib/static/invoiceStatus"
 import { TAX_TYPES } from "~/lib/static/taxTypes"
-import { stripe } from "~/lib/stripe/stripe.server"
+
 import { getCurrentUser } from "~/services/auth/auth.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

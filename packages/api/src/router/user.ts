@@ -2,9 +2,7 @@ import { TRPCError } from "@trpc/server"
 import bcrypt from "bcryptjs"
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc"
 
-import { stripe } from "../lib/stripe"
-
-import { createAuthToken, createTemplates, hashPassword } from "@element/server-services"
+import { createAuthToken, createTemplates, hashPassword, stripe } from "@element/server-services"
 import { loginSchema, registerSchema, updateUserSchema } from "@element/server-schemas"
 
 export const userRouter = createTRPCRouter({
