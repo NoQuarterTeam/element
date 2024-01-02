@@ -12,7 +12,7 @@ import { Icon } from "../../../components/Icon"
 import { LoginPlaceholder } from "../../../components/LoginPlaceholder"
 import { OptimizedImage } from "../../../components/OptimisedImage"
 import { Text } from "../../../components/Text"
-import { UPDATE_ID, VERSION } from "../../../lib/config"
+import { FULL_WEB_URL, UPDATE_ID, VERSION } from "../../../lib/config"
 import { useMe } from "../../../lib/hooks/useMe"
 import { api, AUTH_TOKEN } from "../../../lib/utils/api"
 
@@ -41,6 +41,7 @@ export default function Profile() {
             </Link>
 
             <View className="pt-10">
+              <Text className="text-center">{FULL_WEB_URL}</Text>
               <Text className="text-center">v{VERSION}</Text>
               <Text className="text-center opacity-60">{UPDATE_ID}</Text>
             </View>

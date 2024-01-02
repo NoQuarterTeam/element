@@ -23,7 +23,8 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   },
   updates: {
     fallbackToCacheTimeout: 0,
-    checkAutomatically: "ON_ERROR_RECOVERY",
+    checkAutomatically: "ON_LOAD",
+    url: "https://u.expo.dev/93cfd208-76bb-4e7c-b368-5a09679e1a72",
   },
   runtimeVersion: {
     policy: "nativeVersion",
