@@ -16,7 +16,7 @@
     "@element/database": "workspace:*",
     "@element/shared": "workspace:*",
     "@element/tailwind-config": "workspace:*",
-    "@react-email/components": "0.0.7"
+    "@react-email/components": "0.0.12"
   },
   "devDependencies": {
     "@element/eslint-config": "workspace:*",
