@@ -78,7 +78,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           cancel_url: FULL_WEB_URL + "/timeline/profile/plan",
           automatic_tax: { enabled: true },
           discounts: promoCode ? [{ promotion_code: promoCodeId }] : undefined,
-          line_items: [{ price: env.PRICE_ID, quantity: 1 }],
+          line_items: [{ price: env.OPEN_WEATHER_KEY, quantity: 1 }],
           mode: "subscription",
         })
         if (!session.url) return badRequest("Error creating subscription")

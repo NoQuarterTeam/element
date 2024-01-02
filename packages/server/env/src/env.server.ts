@@ -12,7 +12,7 @@ const envSchema = z.object({
   // GOOGLE_API_KEY: z.string(),
   STRIPE_SECRET_KEY: z.string(),
   STRIPE_WEBHOOK_SECRET: z.string(),
-  PRICE_ID: z.string(),
+  STRIPE_PRICE_ID: z.string(),
   OPEN_WEATHER_KEY: z.string(),
   NODE_ENV: z.enum(["development", "production"]).optional(),
   APP_SECRET: z.string(),
