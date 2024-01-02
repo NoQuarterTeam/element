@@ -188,7 +188,7 @@ function _HeaderDay(props: {
                   </HoverCard.Root>
                 )}
               </div>
-              <div className="vstack space-y-0.5">
+              <div className="flex flex-col">
                 <p className="text-center text-sm">{dayjs(props.day).format("ddd Do")}</p>
                 {props.isHabitsEnabled && props.habits && (
                   <Habits day={dayjs(props.day).format("YYYY-MM-DD")} habits={props.habits} habitEntries={habitEntries} />
