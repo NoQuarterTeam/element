@@ -13,6 +13,7 @@ import { Modal } from "./ui/Modal"
 import { ActionDataSuccessResponse } from "~/lib/form.server"
 import { useFetcher } from "./ui/Form"
 import { FORM_ACTION } from "~/lib/form"
+import { useSelectedTasks } from "~/lib/hooks/useSelectedTasks"
 
 export const taskItemSelectFields = {
   id: true,
@@ -41,6 +42,8 @@ const TODO_RADIUS = 5
 function _TaskItem({ task }: Props) {
   const { removeTask, updateTask, addTask, refetch } = useTimelineTasks()
 
+  const { toggleTaskId, taskIds, removeTaskId } = useSelectedTasks()
+
   const deleteFetcher = useFetcher()
   const toggleCompleteFetcher = useFetcher()
 
@@ -52,13 +55,19 @@ function _TaskItem({ task }: Props) {
   })
 
   const handleClick = async (event: React.MouseEvent<any, MouseEvent>) => {
-    if (event.metaKey) {
+    if (event.metaKey && event.shiftKey) {
+      event.preventDefault()
+      // select task
+      toggleTaskId(task.id)
+    } else if (event.metaKey) {
       event.preventDefault()
       // Duplicate
       dupeFetcher.submit({ [FORM_ACTION]: TaskActionMethods.DuplicateTask }, { action: `/timeline/${task.id}`, method: "POST" })
     } else if (event.shiftKey) {
       event.preventDefault()
       // Delete
+      // remove from selected tasks
+      removeTaskId(task.id)
       if (task.repeat || task.repeatParentId) {
         deleteModalProps.onOpen()
       } else {
@@ -102,6 +111,7 @@ function _TaskItem({ task }: Props) {
               !task.isComplete &&
               "border-primary-400 shadow-primary-400 dark:border-primary-400 shadow-[0_0_0_1px_black]",
             isNavigatingToItem && "animate-pulse-fast",
+            taskIds.includes(task.id) && "border-red-400 shadow-[0_0_0_1px_black] shadow-red-400 dark:border-red-400",
           )}
         >
           <div

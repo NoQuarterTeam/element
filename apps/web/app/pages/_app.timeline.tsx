@@ -24,6 +24,7 @@ import { TASK_CACHE_KEY } from "~/lib/hooks/useTimelineTasks"
 import { useMe } from "~/lib/hooks/useUser"
 
 import type { TimelineTask } from "./api+/tasks"
+import { DeleteManyTasks } from "./api+/tasks.deleteMany"
 
 dayjs.extend(advancedFormat)
 
@@ -191,6 +192,7 @@ function _Timeline() {
             </Tooltip>
           </div>
         </div>
+        <DeleteManyTasks />
       </div>
       {!isFinishedLoading && <LoadingScreen />}
       <Outlet />
