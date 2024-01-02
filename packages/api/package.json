@@ -10,8 +10,7 @@
     "prettier": "prettier --check src",
     "prettier:fix": "prettier --write src",
     "format": "pnpm run lint:fix && pnpm run prettier:fix",
-    "typecheck": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@element/database": "workspace:*",

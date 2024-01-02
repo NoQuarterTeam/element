@@ -122,7 +122,6 @@ export const taskRouter = createTRPCRouter({
       // can be set to null
       const date = data.date ? dayjs(data.date).startOf("day").add(12, "hours").toDate() : data.date
       const task = await ctx.prisma.task.update({ where: { id }, select: timelineTaskFields, data: { ...data, date } })
-
       return {
         ...task,
         date: task.date ? dayjs(task.date).startOf("day").add(12, "hours").format("YYYY-MM-DD") : null,
