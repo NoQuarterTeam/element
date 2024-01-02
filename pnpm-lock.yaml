@@ -236,8 +236,8 @@ importers:
         specifier: 7.6.0
         version: 7.6.0
       '@headlessui/react':
-        specifier: 1.7.13
-        version: 1.7.13(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.7.17
+        version: 1.7.17(react-dom@18.2.0)(react@18.2.0)
       '@hello-pangea/dnd':
         specifier: 16.2.0
         version: 16.2.0(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
@@ -3841,8 +3841,8 @@ packages:
     dependencies:
       '@hapi/hoek': 9.3.0
 
-  /@headlessui/react@1.7.13(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-9n+EQKRtD9266xIHXdY5MfiXPDfYwl7zBM7KOx2Ae3Gdgxy8QML1FkCMjq6AsOf0l6N9uvI4HcFtuFlenaldKg==}
+  /@headlessui/react@1.7.17(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-4am+tzvkqDSSgiwrsEpGWqgGo9dz8qU5M3znCkC4PgkpY4HcCZzEDEvozltGGGHIKl9jbXbZPSH5TWn4sWJdow==}
     engines: {node: '>=10'}
     peerDependencies:
       react: ^16 || ^17 || ^18

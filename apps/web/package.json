@@ -25,7 +25,7 @@
     "@element/server-services": "workspace:*",
     "@element/shared": "workspace:*",
     "@faker-js/faker": "7.6.0",
-    "@headlessui/react": "1.7.13",
+    "@headlessui/react": "1.7.17",
     "@hello-pangea/dnd": "16.2.0",
     "@radix-ui/react-alert-dialog": "1.0.3",
     "@radix-ui/react-avatar": "1.0.2",
