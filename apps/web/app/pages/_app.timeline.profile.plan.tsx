@@ -78,7 +78,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           cancel_url: FULL_WEB_URL + "/timeline/profile/plan",
           automatic_tax: { enabled: true },
           discounts: promoCode ? [{ promotion_code: promoCodeId }] : undefined,
-          line_items: [{ price: env.OPEN_WEATHER_KEY, quantity: 1 }],
+          line_items: [{ price: env.STRIPE_PRICE_ID, quantity: 1 }],
           mode: "subscription",
         })
         if (!session.url) return badRequest("Error creating subscription")
@@ -227,7 +227,7 @@ export default function Plan() {
                 }
                 confirmButton={
                   <cancelFetcher.Form method="post">
-                    <Button name="_action" value={ProfilePlanMethods.CancelPlan} variant="destructive" type="submit">
+                    <Button value={ProfilePlanMethods.CancelPlan} variant="destructive" type="submit">
                       Downgrade
                     </Button>
                   </cancelFetcher.Form>
@@ -248,7 +248,7 @@ export default function Plan() {
                 </Button>
               ) : data.subscription.isCancelled ? (
                 <Form method="post" replace>
-                  <FormButton name="_action" value={ProfilePlanMethods.ReactivatePlan} size="xs" variant="primary">
+                  <FormButton value={ProfilePlanMethods.ReactivatePlan} size="xs" variant="primary">
                     Reactivate
                   </FormButton>
                 </Form>
@@ -262,10 +262,10 @@ export default function Plan() {
                   <div className="stack p-4">
                     <Input name="promoCode" placeholder="Have a promo code?" />
                     <ButtonGroup>
-                      <Button onClick={joinPlanProps.onClose}>Cancel</Button>
-                      <FormButton name="_action" value={ProfilePlanMethods.JoinPlan}>
-                        Join
-                      </FormButton>
+                      <Button variant="ghost" onClick={joinPlanProps.onClose}>
+                        Cancel
+                      </Button>
+                      <FormButton value={ProfilePlanMethods.JoinPlan}>Join</FormButton>
                     </ButtonGroup>
                   </div>
                 </Form>
