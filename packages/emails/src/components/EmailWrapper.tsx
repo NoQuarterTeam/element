@@ -12,7 +12,7 @@ export function EmailWrapper({ children }: { children: React.ReactNode }) {
             {children}
             <div className="mt-6">
               <p>Love,</p>
-              <p>Ramble Team</p>
+              <p>Element Team</p>
             </div>
           </div>
         </Container>

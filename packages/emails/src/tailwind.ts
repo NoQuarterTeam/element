@@ -14,10 +14,6 @@ export const theme = {
       xxxs: "0.4rem",
       xxs: "0.625rem",
     },
-    fontFamily: {
-      sans: ["Urbanist", "sans-serif"],
-      serif: ["Urbanist", "sans-serif"],
-    },
     colors: {
       primary: colors.primary,
       gray: colors.gray,

@@ -10,9 +10,9 @@ interface Props {
 export function ResetPasswordContent(props: Props) {
   return (
     <EmailWrapper>
-      <Heading className="mb-4">reset password</Heading>
+      <Heading className="mb-4">Reset password</Heading>
       <p className="mb-4">
-        Someone recently requested a password change for your Ramble account. If this was you, you can set a new password here:
+        Someone recently requested a password change for your Element account. If this was you, you can set a new password here:
       </p>
       <Button className="mb-4" href={props.link}>
         Reset password
@@ -24,7 +24,7 @@ export function ResetPasswordContent(props: Props) {
 
 export function ResetPasswordEmail(props: Props) {
   return (
-    <EmailDocument preview="Ramble reset your password">
+    <EmailDocument preview="Element: reset your password">
       <ResetPasswordContent {...props} />
     </EmailDocument>
   )

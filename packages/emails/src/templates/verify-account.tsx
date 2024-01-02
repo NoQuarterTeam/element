@@ -10,7 +10,7 @@ interface Props {
 export function VerifyAccountContent(props: Props) {
   return (
     <EmailWrapper>
-      <Heading className="mb-4">verify account</Heading>
+      <Heading className="mb-4">Verify account</Heading>
       <p className="mb-4">To keep access to your account, please verify your email address.</p>
       <Button href={props.link}>Verify account</Button>
     </EmailWrapper>
