@@ -14,6 +14,7 @@ import { useMe } from "../../../lib/hooks/useMe"
 import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
 import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
+import dayjs from "dayjs"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 export default function TaskDetail() {
@@ -57,7 +58,7 @@ function EditTaskForm({ task }: { task: Task }) {
   const tempActions = useTemporaryData()
 
   const update = api.task.update.useMutation({
-    onSuccess: async (updatedTask) => {
+    onSuccess: (updatedTask) => {
       void utils.task.timeline.refetch({ daysBack, daysForward })
       utils.task.byId.setData({ id: task.id }, updatedTask)
       router.back()
@@ -70,7 +71,7 @@ function EditTaskForm({ task }: { task: Task }) {
         id: task.id,
         ...data,
         elementId: data.element.id,
-        date: data.date,
+        date: dayjs(data.date).startOf("day").add(12, "hours").toISOString(),
         durationHours: Number(data.durationHours),
         durationMinutes: Number(data.durationMinutes),
       })

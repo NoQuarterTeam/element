@@ -55,7 +55,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
     startTime: task?.startTime || "",
     durationHours: task?.durationHours?.toString() || "",
     durationMinutes: task?.durationMinutes?.toString() || "",
-    date: task?.date ? dayjs(task.date).toISOString() : (date as string | undefined) || "",
+    date: task?.date ? dayjs(task.date).startOf("day").add(12, "hours").toISOString() : (date as string | undefined) || "",
     element: task?.element || { id: "", name: "", color: "" },
     isImportant: task?.isImportant || false,
   })
