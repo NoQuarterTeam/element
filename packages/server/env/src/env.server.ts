@@ -10,6 +10,7 @@ const envSchema = z.object({
   VERCEL_URL: z.string().optional(),
   // SLACK_TOKEN: z.string(),
   // GOOGLE_API_KEY: z.string(),
+  QSTASH_TOKEN: z.string(),
   STRIPE_SECRET_KEY: z.string(),
   STRIPE_WEBHOOK_SECRET: z.string(),
   STRIPE_PRICE_ID: z.string(),

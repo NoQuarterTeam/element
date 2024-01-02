@@ -24,13 +24,13 @@ export default function RootLayout() {
     Poppins_700Bold,
     Poppins_900Black,
   })
-  const { isDoneChecking } = useCheckExpoUpdates()
+  useCheckExpoUpdates()
 
   const onLayoutRootView = React.useCallback(() => SplashScreen.hideAsync(), [])
 
   const backgroundColor = useBackgroundColor()
   // Prevent rendering until the font has loaded
-  if (!fontsLoaded || !isDoneChecking) return null
+  if (!fontsLoaded) return null
 
   return (
     <ActionSheetProvider>
