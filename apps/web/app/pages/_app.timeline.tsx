@@ -24,7 +24,7 @@ import { TASK_CACHE_KEY } from "~/lib/hooks/useTimelineTasks"
 import { useMe } from "~/lib/hooks/useUser"
 
 import type { TimelineTask } from "./api+/tasks"
-import { DeleteManyTasks } from "./api+/tasks.deleteMany"
+import { DeleteManyTasks } from "./api+/tasks.delete-many"
 
 dayjs.extend(advancedFormat)
 
