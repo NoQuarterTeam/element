@@ -71,7 +71,7 @@
     "recharts": "2.5.0",
     "remix-utils": "7.5.0",
     "resend": "0.17.0",
-    "sharp": "0.32.0",
+    "sharp": "0.32.6",
     "sonner": "1.2.4",
     "tailwind-merge": "1.10.0",
     "tailwindcss-radix": "2.8.0",
