@@ -3,6 +3,7 @@ import dayjs from "dayjs"
 import { z } from "zod"
 import { createTRPCRouter, protectedProcedure } from "../trpc"
 import { habitSchema, updateHabitSchema } from "@element/server-schemas"
+import { createHabitReminder, deleteHabitReminder } from "@element/server-services"
 
 export const habitRouter = createTRPCRouter({
   progressCompleteToday: protectedProcedure.query(async ({ ctx }) => {
@@ -56,22 +57,35 @@ export const habitRouter = createTRPCRouter({
     if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
     return habit
   }),
-  create: protectedProcedure.input(habitSchema.pick({ name: true, reminderTime: true })).mutation(({ ctx, input }) => {
+  create: protectedProcedure.input(habitSchema.pick({ name: true, reminderTime: true })).mutation(async ({ ctx, input }) => {
     const startDate = dayjs().startOf("day").add(12, "h").toDate()
+    const habit = await ctx.prisma.habit.create({ data: { ...input, startDate, creatorId: ctx.user.id } })
     if (input.reminderTime) {
-      // TODO: schedule reminder
+      const schedule = await createHabitReminder({ id: habit.id, reminderTime: input.reminderTime })
+      if (!schedule) {
+        // TODO: handle error
+        return
+      }
+      await ctx.prisma.habit.update({ where: { id: habit.id }, data: { reminderScheduleId: schedule.scheduleId } })
     }
-    return ctx.prisma.habit.create({ data: { ...input, startDate, creatorId: ctx.user.id } })
+    return habit
   }),
   update: protectedProcedure
     .input(updateHabitSchema.merge(z.object({ id: z.string() })))
     .mutation(async ({ ctx, input: { id, ...data } }) => {
       const habit = await ctx.prisma.habit.findUnique({ where: { id, creatorId: { equals: ctx.user.id } } })
       if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
+      let reminderScheduleId = habit.reminderScheduleId
       if (data.reminderTime && habit.reminderTime !== data.reminderTime) {
-        // TODO: schedule reminder
+        if (habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
+        const schedule = await createHabitReminder({ id: habit.id, reminderTime: data.reminderTime })
+        if (!schedule) {
+          // TODO: handle error
+          return
+        }
+        reminderScheduleId = schedule.scheduleId
       }
-      return ctx.prisma.habit.update({ where: { id }, data })
+      return ctx.prisma.habit.update({ where: { id }, data: { ...data, reminderScheduleId } })
     }),
   delete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     const habit = await ctx.prisma.habit.findFirst({
