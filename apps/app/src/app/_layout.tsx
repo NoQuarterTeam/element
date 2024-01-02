@@ -11,6 +11,7 @@ import { useCheckExpoUpdates } from "../lib/hooks/useCheckExpoUpdates"
 import { useMe } from "../lib/hooks/useMe"
 import { useBackgroundColor } from "../lib/tailwind"
 import { api, TRPCProvider } from "../lib/utils/api"
+import { useFeatures } from "../lib/hooks/useFeatures"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -55,14 +56,16 @@ export default function RootLayout() {
 function PrefetchTabs(props: { children: React.ReactNode }) {
   const [isDoneChecking, setIsDoneChecking] = React.useState(false)
   const { me, isLoading } = useMe()
+  const features = useFeatures((s) => s.features)
   const utils = api.useUtils()
   React.useEffect(() => {
     if (isLoading) return
     if (!me) return setIsDoneChecking(true)
+    if (!features.includes("habits")) return setIsDoneChecking(true)
     Promise.all([utils.habit.progressCompleteToday.prefetch(), utils.habit.today.prefetch()])
       .catch()
       .finally(() => setIsDoneChecking(true))
-  }, [me, isLoading, utils.habit.progressCompleteToday, utils.habit.today])
+  }, [me, isLoading, features, utils.habit.progressCompleteToday, utils.habit.today])
 
   if (!isDoneChecking) return null
   return <>{props.children}</>
