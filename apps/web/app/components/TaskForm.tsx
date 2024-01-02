@@ -311,7 +311,8 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             }
             input={
               <div className="stack w-full">
-                <Select id="repeat" name="repeat" value={repeat || ""} onChange={(e) => setRepeat(e.target.value as TaskRepeat)}>
+                {repeat && <input type="hidden" name="repeat" value={repeat} />}
+                <Select id="repeat" value={repeat || ""} onChange={(e) => setRepeat(e.target.value as TaskRepeat)}>
                   <option value="">Doesn't repeat</option>
                   {Object.keys(TaskRepeat).map((key) => (
                     <option key={key} value={key}>

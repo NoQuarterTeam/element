@@ -1,5 +1,5 @@
 import { registerSchema } from "@element/server-schemas"
-import { hashPassword, sendAccountVerificationEmail } from "@element/server-services"
+import { createTemplates, hashPassword, sendAccountVerificationEmail } from "@element/server-services"
 import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 
@@ -11,7 +11,6 @@ import { createToken } from "~/lib/jwt.server"
 import { badRequest, redirect } from "~/lib/remix"
 import { stripe } from "~/lib/stripe/stripe.server"
 import { getUserSession } from "~/services/session/session.server"
-import { createTemplates } from "~/services/timeline/templates.server"
 
 export const meta: MetaFunction = () => {
   return [{ title: "Register" }]
@@ -24,7 +23,6 @@ export const headers = () => {
 
 enum RegisterActionMethods {
   Register = "Register",
-  RegisterTemporay = "RegisterTemporay",
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -50,7 +48,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           name: data.firstName + " " + data.lastName,
         })
         const user = await db.user.create({ data: { ...data, email, password, stripeCustomerId: stripeCustomer.id } })
-        await createTemplates(user.id)
+        const elements = createTemplates(user.id)
+        for await (const element of elements) {
+          await db.element.create({ data: element })
+        }
         const { setUser } = await getUserSession(request)
         const token = await createToken({ id: user.id })
         await sendAccountVerificationEmail(user, token)

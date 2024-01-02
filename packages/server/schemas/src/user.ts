@@ -9,6 +9,7 @@ export const userSchema = z.object({
     .min(2)
     .transform((e) => e.toLowerCase().trim()),
   password: z.string().min(2),
+  avatar: z.string().optional(),
 })
 export const updateUserSchema = userSchema.partial()
 export const loginSchema = userSchema.pick({ email: true, password: true })

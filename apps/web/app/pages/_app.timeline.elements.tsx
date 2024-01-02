@@ -21,12 +21,40 @@ import { ActionDataSuccessResponse, formError, formSuccess, validateFormData } f
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
-import { getSidebarElements } from "~/services/timeline/sidebar.server"
+
 import { elementSchema } from "@element/server-schemas"
+import { type Prisma } from "@element/database/types"
+
+const elementSelectFields = {
+  id: true,
+  name: true,
+  archivedAt: true,
+  color: true,
+} satisfies Prisma.ElementSelect
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
-  const elements = await getSidebarElements(user.id)
+  const elements = await db.element.findMany({
+    orderBy: { name: "asc" },
+    select: {
+      ...elementSelectFields,
+      children: {
+        select: {
+          ...elementSelectFields,
+          children: {
+            select: {
+              ...elementSelectFields,
+              children: { select: elementSelectFields },
+            },
+          },
+        },
+      },
+    },
+    where: {
+      parentId: { equals: null },
+      creatorId: { equals: user.id },
+    },
+  })
   return json(elements)
 }
 

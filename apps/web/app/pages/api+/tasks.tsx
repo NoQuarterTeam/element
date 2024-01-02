@@ -77,23 +77,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               })
               .nullable()
               .optional(),
-            description: z.string().optional().nullable(),
+            description: z.string().nullable().optional(),
             repeat: z
               .nativeEnum(TaskRepeat, { errorMap: () => ({ message: "Incorrect repeat value" }) })
-              .optional()
-              .nullable(),
+              .nullable()
+              .optional(),
             repeatEndDate: z
               .preprocess((d) => (d ? dayjs(d as string).toDate() : undefined), z.date())
-              .optional()
-              .nullable(),
+              .nullable()
+              .optional(),
             durationHours: z
               .preprocess((d) => (d ? Number(d) : undefined), z.number())
-              .optional()
-              .nullable(),
+              .nullable()
+              .optional(),
             durationMinutes: z
               .preprocess((d) => (d ? Number(d) : undefined), z.number())
-              .optional()
-              .nullable(),
+              .nullable()
+              .optional(),
             startTime: z.string().optional().nullable(),
           })
           .superRefine((data, ctx) => {

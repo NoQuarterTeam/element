@@ -2,7 +2,7 @@ import * as React from "react"
 import { safeReadableColor, useDisclosure } from "@element/shared"
 import { Dialog } from "@headlessui/react"
 import { json, type LoaderFunctionArgs, type SerializeFrom } from "@remix-run/node"
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
+import { useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
 import { ChevronDown, ChevronRight, Edit2, Plus, Trash } from "lucide-react"
 
@@ -15,11 +15,13 @@ import { Checkbox } from "~/components/ui/Inputs"
 import { Tooltip } from "~/components/ui/Tooltip"
 import { db } from "~/lib/db.server"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
-import { useFetcherSubmit } from "~/lib/hooks/useFetcherSubmit"
+
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TimelineTask } from "~/pages/api+/tasks"
 import { getCurrentUser } from "~/services/auth/auth.server"
+import { useFetcher } from "~/components/ui/Form"
+import { ActionDataSuccessResponse } from "~/lib/form.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
@@ -86,7 +88,12 @@ function BacklogItem({ task }: { task: BacklogTask }) {
   const { isOpen, onToggle } = useDisclosure()
   const { addTask } = useTimelineTasks()
 
-  const updateFetcher = useFetcherSubmit<{ task: TimelineTask }>({ onSuccess: (data) => addTask(data.task) })
+  const updateFetcher = useFetcher<ActionDataSuccessResponse<{ task: TimelineTask }>>({
+    onFinish: (data) => {
+      if (!data.success) return
+      addTask(data.task)
+    },
+  })
 
   const deleteFetcher = useFetcher()
   return (
@@ -143,7 +150,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
             </div>
           </Dialog>
 
-          <updateFetcher.Form action={`/timeline/${task.id}`} method="post">
+          <updateFetcher.Form action={`/timeline/${task.id}`} method="POST">
             <input type="hidden" name="date" value={dayjs().startOf("d").add(12, "h").format()} />
             <Tooltip label="Add to timeline">
               <IconButton

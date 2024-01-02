@@ -1,14 +1,11 @@
 import { TRPCError } from "@trpc/server"
-import { faker } from "@faker-js/faker"
-import { z } from "zod"
 import bcrypt from "bcryptjs"
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc"
 
 import { stripe } from "../lib/stripe"
 
-import { createTemplates } from "../lib/templates"
-import { createAuthToken, hashPassword } from "@element/server-services"
-import { loginSchema, registerSchema } from "@element/server-schemas"
+import { createAuthToken, createTemplates, hashPassword } from "@element/server-services"
+import { loginSchema, registerSchema, updateUserSchema } from "@element/server-schemas"
 
 export const userRouter = createTRPCRouter({
   me: publicProcedure.query(({ ctx }) => ctx.user || null),
@@ -29,21 +26,17 @@ export const userRouter = createTRPCRouter({
       name: input.firstName + " " + input.lastName,
     })
     const user = await ctx.prisma.user.create({ data: { ...input, password, stripeCustomerId: stripeCustomer.id } })
+    const elements = createTemplates(user.id)
+
+    for await (const element of elements) {
+      await ctx.prisma.element.create({ data: element })
+    }
     return { user, token: createAuthToken({ id: user.id }) }
   }),
-  update: protectedProcedure
-    .input(
-      z.object({
-        firstName: z.string().min(2).optional(),
-        lastName: z.string().min(2).optional(),
-        email: z.string().email().optional(),
-        avatar: z.string().optional(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.update({ where: { id: ctx.user.id }, data: input })
-      return user
-    }),
+  update: protectedProcedure.input(updateUserSchema).mutation(async ({ ctx, input }) => {
+    const user = await ctx.prisma.user.update({ where: { id: ctx.user.id }, data: input })
+    return user
+  }),
   myPlan: protectedProcedure.query(async ({ ctx }) => {
     const user = ctx.user
     const [taskCount, elementCount, subscription] = await Promise.all([
