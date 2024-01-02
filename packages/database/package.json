@@ -8,10 +8,11 @@
   ],
   "sideEffects": false,
   "dependencies": {
+    "@element/server-env": "workspace:*",
+    "@faker-js/faker": "7.6.0",
     "@planetscale/database": "^1.13.0",
     "@prisma/adapter-planetscale": "^5.7.1",
     "@prisma/client": "5.7.1",
-    "@element/server-env": "workspace:*",
     "prisma": "5.7.1"
   },
   "devDependencies": {

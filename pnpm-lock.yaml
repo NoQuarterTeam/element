@@ -570,6 +570,9 @@ importers:
       '@element/server-env':
         specifier: workspace:*
         version: link:../server/env
+      '@faker-js/faker':
+        specifier: 7.6.0
+        version: 7.6.0
       '@planetscale/database':
         specifier: ^1.13.0
         version: 1.13.0

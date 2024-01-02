@@ -1,21 +1,21 @@
-import { db } from "~/lib/db.server"
 import { faker } from "@faker-js/faker"
-import { hashPassword } from "~/services/auth/password.server"
+
+import { prisma } from ".."
 
 export async function main() {
-  const user = await db.user.create({
+  const user = await prisma.user.create({
     data: {
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
       email: faker.internet.email().toLowerCase(),
-      password: await hashPassword("password"),
+      password: "password",
       stripeCustomerId: faker.random.alphaNumeric(10),
     },
   })
 
   await Promise.all(
     Array.from({ length: 30 }).map(() =>
-      db.element.create({
+      prisma.element.create({
         data: {
           creator: { connect: { id: user.id } },
           name: faker.lorem.words(2),
@@ -24,7 +24,7 @@ export async function main() {
       }),
     ),
   )
-  const elements = (await db.element.findMany({ select: { id: true } })).map((e) => e.id)
+  const elements = (await prisma.element.findMany({ select: { id: true } })).map((e) => e.id)
 
   await Promise.all(
     Array.from({ length: 100 }).map(() => {
@@ -32,7 +32,7 @@ export async function main() {
         new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
         new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
       )
-      return db.task.create({
+      return prisma.task.create({
         data: {
           date,
           durationHours: Math.random() > 0.7 ? Math.floor(Math.random() * 3) + 1 : null,
