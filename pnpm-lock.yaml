@@ -281,8 +281,8 @@ importers:
         specifier: 10.45.0
         version: 10.45.0
       axios:
-        specifier: 1.3.4
-        version: 1.3.4
+        specifier: 1.6.0
+        version: 1.6.0
       class-variance-authority:
         specifier: 0.7.0
         version: 0.7.0
@@ -5887,7 +5887,7 @@ packages:
       '@slack/types': 2.11.0
       '@types/is-stream': 1.1.0
       '@types/node': 18.19.4
-      axios: 1.6.2
+      axios: 1.6.0
       eventemitter3: 3.1.2
       form-data: 2.5.1
       is-electron: 2.2.2
@@ -7494,16 +7494,6 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /axios@1.3.4:
-    resolution: {integrity: sha512-toYm+Bsyl6VC5wSkfkbbNB6ROv7KY93PEBBL6xyDczaIHasAiv4wPqQ/c4RjoQzipxRD2W5g21cOqQulZ7rHwQ==}
-    dependencies:
-      follow-redirects: 1.15.3
-      form-data: 4.0.0
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
   /axios@1.4.0:
     resolution: {integrity: sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==}
     dependencies:
@@ -7514,8 +7504,8 @@ packages:
       - debug
     dev: false
 
-  /axios@1.6.2:
-    resolution: {integrity: sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==}
+  /axios@1.6.0:
+    resolution: {integrity: sha512-EZ1DYihju9pwVB+jg67ogm+Tmqc6JmhamRN6I4Zt8DfZu5lbcQGw3ozH9lFejSJgs/ibaef3A9PMXPLeefFGJg==}
     dependencies:
       follow-redirects: 1.15.3
       form-data: 4.0.0
