@@ -233,8 +233,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
       '@faker-js/faker':
-        specifier: 7.6.0
-        version: 7.6.0
+        specifier: 8.3.1
+        version: 8.3.1
       '@headlessui/react':
         specifier: 1.7.13
         version: 1.7.13(react-dom@18.2.0)(react@18.2.0)
@@ -3765,15 +3765,9 @@ packages:
       js-yaml: 4.1.0
     dev: false
 
-  /@faker-js/faker@7.6.0:
-    resolution: {integrity: sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==}
-    engines: {node: '>=14.0.0', npm: '>=6.0.0'}
-    dev: false
-
   /@faker-js/faker@8.3.1:
     resolution: {integrity: sha512-FdgpFxY6V6rLZE9mmIBb9hM0xpfvQOSNOLnzolzKwsE1DH+gC7lEKV1p1IbR0lAYyvYd5a4u3qWJzowUkw1bIw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
-    dev: true
 
   /@fastify/busboy@2.1.0:
     resolution: {integrity: sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==}
