@@ -104,7 +104,7 @@ export default function HomeLayout() {
         </Limiter>
       </div>
       <Limiter className="pb-20 pt-16">
-        <div className="stack space-y-20">
+        <div className="space-y-20">
           <div className="center flex-col">
             <div className="vstack max-w-lg space-y-6 pb-12 text-center">
               <Badge size="lg" colorScheme="green">
@@ -135,7 +135,7 @@ export default function HomeLayout() {
               you. Get started with Element today and simplify your life!
             </p>
           </div>
-          <div className="stack space-y-6 pt-20 md:px-20" id="pricing">
+          <div className="space-y-6 pt-20 md:px-20" id="pricing">
             <div className="vstack">
               <h3 className="text-5xl">Pricing</h3>
               <p className="text-lg">Start for free, or as low as €4 a month.</p>
@@ -144,13 +144,13 @@ export default function HomeLayout() {
               <div className="flex">
                 <div className="flex flex-[3] border-l border-transparent p-1 md:p-2" />
                 <div className="flex flex-[2] border-l border-t border-gray-100 p-1 dark:border-gray-600 md:p-2">
-                  <div className="stack space-y-0 md:space-y-2">
+                  <div className="space-y-0 md:space-y-2">
                     <p className="text-md font-bold">Personal</p>
                     <p className="text-6xl font-bold">€0</p>
                   </div>
                 </div>
                 <div className="flex flex-[2] border-l border-t border-gray-100 p-1 dark:border-gray-600 md:p-2">
-                  <div className="stack space-y-0 md:space-y-2">
+                  <div className="space-y-0 md:space-y-2">
                     <p className="text-md font-bold">Pro</p>
                     <p className="whitespace-nowrap text-6xl font-bold">
                       €4 <span className="whitespace-nowrap text-xs font-thin opacity-70">per month</span>

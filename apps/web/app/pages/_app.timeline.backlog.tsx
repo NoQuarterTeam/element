@@ -62,7 +62,7 @@ export default function Backlog() {
             </ModalContent>
           </ModalRoot>
         </div>
-        <div className="stack overflow-scroll pt-2">
+        <div className="space-y-2 overflow-scroll pt-2">
           {tasks.length === 0 ? (
             <div className="center">
               <p className="py-4">No tasks in the backlog!</p>

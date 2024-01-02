@@ -133,7 +133,7 @@ export function Nav() {
           </Tooltip>
         </div>
 
-        <div className="stack space-y-1">
+        <div className="space-y-1">
           {/* <Tooltip side="left" label="Dashboard" >
             <IconButton
               rounded

@@ -37,7 +37,7 @@ export default function ResetPassword() {
 
   return (
     <Form method="post">
-      <div className="stack">
+      <div className="space-y-2">
         <div>
           <h1 className="text-4xl font-bold">Reset password</h1>
           <p>Enter a new password below.</p>

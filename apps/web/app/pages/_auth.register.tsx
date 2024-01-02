@@ -81,7 +81,7 @@ export default function Register() {
   return (
     <div>
       <Form method="post" replace>
-        <div className="stack">
+        <div className="space-y-2">
           <h1 className="text-4xl font-bold">Register</h1>
           <FormField required label="Email address" name="email" placeholder="jim@gmail.com" />
           <FormField required label="Password" name="password" type="password" placeholder="********" />

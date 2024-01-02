@@ -41,7 +41,7 @@ export default function Login() {
   const [params] = useSearchParams()
   return (
     <Form method="post" replace>
-      <div className="stack">
+      <div className="space-y-2">
         <h1 className="text-4xl">Login</h1>
         <input type="hidden" name="redirectTo" value={params.get("redirectTo") || ""} />
         <FormField required label="Email address" name="email" placeholder="jim@gmail.com" />

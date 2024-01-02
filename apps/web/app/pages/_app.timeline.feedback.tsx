@@ -77,13 +77,13 @@ export default function Feedback() {
   return (
     <Modal size="md" isOpen={true} onClose={() => navigate("/timeline")} title={title}>
       {createdFeedback ? (
-        <div className="stack p-4">
+        <div className="space-y-2 p-4">
           <p>We will try and look at this as soon as possible</p>
           <Button onClick={() => navigate("/timeline")}>Close</Button>
         </div>
       ) : type ? (
         <Form method="post" replace>
-          <div className="stack p-4">
+          <div className="space-y-2 p-4">
             <FormField required autoFocus name="content" input={<Textarea rows={5} />} />
             <input type="hidden" name="type" value={type} />
             <div className="flex justify-between">
