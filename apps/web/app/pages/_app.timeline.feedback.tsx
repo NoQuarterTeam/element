@@ -97,7 +97,7 @@ export default function Feedback() {
           </div>
         </Form>
       ) : (
-        <div className="vstack px-4 py-8">
+        <div className="center px-4 py-8">
           <ButtonGroup>
             <Button variant="secondary" className="sq-24" onClick={() => setType("ISSUE")}>
               <div className="vstack">
