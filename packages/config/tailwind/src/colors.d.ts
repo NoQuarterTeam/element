@@ -1,5 +1,6 @@
 declare const _exports: {
     primary: {
+        800: string;
         '50': "#fff7ed";
         '100': "#ffedd5";
         '200': "#fed7aa";
@@ -8,9 +9,9 @@ declare const _exports: {
         '500': "#f97316";
         '600': "#ea580c";
         '700': "#c2410c";
-        '800': "#9a3412";
         '900': "#7c2d12";
         '950': "#431407";
+        DEFAULT: "#ea580c";
     };
     gray: {
         50: string;

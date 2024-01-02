@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server"
-import bcrypt from "bcryptjs"
+
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc"
 
-import { createAuthToken, createTemplates, hashPassword, stripe } from "@element/server-services"
+import { comparePasswords, createAuthToken, createTemplates, hashPassword, stripe } from "@element/server-services"
 import { loginSchema, registerSchema, updateUserSchema } from "@element/server-schemas"
 
 export const userRouter = createTRPCRouter({
@@ -10,7 +10,7 @@ export const userRouter = createTRPCRouter({
   login: publicProcedure.input(loginSchema).mutation(async ({ ctx, input }) => {
     const user = await ctx.prisma.user.findUnique({ where: { email: input.email } })
     if (!user) throw new TRPCError({ code: "BAD_REQUEST", message: "Incorrect email or password" })
-    const isSamePassword = bcrypt.compareSync(input.password, user.password)
+    const isSamePassword = comparePasswords(input.password, user.password)
     if (!isSamePassword) throw new TRPCError({ code: "BAD_REQUEST", message: "Incorrect email or password" })
     const token = createAuthToken({ id: user.id })
     return { user, token }
@@ -18,7 +18,7 @@ export const userRouter = createTRPCRouter({
   register: publicProcedure.input(registerSchema).mutation(async ({ ctx, input }) => {
     const existingEmail = await ctx.prisma.user.findUnique({ where: { email: input.email } })
     if (existingEmail) throw new TRPCError({ code: "BAD_REQUEST", message: "Email already in use" })
-    const password = await hashPassword(input.password)
+    const password = hashPassword(input.password)
     const stripeCustomer = await stripe.customers.create({
       email: input.email,
       name: input.firstName + " " + input.lastName,

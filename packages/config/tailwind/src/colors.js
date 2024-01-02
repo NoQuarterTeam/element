@@ -1,14 +1,14 @@
-const colors = require("tailwindcss/colors")
+const twColors = require("tailwindcss/colors")
 
-delete colors["lightBlue"]
-delete colors["warmGray"]
-delete colors["trueGray"]
-delete colors["coolGray"]
-delete colors["blueGray"]
+delete twColors["lightBlue"]
+delete twColors["warmGray"]
+delete twColors["trueGray"]
+delete twColors["coolGray"]
+delete twColors["blueGray"]
 
 module.exports = {
-  ...colors,
-  primary: colors.orange,
+  ...twColors,
+  primary: { DEFAULT: twColors.orange[600], ...twColors.orange, 800: "#362926" },
   gray: {
     50: "#FAFAFA",
     75: "#EFEFEF",

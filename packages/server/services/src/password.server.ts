@@ -1,3 +1,3 @@
 import bcrypt from "bcryptjs"
-export const comparePasswords = (password: string, hash: string) => bcrypt.compare(password, hash)
-export const hashPassword = (password: string) => bcrypt.hash(password, 10)
+export const comparePasswords = (password: string, hash: string) => bcrypt.compareSync(password, hash)
+export const hashPassword = (password: string) => bcrypt.hashSync(password, 10)

@@ -1,13 +1,12 @@
 import * as React from "react"
 import { safeReadableColor, useDisclosure } from "@element/shared"
-import { Dialog } from "@headlessui/react"
+import * as ModalPrimitive from "@radix-ui/react-dialog"
 import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
-import { ChevronDown, ChevronRight } from "lucide-react"
+import { ChevronDown, ChevronRight, X } from "lucide-react"
 
-import { CloseButton } from "~/components/ui/CloseButton"
 import { IconButton } from "~/components/ui/IconButton"
 import { Checkbox } from "~/components/ui/Inputs"
 import { Tooltip } from "~/components/ui/Tooltip"
@@ -19,6 +18,7 @@ import { getCurrentUser } from "~/services/auth/auth.server"
 
 import { TaskActionMethods } from "./_app.timeline.$id"
 import { type TimelineTask } from "./api+/tasks"
+import { ModalOverlay, ModalPortal, ModalRoot } from "~/components/ui/Modal"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
@@ -57,13 +57,10 @@ export default function Focus() {
   }, [])
 
   return (
-    <Dialog open={true} as="div" className="relative z-50" onClose={() => navigate("/timeline")}>
-      <div className="fixed inset-0 bg-black/50" />
-      <div className="fixed inset-0 top-0 h-screen overflow-y-auto">
-        <Dialog.Panel className="relative h-full w-full bg-white dark:bg-gray-800">
-          <div className="absolute right-4 top-2">
-            <CloseButton size="lg" onClick={() => navigate("/timeline")} />
-          </div>
+    <ModalRoot open onOpenChange={() => navigate("/timeline")}>
+      <ModalPortal position="top" className="pt-0 md:pt-0">
+        <ModalOverlay />
+        <ModalPrimitive.Content className="animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0 bg-background rounded-xs fixed z-50 grid h-screen w-screen overflow-y-scroll p-4">
           <div className="my-4">
             <div className="vstack space-y-6 py-20">
               {tasks.length === 0 ? (
@@ -76,9 +73,13 @@ export default function Focus() {
               )}
             </div>
           </div>
-        </Dialog.Panel>
-      </div>
-    </Dialog>
+          <ModalPrimitive.Close className="rounded-xs absolute right-4 top-4 opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none">
+            <X className="sq-4" />
+            <span className="sr-only">Close</span>
+          </ModalPrimitive.Close>
+        </ModalPrimitive.Content>
+      </ModalPortal>
+    </ModalRoot>
   )
 }
 

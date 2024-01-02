@@ -1,21 +1,28 @@
-import { Dialog } from "@headlessui/react"
 import { type ActionFunctionArgs, json, type LoaderFunctionArgs, redirect, type SerializeFrom } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
+import { cacheHeader } from "pretty-cache-header"
 import { z } from "zod"
 
 import { TaskForm } from "~/components/TaskForm"
 import { taskItemSelectFields } from "~/components/TaskItem"
+import { ModalContent, ModalRoot } from "~/components/ui/Modal"
 import { db } from "~/lib/db.server"
 import { FORM_ACTION } from "~/lib/form"
 import { formError, formSuccess, getFormDataArray, validateFormData } from "~/lib/form.server"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser, requireUser } from "~/services/auth/auth.server"
 
+export const headers = () => {
+  return {
+    "Cache-Control": cacheHeader({ maxAge: "1hour", staleWhileRevalidate: "1min" }),
+  }
+}
+
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireUser(request)
   const id = params.id
-  if (!id) redirect("/timeline")
+  if (!id) throw redirect("/timeline")
   const task = await db.task.findUnique({
     where: { id },
     select: {
@@ -23,7 +30,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       todos: { orderBy: { createdAt: "asc" }, select: { id: true, isComplete: true, name: true } },
     },
   })
-  if (!task) redirect("/timeline")
+  if (!task) throw redirect("/timeline")
   return json(task)
 }
 
@@ -165,15 +172,10 @@ export default function TaskModal() {
   const navigate = useNavigate()
 
   return (
-    <Dialog open={true} as="div" className="relative z-50" onClose={() => navigate("/timeline")}>
-      <div className="fixed inset-0 bg-black/50" />
-      <div className="fixed inset-0 overflow-y-auto">
-        <div className="flex min-h-full flex-col items-center justify-start p-0 sm:p-4">
-          <Dialog.Panel className="mt-10 w-full max-w-xl overflow-hidden bg-white text-left shadow-xl transition-all dark:bg-gray-700">
-            <TaskForm task={task} onClose={() => navigate("/timeline")} />
-          </Dialog.Panel>
-        </div>
-      </div>
-    </Dialog>
+    <ModalRoot modal open onOpenChange={() => navigate("/timeline")}>
+      <ModalContent position="top" shouldHideCloseButton className="max-w-xl p-0">
+        <TaskForm task={task} onClose={() => navigate("/timeline")} />
+      </ModalContent>
+    </ModalRoot>
   )
 }

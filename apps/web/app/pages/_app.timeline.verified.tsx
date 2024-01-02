@@ -8,7 +8,7 @@ export default function Subscribed() {
   const navigate = useNavigate()
 
   return (
-    <Modal position="center" size="lg" isOpen onClose={() => navigate("/timeline")}>
+    <Modal size="lg" isOpen onClose={() => navigate("/timeline")}>
       <Confetti />
       <div className="stack space-y-6 p-6">
         <h1 className="w-max text-3xl">You're all set!</h1>

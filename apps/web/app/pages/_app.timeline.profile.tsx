@@ -16,7 +16,7 @@ export default function Profile() {
   const { featuresSeen } = useFeaturesSeen()
 
   return (
-    <Modal size="3xl" isOpen={true} onClose={() => navigate("/timeline")}>
+    <Modal size="3xl" className="p-0" isOpen={true} onClose={() => navigate("/timeline")}>
       <div className="flex h-full min-h-[600px] overflow-hidden">
         <div className="h-auto w-12 bg-gray-50 dark:bg-gray-800 md:w-52">
           <div className="px-4 py-2">

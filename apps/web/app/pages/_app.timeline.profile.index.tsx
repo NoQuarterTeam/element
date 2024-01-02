@@ -128,7 +128,7 @@ export default function Account() {
           Permanently delete your account and all of its contents. This action is not reversible - please continue with caution.
         </p>
         <AlertDialog
-          triggerButton={<Button variant="destructive">Delete account</Button>}
+          trigger={<Button variant="destructive">Delete account</Button>}
           confirmButton={
             <Form method="post" replace>
               <Button name="_action" value={ProfileActionMethods.DeleteAcccount} variant="destructive" type="submit">

@@ -75,7 +75,7 @@ export default function Feedback() {
           : "Let us know your thoughts"
       : "What kind of feedback do you have?"
   return (
-    <Modal position="center" size="md" isOpen={true} onClose={() => navigate("/timeline")} title={title}>
+    <Modal size="md" isOpen={true} onClose={() => navigate("/timeline")} title={title}>
       {createdFeedback ? (
         <div className="stack p-4">
           <p>We will try and look at this as soon as possible</p>

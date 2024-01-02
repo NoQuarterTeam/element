@@ -20,8 +20,7 @@
     "@element/server-env": "workspace:*",
     "@element/server-schemas": "workspace:*",
     "@element/shared": "workspace:*",
-    "@trpc/server": "10.16.0",
-    "bcryptjs": "^2.4.3",
+    "@trpc/server": "10.45.0",
     "dayjs": "1.11.10",
     "jsonwebtoken": "9.0.2",
     "superjson": "^1.12.2",
@@ -29,7 +28,6 @@
   },
   "devDependencies": {
     "@element/eslint-config": "workspace:*",
-    "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "9.0.5",
     "@types/node": "^18.15.3"
   }

@@ -42,7 +42,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const email = data.email.toLowerCase().trim()
         const existing = await db.user.findFirst({ where: { email } })
         if (existing) return badRequest({ data, formError: "User with these details already exists" })
-        const password = await hashPassword(data.password)
+        const password = hashPassword(data.password)
         const stripeCustomer = await stripe.customers.create({
           email,
           name: data.firstName + " " + data.lastName,

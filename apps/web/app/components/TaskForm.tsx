@@ -32,7 +32,7 @@ interface FormProps {
 export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormProps) {
   const [todos, setTodos] = React.useState(task?.todos || [])
   const [searchParams] = useSearchParams()
-
+  const containerRef = React.useRef<HTMLDivElement>(null)
   const day = searchParams.get("day") || undefined
   const { addTask, updateTask, removeTask, refetch } = useTimelineTasks()
   const [isImportant, setIsImportant] = React.useState(task?.isImportant || false)
@@ -139,154 +139,164 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
   }, [todos])
 
   return (
-    <createUpdateFetcher.Form method="post" action={task ? `/timeline/${task.id}` : "/api/tasks"}>
-      <div className="flex w-full items-start justify-between">
-        <input
-          className="w-full border-none bg-transparent pb-1 pl-3 pt-3 text-2xl text-gray-900 outline-none focus:outline-none focus:ring-transparent dark:text-gray-100 md:pl-5 md:pt-5 md:text-4xl"
-          required
-          name="name"
-          placeholder="Name"
-          defaultValue={task?.name}
-          autoFocus
-        />
-        <div className="flex justify-end space-x-1 p-3 md:p-5">
-          <Button
-            variant={isImportant ? "brand" : "outline"}
-            onClick={() => setIsImportant(!isImportant)}
-            leftIcon={<AlertTriangle size={16} />}
-            size="xs"
-          >
-            <span className="hidden md:block">Important</span>
-          </Button>
-
-          <input type="hidden" name="isImportant" value={isImportant ? "true" : "false"} />
-          <Checkbox defaultChecked={isComplete} onChange={() => setIsComplete(!isComplete)} size="md" />
-          <input type="hidden" name="isComplete" value={isComplete ? "true" : "false"} />
-        </div>
-      </div>
-      <div className="stack space-y-1 p-3 pt-0 md:space-y-3 md:p-5 md:pt-0">
-        <input type="hidden" name="elementId" value={element?.value} />
-
-        <div className="flex w-full items-end md:items-start">
-          <InlineFormField
+    <createUpdateFetcher.Form method="post" className="relative" action={task ? `/timeline/${task.id}` : "/api/tasks"}>
+      <div ref={containerRef} className="scrollbar-hide max-h-[80vh] overflow-y-scroll">
+        <div className="flex w-full items-start justify-between">
+          <input
+            className="w-full border-none bg-transparent pb-1 pl-3 pt-3 text-2xl text-gray-900 outline-none focus:outline-none focus:ring-transparent dark:text-gray-100 md:pl-5 md:pt-5 md:text-4xl"
             required
-            label="Element"
-            name="element"
-            errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.elementId}
+            name="name"
+            placeholder="Name"
+            defaultValue={task?.name}
+            autoFocus
+          />
+          <div className="flex justify-end space-x-1 p-3 md:p-5">
+            <Button
+              variant={isImportant ? "brand" : "outline"}
+              onClick={() => setIsImportant(!isImportant)}
+              leftIcon={<AlertTriangle size={16} />}
+              size="xs"
+              className="hidden md:flex"
+            >
+              Important
+            </Button>
+            <IconButton
+              aria-label="important"
+              className="flex md:hidden"
+              variant={isImportant ? "brand" : "outline"}
+              onClick={() => setIsImportant(!isImportant)}
+              icon={<AlertTriangle size={16} />}
+              size="xs"
+            />
+
+            <input type="hidden" name="isImportant" value={isImportant ? "true" : "false"} />
+            <Checkbox defaultChecked={isComplete} onChange={() => setIsComplete(!isComplete)} size="md" />
+            <input type="hidden" name="isComplete" value={isComplete ? "true" : "false"} />
+          </div>
+        </div>
+        <div className="stack relative space-y-1 p-3 pt-0 md:space-y-3 md:p-5 md:pt-0">
+          <input type="hidden" name="elementId" value={element?.value} />
+
+          <div className="flex w-full items-end md:items-start">
+            <InlineFormField
+              required
+              label="Element"
+              name="element"
+              errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.elementId}
+              input={
+                <Singleselect
+                  value={element}
+                  onChange={setElement}
+                  formatOptionLabel={(option: any) => (
+                    <div className="hstack">
+                      <div className="sq-4 rounded-full" style={{ background: option.color }} />
+                      <p>{option.label}</p>
+                    </div>
+                  )}
+                  options={elements?.map((e) => ({ label: e.name, value: e.id, color: e.color }))}
+                />
+              }
+            />
+            <Button className="ml-2" onClick={elementModalProps.onOpen} variant="outline" leftIcon={<Plus size={16} />}>
+              Create
+            </Button>
+            <Modal title="Create an Element" size="lg" {...elementModalProps}>
+              <createElementFetcher.Form method="post" action="/timeline/elements">
+                <div className="stack p-4">
+                  <InlineFormField
+                    autoFocus
+                    name="name"
+                    label="Name"
+                    size="sm"
+                    required
+                    errors={!createElementFetcher.data?.success && createElementFetcher.data?.fieldErrors?.name}
+                  />
+
+                  <InlineFormField
+                    name="color"
+                    required
+                    errors={!createElementFetcher.data?.success && createElementFetcher.data?.fieldErrors?.color}
+                    label="Color"
+                    shouldPassProps={false}
+                    input={<ColorInput name="color" value={color} setValue={setColor} />}
+                  />
+
+                  <ButtonGroup>
+                    <Button variant="ghost" disabled={createElementFetcher.state !== "idle"} onClick={elementModalProps.onClose}>
+                      Cancel
+                    </Button>
+                    <Button
+                      name={FORM_ACTION}
+                      value={ElementsActionMethods.CreateElement}
+                      type="submit"
+                      variant="primary"
+                      isLoading={createElementFetcher.state !== "idle"}
+                    >
+                      Create
+                    </Button>
+                  </ButtonGroup>
+                </div>
+              </createElementFetcher.Form>
+            </Modal>
+          </div>
+
+          {(!task || task.date) && (
+            <InlineFormField
+              type="date"
+              name="date"
+              required
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              label="Date"
+              errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.date}
+            />
+          )}
+
+          <InlineFormField
+            name="durationHours"
+            label="Duration"
+            shouldPassProps={false}
+            errors={
+              (!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.durationHours) ||
+              (!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.durationMinutes)
+            }
             input={
-              <Singleselect
-                value={element}
-                onChange={setElement}
-                formatOptionLabel={(option: any) => (
-                  <div className="hstack">
-                    <div className="sq-4 rounded-full" style={{ background: option.color }} />
-                    <p>{option.label}</p>
-                  </div>
-                )}
-                options={elements?.map((e) => ({ label: e.name, value: e.id, color: e.color }))}
-              />
+              <div className="hstack">
+                <div className="hstack space-x-1">
+                  <Input
+                    className="sq-8 px-0 text-center"
+                    defaultValue={task?.durationHours ? task.durationHours.toString() : undefined}
+                    id="durationHours"
+                    min={0}
+                    max={24}
+                    name="durationHours"
+                  />
+                  <p className="text-xs opacity-80">Hours</p>
+                </div>
+                <div className="hstack space-x-1">
+                  <Input
+                    className="sq-8 px-0 text-center"
+                    defaultValue={task?.durationMinutes ? task.durationMinutes.toString() : undefined}
+                    max={60}
+                    min={0}
+                    name="durationMinutes"
+                  />
+                  <p className="text-xs opacity-80">Minutes</p>
+                </div>
+              </div>
             }
           />
-          <Button className="ml-2" onClick={elementModalProps.onOpen} variant="outline" leftIcon={<Plus size={16} />}>
-            Create
-          </Button>
-          <Modal title="Create an Element" size="lg" {...elementModalProps}>
-            <createElementFetcher.Form method="post" action="/timeline/elements">
-              <div className="stack p-4">
-                <InlineFormField
-                  autoFocus
-                  name="name"
-                  label="Name"
-                  size="sm"
-                  required
-                  errors={!createElementFetcher.data?.success && createElementFetcher.data?.fieldErrors?.name}
-                />
 
-                <InlineFormField
-                  name="color"
-                  required
-                  errors={!createElementFetcher.data?.success && createElementFetcher.data?.fieldErrors?.color}
-                  label="Color"
-                  shouldPassProps={false}
-                  input={<ColorInput name="color" value={color} setValue={setColor} />}
-                />
-
-                <ButtonGroup>
-                  <Button variant="ghost" disabled={createElementFetcher.state !== "idle"} onClick={elementModalProps.onClose}>
-                    Cancel
-                  </Button>
-                  <Button
-                    name={FORM_ACTION}
-                    value={ElementsActionMethods.CreateElement}
-                    type="submit"
-                    variant="primary"
-                    isLoading={createElementFetcher.state !== "idle"}
-                  >
-                    Create
-                  </Button>
-                </ButtonGroup>
-              </div>
-            </createElementFetcher.Form>
-          </Modal>
-        </div>
-
-        {(!task || task.date) && (
-          <InlineFormField
-            type="date"
-            name="date"
-            required
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            label="Date"
-            errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.date}
-          />
-        )}
-
-        <InlineFormField
-          name="durationHours"
-          label="Duration"
-          shouldPassProps={false}
-          errors={
-            (!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.durationHours) ||
-            (!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.durationMinutes)
-          }
-          input={
-            <div className="hstack">
-              <div className="hstack space-x-1">
-                <Input
-                  className="sq-8 px-0 text-center"
-                  defaultValue={task?.durationHours ? task.durationHours.toString() : undefined}
-                  id="durationHours"
-                  min={0}
-                  max={24}
-                  name="durationHours"
-                />
-                <p className="text-xs opacity-80">Hours</p>
-              </div>
-              <div className="hstack space-x-1">
-                <Input
-                  className="sq-8 px-0 text-center"
-                  defaultValue={task?.durationMinutes ? task.durationMinutes.toString() : undefined}
-                  max={60}
-                  min={0}
-                  name="durationMinutes"
-                />
-                <p className="text-xs opacity-80">Minutes</p>
-              </div>
-            </div>
-          }
-        />
-
-        <div className="flex space-x-2">
-          <InlineFormField
-            pattern="^([01]\d|2[0-3]):?([0-5]\d)$"
-            type="time"
-            name="startTime"
-            defaultValue={task?.startTime}
-            label="Start time"
-            errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.startTime}
-          />
-          {/* <Tooltip label="Notifications">
+          <div className="flex space-x-2">
+            <InlineFormField
+              pattern="^([01]\d|2[0-3]):?([0-5]\d)$"
+              type="time"
+              name="startTime"
+              defaultValue={task?.startTime}
+              label="Start time"
+              errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.startTime}
+            />
+            {/* <Tooltip label="Notifications">
             <IconButton
               size="sm"
               variant="outline"
@@ -297,158 +307,161 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
               // }}
             />
           </Tooltip> */}
-        </div>
+          </div>
 
-        {!task && (
+          {!task && (
+            <InlineFormField
+              name="repeat"
+              label="Repeat"
+              shouldPassProps={false}
+              errors={
+                !createUpdateFetcher.data?.success
+                  ? createUpdateFetcher.data?.fieldErrors?.repeat || (createUpdateFetcher.data?.fieldErrors as any)?.repeatEndDate
+                  : undefined
+              }
+              input={
+                <div className="stack w-full">
+                  {repeat && <input type="hidden" name="repeat" value={repeat} />}
+                  <Select id="repeat" value={repeat || ""} onChange={(e) => setRepeat(e.target.value as TaskRepeat)}>
+                    <option value="">Doesn't repeat</option>
+                    {Object.keys(TaskRepeat).map((key) => (
+                      <option key={key} value={key}>
+                        {key.toLowerCase()[0]!.toUpperCase() + key.toLowerCase().slice(1)}
+                      </option>
+                    ))}
+                  </Select>
+
+                  {!task && repeat ? (
+                    <label className="flex items-center" htmlFor="repeatEndDate">
+                      <div className="mr-2 flex min-w-[80px] flex-col">
+                        <span className="whitespace-nowrap text-sm">End date</span>
+                        <span className="text-xxs opacity-70">
+                          Creating{" "}
+                          {1 + getRepeatingDatesBetween(dayjs(date).toDate(), dayjs(repeatEndDate).toDate(), repeat).length}
+                        </span>
+                      </div>
+
+                      <Input
+                        autoFocus
+                        required
+                        max={dayjs().add(1, "year").format("YYYY-MM-DD")}
+                        value={repeatEndDate}
+                        onChange={(e) => setRepeatEndDate(e.target.value)}
+                        name="repeatEndDate"
+                        type="date"
+                      />
+                    </label>
+                  ) : (
+                    <div />
+                  )}
+                </div>
+              }
+            />
+          )}
           <InlineFormField
-            name="repeat"
-            label="Repeat"
+            name="description"
+            defaultValue={task?.description}
+            label="Description"
+            input={<Textarea />}
+            errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.description}
+          />
+          <InlineFormField
+            name="todos"
+            label="Todos"
             shouldPassProps={false}
-            errors={
-              !createUpdateFetcher.data?.success
-                ? createUpdateFetcher.data?.fieldErrors?.repeat || (createUpdateFetcher.data?.fieldErrors as any)?.repeatEndDate
-                : undefined
-            }
             input={
-              <div className="stack w-full">
-                {repeat && <input type="hidden" name="repeat" value={repeat} />}
-                <Select id="repeat" value={repeat || ""} onChange={(e) => setRepeat(e.target.value as TaskRepeat)}>
-                  <option value="">Doesn't repeat</option>
-                  {Object.keys(TaskRepeat).map((key) => (
-                    <option key={key} value={key}>
-                      {key.toLowerCase()[0]!.toUpperCase() + key.toLowerCase().slice(1)}
-                    </option>
-                  ))}
-                </Select>
-
-                {!task && repeat ? (
-                  <label className="flex items-center" htmlFor="repeatEndDate">
-                    <div className="mr-2 flex min-w-[80px] flex-col">
-                      <span className="whitespace-nowrap text-sm">End date</span>
-                      <span className="text-xxs opacity-70">
-                        Creating{" "}
-                        {1 + getRepeatingDatesBetween(dayjs(date).toDate(), dayjs(repeatEndDate).toDate(), repeat).length}
-                      </span>
-                    </div>
-
+              <div className="stack w-full space-y-1">
+                <input type="hidden" name="hasTodos" value="true" />
+                {todos.map((todo, i) => (
+                  <div key={todo.id} className="hstack">
+                    <Checkbox className="peer" name={`todos[${i}].isComplete`} defaultChecked={todos[i]?.isComplete} />
                     <Input
-                      autoFocus
-                      required
-                      max={dayjs().add(1, "year").format("YYYY-MM-DD")}
-                      value={repeatEndDate}
-                      onChange={(e) => setRepeatEndDate(e.target.value)}
-                      name="repeatEndDate"
-                      type="date"
+                      id={`todo-${todo.id}`}
+                      ref={(el) => (itemsRef.current[i] = el)}
+                      name={`todos[${i}].name`}
+                      defaultValue={todos[i]?.name}
+                      className={join("peer-checked:text-black/40 peer-checked:line-through dark:peer-checked:text-white/40")}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && e.metaKey) {
+                          e.preventDefault()
+                          // toggle current checkbox
+                          const checkbox = e.currentTarget.previousSibling as HTMLInputElement
+                          checkbox.checked = !checkbox.checked
+                        } else if (e.key === "Enter") {
+                          e.preventDefault()
+                          // if value is empty remove input
+                          if (!e.currentTarget.value) {
+                            // get previous input
+                            const prevInput = itemsRef.current?.[i - 1]
+                            prevInput?.select()
+                            const newTodos = [...todos]
+                            newTodos.splice(i, 1)
+                            setTodos(newTodos)
+                          } else {
+                            const newTodos = [...todos]
+                            newTodos.splice(i + 1, 0, {
+                              id: new Date().getMilliseconds().toString(),
+                              name: "",
+                              isComplete: false,
+                            })
+                            setTodos(newTodos)
+                            setTimeout(() => {
+                              const nextInput = itemsRef.current?.[i + 1]
+                              nextInput?.focus()
+                              containerRef.current?.scroll({ top: 1000 })
+                            }, 10)
+                          }
+                        }
+                        if (e.key === "ArrowUp") {
+                          e.preventDefault()
+                          const nextInput = itemsRef.current?.[i - 1]
+                          nextInput?.select()
+                        }
+                        if (e.key === "ArrowDown") {
+                          e.preventDefault()
+                          const nextInput = itemsRef.current?.[i + 1]
+                          nextInput?.select()
+                        }
+                        if (e.key === "Backspace" && !e.currentTarget.value) {
+                          e.preventDefault()
+                          // if current input was first select second input, else select prev
+                          const isFirstInput = i === 0
+                          setTodos((c) => c.filter((t) => t.id !== todo.id))
+                          setTimeout(() => {
+                            const nextInput = itemsRef.current?.[isFirstInput ? 0 : i - 1]
+                            nextInput?.focus()
+                          }, 10)
+                        }
+                      }}
                     />
-                  </label>
-                ) : (
-                  <div />
+                  </div>
+                ))}
+
+                {todos.length === 0 && (
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    aria-label="add todo"
+                    onClick={() => {
+                      setTodos((c) => [...c, { id: new Date().getMilliseconds().toString(), name: "", isComplete: false }])
+                      setTimeout(() => {
+                        const lastInput = itemsRef.current?.[itemsRef.current.length - 1]
+                        lastInput?.focus()
+                      }, 50)
+                    }}
+                  >
+                    <Plus size={16} />
+                  </Button>
                 )}
               </div>
             }
           />
-        )}
-        <InlineFormField
-          name="description"
-          defaultValue={task?.description}
-          label="Description"
-          input={<Textarea />}
-          errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.description}
-        />
-        <InlineFormField
-          name="todos"
-          label="Todos"
-          shouldPassProps={false}
-          input={
-            <div className="stack w-full space-y-1">
-              <input type="hidden" name="hasTodos" value="true" />
-              {todos.map((todo, i) => (
-                <div key={todo.id} className="hstack">
-                  <Checkbox className="peer" name={`todos[${i}].isComplete`} defaultChecked={todos[i]?.isComplete} />
-                  <Input
-                    id={`todo-${todo.id}`}
-                    ref={(el) => (itemsRef.current[i] = el)}
-                    name={`todos[${i}].name`}
-                    defaultValue={todos[i]?.name}
-                    className={join("peer-checked:text-black/40 peer-checked:line-through dark:peer-checked:text-white/40")}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && e.metaKey) {
-                        e.preventDefault()
-                        // toggle current checkbox
-                        const checkbox = e.currentTarget.previousSibling as HTMLInputElement
-                        checkbox.checked = !checkbox.checked
-                      } else if (e.key === "Enter") {
-                        e.preventDefault()
-                        // if value is empty remove input
-                        if (!e.currentTarget.value) {
-                          // get previous input
-                          const prevInput = itemsRef.current?.[i - 1]
-                          prevInput?.select()
-                          const newTodos = [...todos]
-                          newTodos.splice(i, 1)
-                          setTodos(newTodos)
-                        } else {
-                          const newTodos = [...todos]
-                          newTodos.splice(i + 1, 0, {
-                            id: new Date().getMilliseconds().toString(),
-                            name: "",
-                            isComplete: false,
-                          })
-                          setTodos(newTodos)
-                          setTimeout(() => {
-                            const nextInput = itemsRef.current?.[i + 1]
-                            nextInput?.focus()
-                          }, 10)
-                        }
-                      }
-                      if (e.key === "ArrowUp") {
-                        e.preventDefault()
-                        const nextInput = itemsRef.current?.[i - 1]
-                        nextInput?.select()
-                      }
-                      if (e.key === "ArrowDown") {
-                        e.preventDefault()
-                        const nextInput = itemsRef.current?.[i + 1]
-                        nextInput?.select()
-                      }
-                      if (e.key === "Backspace" && !e.currentTarget.value) {
-                        e.preventDefault()
-                        // if current input was first select second input, else select prev
-                        const isFirstInput = i === 0
-                        setTodos((c) => c.filter((t) => t.id !== todo.id))
-                        setTimeout(() => {
-                          const nextInput = itemsRef.current?.[isFirstInput ? 0 : i - 1]
-                          nextInput?.focus()
-                        }, 10)
-                      }
-                    }}
-                  />
-                </div>
-              ))}
 
-              {todos.length === 0 && (
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  aria-label="add todo"
-                  onClick={() => {
-                    setTodos((c) => [...c, { id: new Date().getMilliseconds().toString(), name: "", isComplete: false }])
-                    setTimeout(() => {
-                      const lastInput = itemsRef.current?.[itemsRef.current.length - 1]
-                      lastInput?.focus()
-                    }, 50)
-                  }}
-                >
-                  <Plus />
-                </Button>
-              )}
-            </div>
-          }
-        />
+          <FormError error={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.formError} />
 
-        <FormError error={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.formError} />
-
-        <div className="flex justify-between pt-4">
+          <div className="h-14" />
+        </div>
+        <div className="bg-background absolute bottom-0 left-0 z-20 flex h-14 w-full justify-between border-t px-2">
           {task ? (
             <>
               <div className="hstack">
@@ -519,7 +532,3 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
     </createUpdateFetcher.Form>
   )
 })
-
-export function TaskFormInputs() {
-  return <div></div>
-}

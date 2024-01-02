@@ -24,7 +24,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (!result.success) return formError(result)
   const data = result.data
   const payload = await decryptToken<{ id: string }>(data.token)
-  const hashedPassword = await hashPassword(data.password)
+  const hashedPassword = hashPassword(data.password)
   await db.user.update({ where: { id: payload.id }, data: { password: hashedPassword } })
 
   return redirect("/login", request, {

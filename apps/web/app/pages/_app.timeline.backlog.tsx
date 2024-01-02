@@ -1,6 +1,6 @@
 import * as React from "react"
 import { safeReadableColor, useDisclosure } from "@element/shared"
-import { Dialog } from "@headlessui/react"
+
 import { json, type LoaderFunctionArgs, type SerializeFrom } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
@@ -22,6 +22,7 @@ import { type TimelineTask } from "~/pages/api+/tasks"
 import { getCurrentUser } from "~/services/auth/auth.server"
 import { useFetcher } from "~/components/ui/Form"
 import { ActionDataSuccessResponse } from "~/lib/form.server"
+import { ModalContent, ModalRoot } from "~/components/ui/Modal"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
@@ -50,21 +51,16 @@ export default function Backlog() {
   return (
     <Drawer isOpen={true} size="md" onClose={() => navigate("/timeline")} title="Backlog">
       <div className="relative h-screen overflow-scroll px-4 pb-40">
-        <div className="items-center justify-between">
+        <div className="items-center justify-between pt-4">
           <Button variant="primary" leftIcon={<Plus size={16} />} onClick={createModalProps.onOpen}>
             Add
           </Button>
 
-          <Dialog open={createModalProps.isOpen} as="div" className="relative z-50" onClose={createModalProps.onClose}>
-            <div className="fixed inset-0 bg-black/50" />
-            <div className="fixed inset-0 overflow-y-auto">
-              <div className="flex min-h-full flex-col items-center justify-start p-0 sm:p-4">
-                <Dialog.Panel className="mt-10 w-full max-w-xl overflow-hidden bg-white text-left shadow-xl transition-all dark:bg-gray-700">
-                  <TaskForm onClose={createModalProps.onClose} />
-                </Dialog.Panel>
-              </div>
-            </div>
-          </Dialog>
+          <ModalRoot open={createModalProps.isOpen} onOpenChange={createModalProps.onClose}>
+            <ModalContent position="top" shouldHideCloseButton className="max-w-xl p-0">
+              <TaskForm onClose={createModalProps.onClose} />
+            </ModalContent>
+          </ModalRoot>
         </div>
         <div className="stack overflow-scroll pt-2">
           {tasks.length === 0 ? (
@@ -139,16 +135,12 @@ function BacklogItem({ task }: { task: BacklogTask }) {
               />
             </deleteFetcher.Form>
           </Tooltip>
-          <Dialog open={editModalProps.isOpen} as="div" className="relative z-50" onClose={editModalProps.onClose}>
-            <div className="fixed inset-0 bg-black/50" />
-            <div className="fixed inset-0 overflow-y-auto">
-              <div className="flex min-h-full flex-col items-center justify-start p-0 sm:p-4">
-                <Dialog.Panel className="mt-10 w-full max-w-xl overflow-hidden bg-white text-left shadow-xl transition-all dark:bg-gray-700">
-                  <TaskForm task={task} onClose={editModalProps.onClose} />
-                </Dialog.Panel>
-              </div>
-            </div>
-          </Dialog>
+
+          <ModalRoot open={editModalProps.isOpen} onOpenChange={editModalProps.onClose}>
+            <ModalContent position="top" shouldHideCloseButton className="max-w-xl p-0">
+              <TaskForm task={task} onClose={editModalProps.onClose} />
+            </ModalContent>
+          </ModalRoot>
 
           <updateFetcher.Form action={`/timeline/${task.id}`} method="POST">
             <input type="hidden" name="date" value={dayjs().startOf("d").add(12, "h").format()} />

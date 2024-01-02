@@ -215,7 +215,7 @@ export default function Plan() {
                 description={`Are you sure? You will remain on the Pro plan until ${dayjs
                   .unix(data?.subscription?.endDate || 0)
                   .format("DD/MM/YYYY")}`}
-                triggerButton={
+                trigger={
                   <Button
                     size="xs"
                     isLoading={cancelFetcher.state !== "idle"}

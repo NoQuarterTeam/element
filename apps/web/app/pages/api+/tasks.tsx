@@ -1,4 +1,5 @@
 import { type Task, TaskRepeat } from "@element/database/types"
+import { NullableFormNumber, NullableFormString } from "@element/server-schemas"
 import { getRepeatingDatesBetween, MAX_FREE_TASKS } from "@element/shared"
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
@@ -77,7 +78,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               })
               .nullable()
               .optional(),
-            description: z.string().nullable().optional(),
+            description: NullableFormString,
             repeat: z
               .nativeEnum(TaskRepeat, { errorMap: () => ({ message: "Incorrect repeat value" }) })
               .nullable()
@@ -86,15 +87,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               .preprocess((d) => (d ? dayjs(d as string).toDate() : undefined), z.date())
               .nullable()
               .optional(),
-            durationHours: z
-              .preprocess((d) => (d ? Number(d) : undefined), z.number())
-              .nullable()
-              .optional(),
-            durationMinutes: z
-              .preprocess((d) => (d ? Number(d) : undefined), z.number())
-              .nullable()
-              .optional(),
-            startTime: z.string().optional().nullable(),
+            durationHours: NullableFormNumber,
+            durationMinutes: NullableFormNumber,
+            startTime: NullableFormString,
           })
           .superRefine((data, ctx) => {
             if (!!data.repeat && !data.repeatEndDate)

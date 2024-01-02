@@ -1,3 +1,10 @@
+import "@fontsource/poppins/300.css"
+import "@fontsource/poppins/400.css"
+import "@fontsource/poppins/500.css"
+import "@fontsource/poppins/600.css"
+import "@fontsource/poppins/700.css"
+import "@fontsource/poppins/800.css"
+import "@fontsource/poppins/900.css"
 import type * as React from "react"
 import { ENV, FULL_WEB_URL } from "@element/server-env"
 import { join } from "@element/shared"
@@ -20,7 +27,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Frown } from "lucide-react"
 import { promiseHash } from "remix-utils/promise"
 import "~/styles/app.css"
-import "~/styles/toast.css"
 
 import { LinkButton } from "./components/ui/LinkButton"
 import { Toaster } from "./components/ui/Toast"
@@ -137,10 +143,6 @@ function Document({ theme, children }: DocumentProps) {
         <meta name="viewport" content="user-scalable=no, initial-scale=1, width=device-width" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
-          rel="stylesheet"
-        />
         <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png" />
         <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png" />
         <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png" />
