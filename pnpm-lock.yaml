@@ -130,8 +130,8 @@ importers:
         specifier: 2.12.1
         version: 2.12.1(react-native@0.72.6)(react@18.2.0)
       react-native-modal-datetime-picker:
-        specifier: 14.0.1
-        version: 14.0.1(@react-native-community/datetimepicker@7.2.0)(react-native@0.72.6)
+        specifier: 17.1.0
+        version: 17.1.0(@react-native-community/datetimepicker@7.2.0)(react-native@0.72.6)
       react-native-progress:
         specifier: 5.0.1
         version: 5.0.1(react-native-svg@13.9.0)
@@ -14755,10 +14755,10 @@ packages:
       react-native: 0.72.6(@babel/core@7.23.7)(@babel/preset-env@7.23.7)(react@18.2.0)
     dev: false
 
-  /react-native-modal-datetime-picker@14.0.1(@react-native-community/datetimepicker@7.2.0)(react-native@0.72.6):
-    resolution: {integrity: sha512-wQt4Pjxt2jiTsVhLMG0E7WrRTYBEQx2d/nUrFVCbRqJ7lrXocXaT5UZsyMpV93TnKcyut62OprbO88wYq/vh0g==}
+  /react-native-modal-datetime-picker@17.1.0(@react-native-community/datetimepicker@7.2.0)(react-native@0.72.6):
+    resolution: {integrity: sha512-jfTwfaCLtBffYbQ+pOGFLM+J5HmUh3vb9rT0JrrQPjxzecdc8pNYreB1c96+mVuq8bDCvaCdIeuEsslTqLJL0Q==}
     peerDependencies:
-      '@react-native-community/datetimepicker': '>=3.0.0'
+      '@react-native-community/datetimepicker': '>=6.7.0'
       react-native: '>=0.65.0'
     dependencies:
       '@react-native-community/datetimepicker': 7.2.0
