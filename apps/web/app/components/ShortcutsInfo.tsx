@@ -58,6 +58,12 @@ export function ShortcutsInfo() {
           </p>
           <p className="text-md">Toggle task completion</p>
         </div>
+        <div className="flex items-center justify-between">
+          <p>
+            <Kbd>shift</Kbd> + <Kbd>cmd</Kbd> + <Kbd>click</Kbd>
+          </p>
+          <p className="text-md">Toggle task for bulk deletion</p>
+        </div>
       </div>
     </div>
   )
