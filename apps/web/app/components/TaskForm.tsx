@@ -174,7 +174,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             <input type="hidden" name="isComplete" value={isComplete ? "true" : "false"} />
           </div>
         </div>
-        <div className="stack relative space-y-1 p-3 pt-0 md:space-y-3 md:p-5 md:pt-0">
+        <div className="relative space-y-1 p-3 pt-0 md:space-y-3 md:p-5 md:pt-0">
           <input type="hidden" name="elementId" value={element?.value} />
 
           <div className="flex w-full items-end md:items-start">
@@ -202,7 +202,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             </Button>
             <Modal title="Create an Element" size="lg" {...elementModalProps}>
               <createElementFetcher.Form method="post" action="/timeline/elements">
-                <div className="stack p-4">
+                <div className="space-y-2 p-4">
                   <InlineFormField
                     autoFocus
                     name="name"
@@ -320,7 +320,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                   : undefined
               }
               input={
-                <div className="stack w-full">
+                <div className="w-full space-y-2">
                   {repeat && <input type="hidden" name="repeat" value={repeat} />}
                   <Select id="repeat" value={repeat || ""} onChange={(e) => setRepeat(e.target.value as TaskRepeat)}>
                     <option value="">Doesn't repeat</option>
@@ -370,7 +370,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             label="Todos"
             shouldPassProps={false}
             input={
-              <div className="stack w-full space-y-1">
+              <div className="w-full space-y-1">
                 <input type="hidden" name="hasTodos" value="true" />
                 {todos.map((todo, i) => (
                   <div key={todo.id} className="hstack">
@@ -497,7 +497,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
               </div>
 
               <Modal {...deleteModalProps} size="md" title="Deleting task">
-                <div className="stack p-4">
+                <div className="space-y-2 p-4">
                   <p>Do you want to only delete this task or all future tasks as well?</p>
                   <div className="flex items-center justify-between">
                     <Button variant="ghost" onClick={deleteModalProps.onClose}>

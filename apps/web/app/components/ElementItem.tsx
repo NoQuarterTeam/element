@@ -187,7 +187,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
               }
             }}
           >
-            <div className="stack p-4">
+            <div className="p-4">
               <input type="hidden" name="parentId" value={element.id} />
               <InlineFormField autoFocus name="name" label="Name" required />
               <input type="hidden" name="color" value={newColor} />
@@ -211,7 +211,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
         </Modal>
         <Modal title="Move element to parent" size="xl" {...moveModalProps}>
           <moveFetcher.Form method="post" action={`/api/elements/${element.id}`}>
-            <div className="stack p-4">
+            <div className="space-y-2 p-4">
               <MoveFormElementInput
                 error={!moveFetcher.data?.success && moveFetcher.data?.fieldErrors?.parentId}
                 elementId={element.id}
@@ -240,7 +240,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
               }
             }}
           >
-            <div className="stack p-4">
+            <div className="space-y-2 p-4">
               <InlineFormField
                 errors={!updateFetcher.data?.success && updateFetcher.data?.fieldErrors?.name}
                 autoFocus
@@ -278,7 +278,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
         </Modal>
 
         <Modal title={`Archive ${element.name}`} {...archiveModalProps}>
-          <div className="stack p-4">
+          <div className="space-y-2 p-4">
             <p>Are you sure you want to do this?</p>
             <ButtonGroup>
               <Button variant="outline" onClick={archiveModalProps.onClose}>
@@ -301,7 +301,7 @@ export function ElementItem({ element, search, isArchivedShown, ...props }: Prop
         </Modal>
       </div>
       {matchedChildren.length > 0 && expandProps.isOpen ? (
-        <div className="stack mt-px space-y-px">
+        <div className="mt-px space-y-px">
           {matchedChildren.map((child) => (
             <ElementItem
               search={search}

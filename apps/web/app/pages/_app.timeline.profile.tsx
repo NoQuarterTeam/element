@@ -22,7 +22,7 @@ export default function Profile() {
           <div className="px-4 py-2">
             <p className="hidden truncate text-xs opacity-80 md:block">{me.email}</p>
           </div>
-          <div className="stack space-y-1">
+          <div className="space-y-1">
             <TabLink
               to="."
               icon={

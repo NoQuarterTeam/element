@@ -174,7 +174,7 @@ function _TaskItem({ task }: Props) {
           </div>
           {(task.repeat || task.repeatParentId) && (
             <Modal {...deleteModalProps} size="md" title="Deleting task">
-              <div className="stack p-4">
+              <div className="space-y-2 p-4">
                 <p>Do you want to only delete this task or all future tasks as well?</p>
                 <div className="flex items-center justify-between">
                   <Button variant="ghost" onClick={deleteModalProps.onClose}>

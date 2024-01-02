@@ -133,7 +133,7 @@ export default function Admin() {
             <h4 className="text-lg">Total tasks</h4>
             <p className="text-3xl">{taskCountTotal.toLocaleString()}</p>
           </div>
-          <div className="stack">
+          <div className="space-y-2">
             <h4>Tasks this month</h4>
             <div className="hstack">
               <p className="text-3xl">{taskCountThisMonth}</p>
@@ -144,7 +144,7 @@ export default function Admin() {
             </div>
           </div>
         </div>
-        <div className="stack">
+        <div className="space-y-2">
           <h4 className="text-lg">Latest 5 users</h4>
           <div className="grid grid-cols-9 px-4 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
             <p className="col-span-2">Name</p>
@@ -154,7 +154,7 @@ export default function Admin() {
             <p className="col-span-1 text-right">Signed up</p>
           </div>
 
-          <div className="stack">
+          <div className="space-y-2">
             {users.map((user) => (
               <div className="grid grid-cols-9 rounded-sm border border-gray-100 p-4 text-sm dark:border-gray-700" key={user.id}>
                 <p className="col-span-2 truncate">{user.firstName}</p>
@@ -224,10 +224,10 @@ export default function Admin() {
           </div> */}
         </div>
 
-        <div className="stack">
+        <div className="space-y-2">
           <h4 className="text-lg">Feedback</h4>
 
-          <div className="stack">
+          <div className="space-y-2">
             {feedback.map((feedback) => (
               <div className="grid grid-cols-4 border border-gray-100  p-4 text-sm dark:border-gray-700" key={feedback.id}>
                 <p className="col-span-2 truncate">{feedback.content}</p>

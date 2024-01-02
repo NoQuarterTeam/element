@@ -88,11 +88,11 @@ export default function Account() {
   const verifyFetcher = useFetcher()
 
   return (
-    <div className="stack">
+    <div className="space-y-2">
       <p className="text-lg font-medium">Account</p>
       {!me.verifiedAt && (
         <verifyFetcher.Form action="/api/verify" method="post">
-          <div className="stack rounded-sm bg-orange-100 p-2 dark:bg-orange-900">
+          <div className="space-y-2 rounded-sm bg-orange-100 p-2 dark:bg-orange-900">
             <p className="text-md">Your account is not yet verified</p>
             <p className="text-xs">Please check your email inbox for a verification link</p>
             <Button type="submit" variant="outline" className="font-normal" isLoading={verifyFetcher.state !== "idle"}>
@@ -102,7 +102,7 @@ export default function Account() {
         </verifyFetcher.Form>
       )}
       <Form method="post" replace>
-        <div className="stack">
+        <div className="space-y-2">
           <FormField defaultValue={me.email} name="email" label="Email" />
           <FormField defaultValue={me.firstName} name="firstName" label="First name" />
           <FormField defaultValue={me.lastName} name="lastName" label="Last name" />
@@ -122,7 +122,7 @@ export default function Account() {
         </Button>
       </div>
       <hr />
-      <div className="stack">
+      <div className="space-y-2">
         <p className="text-sm">Danger zone</p>
         <p className="text-xs">
           Permanently delete your account and all of its contents. This action is not reversible - please continue with caution.

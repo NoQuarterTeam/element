@@ -112,17 +112,17 @@ export default function Dashboard() {
   const { table, pie, habits } = useLoaderData<typeof loader>()
 
   return (
-    <div className="stack p-4 md:p-6">
+    <div className="space-y-2 p-4 md:p-6">
       <div className="block">
         <LinkButton to="/timeline" variant="ghost" leftIcon={<ArrowLeft size={16} />}>
           Back to timeline
         </LinkButton>
       </div>
       <h1 className="text-5xl font-bold">Dashboard</h1>
-      <div className="stack">
+      <div className="space-y-2">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div className="stack space-y-8">
-            <div className="stack">
+          <div className="space-y-8">
+            <div className="space-y-2">
               <p className="text-xl font-medium">Elements</p>
               <hr />
               <div className="flex justify-between">
@@ -139,7 +139,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="stack">
+            <div className="space-y-2">
               <p className="text-xl font-medium">Tasks</p>
               <hr />
               <p>Count</p>
@@ -159,7 +159,7 @@ export default function Dashboard() {
               </React.Suspense>
             </div>
           </div>
-          <div className="stack">
+          <div className="space-y-2">
             <p className="text-xl font-medium">Habits</p>
             <hr />
             <div className="flex items-center justify-between ">
@@ -194,7 +194,7 @@ interface Props {
 
 function ElementStat({ element, depth }: Props) {
   return (
-    <div className="stack">
+    <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div className="hstack">
           <div className="sq-5 rounded-full" style={{ background: element.color }} />
@@ -206,7 +206,7 @@ function ElementStat({ element, depth }: Props) {
         </div>
       </div>
       {element.children && element.children.length > 0 && (
-        <div className={merge("stack", `pl-${4 * depth}`)}>
+        <div className={merge("space-y-2", `pl-${4 * depth}`)}>
           {element.children?.map((child) => <ElementStat key={child.id} element={child as Element} depth={depth + 1} />)}
         </div>
       )}

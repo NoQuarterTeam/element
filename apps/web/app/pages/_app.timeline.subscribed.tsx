@@ -10,7 +10,7 @@ export default function Subscribed() {
   return (
     <Modal size="lg" isOpen onClose={() => navigate("/timeline")}>
       <Confetti />
-      <div className="stack space-y-6 p-6">
+      <div className="space-y-6 p-6">
         <h1 className="w-max text-3xl">Welcome to Element Pro!</h1>
         <p>You can now create unlimited tasks and elements</p>
         <Button variant="primary" onClick={() => navigate("/timeline")}>

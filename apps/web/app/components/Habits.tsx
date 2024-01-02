@@ -67,7 +67,7 @@ function _Habits({ habits, day, habitEntries }: Props) {
               <CloseButton />
             </Popover.Close>
           </div>
-          <div className="stack space-y-1 px-3 py-2">
+          <div className="space-y-1 px-3 py-2">
             {dayHabits.length === 0 ? (
               <p className="py-2 text-sm">No habits yet!</p>
             ) : (
@@ -124,7 +124,7 @@ function HabitForm(props: { onClose: () => void; day: string }) {
   }, [createFetcher.state, createFetcher.data])
   return (
     <createFetcher.Form action="/api/habits" method="post">
-      <div className="stack">
+      <div className="space-y-2">
         <FormField required autoFocus name="name" />
         <input type="hidden" value={props.day} name="date" />
         <FormError />
