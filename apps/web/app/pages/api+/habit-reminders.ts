@@ -12,15 +12,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const signature = request.headers.get("upstash-signature")
     if (!signature) {
-      console.log("no signature")
+      console.log("----- no signature")
       return badRequest({ success: false, message: "no signature" })
     }
     const body = await request.text()
     await qstashReceiver.verify({ signature, body })
 
     const data = JSON.parse(body) as Partial<HabitReminderBody>
+    console.log("------- data", data)
     const habitId = data?.id
     if (!habitId) return badRequest({ success: false, message: "no habit id provided" })
+    console.log("------- habitId", habitId)
     const habit = await db.habit.findUnique({
       where: { id: habitId },
       include: {
@@ -28,10 +30,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       },
     })
     if (!habit) return json({ success: true, message: "habit deleted" })
+    console.log("------- habit", habit)
     if (habit.archivedAt) return json({ success: true, message: "habit archived" })
+    console.log("------- habit not archived")
     if (habit.entries.length > 0) return json({ success: true, message: "habit already complete" })
+    console.log("------- habit not complete")
 
     const pushTokens = await db.pushToken.findMany({ where: { userId: habit.creatorId } })
+    console.log("------- pushTokens: ", pushTokens.length)
+
     const messages = pushTokens
       .filter((t) => Expo.isExpoPushToken(t.token))
       .map((t) => ({
@@ -39,6 +46,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         body: `Here's a reminder to complete your habit: ${habit.name}!`,
         data: { url: "/habits" },
       }))
+    console.log("------- message: ", messages.length)
+
     const chunks = expo.chunkPushNotifications(messages)
 
     // todod: need to check if the habit was complete for today, if so, dont send
@@ -55,6 +64,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         }
       }
     })()
+    console.log("------- finihed: ")
     return json({ success: true })
   } catch (error) {
     console.log("-----------ERROR sending habit reminder")
