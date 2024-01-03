@@ -8,4 +8,5 @@ export const habitSchema = z.object({
   startDate: z.date().optional(),
   reminderTime: z.date().nullish(),
 })
+
 export const updateHabitSchema = habitSchema.partial()
