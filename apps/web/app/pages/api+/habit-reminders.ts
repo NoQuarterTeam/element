@@ -1,7 +1,7 @@
 import { ActionFunctionArgs } from "@remix-run/node"
 import { badRequest, json } from "~/lib/remix"
 import { Expo } from "expo-server-sdk"
-import { FULL_WEB_URL, env } from "@element/server-env"
+import { env } from "@element/server-env"
 import { db } from "~/lib/db.server"
 import { HabitReminderBody, qstashReceiver } from "@element/server-services"
 import dayjs from "dayjs"
@@ -37,7 +37,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       .map((t) => ({
         to: t.token,
         body: `Here's a reminder to complete your habit: ${habit.name}!`,
-        data: { url: FULL_WEB_URL + "/habits" },
+        data: { url: "/habits" },
       }))
     const chunks = expo.chunkPushNotifications(messages)
 

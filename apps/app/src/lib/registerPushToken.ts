@@ -1,6 +1,7 @@
 import * as Notifications from "expo-notifications"
 import { isAndroid } from "./utils/device"
 import colors from "@element/tailwind-config/src/colors"
+import Constants from "expo-constants"
 
 export async function registerPushToken() {
   try {
@@ -14,7 +15,7 @@ export async function registerPushToken() {
     }
     if (finalStatus !== "granted") return
 
-    const token = (await Notifications.getExpoPushTokenAsync({ projectId: "93cfd208-76bb-4e7c-b368-5a09679e1a72" })).data
+    const token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig!.extra!.eas.projectId })).data
 
     if (isAndroid) {
       Notifications.setNotificationChannelAsync("default", {
