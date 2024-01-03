@@ -151,7 +151,11 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           onRequestClose={elementCreateModalProps.onClose}
         >
           <ModalView title="Create element" onBack={elementCreateModalProps.onClose}>
-            <ScrollView contentContainerStyle={{ paddingBottom: 100, paddingTop: 20 }} showsVerticalScrollIndicator={false}>
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{ paddingBottom: 100, paddingTop: 20 }}
+              showsVerticalScrollIndicator={false}
+            >
               <ElementForm onCreate={handleCreateElement} isLoading={createElement.isLoading} />
             </ScrollView>
           </ModalView>
@@ -164,7 +168,11 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           onRequestClose={elementModalProps.onClose}
         >
           <ModalView title="Select element" onBack={elementModalProps.onClose}>
-            <ScrollView contentContainerStyle={{ paddingBottom: 100, paddingTop: 0 }} showsVerticalScrollIndicator={false}>
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{ paddingBottom: 100, paddingTop: 0 }}
+              showsVerticalScrollIndicator={false}
+            >
               <View className="space-y-1 pt-2">
                 {(me ? data : tempElements)?.map((element) => (
                   <TouchableOpacity

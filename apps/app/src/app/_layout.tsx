@@ -12,6 +12,7 @@ import { useMe } from "../lib/hooks/useMe"
 import { useBackgroundColor } from "../lib/tailwind"
 import { api, TRPCProvider } from "../lib/utils/api"
 import { useFeatures } from "../lib/hooks/useFeatures"
+import { useNotificationObserver } from "../lib/hooks/usePush"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -24,6 +25,7 @@ export default function RootLayout() {
     Poppins_700Bold,
     Poppins_900Black,
   })
+  useNotificationObserver()
   useCheckExpoUpdates()
 
   const onLayoutRootView = React.useCallback(() => SplashScreen.hideAsync(), [])

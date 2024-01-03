@@ -4,7 +4,7 @@ import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import * as Haptics from "expo-haptics"
 import { Link, useRouter } from "expo-router"
-import { Check, Circle, Plus } from "lucide-react-native"
+import { Check, Circle, Clock, Plus } from "lucide-react-native"
 
 import colors from "@element/tailwind-config/src/colors"
 
@@ -34,8 +34,13 @@ export default function Habits() {
 
   return (
     <View className="relative w-full flex-1 px-4 pt-16">
-      <Heading className="text-3xl">Habits</Heading>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} className="space-y-3">
+      <Heading className="pb-2 text-3xl">Habits</Heading>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        className="space-y-2"
+      >
         {habits.map((habit) => (
           <View key={habit.id}>
             <HabitItem habit={habit} entries={habitEntries.filter((entry) => entry.habitId === habit.id)} />
@@ -116,23 +121,34 @@ function HabitItem({ habit, entries }: { habit: Habit; entries: HabitEntries }) 
   }
   return (
     <TouchableOpacity
-      className="flex flex-row items-center justify-between py-1 pr-2"
+      className="flex flex-row items-center justify-between rounded border border-gray-100 p-3 dark:border-gray-700"
       onPress={handleToggleComplete}
-      activeOpacity={0.8}
       onLongPress={handleOpenMenu}
+      activeOpacity={0.6}
     >
       <Text className="text-lg">{habit.name}</Text>
-      <View className="relative">
-        <Circle
-          size={26}
-          color={isComplete ? colors.primary[500] : isDark ? colors.gray[700] : colors.gray[100]}
-          fill={isComplete ? colors.primary[500] : "transparent"}
-        />
-        {isComplete && (
-          <View className="absolute left-1 top-[5px]">
-            <Icon icon={Check} size={18} strokeWidth={3} fill="transparent" color="white" />
+      <View className="flex flex-row items-center space-x-2">
+        {habit.reminderTime && (
+          <View className="flex flex-row items-center space-x-1 opacity-70">
+            <Icon icon={Clock} size={14} />
+            <Text className="text-xs">
+              {habit.reminderTime.getHours()}:{habit.reminderTime.getMinutes()}
+            </Text>
           </View>
         )}
+
+        <View className="relative">
+          <Circle
+            size={26}
+            color={isComplete ? colors.primary[500] : isDark ? colors.gray[700] : colors.gray[100]}
+            fill={isComplete ? colors.primary[500] : "transparent"}
+          />
+          {isComplete && (
+            <View className="absolute left-1 top-[5px]">
+              <Icon icon={Check} size={18} strokeWidth={3} fill="transparent" color="white" />
+            </View>
+          )}
+        </View>
       </View>
     </TouchableOpacity>
   )

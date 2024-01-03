@@ -1,18 +1,28 @@
-import { FULL_WEB_URL } from "@element/server-env"
-import { qstash } from "./lib/qstash"
+import { FULL_WEB_URL, IS_DEV } from "@element/server-env"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import { qstash } from "./lib/qstash.server"
 import { Habit } from "@element/database/types"
+dayjs.extend(utc)
 
-export function createHabitReminder(habit: Pick<Habit, "id" | "reminderTime">) {
+export type HabitReminderBody = Pick<Habit, "id" | "name">
+
+export function createHabitReminder(habit: Pick<Habit, "id" | "name" | "reminderTime">) {
   if (!habit.reminderTime) return
-  const cron = `${habit.reminderTime.split(":")[0]} ${habit.reminderTime.split(":")[1]} * * *`
+
+  // upstashs servers on utc
+  const hour = dayjs.utc(habit.reminderTime).hour()
+  const minute = dayjs.utc(habit.reminderTime).minute()
+
+  const cron = `${minute} ${hour} * * *`
   const headers = new Headers()
   headers.append("Content-Type", "application/json")
 
   return qstash.schedules.create({
     cron,
-    body: JSON.stringify({ id: habit.id }),
+    body: JSON.stringify({ id: habit.id, name: habit.name } satisfies HabitReminderBody),
     headers,
-    destination: FULL_WEB_URL + "/api/habit-reminders",
+    destination: IS_DEV ? "https://element.requestcatcher.com" : FULL_WEB_URL + "/api/habit-reminders",
   })
 }
 export async function deleteHabitReminder(id: string) {

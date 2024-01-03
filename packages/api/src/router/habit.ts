@@ -29,7 +29,7 @@ export const habitRouter = createTRPCRouter({
     const [habits, habitEntries] = await Promise.all([
       ctx.prisma.habit.findMany({
         orderBy: { createdAt: "asc" },
-        select: { id: true, name: true, startDate: true, archivedAt: true },
+        select: { id: true, name: true, reminderTime: true, startDate: true, archivedAt: true },
         where: {
           OR: [{ archivedAt: { equals: null } }, { archivedAt: { gte: dayjs(today).endOf("day").toDate() } }],
           startDate: { lt: dayjs(today).endOf("day").toDate() },
@@ -50,10 +50,7 @@ export const habitRouter = createTRPCRouter({
     return { habits, habitEntries }
   }),
   byId: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
-    const habit = await ctx.prisma.habit.findFirst({
-      select: { id: true, name: true, startDate: true, archivedAt: true },
-      where: { id: input.id, creatorId: { equals: ctx.user.id } },
-    })
+    const habit = await ctx.prisma.habit.findFirst({ where: { id: input.id, creatorId: { equals: ctx.user.id } } })
     if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
     return habit
   }),
@@ -61,11 +58,9 @@ export const habitRouter = createTRPCRouter({
     const startDate = dayjs().startOf("day").add(12, "h").toDate()
     const habit = await ctx.prisma.habit.create({ data: { ...input, startDate, creatorId: ctx.user.id } })
     if (input.reminderTime) {
-      const schedule = await createHabitReminder({ id: habit.id, reminderTime: input.reminderTime })
-      if (!schedule) {
-        // TODO: handle error
-        return
-      }
+      const schedule = await createHabitReminder(habit)
+      // TODO: handle error
+      if (!schedule) return
       await ctx.prisma.habit.update({ where: { id: habit.id }, data: { reminderScheduleId: schedule.scheduleId } })
     }
     return habit
@@ -76,30 +71,32 @@ export const habitRouter = createTRPCRouter({
       const habit = await ctx.prisma.habit.findUnique({ where: { id, creatorId: { equals: ctx.user.id } } })
       if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
       let reminderScheduleId = habit.reminderScheduleId
+
+      if (data.reminderTime === null && habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
+
       if (data.reminderTime && habit.reminderTime !== data.reminderTime) {
         if (habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
-        const schedule = await createHabitReminder({ id: habit.id, reminderTime: data.reminderTime })
-        if (!schedule) {
-          // TODO: handle error
-          return
-        }
+        const schedule = await createHabitReminder(habit)
+        // TODO: handle error
+        if (!schedule) return
         reminderScheduleId = schedule.scheduleId
       }
       return ctx.prisma.habit.update({ where: { id }, data: { ...data, reminderScheduleId } })
     }),
   delete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    const habit = await ctx.prisma.habit.findFirst({
-      select: { id: true },
-      where: { id: input.id, creatorId: { equals: ctx.user.id } },
-    })
+    const habit = await ctx.prisma.habit.findFirst({ where: { id: input.id, creatorId: { equals: ctx.user.id } } })
     if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
+
+    if (habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
+
     return ctx.prisma.habit.delete({ where: { id: habit.id } })
   }),
-  archive: protectedProcedure.input(z.object({ id: z.string() })).mutation(({ ctx, input }) => {
-    return ctx.prisma.habit.update({
+  archive: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+    const habit = await ctx.prisma.habit.update({
       where: { id: input.id },
       data: { archivedAt: dayjs().startOf("day").add(12, "h").toDate() },
     })
+    if (habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
   }),
   toggleComplete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     const date = dayjs().toDate()

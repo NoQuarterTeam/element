@@ -33,9 +33,22 @@ model User {
   habits               Habit[]
   habitEntries         HabitEntry[]
   feedbacks            Feedback[]
+  pushTokens           PushToken[]
 
   @@index([email])
   @@index([stripeCustomerId])
+}
+
+model PushToken {
+  id        String   @id @default(uuid())
+  token     String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([userId, token])
+  @@index([userId])
 }
 
 enum TaskRepeat {
@@ -112,7 +125,7 @@ model Habit {
   description        String?
   archivedAt         DateTime?
   startDate          DateTime
-  reminderTime       String?
+  reminderTime       DateTime?
   reminderScheduleId String?
 
   createdAt DateTime     @default(now())

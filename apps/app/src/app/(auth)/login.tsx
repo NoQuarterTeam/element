@@ -9,6 +9,7 @@ import { FormInput } from "../../components/FormInput"
 import { ModalView } from "../../components/ModalView"
 import { Text } from "../../components/Text"
 import { api, AUTH_TOKEN } from "../../lib/utils/api"
+import { registerPushToken } from "../../lib/registerPushToken"
 
 export default function Login() {
   const queryClient = api.useUtils()
@@ -19,11 +20,15 @@ export default function Login() {
     email: "",
     password: "",
   })
+  const pushToken = api.pushToken.create.useMutation()
   const login = api.user.login.useMutation({
     onSuccess: async (data) => {
       await AsyncStorage.setItem(AUTH_TOKEN, data.token)
       queryClient.user.me.setData(undefined, data.user)
       router.replace("/")
+      const token = await registerPushToken()
+      if (!token) return
+      pushToken.mutate({ token })
     },
   })
   const handleLogin = async () => {
@@ -33,7 +38,11 @@ export default function Login() {
 
   return (
     <ModalView title="Login">
-      <ScrollView contentContainerStyle={{ paddingBottom: 400 }} showsHorizontalScrollIndicator={false}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 400 }}
+        showsHorizontalScrollIndicator={false}
+      >
         <View className="space-y-1">
           <View>
             <FormInput
