@@ -64,7 +64,7 @@
     "reanimated-color-picker": "2.0.0",
     "superjson": "1.12.2",
     "uuid": "3.4.0",
-    "zustand": "4.4.4"
+    "zustand": "4.4.7"
   },
   "devDependencies": {
     "@babel/core": "7.23.7",
