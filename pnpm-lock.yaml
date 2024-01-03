@@ -166,8 +166,8 @@ importers:
         specifier: 3.4.0
         version: 3.4.0
       zustand:
-        specifier: 4.4.4
-        version: 4.4.4(@types/react@18.2.46)(react@18.2.0)
+        specifier: 4.4.7
+        version: 4.4.7(@types/react@18.2.46)(react@18.2.0)
     devDependencies:
       '@babel/core':
         specifier: 7.23.7
@@ -392,8 +392,8 @@ importers:
         specifier: 3.22.4
         version: 3.22.4
       zustand:
-        specifier: 4.4.4
-        version: 4.4.4(@types/react@18.2.46)(react@18.2.0)
+        specifier: 4.4.7
+        version: 4.4.7(@types/react@18.2.46)(react@18.2.0)
     devDependencies:
       '@element/eslint-config':
         specifier: workspace:*
@@ -17359,8 +17359,8 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /zustand@4.4.4(@types/react@18.2.46)(react@18.2.0):
-    resolution: {integrity: sha512-5UTUIAiHMNf5+mFp7/AnzJXS7+XxktULFN0+D1sCiZWyX7ZG+AQpqs2qpYrynRij4QvoDdCD+U+bmg/cG3Ucxw==}
+  /zustand@4.4.7(@types/react@18.2.46)(react@18.2.0):
+    resolution: {integrity: sha512-QFJWJMdlETcI69paJwhSMJz7PPWjVP8Sjhclxmxmxv/RYI7ZOvR5BHX+ktH0we9gTWQMxcne8q1OY8xxz604gw==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       '@types/react': '>=16.8'
