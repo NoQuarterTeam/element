@@ -17,10 +17,13 @@ import { Button } from "./Button"
 import { FormInput } from "./FormInput"
 import { RouterInputs } from "../lib/utils/api"
 import { toast } from "./Toast"
-import { TRPCClientErrorBase } from "@trpc/client"
+
 import { FormError } from "./FormError"
 
-type Props = { isLoading: boolean; error: TRPCClientErrorBase<any>["data"] } & (
+type Props = {
+  isLoading: boolean
+  error?: { formError: string | undefined; zodError: null | undefined | { fieldErrors?: { [key: string]: string[] } } }
+} & (
   | {
       habit?: undefined
       onCreate: (data: RouterInputs["habit"]["create"]) => void
@@ -38,7 +41,7 @@ export function HabitForm(props: Props) {
   const [shouldRemind, setShouldRemind] = React.useState(!!props.habit?.reminderTime)
   return (
     <View className="space-y-2">
-      <FormInput label="Name" value={name} error={props.error.zodError?.fieldErrors?.name} onChangeText={setName} />
+      <FormInput label="Name" value={name} error={props.error?.zodError?.fieldErrors?.name} onChangeText={setName} />
       <View className="flex flex-row items-center justify-between">
         <Text className="pt-1 text-lg">Reminder</Text>
         <Switch
@@ -53,7 +56,7 @@ export function HabitForm(props: Props) {
         <View>
           <FormInput
             label="What time shall we remind you?"
-            error={props.error.zodError?.fieldErrors?.reminderTime}
+            error={props.error?.zodError?.fieldErrors?.reminderTime}
             input={
               <TouchableOpacity onPress={timeProps.onOpen} className={inputClassName}>
                 <Text className={join("text-sm", !reminderTime && "opacity-60")}>
@@ -99,7 +102,7 @@ export function HabitForm(props: Props) {
             {props.habit ? "Update" : "Create"}
           </Button>
         </View>
-        <FormError error={props.error.formError} />
+        <FormError error={props.error?.formError} />
       </View>
     </View>
   )

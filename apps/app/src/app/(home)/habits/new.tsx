@@ -17,7 +17,13 @@ export default function NewHabit() {
 
   return (
     <ModalView title="New habit">
-      <HabitForm isLoading={createHabit.isLoading} onCreate={createHabit.mutate} />
+      <HabitForm
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        error={createHabit.error?.data}
+        isLoading={createHabit.isLoading}
+        onCreate={createHabit.mutate}
+      />
     </ModalView>
   )
 }

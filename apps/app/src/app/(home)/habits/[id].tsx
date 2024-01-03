@@ -41,6 +41,8 @@ function EditHabitForm({ habit }: { habit: Habit }) {
         showsVerticalScrollIndicator={false}
       >
         <HabitForm
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           error={updateHabit.error?.data}
           isLoading={updateHabit.isLoading}
           habit={habit}
