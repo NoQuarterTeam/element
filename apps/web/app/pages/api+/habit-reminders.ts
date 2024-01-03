@@ -1,12 +1,12 @@
 import { ActionFunctionArgs } from "@remix-run/node"
 import { badRequest, json } from "~/lib/remix"
 import { Expo } from "expo-server-sdk"
-import { env } from "@element/server-env"
+
 import { db } from "~/lib/db.server"
 import { HabitReminderBody, qstashReceiver } from "@element/server-services"
 import dayjs from "dayjs"
 
-const expo = new Expo({ accessToken: env.EXPO_ACCESS_TOKEN })
+const expo = new Expo()
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
@@ -49,12 +49,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           const ticketChunk = await expo.sendPushNotificationsAsync(chunk)
           tickets.push(...ticketChunk)
         } catch (error) {
+          console.log("-----------ERROR sending expo push notification")
+
           console.error(error)
         }
       }
     })()
     return json({ success: true })
   } catch (error) {
+    console.log("-----------ERROR sending habit reminder")
     console.log(error)
     return badRequest({ success: false, message: "Error sending habit reminder" })
   }

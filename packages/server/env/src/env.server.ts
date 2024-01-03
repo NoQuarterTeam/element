@@ -13,7 +13,6 @@ const envSchema = z.object({
   QSTASH_TOKEN: z.string(),
   QSTASH_CURRENT_SIGNING_KEY: z.string(),
   QSTASH_NEXT_SIGNING_KEY: z.string(),
-  EXPO_ACCESS_TOKEN: z.string(),
   STRIPE_SECRET_KEY: z.string(),
   STRIPE_WEBHOOK_SECRET: z.string(),
   STRIPE_PRICE_ID: z.string(),
