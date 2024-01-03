@@ -60,8 +60,9 @@ export const habitRouter = createTRPCRouter({
     if (input.reminderTime) {
       const schedule = await createHabitReminder({ id: habit.id, reminderTime: input.reminderTime, name: habit.name })
       // TODO: handle error
-      if (!schedule) return
-      await ctx.prisma.habit.update({ where: { id: habit.id }, data: { reminderScheduleId: schedule.scheduleId } })
+      if (schedule) {
+        await ctx.prisma.habit.update({ where: { id: habit.id }, data: { reminderScheduleId: schedule.scheduleId } })
+      }
     }
     return habit
   }),
@@ -77,8 +78,9 @@ export const habitRouter = createTRPCRouter({
         if (habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
         const schedule = await createHabitReminder({ id: habit.id, reminderTime: data.reminderTime, name: habit.name })
         // TODO: handle error
-        if (!schedule) return
-        reminderScheduleId = schedule.scheduleId
+        if (schedule) {
+          reminderScheduleId = schedule.scheduleId
+        }
       }
       return ctx.prisma.habit.update({ where: { id }, data: { ...data, reminderScheduleId } })
     }),
