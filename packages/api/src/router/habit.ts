@@ -71,6 +71,9 @@ export const habitRouter = createTRPCRouter({
       const habit = await ctx.prisma.habit.findUnique({ where: { id, creatorId: { equals: ctx.user.id } } })
       if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
       let reminderScheduleId = habit.reminderScheduleId
+      console.log("-----------------------------------------------------------")
+
+      console.log({ data })
 
       if (data.reminderTime === null && habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
 

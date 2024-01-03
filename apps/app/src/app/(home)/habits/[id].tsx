@@ -40,7 +40,12 @@ function EditHabitForm({ habit }: { habit: Habit }) {
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
       >
-        <HabitForm isLoading={updateHabit.isLoading} habit={habit} onUpdate={updateHabit.mutate} />
+        <HabitForm
+          error={updateHabit.error?.data}
+          isLoading={updateHabit.isLoading}
+          habit={habit}
+          onUpdate={updateHabit.mutate}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   )

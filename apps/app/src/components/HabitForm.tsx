@@ -17,8 +17,10 @@ import { Button } from "./Button"
 import { FormInput } from "./FormInput"
 import { RouterInputs } from "../lib/utils/api"
 import { toast } from "./Toast"
+import { TRPCClientErrorBase } from "@trpc/client"
+import { FormError } from "./FormError"
 
-type Props = { isLoading: boolean } & (
+type Props = { isLoading: boolean; error: TRPCClientErrorBase<any>["data"] } & (
   | {
       habit?: undefined
       onCreate: (data: RouterInputs["habit"]["create"]) => void
@@ -36,12 +38,7 @@ export function HabitForm(props: Props) {
   const [shouldRemind, setShouldRemind] = React.useState(!!props.habit?.reminderTime)
   return (
     <View className="space-y-2">
-      <FormInput
-        label="Name"
-        value={name}
-        // error={createHabit.error?.data?.zodError?.fieldErrors?.name}
-        onChangeText={setName}
-      />
+      <FormInput label="Name" value={name} error={props.error.zodError?.fieldErrors?.name} onChangeText={setName} />
       <View className="flex flex-row items-center justify-between">
         <Text className="pt-1 text-lg">Reminder</Text>
         <Switch
@@ -56,11 +53,16 @@ export function HabitForm(props: Props) {
         <View>
           <FormInput
             label="What time shall we remind you?"
-            // error={fieldErrors?.startTime}
+            error={props.error.zodError?.fieldErrors?.reminderTime}
             input={
               <TouchableOpacity onPress={timeProps.onOpen} className={inputClassName}>
                 <Text className={join("text-sm", !reminderTime && "opacity-60")}>
-                  {reminderTime ? `${reminderTime.getHours()}:${reminderTime.getMinutes()}` : "hh:mm"}
+                  {reminderTime
+                    ? `${reminderTime.getHours().toString().padStart(2, "0")}:${reminderTime
+                        .getMinutes()
+                        .toString()
+                        .padStart(2, "0")}`
+                    : "hh:mm"}
                 </Text>
               </TouchableOpacity>
             }
@@ -97,11 +99,7 @@ export function HabitForm(props: Props) {
             {props.habit ? "Update" : "Create"}
           </Button>
         </View>
-        {/* {createHabit.error?.data?.formError && (
-            <View>
-              <FormError error={createHabit.error.data.formError} />
-            </View>
-          )} */}
+        <FormError error={props.error.formError} />
       </View>
     </View>
   )

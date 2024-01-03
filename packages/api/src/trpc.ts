@@ -37,7 +37,7 @@ export const t = initTRPC.context<Context>().create({
             ? "There was an error processing your request."
             : error.message
           : undefined,
-        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+        zodError: error.code === "BAD_REQUEST" && error.cause instanceof ZodError ? error.cause.flatten() : null,
       },
     }
   },
