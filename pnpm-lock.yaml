@@ -368,8 +368,8 @@ importers:
         specifier: 7.5.0
         version: 7.5.0(@remix-run/node@2.3.1)(@remix-run/react@2.3.1)(react@18.2.0)(zod@3.22.4)
       resend:
-        specifier: 0.17.0
-        version: 0.17.0
+        specifier: 0.17.2
+        version: 0.17.2
       sharp:
         specifier: 0.32.6
         version: 0.32.6
@@ -15293,11 +15293,12 @@ packages:
     resolution: {integrity: sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ==}
     dev: false
 
-  /resend@0.17.0:
-    resolution: {integrity: sha512-KYl4fC33f2AkJ134blSS1ZAbmpuYrzcKQVl72I1Fx67z+iXmOAOBs66OTKXJ0wmXaAy0ls8lSRo927/QXD1E8w==}
+  /resend@0.17.2:
+    resolution: {integrity: sha512-lakm76u4MiIDeMF1s2tCmjtksOhwZOs4WcAXkA7aUTvl+63/h+0h6Q6WnkB8RGtj6GakUhQuUkiZshfXgtIrGw==}
     dependencies:
       '@react-email/render': 0.0.7
       axios: 1.4.0
+      type-fest: 3.13.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -16532,6 +16533,11 @@ packages:
   /type-fest@0.7.1:
     resolution: {integrity: sha512-Ne2YiiGN8bmrmJJEuTWTLJR32nh/JdL1+PSicowtNb0WFpn59GK8/lfD61bVtzguz7b3PBt74nxpv/Pw5po5Rg==}
     engines: {node: '>=8'}
+    dev: false
+
+  /type-fest@3.13.0:
+    resolution: {integrity: sha512-Gur3yQGM9qiLNs0KPP7LPgeRbio2QTt4xXouobMCarR0/wyW3F+F/+OWwshg3NG0Adon7uQfSZBpB46NfhoF1A==}
+    engines: {node: '>=14.16'}
     dev: false
 
   /type-fest@4.8.3:
