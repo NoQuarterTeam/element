@@ -129,9 +129,11 @@ export const taskRouter = createTRPCRouter({
     }),
   duplicate: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input: { id } }) => {
     const taskToDupe = await ctx.prisma.task.findUniqueOrThrow({ where: { id }, include: { todos: true } })
-    return ctx.prisma.task.create({
+    const task = await ctx.prisma.task.create({
+      select: timelineTaskFields,
       data: {
         ...taskToDupe,
+        order: taskToDupe.order + 1,
         repeat: null,
         createdAt: undefined,
         updatedAt: undefined,
@@ -139,6 +141,7 @@ export const taskRouter = createTRPCRouter({
         id: undefined,
       },
     })
+    return { ...task, date: task.date ? dayjs(task.date).startOf("day").add(12, "hours").format("YYYY-MM-DD") : null }
   }),
   delete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input: { id } }) => {
     const task = await ctx.prisma.task.findFirst({ where: { id, creatorId: { equals: ctx.user.id } } })
