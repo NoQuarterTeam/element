@@ -1,3 +1,4 @@
+import { deleteHabitReminder } from "@element/server-services"
 import type { ActionFunctionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import dayjs from "dayjs"
@@ -29,7 +30,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   switch (action) {
     case HabitActionMethods.Edit:
       try {
-        const schema = z.object({ name: z.string() })
+        const schema = z.object({ name: z.string().min(1) })
         const result = await validateFormData(request, schema)
         if (!result.success) return formError(result)
         const editHabit = await db.habit.update({ where: { id }, data: { name: result.data.name } })
@@ -82,6 +83,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         if (!result.success) return formError(result)
         const archivedAt = result.data.archivedAt
         await db.habit.update({ where: { id }, data: { archivedAt: dayjs(archivedAt).toDate() } })
+        if (habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
         return formSuccess()
       } catch (e: unknown) {
         if (e instanceof Error) {
@@ -93,6 +95,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     case HabitActionMethods.Delete:
       try {
         await db.habit.delete({ where: { id } })
+        if (habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
         return formSuccess()
       } catch (e: unknown) {
         if (e instanceof Error) {

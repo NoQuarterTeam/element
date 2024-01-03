@@ -12,6 +12,7 @@ import { useMe } from "../lib/hooks/useMe"
 import { useBackgroundColor } from "../lib/tailwind"
 import { api, TRPCProvider } from "../lib/utils/api"
 import { useFeatures } from "../lib/hooks/useFeatures"
+import { useNotificationObserver } from "../lib/hooks/usePush"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -24,13 +25,14 @@ export default function RootLayout() {
     Poppins_700Bold,
     Poppins_900Black,
   })
-  const { isDoneChecking } = useCheckExpoUpdates()
+  useNotificationObserver()
+  useCheckExpoUpdates()
 
   const onLayoutRootView = React.useCallback(() => SplashScreen.hideAsync(), [])
 
   const backgroundColor = useBackgroundColor()
   // Prevent rendering until the font has loaded
-  if (!fontsLoaded || !isDoneChecking) return null
+  if (!fontsLoaded) return null
 
   return (
     <ActionSheetProvider>

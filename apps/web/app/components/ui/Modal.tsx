@@ -16,7 +16,7 @@ export function ModalPortal({
   position = "center",
   className,
   ...props
-}: ModalPrimitive.DialogPortalProps & { position?: Position }) {
+}: ModalPrimitive.DialogPortalProps & { position?: Position; className?: string }) {
   return (
     <ModalPrimitive.Portal {...props}>
       <div

@@ -1,22 +1,23 @@
-import * as React from "react"
-import { type Habit } from "@element/database/types"
 import { merge, useDisclosure } from "@element/shared"
-import { useFetcher } from "@remix-run/react"
+import * as React from "react"
+
 import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import { Folder, PlusCircle, Trash } from "lucide-react"
 
 import * as Popover from "~/components/ui/Popover"
-import type { TimelineHabit, TimelineHabitEntry, TimelineHabitResponse } from "~/pages/api+/habits"
+import type { CreateHabitFormData, TimelineHabit, TimelineHabitEntry, TimelineHabitResponse } from "~/pages/api+/habits"
 import { HabitsActionMethods } from "~/pages/api+/habits"
 import { HabitActionMethods } from "~/pages/api+/habits.$id"
 
 import { Button } from "./ui/Button"
 import { CloseButton } from "./ui/CloseButton"
-import { FormButton, FormError, FormField } from "./ui/Form"
+import { FormError, FormField, useFetcher } from "./ui/Form"
 import { IconButton } from "./ui/IconButton"
 import { Checkbox } from "./ui/Inputs"
 import { Tooltip } from "./ui/Tooltip"
+
+import { ActionDataErrorResponse, ActionDataSuccessResponse } from "~/lib/form.server"
 
 interface Props {
   habits: TimelineHabit[]
@@ -108,30 +109,32 @@ function _Habits({ habits, day, habitEntries }: Props) {
 
 function HabitForm(props: { onClose: () => void; day: string }) {
   const client = useQueryClient()
+  const createFetcher = useFetcher<
+    ActionDataSuccessResponse<{ habit: TimelineHabit }> | ActionDataErrorResponse<CreateHabitFormData>
+  >({
+    onFinish: (res) => {
+      if (!res.success) return
+      console.log("MAKING IT HEE")
 
-  const createFetcher = useFetcher<{ habit: Habit }>()
-  React.useEffect(() => {
-    if (createFetcher.state !== "idle" && createFetcher.data?.habit) {
-      const res = client.getQueryData<TimelineHabitResponse>(["habits"])
-      if (!res) return
+      const habitsRes = client.getQueryData<TimelineHabitResponse>(["habits"])
+      if (!habitsRes) return
+      console.log("naywere")
       client.setQueryData<TimelineHabitResponse>(["habits"], {
-        habits: [...res.habits, createFetcher.data.habit],
-        habitEntries: res.habitEntries || [],
+        habits: [...habitsRes.habits, res.habit],
+        habitEntries: habitsRes.habitEntries || [],
       })
       props.onClose()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createFetcher.state, createFetcher.data])
+    },
+  })
   return (
     <createFetcher.Form action="/api/habits" method="post">
       <div className="space-y-2">
         <FormField required autoFocus name="name" />
+
         <input type="hidden" value={props.day} name="date" />
-        <FormError />
+        <FormError error={!createFetcher.data?.success && createFetcher.data?.formError} />
         <div className="flex justify-end">
-          <FormButton isLoading={createFetcher.state !== "idle"} name="_action" value={HabitsActionMethods.CreateHabit}>
-            Save
-          </FormButton>
+          <createFetcher.FormButton value={HabitsActionMethods.CreateHabit}>Save</createFetcher.FormButton>
         </div>
       </div>
     </createFetcher.Form>

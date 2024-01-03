@@ -19,8 +19,8 @@ model User {
   email                String       @unique
   password             String
   firstName            String
-  role                 Role         @default(USER)
   lastName             String
+  role                 Role         @default(USER)
   avatar               String?
   stripeCustomerId     String       @unique
   stripeSubscriptionId String?      @unique
@@ -33,6 +33,22 @@ model User {
   habits               Habit[]
   habitEntries         HabitEntry[]
   feedbacks            Feedback[]
+  pushTokens           PushToken[]
+
+  @@index([email])
+  @@index([stripeCustomerId])
+}
+
+model PushToken {
+  id        String   @id @default(uuid())
+  token     String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([userId, token])
+  @@index([userId])
 }
 
 enum TaskRepeat {
@@ -104,16 +120,19 @@ model Element {
 }
 
 model Habit {
-  id          String       @id @default(uuid())
-  name        String
-  description String?
-  archivedAt  DateTime?
-  startDate   DateTime
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @default(now()) @updatedAt
-  creatorId   String
-  creator     User         @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  entries     HabitEntry[]
+  id                 String    @id @default(uuid())
+  name               String
+  description        String?
+  archivedAt         DateTime?
+  startDate          DateTime
+  reminderTime       DateTime?
+  reminderScheduleId String?
+
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @default(now()) @updatedAt
+  creatorId String
+  creator   User         @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  entries   HabitEntry[]
 
   @@index([archivedAt])
   @@index([startDate])

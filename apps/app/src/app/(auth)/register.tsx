@@ -9,6 +9,7 @@ import { FormInput } from "../../components/FormInput"
 import { ModalView } from "../../components/ModalView"
 import { Text } from "../../components/Text"
 import { api, AUTH_TOKEN } from "../../lib/utils/api"
+import { registerPushToken } from "../../lib/registerPushToken"
 
 export default function Register() {
   const [form, setForm] = React.useState({
@@ -19,11 +20,16 @@ export default function Register() {
   })
   const queryClient = api.useUtils()
   const router = useRouter()
+
+  const pushToken = api.pushToken.create.useMutation()
   const register = api.user.register.useMutation({
     onSuccess: async (data) => {
       await AsyncStorage.setItem(AUTH_TOKEN, data.token)
       queryClient.user.me.setData(undefined, data.user)
       router.replace("/")
+      const token = await registerPushToken()
+      if (!token) return
+      pushToken.mutate({ token })
     },
   })
 
@@ -34,7 +40,11 @@ export default function Register() {
 
   return (
     <ModalView title="Register">
-      <ScrollView contentContainerStyle={{ paddingBottom: 400 }} showsHorizontalScrollIndicator={false}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 400 }}
+        showsHorizontalScrollIndicator={false}
+      >
         <View className="space-y-1">
           <View>
             <FormInput

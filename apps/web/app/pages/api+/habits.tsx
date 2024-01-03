@@ -1,3 +1,4 @@
+import { Prisma } from "@element/database/types"
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import dayjs from "dayjs"
@@ -8,6 +9,14 @@ import { FORM_ACTION } from "~/lib/form"
 import { formError, formSuccess, validateFormData } from "~/lib/form.server"
 import { badRequest } from "~/lib/remix"
 import { getCurrentUser } from "~/services/auth/auth.server"
+
+const habitSelectFields = {
+  id: true,
+  name: true,
+  startDate: true,
+  archivedAt: true,
+  reminderTime: true,
+} satisfies Prisma.HabitSelect
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
@@ -20,10 +29,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const [habits, habitEntries] = await Promise.all([
     db.habit.findMany({
       orderBy: { createdAt: "desc" },
-      select: { id: true, name: true, startDate: true, archivedAt: true },
-      where: {
-        creatorId: { equals: user.id },
-      },
+      select: habitSelectFields,
+      where: { creatorId: { equals: user.id } },
     }),
     db.habitEntry.findMany({
       select: { id: true, habitId: true, createdAt: true },
@@ -42,12 +49,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 }
 
 export type TimelineHabitResponse = SerializeFrom<typeof loader>
-export type TimelineHabit = SerializeFrom<typeof loader>["habits"][0]
-export type TimelineHabitEntry = SerializeFrom<typeof loader>["habitEntries"][0]
+export type TimelineHabit = TimelineHabitResponse["habits"][0]
+
+export type TimelineHabitEntry = TimelineHabitResponse["habitEntries"][0]
 
 export enum HabitsActionMethods {
   CreateHabit = "createHabit",
 }
+
+const createHabitSchema = z.object({ name: z.string().min(1), date: z.string() })
+export type CreateHabitFormData = typeof createHabitSchema
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await getCurrentUser(request)
   const clonedRequest = request.clone()
@@ -56,16 +67,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (action) {
     case HabitsActionMethods.CreateHabit:
       try {
-        if (!user.stripeSubscriptionId) {
-          return redirect("/timeline/profile/plan")
-        }
-        const schema = z.object({ name: z.string(), date: z.string() })
-        const result = await validateFormData(request, schema)
+        if (!user.stripeSubscriptionId) return redirect("/timeline/profile/plan")
+        const result = await validateFormData(request, createHabitSchema)
         if (!result.success) return formError(result)
         const date = result.data.date
         const habit = await db.habit.create({
+          select: habitSelectFields,
           data: { creatorId: user.id, name: result.data.name, startDate: dayjs(date).toDate() },
         })
+
         return formSuccess({ habit })
       } catch (e: unknown) {
         if (e instanceof Error) {
