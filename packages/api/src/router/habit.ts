@@ -58,7 +58,7 @@ export const habitRouter = createTRPCRouter({
     const startDate = dayjs().startOf("day").add(12, "h").toDate()
     const habit = await ctx.prisma.habit.create({ data: { ...input, startDate, creatorId: ctx.user.id } })
     if (input.reminderTime) {
-      const schedule = await createHabitReminder(habit)
+      const schedule = await createHabitReminder({ id: habit.id, reminderTime: input.reminderTime, name: habit.name })
       // TODO: handle error
       if (!schedule) return
       await ctx.prisma.habit.update({ where: { id: habit.id }, data: { reminderScheduleId: schedule.scheduleId } })
@@ -71,15 +71,11 @@ export const habitRouter = createTRPCRouter({
       const habit = await ctx.prisma.habit.findUnique({ where: { id, creatorId: { equals: ctx.user.id } } })
       if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
       let reminderScheduleId = habit.reminderScheduleId
-      console.log("-----------------------------------------------------------")
-
-      console.log({ data })
-
       if (data.reminderTime === null && habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
 
       if (data.reminderTime && habit.reminderTime !== data.reminderTime) {
         if (habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
-        const schedule = await createHabitReminder(habit)
+        const schedule = await createHabitReminder({ id: habit.id, reminderTime: data.reminderTime, name: habit.name })
         // TODO: handle error
         if (!schedule) return
         reminderScheduleId = schedule.scheduleId
