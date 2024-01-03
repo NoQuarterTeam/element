@@ -132,7 +132,8 @@ function HabitItem({ habit, entries }: { habit: Habit; entries: HabitEntries }) 
           <View className="flex flex-row items-center space-x-1 opacity-70">
             <Icon icon={Clock} size={14} />
             <Text className="text-xs">
-              {habit.reminderTime.getHours()}:{habit.reminderTime.getMinutes()}
+              {habit.reminderTime.getHours().toString().padStart(2, "0")}:
+              {habit.reminderTime.getMinutes().toString().padStart(2, "0")}
             </Text>
           </View>
         )}
