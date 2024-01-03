@@ -59,7 +59,14 @@ function EditTaskForm({ task }: { task: Task }) {
 
   const update = api.task.update.useMutation({
     onSuccess: (updatedTask) => {
-      void utils.task.timeline.refetch({ daysBack, daysForward })
+      utils.task.timeline.setData({ daysBack, daysForward }, (old) => {
+        if (!old) return old
+        return old.map((t) =>
+          t.id === task.id
+            ? { ...t, ...updatedTask, date: dayjs(updatedTask.date!).startOf("day").add(12, "hours").format("YYYY-MM-DD") }
+            : t,
+        )
+      })
       utils.task.byId.setData({ id: task.id }, updatedTask)
       router.back()
     },
@@ -116,8 +123,10 @@ function EditTaskForm({ task }: { task: Task }) {
   }
 
   const duplicate = api.task.duplicate.useMutation({
-    onSuccess: async () => {
-      void utils.task.timeline.refetch({ daysBack, daysForward })
+    onSuccess: async (dupeTask) => {
+      utils.task.timeline.setData({ daysBack, daysForward }, (old) =>
+        old ? [...old, { ...dupeTask, date: dupeTask.date! }] : [{ ...dupeTask, date: dupeTask.date! }],
+      )
       router.back()
     },
   })
@@ -146,13 +155,13 @@ function EditTaskForm({ task }: { task: Task }) {
       />
       <View className="flex w-full flex-row items-center justify-between">
         <TouchableOpacity onPress={handleDelete} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
-          <Icon icon={Trash} size={24} color="red" />
+          {deleteTask.isLoading ? <Spinner size={24} /> : <Icon icon={Trash} size={24} color="red" />}
         </TouchableOpacity>
         <TouchableOpacity onPress={handleAddToBacklog} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
-          <Icon icon={Clock} size={24} />
+          {addToBacklog.isLoading ? <Spinner size={24} /> : <Icon icon={Clock} size={24} />}
         </TouchableOpacity>
         <TouchableOpacity onPress={handleDuplicate} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
-          <Icon icon={Copy} size={24} />
+          {duplicate.isLoading ? <Spinner size={24} /> : <Icon icon={Copy} size={24} />}
         </TouchableOpacity>
       </View>
     </ScrollView>

@@ -324,7 +324,9 @@ function TasksGrid({ days, tasks }: { days: string[]; tasks: Task[] }) {
 
   const { me } = useMe()
   const updateTempTaskOrder = useTemporaryData((s) => s.updateOrder)
+  const utils = api.useUtils()
   const { mutate } = api.task.updateOrder.useMutation()
+  const { daysBack, daysForward } = useTimelineDays()
   const handleDrop = (taskId: string) => {
     const newTask = taskPositions.value[taskId]!
     const oldTask = tasks.find((t) => t.id === taskId)!
@@ -333,6 +335,17 @@ function TasksGrid({ days, tasks }: { days: string[]; tasks: Task[] }) {
     const tasksToUpdate = tasks.filter((t) => t.date === oldDate || t.date === newDate)
 
     if (me) {
+      utils.task.timeline.setData({ daysBack, daysForward }, (old) => {
+        if (!old) return old
+        // update tasks in timeline using tasksToUpdate
+        return old.map((t) => {
+          const taskToUpdate = tasksToUpdate.find((tu) => tu.id === t.id)
+          if (taskToUpdate) {
+            return { ...t, order: taskPositions.value[t.id]!.order, date: taskPositions.value[t.id]!.date }
+          }
+          return t
+        })
+      })
       mutate(
         tasksToUpdate.map((t) => ({ id: t.id, order: taskPositions.value[t.id]!.order, date: taskPositions.value[t.id]!.date })),
       )
