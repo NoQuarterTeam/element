@@ -92,10 +92,11 @@ export function HabitForm(props: Props) {
             size="sm"
             onPress={() => {
               if (shouldRemind && !reminderTime) return toast({ title: "Please select a reminder time", type: "error" })
+              const payload = { name, reminderTime: shouldRemind ? reminderTime : null }
               if (props.habit) {
-                return props.onUpdate({ id: props.habit.id, name, reminderTime })
+                return props.onUpdate({ id: props.habit.id, ...payload })
               } else {
-                return props.onCreate({ name, reminderTime })
+                return props.onCreate(payload)
               }
             }}
           >
