@@ -12,7 +12,7 @@ import { useMe } from "../lib/hooks/useMe"
 import { useBackgroundColor } from "../lib/tailwind"
 import { api, TRPCProvider } from "../lib/utils/api"
 import { useFeatures } from "../lib/hooks/useFeatures"
-import { useNotificationObserver } from "../lib/hooks/usePush"
+import { useNotificationObserver } from "../lib/hooks/useNotificationObserver"
 
 SplashScreen.preventAutoHideAsync()
 
