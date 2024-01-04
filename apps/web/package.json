@@ -44,7 +44,7 @@
     "@trpc/server": "10.45.0",
     "axios": "1.6.4",
     "class-variance-authority": "0.7.0",
-    "cookie": "0.5.0",
+    "cookie": "0.6.0",
     "currency.js": "2.0.4",
     "dayjs": "1.11.10",
     "deep-equal": "2.2.3",
