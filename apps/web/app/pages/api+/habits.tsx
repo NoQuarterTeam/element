@@ -1,4 +1,4 @@
-import { Prisma } from "@element/database/types"
+import { type Prisma } from "@element/database/types"
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import dayjs from "dayjs"

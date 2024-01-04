@@ -9,6 +9,7 @@ import { ChevronDown, ChevronRight, X } from "lucide-react"
 
 import { IconButton } from "~/components/ui/IconButton"
 import { Checkbox } from "~/components/ui/Inputs"
+import { ModalOverlay, ModalPortal, ModalRoot } from "~/components/ui/Modal"
 import { Tooltip } from "~/components/ui/Tooltip"
 import { db } from "~/lib/db.server"
 import { type ActionDataErrorResponse } from "~/lib/form.server"
@@ -18,7 +19,6 @@ import { getCurrentUser } from "~/services/auth/auth.server"
 
 import { TaskActionMethods } from "./_app.timeline.$id"
 import { type TimelineTask } from "./api+/tasks"
-import { ModalOverlay, ModalPortal, ModalRoot } from "~/components/ui/Modal"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)

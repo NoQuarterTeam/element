@@ -1,7 +1,7 @@
-import { useGlobalSearchParams, useRouter } from "expo-router"
-import { StatusBar } from "expo-status-bar"
 import { KeyboardAvoidingView } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
+import { useGlobalSearchParams, useRouter } from "expo-router"
+import { StatusBar } from "expo-status-bar"
 
 import { HabitForm } from "../../../components/HabitForm"
 import { ModalView } from "../../../components/ModalView"

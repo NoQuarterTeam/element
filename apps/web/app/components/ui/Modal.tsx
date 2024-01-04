@@ -1,9 +1,8 @@
 "use client"
 import * as React from "react"
+import { join, merge, type UseDisclosure } from "@element/shared"
 import * as ModalPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
-
-import { join, merge, type UseDisclosure } from "@element/shared"
 
 const ModalRoot = ModalPrimitive.Root
 

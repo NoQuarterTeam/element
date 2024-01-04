@@ -8,11 +8,11 @@ import { SplashScreen, Stack } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
 import { useCheckExpoUpdates } from "../lib/hooks/useCheckExpoUpdates"
+import { useFeatures } from "../lib/hooks/useFeatures"
 import { useMe } from "../lib/hooks/useMe"
+import { useNotificationObserver } from "../lib/hooks/useNotificationObserver"
 import { useBackgroundColor } from "../lib/tailwind"
 import { api, TRPCProvider } from "../lib/utils/api"
-import { useFeatures } from "../lib/hooks/useFeatures"
-import { useNotificationObserver } from "../lib/hooks/useNotificationObserver"
 
 SplashScreen.preventAutoHideAsync()
 

@@ -1,6 +1,5 @@
 import * as React from "react"
 import { safeReadableColor, useDisclosure } from "@element/shared"
-
 import { json, type LoaderFunctionArgs, type SerializeFrom } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
@@ -10,19 +9,18 @@ import { TaskForm } from "~/components/TaskForm"
 import { taskItemSelectFields } from "~/components/TaskItem"
 import { Button } from "~/components/ui/Button"
 import { Drawer } from "~/components/ui/Drawer"
+import { useFetcher } from "~/components/ui/Form"
 import { IconButton } from "~/components/ui/IconButton"
 import { Checkbox } from "~/components/ui/Inputs"
+import { ModalContent, ModalRoot } from "~/components/ui/Modal"
 import { Tooltip } from "~/components/ui/Tooltip"
 import { db } from "~/lib/db.server"
+import { type ActionDataSuccessResponse } from "~/lib/form.server"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
-
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import { type TimelineTask } from "~/pages/api+/tasks"
 import { getCurrentUser } from "~/services/auth/auth.server"
-import { useFetcher } from "~/components/ui/Form"
-import { ActionDataSuccessResponse } from "~/lib/form.server"
-import { ModalContent, ModalRoot } from "~/components/ui/Modal"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)

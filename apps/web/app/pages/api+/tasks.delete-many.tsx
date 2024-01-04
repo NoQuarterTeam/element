@@ -1,12 +1,11 @@
 import { type ActionFunctionArgs } from "@remix-run/node"
 import { Trash, X } from "lucide-react"
-import { useFetcher } from "~/components/ui/Form"
 
+import { useFetcher } from "~/components/ui/Form"
 import { IconButton } from "~/components/ui/IconButton"
 import { Tooltip } from "~/components/ui/Tooltip"
 import { db } from "~/lib/db.server"
-import { ActionDataSuccessResponse, formSuccess, getFormDataArray } from "~/lib/form.server"
-
+import { type ActionDataSuccessResponse, formSuccess, getFormDataArray } from "~/lib/form.server"
 import { useSelectedTasks } from "~/lib/hooks/useSelectedTasks"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 

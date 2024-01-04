@@ -8,8 +8,8 @@ import { FormError } from "../../components/FormError"
 import { FormInput } from "../../components/FormInput"
 import { ModalView } from "../../components/ModalView"
 import { Text } from "../../components/Text"
-import { api, AUTH_TOKEN } from "../../lib/utils/api"
 import { registerPushToken } from "../../lib/registerPushToken"
+import { api, AUTH_TOKEN } from "../../lib/utils/api"
 
 export default function Register() {
   const [form, setForm] = React.useState({
