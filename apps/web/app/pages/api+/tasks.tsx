@@ -26,10 +26,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     orderBy: { order: "asc" },
     where: {
       creatorId: { equals: user.id },
-      element: {
-        archivedAt: elementIds.length ? undefined : { equals: null },
-        id: elementIds.length ? { in: elementIds } : undefined,
-      },
+      element: elementIds.length > 0 ? { id: { in: elementIds } } : { archivedAt: null },
       date: {
         not: { equals: null },
         gte: dayjs(backParam).startOf("d").toDate(),

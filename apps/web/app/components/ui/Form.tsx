@@ -131,7 +131,7 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(func
   const className = merge(props.className, inputClassName, fieldErrors && "border-red-500 focus:border-red-500")
 
   const sharedProps = {
-    "aria-invalid": fieldErrors || fieldErrors?.length ? true : undefined,
+    "aria-invalid": !!fieldErrors && fieldErrors?.length > 0,
     "aria-errormessage": props.name + "-error",
     id: props.name,
     ...props,
@@ -152,7 +152,7 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(func
 
       {typeof fieldErrors === "string" ? (
         <FormFieldError>{fieldErrors}</FormFieldError>
-      ) : fieldErrors?.length ? (
+      ) : fieldErrors && fieldErrors.length > 0 ? (
         <ul id={props.name + "-error"}>{fieldErrors?.map((error, i) => <FormFieldError key={i}>{error}</FormFieldError>)}</ul>
       ) : null}
     </div>
@@ -168,7 +168,7 @@ export const InlineFormField = React.forwardRef<HTMLInputElement, FormFieldProps
   const className = merge(props.className, fieldErrors && "border-red-500 focus:border-red-500")
   const sharedProps = shouldPassProps
     ? {
-        "aria-invalid": fieldErrors || fieldErrors?.length ? true : undefined,
+        "aria-invalid": !!fieldErrors && fieldErrors.length > 0,
         "aria-errormessage": props.name + "-error",
         id: props.name,
         ref,
