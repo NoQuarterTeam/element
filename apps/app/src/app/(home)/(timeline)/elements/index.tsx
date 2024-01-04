@@ -10,6 +10,7 @@ import { api, type RouterOutputs } from "../../../../lib/utils/api"
 
 export default function Elements() {
   const { data, isLoading } = api.element.all.useQuery()
+
   return (
     <ModalView title="Elements">
       <View className="relative flex-1">
@@ -27,28 +28,10 @@ export default function Elements() {
                 <Text className="text-center">No elements yet</Text>
               </View>
             )}
-            // ListFooterComponent={() =>
-            //   data.filter((e) => e.archivedAt !== null).length > 0 && (
-            //     <View>
-            //       <Button variant="link" onPress={() => setIsArchivedShown((s) => !s)}>
-            //         {isArchivedShown ? "Hide" : "Show"} archived
-            //       </Button>
-            //       {isArchivedShown && (
-            //         <View className="pt-2">
-            //           {data
-            //             .filter((e) => e.archivedAt !== null)
-            //             .map((e) => (
-            //               <ElementItem key={e.id} element={e} />
-            //             ))}
-            //         </View>
-            //       )}
-            //     </View>
-            //   )
-            // }
             renderItem={({ item }) => <ElementItem element={item} />}
           />
         )}
-        <Link href={`/elements/new-element`} asChild>
+        <Link href={`/elements/create`} asChild>
           <TouchableOpacity className="bg-primary-500/90 sq-14 absolute bottom-6 right-4 flex items-center justify-center rounded-full">
             <Icon icon={Plus} size={24} color="black" />
           </TouchableOpacity>

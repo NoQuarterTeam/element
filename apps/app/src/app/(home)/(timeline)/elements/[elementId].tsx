@@ -15,9 +15,10 @@ export default function ElementDetail() {
   const router = useRouter()
   const { elementId: id } = useGlobalSearchParams()
 
-  const { data, isLoading } = api.element.byId.useQuery({ id: String(id) }, { enabled: !!id })
+  const { data, isLoading, error } = api.element.byId.useQuery({ id: String(id) }, { enabled: !!id })
 
   const { daysBack, daysForward } = useTimelineDays()
+
   const { mutate, isLoading: updateLoading } = api.element.update.useMutation({
     onSuccess: () => {
       void utils.element.byId.refetch({ id: String(id) })
@@ -48,7 +49,7 @@ export default function ElementDetail() {
           contentContainerStyle={{ minHeight: "100%", paddingBottom: 400 }}
           showsVerticalScrollIndicator={false}
         >
-          <ElementForm element={data} onUpdate={mutate} isLoading={updateLoading} />
+          <ElementForm error={error?.data} element={data} onUpdate={mutate} isLoading={updateLoading} />
           <View className="flex flex-row items-center justify-center">
             <TouchableOpacity
               onPress={() => mutate({ id: data.id, archivedAt: new Date() })}
@@ -56,18 +57,6 @@ export default function ElementDetail() {
             >
               <Icon icon={Trash} size={24} color="red" />
             </TouchableOpacity>
-            {/* <TouchableOpacity
-              // onPress={handleAddToBacklog}
-              className="rounded-full border border-gray-100 p-4 dark:border-gray-600"
-            >
-              <Icon icon={CornerUpRight} size={24} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              // onPress={handleDuplicate}
-              className="rounded-full border border-gray-100 p-4 dark:border-gray-600"
-            >
-              <Icon icon={FolderPlus} size={24} />
-            </TouchableOpacity> */}
           </View>
         </ScrollView>
       )}

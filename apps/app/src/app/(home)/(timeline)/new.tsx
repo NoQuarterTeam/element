@@ -4,11 +4,12 @@ import { StatusBar } from "expo-status-bar"
 
 import { join } from "@element/shared"
 
-import { TaskForm, type TaskFormData } from "../../../components/TaskForm"
+import { TaskForm } from "../../../components/TaskForm"
+import { Toast } from "../../../components/Toast"
 import { useMe } from "../../../lib/hooks/useMe"
 import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
 import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
-import { api } from "../../../lib/utils/api"
+import { api, type RouterInputs } from "../../../lib/utils/api"
 
 export default function NewTask() {
   const router = useRouter()
@@ -25,19 +26,16 @@ export default function NewTask() {
   })
 
   const addTempTask = useTemporaryData((s) => s.addTask)
-  const handleCreate = (data: TaskFormData) => {
-    if (!data.element) return
+  const handleCreate = (data: RouterInputs["task"]["create"]) => {
     if (me) {
       create.mutate({
         ...data,
-        elementId: data.element.id,
         durationHours: Number(data.durationHours),
         durationMinutes: Number(data.durationMinutes),
       })
     } else {
       addTempTask({
         ...data,
-        elementId: data.element.id,
         durationHours: Number(data.durationHours),
         durationMinutes: Number(data.durationMinutes),
       })
@@ -52,14 +50,10 @@ export default function NewTask() {
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 400 }}
         showsVerticalScrollIndicator={false}
       >
-        <TaskForm
-          onSubmit={handleCreate}
-          formError={create.error?.data?.formError}
-          fieldErrors={create.error?.data?.zodError?.fieldErrors}
-          isLoading={create.isLoading}
-        />
+        <TaskForm onCreate={handleCreate} error={create.error?.data} isLoading={create.isLoading} />
       </ScrollView>
       <StatusBar style="light" />
+      <Toast />
     </View>
   )
 }

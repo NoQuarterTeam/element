@@ -1,7 +1,7 @@
 import { ScrollView, TouchableOpacity, View } from "react-native"
 import { Alert } from "react-native"
 import dayjs from "dayjs"
-import { useGlobalSearchParams, useRouter } from "expo-router"
+import { useLocalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 import { Clock, Copy, Trash } from "lucide-react-native"
 
@@ -9,16 +9,17 @@ import { join } from "@element/shared"
 
 import { Icon } from "../../../components/Icon"
 import { Spinner } from "../../../components/Spinner"
-import { TaskForm, type TaskFormData } from "../../../components/TaskForm"
+import { TaskForm } from "../../../components/TaskForm"
 import { Text } from "../../../components/Text"
+import { Toast } from "../../../components/Toast"
 import { useMe } from "../../../lib/hooks/useMe"
 import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
 import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
-import { api, type RouterOutputs } from "../../../lib/utils/api"
+import { api, type RouterInputs, type RouterOutputs } from "../../../lib/utils/api"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 export default function TaskDetail() {
-  const { id } = useGlobalSearchParams()
+  const { id } = useLocalSearchParams()
   const { me } = useMe()
   const router = useRouter()
   const canGoBack = router.canGoBack()
@@ -31,7 +32,7 @@ export default function TaskDetail() {
   return (
     <View className={join("px-4", canGoBack ? "pt-6" : "pt-16")}>
       {me ? (
-        isLoading ? (
+        isLoading && !data ? (
           <View className="flex flex-row items-end justify-center pt-6">
             <Spinner />
           </View>
@@ -46,6 +47,7 @@ export default function TaskDetail() {
         <Text className="pt-6 text-center">Task not found</Text>
       )}
       <StatusBar style="light" />
+      <Toast />
     </View>
   )
 }
@@ -72,21 +74,20 @@ function EditTaskForm({ task }: { task: Task }) {
     },
   })
 
-  const handleUpdate = (data: TaskFormData) => {
+  const handleUpdate = (data: RouterInputs["task"]["update"]) => {
     if (me) {
       update.mutate({
-        id: task.id,
         ...data,
-        elementId: data.element.id,
-        date: dayjs(data.date).startOf("day").add(12, "hours").toISOString(),
+        date: dayjs(data.date as string)
+          .startOf("day")
+          .add(12, "hours")
+          .toISOString(),
         durationHours: Number(data.durationHours),
         durationMinutes: Number(data.durationMinutes),
       })
     } else {
       tempActions.updateTask({
-        id: task.id,
         ...data,
-        elementId: data.element.id,
         durationHours: Number(data.durationHours),
         durationMinutes: Number(data.durationMinutes),
       })
@@ -146,13 +147,7 @@ function EditTaskForm({ task }: { task: Task }) {
       contentContainerStyle={{ minHeight: "100%", paddingBottom: 400 }}
       showsVerticalScrollIndicator={false}
     >
-      <TaskForm
-        formError={update.error?.data?.formError}
-        fieldErrors={update.error?.data?.zodError?.fieldErrors}
-        task={task}
-        onSubmit={handleUpdate}
-        isLoading={update.isLoading}
-      />
+      <TaskForm error={update.error?.data} task={task} onUpdate={handleUpdate} isLoading={update.isLoading} />
       <View className="flex w-full flex-row items-center justify-between">
         <TouchableOpacity onPress={handleDelete} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
           {deleteTask.isLoading ? <Spinner size={24} /> : <Icon icon={Trash} size={24} color="red" />}

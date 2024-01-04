@@ -8,6 +8,7 @@ import { join } from "@element/shared"
 
 import { Heading } from "./Heading"
 import { Icon } from "./Icon"
+import { Toast } from "./Toast"
 
 interface Props {
   title?: string
@@ -33,6 +34,7 @@ export function ModalView(props: Props) {
       </View>
       {props.children}
       <StatusBar style="light" />
+      <Toast />
     </View>
   )
 }

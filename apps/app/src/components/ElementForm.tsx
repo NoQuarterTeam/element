@@ -1,15 +1,17 @@
 import * as React from "react"
 import { View } from "react-native"
-import ColorPicker, { HueSlider, Panel1, Preview } from "reanimated-color-picker"
+import ColorPicker, { HueSlider, Panel1 } from "reanimated-color-picker"
 
 import { type Element } from "@element/database/types"
 import { randomHexColor } from "@element/shared"
 
+import { type FormResponseError } from "../lib/form"
 import { type RouterInputs } from "../lib/utils/api"
 import { Button } from "./Button"
+import { FormError } from "./FormError"
 import { FormInput } from "./FormInput"
 
-type Props = { isLoading: boolean } & (
+type Props = { isLoading: boolean; error?: FormResponseError } & (
   | {
       element?: undefined
       onCreate: (data: RouterInputs["element"]["create"]) => void
@@ -28,14 +30,14 @@ export function ElementForm(props: Props) {
   return (
     <View className="space-y-2">
       <FormInput
-        autoFocus={!!!props.element}
+        autoFocus={!!!form.name}
         label="Name"
+        error={props.error?.zodError?.fieldErrors?.name}
         value={form.name}
         onChangeText={(name) => setForm({ ...form, name })}
       />
       <ColorPicker value={form.color} onChange={({ hex }) => setForm((f) => ({ ...f, color: hex }))}>
-        <Preview hideInitialColor />
-        <Panel1 style={{ height: 100 }} />
+        <Panel1 />
         <HueSlider />
       </ColorPicker>
       <Button
@@ -44,6 +46,7 @@ export function ElementForm(props: Props) {
       >
         Save
       </Button>
+      <FormError error={props.error?.formError} />
     </View>
   )
 }

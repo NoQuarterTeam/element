@@ -7,6 +7,7 @@ import { Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold, Poppins_900Bl
 import { SplashScreen, Stack } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
+import { Toast } from "../components/Toast"
 import { useCheckExpoUpdates } from "../lib/hooks/useCheckExpoUpdates"
 import { useFeatures } from "../lib/hooks/useFeatures"
 import { useMe } from "../lib/hooks/useMe"
@@ -44,8 +45,10 @@ export default function RootLayout() {
                 <Stack initialRouteName="(home)" screenOptions={{ headerShown: false, contentStyle: { backgroundColor } }}>
                   <Stack.Screen name="(home)" />
                   <Stack.Screen name="(auth)" options={{ presentation: "modal" }} />
+                  <Stack.Screen name="onboarding" options={{ presentation: "modal" }} />
                 </Stack>
               </View>
+              <Toast />
               <StatusBar />
             </SafeAreaProvider>
           </GestureHandlerRootView>

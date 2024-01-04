@@ -10,17 +10,17 @@ export function Toast() {
           <BaseToast
             {...props}
             style={{ borderLeftWidth: 0, backgroundColor: colors.gray[800], borderRadius: 100 }}
-            text1Style={{ color: "white", fontSize: 13, fontFamily: "urbanist400" }}
-            text2Style={{ color: "white", opacity: 0.8, fontSize: 11, fontFamily: "urbanist400" }}
+            text1Style={{ color: "white", fontSize: 13, fontFamily: "Poppins_400Regular" }}
+            text2Style={{ color: "white", opacity: 0.8, fontSize: 11, fontFamily: "Poppins_400Regular" }}
           />
         ),
         error: (props) => (
           <BaseToast
             {...props}
             style={{ borderLeftWidth: 0, backgroundColor: colors.red[500], borderRadius: 100 }}
-            text1Style={{ color: "white", fontSize: 13, fontFamily: "urbanist400" }}
+            text1Style={{ color: "white", fontSize: 13, fontFamily: "Poppins_400Regular" }}
             text2NumberOfLines={1}
-            text2Style={{ color: "white", opacity: 0.8, fontSize: 11, fontFamily: "urbanist400" }}
+            text2Style={{ color: "white", opacity: 0.8, fontSize: 11, fontFamily: "Poppins_400Regular" }}
           />
         ),
       }}

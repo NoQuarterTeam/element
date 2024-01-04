@@ -7,18 +7,18 @@ import { type Habit } from "@element/database/types"
 import { join, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
+import { type FormResponseError } from "../lib/form"
 import { type RouterInputs } from "../lib/utils/api"
 import { Button } from "./Button"
 import { FormError } from "./FormError"
 import { FormInput } from "./FormInput"
-// import { FormError } from "./FormError"
 import { inputClassName } from "./Input"
 import { Text } from "./Text"
 import { toast } from "./Toast"
 
 type Props = {
   isLoading: boolean
-  error?: { formError: string | undefined; zodError: null | undefined | { fieldErrors?: { [key: string]: string[] } } }
+  error?: FormResponseError
 } & (
   | {
       habit?: undefined

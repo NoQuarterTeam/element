@@ -23,9 +23,9 @@ import { formatDuration, join, safeReadableColor } from "@element/shared"
 
 import { Heading } from "../../../components/Heading"
 import { Icon } from "../../../components/Icon"
-import { OnboardingCheck } from "../../../components/OnboardingCheck"
 import { Text } from "../../../components/Text"
 import { useMe } from "../../../lib/hooks/useMe"
+import { useOnboarding } from "../../../lib/hooks/useOnboarding"
 import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
 import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
@@ -51,6 +51,16 @@ export const getDays = (startDate: string, daysBack: number, daysForward: number
 const MONTH_NAMES = ["jan.", "feb.", "mar.", "apr.", "may.", "jun.", "jul.", "aug.", "sept.", "oct.", "nov.", "dec."]
 
 export default function Timeline() {
+  const hasSeenOnboarding = useOnboarding((s) => s.hasSeenOnboarding)
+
+  React.useEffect(() => {
+    if (!hasSeenOnboarding) {
+      setTimeout(() => {
+        router.push("/onboarding")
+      }, 1000)
+    }
+  }, [hasSeenOnboarding])
+
   const [isLoaded, setIsLoaded] = React.useState(false)
 
   const timelineRef = useAnimatedRef<Animated.ScrollView>()
@@ -120,7 +130,6 @@ export default function Timeline() {
 
   return (
     <View className="flex-1 pt-16">
-      <OnboardingCheck />
       <Animated.View className="flex flex-row" style={{ transform: [{ translateX: headerTranslateX }] }}>
         {months.map(({ month, year, width }, i) => {
           // left start is the sum of all previous months' widths
