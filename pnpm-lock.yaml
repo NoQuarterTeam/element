@@ -157,8 +157,8 @@ importers:
         specifier: 2.2.0
         version: 2.2.0(react-native@0.72.6)(react@18.2.0)
       reanimated-color-picker:
-        specifier: 2.0.0
-        version: 2.0.0(expo@49.0.21)(react-native-gesture-handler@2.12.1)(react-native-reanimated@3.3.0)
+        specifier: 2.4.2
+        version: 2.4.2(expo@49.0.21)(react-native-gesture-handler@2.12.1)(react-native-reanimated@3.3.0)(react-native@0.72.6)(react@18.2.0)
       superjson:
         specifier: 1.12.2
         version: 1.12.2
@@ -15036,10 +15036,12 @@ packages:
     resolution: {integrity: sha512-k2d6ACCkiNYz222Fs/iNze30rRJ1iIicW7JuX/7/cozvih6YCkFZH+J6mAFDVgv0dRBaAyr4jDqC95R2y4IADg==}
     dev: false
 
-  /reanimated-color-picker@2.0.0(expo@49.0.21)(react-native-gesture-handler@2.12.1)(react-native-reanimated@3.3.0):
-    resolution: {integrity: sha512-E5R4IcQbyvfcM11aBCk3R9HA/78HyHSIFCsuf8VmHW7apGwXVW1o/XxiGm9jd8x05EmIlxLYELQ36EBQDVK63Q==}
+  /reanimated-color-picker@2.4.2(expo@49.0.21)(react-native-gesture-handler@2.12.1)(react-native-reanimated@3.3.0)(react-native@0.72.6)(react@18.2.0):
+    resolution: {integrity: sha512-UNw1jEEOjY2m6F/sI7/nZQwT+yl7kSxao9wJtdkHUsrmm66QRqWKku76/hZGXyl+wzdKk4yLmXMPaEaLq69GBg==}
     peerDependencies:
       expo: '>=44.0.0'
+      react: '*'
+      react-native: '*'
       react-native-gesture-handler: '>=2.0.0'
       react-native-reanimated: ^2.0.0 || ^3.0.0
     peerDependenciesMeta:
@@ -15047,6 +15049,8 @@ packages:
         optional: true
     dependencies:
       expo: 49.0.21(@babel/core@7.23.7)
+      react: 18.2.0
+      react-native: 0.72.6(@babel/core@7.23.7)(@babel/preset-env@7.23.7)(react@18.2.0)
       react-native-gesture-handler: 2.12.1(react-native@0.72.6)(react@18.2.0)
       react-native-reanimated: 3.3.0(@babel/core@7.23.7)(@babel/plugin-proposal-nullish-coalescing-operator@7.18.6)(@babel/plugin-proposal-optional-chaining@7.21.0)(@babel/plugin-transform-arrow-functions@7.23.3)(@babel/plugin-transform-shorthand-properties@7.23.3)(@babel/plugin-transform-template-literals@7.23.3)(react-native@0.72.6)(react@18.2.0)
     dev: false
