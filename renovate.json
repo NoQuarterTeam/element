@@ -19,6 +19,9 @@
     }
   ],
   "ignoreDeps": [
+    "lucide-react-native",
+    "tailwindcss",
+    "sharp",
     "@react-native-async-storage/async-storage",
     "@react-native-community/datetimepicker",
     "react-native-progress",
@@ -31,7 +34,6 @@
     "expo-constants",
     "expo-dev-client",
     "expo-device",
-    "sharp",
     "expo-file-system",
     "expo-font",
     "expo-image-picker",
