@@ -82,7 +82,7 @@
     "@element/eslint-config": "workspace:*",
     "@element/tailwind-config": "workspace:*",
     "@remix-run/dev": "2.3.1",
-    "@remix-run/eslint-config": "2.3.1",
+    "@remix-run/eslint-config": "2.4.1",
     "@tailwindcss/forms": "0.5.7",
     "@types/cookie": "0.6.0",
     "@types/deep-equal": "1.0.4",
@@ -102,7 +102,7 @@
     "postcss": "8.4.32",
     "prettier": "3.1.1",
     "remix-flat-routes": "0.6.4",
-    "tailwindcss": "3.3.2",
+    "tailwindcss": "3.4.0",
     "typescript": "5.3.3"
   },
   "sideEffects": false
