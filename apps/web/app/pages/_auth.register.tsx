@@ -9,7 +9,6 @@ import { FORM_ACTION } from "~/lib/form"
 import { formError, validateFormData } from "~/lib/form.server"
 import { createToken } from "~/lib/jwt.server"
 import { badRequest, redirect } from "~/lib/remix"
-
 import { getUserSession } from "~/services/session/session.server"
 
 export const meta: MetaFunction = () => {

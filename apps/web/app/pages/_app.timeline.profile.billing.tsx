@@ -17,7 +17,6 @@ import { badRequest, json } from "~/lib/remix"
 import { COUNTRIES } from "~/lib/static/countries"
 import { INVOICE_STATUS } from "~/lib/static/invoiceStatus"
 import { TAX_TYPES } from "~/lib/static/taxTypes"
-
 import { getCurrentUser } from "~/services/auth/auth.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

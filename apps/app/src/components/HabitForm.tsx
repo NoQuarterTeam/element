@@ -1,24 +1,20 @@
 import * as React from "react"
 import { Switch, TouchableOpacity, View } from "react-native"
-
 import DateTimePickerModal from "react-native-modal-datetime-picker"
-
-import colors from "@element/tailwind-config/src/colors"
-import { join, useDisclosure } from "@element/shared"
-
 import dayjs from "dayjs"
 
-import { Habit } from "@element/database/types"
+import { type Habit } from "@element/database/types"
+import { join, useDisclosure } from "@element/shared"
+import colors from "@element/tailwind-config/src/colors"
 
+import { type RouterInputs } from "../lib/utils/api"
+import { Button } from "./Button"
+import { FormError } from "./FormError"
+import { FormInput } from "./FormInput"
 // import { FormError } from "./FormError"
 import { inputClassName } from "./Input"
 import { Text } from "./Text"
-import { Button } from "./Button"
-import { FormInput } from "./FormInput"
-import { RouterInputs } from "../lib/utils/api"
 import { toast } from "./Toast"
-
-import { FormError } from "./FormError"
 
 type Props = {
   isLoading: boolean

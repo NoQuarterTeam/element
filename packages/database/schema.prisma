@@ -125,7 +125,7 @@ model Habit {
   description        String?
   archivedAt         DateTime?
   startDate          DateTime
-  order              Int       @default(10)
+  order              Int       @default(0)
   reminderTime       DateTime?
   reminderScheduleId String?
 

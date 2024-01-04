@@ -1,7 +1,9 @@
-import * as Notifications from "expo-notifications"
-import { isAndroid } from "./utils/device"
-import colors from "@element/tailwind-config/src/colors"
 import Constants from "expo-constants"
+import * as Notifications from "expo-notifications"
+
+import colors from "@element/tailwind-config/src/colors"
+
+import { isAndroid } from "./utils/device"
 
 export async function registerPushToken() {
   try {

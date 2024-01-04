@@ -16,7 +16,6 @@ import { db } from "~/lib/db.server"
 import { FORM_ACTION } from "~/lib/form"
 import { formSuccess } from "~/lib/form.server"
 import { badRequest } from "~/lib/remix"
-
 import { getCurrentUser } from "~/services/auth/auth.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
