@@ -1,7 +1,9 @@
-import { Prisma } from "@element/database/types"
 import { TRPCError } from "@trpc/server"
 import dayjs from "dayjs"
 import { z } from "zod"
+
+import { type Prisma } from "@element/database/types"
+
 import { createTRPCRouter, protectedProcedure } from "../trpc"
 
 const timelineTaskFields = {

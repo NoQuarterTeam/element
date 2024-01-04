@@ -1,9 +1,11 @@
 import { TRPCError } from "@trpc/server"
 import dayjs from "dayjs"
 import { z } from "zod"
-import { createTRPCRouter, protectedProcedure } from "../trpc"
+
 import { habitSchema, updateHabitSchema } from "@element/server-schemas"
 import { createHabitReminder, deleteHabitReminder } from "@element/server-services"
+
+import { createTRPCRouter, protectedProcedure } from "../trpc"
 
 export const habitRouter = createTRPCRouter({
   progressCompleteToday: protectedProcedure.query(async ({ ctx }) => {

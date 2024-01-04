@@ -3,30 +3,20 @@ import dayjs from "dayjs"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
 
-import { type Element } from "@element/database/types"
-
 import { type RouterInputs, type RouterOutputs } from "../utils/api"
 
-export const initialElement: Element[] = [
+export const initialElement: RouterOutputs["element"]["all"] = [
   {
     id: "1",
     name: "Work",
     color: "#F87171",
-    archivedAt: null,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    creatorId: "1",
-    parentId: null,
+    latestTaskDate: new Date().toISOString(),
   },
   {
     id: "2",
     name: "Personal",
     color: "#34D399",
-    archivedAt: null,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    creatorId: "1",
-    parentId: null,
+    latestTaskDate: new Date().toISOString(),
   },
 ]
 
@@ -49,7 +39,6 @@ export const useTemporaryData = create<{
           }),
         })),
       removeAll: () => set({ tasks: [], elements: initialElement }),
-      elements: initialElement,
       tasks: [],
       addTask: (task) =>
         set((state) => ({
@@ -94,6 +83,7 @@ export const useTemporaryData = create<{
               : t,
           ),
         })),
+      elements: initialElement,
     }),
     { name: "element.temporary.data", storage: createJSONStorage(() => AsyncStorage) },
   ),

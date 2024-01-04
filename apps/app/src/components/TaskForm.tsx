@@ -1,9 +1,10 @@
 import * as React from "react"
-import { Modal, ScrollView, TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
+import { Modal, Pressable, ScrollView, TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import dayjs from "dayjs"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import { AlertTriangle, Plus, X } from "lucide-react-native"
+import { matchSorter } from "match-sorter"
 import ColorPicker, { HueSlider, Panel1, Preview } from "reanimated-color-picker"
 
 import { join, randomHexColor, useDisclosure } from "@element/shared"
@@ -19,6 +20,7 @@ import { Icon } from "./Icon"
 import { Input, inputClassName } from "./Input"
 import { ModalView } from "./ModalView"
 import { Text } from "./Text"
+import { Spinner } from "./Spinner"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 
@@ -62,7 +64,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
   const utils = api.useUtils()
 
   const { me } = useMe()
-  const { data } = api.element.all.useQuery(undefined, { enabled: !!me })
+  api.element.all.useQuery(undefined, { enabled: !!me })
 
   const elementCreateModalProps = useDisclosure()
   const createElement = api.element.create.useMutation()
@@ -83,7 +85,6 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
     timeProps.onClose()
     setForm((f) => ({ ...f, startTime: dayjs(startTime).format("HH:mm") }))
   }
-  const tempElements = useTemporaryData((s) => s.elements)
   const dateProps = useDisclosure()
   const handlePickDate = (date: Date) => {
     dateProps.onClose()
@@ -98,7 +99,7 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
             className="font-label text-2xl dark:text-white"
             value={form.name}
             multiline
-            autoFocus={!task}
+            autoFocus={!task && !form.name}
             placeholderTextColor={colorScheme === "dark" ? colors.gray[500] : colors.gray[300]}
             placeholder="Name"
             onChangeText={(name) => setForm((f) => ({ ...f, name }))}
@@ -168,27 +169,12 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           onRequestClose={elementModalProps.onClose}
         >
           <ModalView title="Select element" onBack={elementModalProps.onClose}>
-            <ScrollView
-              keyboardShouldPersistTaps="handled"
-              contentContainerStyle={{ paddingBottom: 100, paddingTop: 0 }}
-              showsVerticalScrollIndicator={false}
-            >
-              <View className="space-y-1 pt-2">
-                {(me ? data : tempElements)?.map((element) => (
-                  <TouchableOpacity
-                    key={element.id}
-                    className="flex flex-row items-center space-x-2 p-1"
-                    onPress={() => {
-                      setForm((f) => ({ ...f, element }))
-                      elementModalProps.onClose()
-                    }}
-                  >
-                    <View className="sq-4 rounded-full" style={{ backgroundColor: element.color }} />
-                    <Text className="text-lg">{element.name}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
+            <ElementSelect
+              onSelect={(element) => {
+                setForm((f) => ({ ...f, element }))
+                elementModalProps.onClose()
+              }}
+            />
           </ModalView>
         </Modal>
       </View>
@@ -309,5 +295,62 @@ function ElementForm({
         </Button>
       </View>
     </View>
+  )
+}
+
+function ElementSelect({ onSelect }: { onSelect: (element: { id: string; name: string; color: string }) => void }) {
+  const tempElements = useTemporaryData((s) => s.elements)
+  const [search, setSearch] = React.useState("")
+  const { me } = useMe()
+  const { data, isLoading } = api.element.all.useQuery(undefined, { enabled: !!me })
+
+  const matchedElements = matchSorter(me ? data || [] : tempElements, search, {
+    baseSort: (e) => dayjs(e.item.latestTaskDate).unix() - dayjs(e.item.latestTaskDate).unix(),
+    keys: ["name"],
+  })
+  return (
+    <>
+      <Input
+        onSubmitEditing={() => {
+          if (!matchedElements[0]) return
+          onSelect(matchedElements[0])
+        }}
+        returnKeyType="done"
+        autoFocus
+        placeholder="Search"
+        value={search}
+        onChangeText={setSearch}
+      />
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 100, paddingTop: 0 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View className="space-y-1 pt-2">
+          {isLoading ? (
+            <View className="flex items-center justify-center pt-2">
+              <Spinner />
+            </View>
+          ) : (
+            matchedElements.map((element, i) => (
+              <Pressable key={element.id} onPress={() => onSelect(element)}>
+                {({ pressed }) => (
+                  <View
+                    className={join(
+                      "flex flex-row items-center space-x-2 rounded p-1 px-2",
+                      i === 0 && "bg-gray-75 dark:bg-gray-800",
+                      pressed && "bg-gray-100 dark:bg-gray-700",
+                    )}
+                  >
+                    <View className="sq-4 rounded-full" style={{ backgroundColor: element.color }} />
+                    <Text className="text-lg">{element.name}</Text>
+                  </View>
+                )}
+              </Pressable>
+            ))
+          )}
+        </View>
+      </ScrollView>
+    </>
   )
 }

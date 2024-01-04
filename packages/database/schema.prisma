@@ -83,6 +83,7 @@ model Task {
   updatedAt       DateTime    @default(now()) @updatedAt
 
   @@index([date])
+  @@index([createdAt])
   @@index([elementId])
   @@index([repeatParentId])
   @@index([creatorId])
@@ -117,6 +118,7 @@ model Element {
   @@index([name])
   @@index([parentId])
   @@index([creatorId])
+  @@index([creatorId, archivedAt])
 }
 
 model Habit {

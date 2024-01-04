@@ -117,6 +117,9 @@ importers:
       lucide-react-native:
         specifier: 0.303.0
         version: 0.303.0(prop-types@15.8.1)(react-native-svg@13.9.0)(react-native@0.72.6)(react@18.2.0)
+      match-sorter:
+        specifier: 6.3.1
+        version: 6.3.1
       nativewind:
         specifier: 2.0.11
         version: 2.0.11(react@18.2.0)(tailwindcss@3.3.2)

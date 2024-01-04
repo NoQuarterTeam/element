@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server"
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc"
-
-import { comparePasswords, createAuthToken, createTemplates, hashPassword, stripe } from "@element/server-services"
 import { loginSchema, registerSchema, updateUserSchema } from "@element/server-schemas"
+import { comparePasswords, createAuthToken, createTemplates, hashPassword, stripe } from "@element/server-services"
+
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc"
 
 export const userRouter = createTRPCRouter({
   me: publicProcedure.query(({ ctx }) => ctx.user || null),
