@@ -100,13 +100,11 @@ export const habitRouter = createTRPCRouter({
   updateOrder: protectedProcedure
     .input(z.array(z.object({ id: z.string(), order: z.number() })))
     .mutation(async ({ ctx, input }) => {
-      const habits = await ctx.prisma.habit.findMany({ where: { id: { in: input.map((i) => i.id) } } })
-      const updates = input.map((i) => {
-        const habit = habits.find((h) => h.id === i.id)
-        if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
-        return ctx.prisma.habit.update({ where: { id: i.id }, data: { order: i.order } })
-      })
-      await Promise.all(updates)
+      await Promise.all(
+        input.map((i) => {
+          return ctx.prisma.habit.update({ where: { id: i.id }, data: { order: i.order } }).catch()
+        }),
+      )
       return true
     }),
   archive: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {

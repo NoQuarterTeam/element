@@ -5,7 +5,7 @@ import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import * as Haptics from "expo-haptics"
 import { Link, useRouter } from "expo-router"
-import { Check, Circle, Clock, Plus } from "lucide-react-native"
+import { Check, Circle, Clock, GripVertical, Plus } from "lucide-react-native"
 
 import colors from "@element/tailwind-config/src/colors"
 
@@ -44,23 +44,26 @@ export default function Habits() {
   return (
     <View className="relative w-full flex-1 pt-16">
       <Heading className="px-4 pb-2 text-3xl">Habits</Heading>
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-      >
-        {isLoading ? (
-          <View className="flex items-center justify-center pt-4">
-            <Spinner />
-          </View>
-        ) : !data ? (
-          <View className="flex items-center justify-center pt-4">
-            <Text>Error loading habits</Text>
-          </View>
-        ) : (
+      {isLoading ? (
+        <View className="flex items-center justify-center pt-4">
+          <Spinner />
+        </View>
+      ) : !data ? (
+        <View className="flex items-center justify-center pt-4">
+          <Text>Error loading habits</Text>
+        </View>
+      ) : (
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{
+            flexGrow: 1,
+            minHeight: data.habits.length * HABIT_HEIGHT + 100,
+          }}
+          showsVerticalScrollIndicator={false}
+        >
           <HabitsList data={data} />
-        )}
-      </ScrollView>
+        </ScrollView>
+      )}
       <View className="absolute bottom-4 right-4">
         <Link href={`/habits/new`} asChild>
           <TouchableOpacity className="bg-primary-500/90 rounded-full p-4">
@@ -72,32 +75,27 @@ export default function Habits() {
   )
 }
 
-const HABIT_HEIGHT = 80
-type Posistions = { [key: string]: Habit }
+const HABIT_HEIGHT = 65
+type Positions = { [key: string]: Habit }
 function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"]> }) {
   const habits = data.habits
   const habitEntries = data.habitEntries
 
-  const {} = api.habit.updateOrder.useMutation()
-
   const posistions = useSharedValue(
-    habits.reduce<Posistions>((acc, habit) => {
+    habits.reduce<Positions>((acc, habit) => {
       acc[habit.id] = habit
       return acc
     }, {}),
   )
 
   React.useEffect(() => {
-    posistions.value = habits.reduce<Posistions>((acc, habit) => {
+    posistions.value = habits.reduce<Positions>((acc, habit) => {
       acc[habit.id] = habit
       return acc
     }, {})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [habits])
 
-  const handleUpdateOrder = (id: string) => {
-    // mutate({})
-  }
   return (
     <>
       {habits.map((habit) => (
@@ -105,7 +103,6 @@ function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"
           key={habit.id}
           positions={posistions}
           habit={habit}
-          onDrop={() => handleUpdateOrder(habit.id)}
           isComplete={habitEntries.some((entry) => entry.habitId === habit.id)}
         />
       ))}
@@ -113,17 +110,7 @@ function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"
   )
 }
 
-function HabitItem({
-  habit,
-  isComplete,
-  positions,
-  onDrop,
-}: {
-  onDrop: () => void
-  positions: SharedValue<Posistions>
-  habit: Habit
-  isComplete: boolean
-}) {
+function HabitItem({ habit, isComplete, positions }: { positions: SharedValue<Positions>; habit: Habit; isComplete: boolean }) {
   const isDark = useColorScheme() === "dark"
   const utils = api.useUtils()
   const router = useRouter()
@@ -183,6 +170,15 @@ function HabitItem({
       }
     })
   }
+
+  const { mutate } = api.habit.updateOrder.useMutation()
+
+  const handleUpdateOrder = () => {
+    if (!positions.value) return
+    const data = Object.values(positions.value).map((habit) => ({ id: habit.id, order: habit.order }))
+    mutate(data)
+  }
+
   const translateY = useSharedValue((positions.value[habit.id]?.order || 0) * HABIT_HEIGHT)
   const offsetY = useSharedValue(translateY.value)
   const scale = useSharedValue(1)
@@ -206,6 +202,7 @@ function HabitItem({
   })
 
   const pan = Gesture.Pan()
+    .activateAfterLongPress(200)
     .onStart(() => {
       offsetY.value = translateY.value
       scale.value = withTiming(1.05)
@@ -240,7 +237,7 @@ function HabitItem({
       scale.value = withTiming(1, undefined, () => {
         isActive.value = false
       })
-      runOnJS(onDrop)()
+      runOnJS(handleUpdateOrder)()
     })
 
   const longPress = Gesture.LongPress()
@@ -249,12 +246,6 @@ function HabitItem({
     .onStart(() => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
       handleOpenMenu()
-      // isComplete.value = !isComplete.value
-      // if (me) {
-      //   mutate({ id: task.id, isComplete: !task.isComplete })
-      // } else {
-      //   updateTask({ isComplete: !task.isComplete })
-      // }
     })
 
   const tap = Gesture.Tap().runOnJS(true).onStart(handleToggleComplete)
@@ -265,7 +256,10 @@ function HabitItem({
       <GestureDetector gesture={gesture}>
         <View style={{ height: HABIT_HEIGHT }} className="w-full px-4 py-1">
           <View className="flex h-full w-full flex-row items-center justify-between rounded border border-gray-100 bg-white p-3 dark:border-gray-700 dark:bg-black">
-            <Text className="text-lg">{habit.name}</Text>
+            <View className="flex flex-row items-center space-x-2">
+              <Icon icon={GripVertical} size={16} />
+              <Text className="text-lg">{habit.name}</Text>
+            </View>
             <View className="flex flex-row items-center space-x-2">
               {habit.reminderTime && (
                 <View className="flex flex-row items-center space-x-1 opacity-70">
