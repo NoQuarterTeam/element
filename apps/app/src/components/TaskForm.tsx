@@ -90,16 +90,19 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
     dateProps.onClose()
     setForm((f) => ({ ...f, date: dayjs(date).format("YYYY-MM-DD") }))
   }
+
+  const nameInputRef = React.useRef<TextInput>(null)
   const colorScheme = useColorScheme()
   return (
     <View className="space-y-2">
       <View className="flex flex-row items-start justify-between">
         <View className="flex-1">
           <TextInput
+            ref={nameInputRef}
             className="font-label text-2xl dark:text-white"
             value={form.name}
             multiline
-            autoFocus={!task && !form.name}
+            autoFocus={!!!form.name}
             placeholderTextColor={colorScheme === "dark" ? colors.gray[500] : colors.gray[300]}
             placeholder="Name"
             onChangeText={(name) => setForm((f) => ({ ...f, name }))}
@@ -126,7 +129,13 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           label="Element"
           error={fieldErrors?.elementId}
           input={
-            <TouchableOpacity onPress={elementModalProps.onOpen} className={join(inputClassName, "flex-1")}>
+            <TouchableOpacity
+              onPress={() => {
+                nameInputRef.current?.blur()
+                elementModalProps.onOpen()
+              }}
+              className={join(inputClassName, "flex-1")}
+            >
               <Text className={join("text-sm", !form.element.name && "opacity-60")}>
                 {form.element.name || "Select an element"}
               </Text>
@@ -135,7 +144,10 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           rightElement={
             me && (
               <TouchableOpacity
-                onPress={elementCreateModalProps.onOpen}
+                onPress={() => {
+                  nameInputRef.current?.blur()
+                  elementCreateModalProps.onOpen()
+                }}
                 className="rounded-sm border border-gray-100 p-2.5 dark:border-gray-600"
               >
                 <Icon icon={Plus} size={20} />
@@ -225,7 +237,13 @@ export function TaskForm({ task, fieldErrors, formError, ...props }: Props) {
           label="Start time"
           error={fieldErrors?.startTime}
           input={
-            <TouchableOpacity onPress={timeProps.onOpen} className={inputClassName}>
+            <TouchableOpacity
+              onPress={() => {
+                nameInputRef.current?.blur()
+                timeProps.onOpen()
+              }}
+              className={inputClassName}
+            >
               <Text className={join("text-sm", !form.startTime && "opacity-60")}>{form.startTime || "hh:mm"}</Text>
             </TouchableOpacity>
           }
