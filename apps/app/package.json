@@ -61,7 +61,7 @@
     "react-native-screens": "~3.22.1",
     "react-native-svg": "13.9.0",
     "react-native-toast-message": "2.2.0",
-    "reanimated-color-picker": "2.0.0",
+    "reanimated-color-picker": "2.4.2",
     "superjson": "1.12.2",
     "uuid": "3.4.0",
     "zustand": "4.4.7"
