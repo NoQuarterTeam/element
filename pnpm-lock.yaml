@@ -382,9 +382,6 @@ importers:
       sonner:
         specifier: 1.3.1
         version: 1.3.1(react-dom@18.2.0)(react@18.2.0)
-      tailwind-merge:
-        specifier: 1.14.0
-        version: 1.14.0
       tailwind-scrollbar-hide:
         specifier: ^1.1.7
         version: 1.1.7
@@ -663,9 +660,6 @@ importers:
       '@element/shared':
         specifier: workspace:*
         version: link:../../shared
-      tailwind-merge:
-        specifier: 2.2.0
-        version: 2.2.0
       zod:
         specifier: 3.22.4
         version: 3.22.4
@@ -16108,10 +16102,6 @@ packages:
       csso: 5.0.5
       picocolors: 1.0.0
     dev: true
-
-  /tailwind-merge@1.14.0:
-    resolution: {integrity: sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ==}
-    dev: false
 
   /tailwind-merge@2.2.0:
     resolution: {integrity: sha512-SqqhhaL0T06SW59+JVNfAqKdqLs0497esifRrZ7jOaefP3o64fdFNDMrAQWZFMxTLJPiHVjRLUywT8uFz1xNWQ==}

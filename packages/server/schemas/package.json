@@ -14,7 +14,6 @@
   "dependencies": {
     "@element/database": "workspace:*",
     "@element/shared": "workspace:*",
-    "tailwind-merge": "2.2.0",
     "zod": "3.22.4",
     "zodix": "0.4.4"
   },
