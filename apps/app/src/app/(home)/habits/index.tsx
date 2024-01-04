@@ -1,3 +1,4 @@
+import * as React from "react"
 import { ScrollView, TouchableOpacity, useColorScheme, View } from "react-native"
 import { useActionSheet } from "@expo/react-native-action-sheet"
 import dayjs from "dayjs"
@@ -12,16 +13,24 @@ import { Heading } from "../../../components/Heading"
 import { Icon } from "../../../components/Icon"
 import { Text } from "../../../components/Text"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
+import { Spinner } from "../../../components/Spinner"
+import Animated, {
+  runOnJS,
+  SharedValue,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated"
+import { Gesture, GestureDetector } from "react-native-gesture-handler"
 
 dayjs.extend(advancedFormat)
 
 type Habit = NonNullable<RouterOutputs["habit"]["today"]>["habits"][number]
-type HabitEntries = NonNullable<RouterOutputs["habit"]["today"]>["habitEntries"]
 
 export default function Habits() {
-  const { data } = api.habit.today.useQuery()
-  const habits = data?.habits || []
-  const habitEntries = data?.habitEntries || []
+  const { data, isLoading } = api.habit.today.useQuery()
+
   // const dateLabel = dayjs(date).isSame(dayjs(), "date")
   //   ? "Today"
   //   : // if yesterday
@@ -33,19 +42,24 @@ export default function Habits() {
   //       : dayjs(date).format("ddd Do")
 
   return (
-    <View className="relative w-full flex-1 px-4 pt-16">
-      <Heading className="pb-2 text-3xl">Habits</Heading>
+    <View className="relative w-full flex-1 pt-16">
+      <Heading className="px-4 pb-2 text-3xl">Habits</Heading>
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
-        className="space-y-2"
       >
-        {habits.map((habit) => (
-          <View key={habit.id}>
-            <HabitItem habit={habit} entries={habitEntries.filter((entry) => entry.habitId === habit.id)} />
+        {isLoading ? (
+          <View className="flex items-center justify-center pt-4">
+            <Spinner />
           </View>
-        ))}
+        ) : !data ? (
+          <View className="flex items-center justify-center pt-4">
+            <Text>Error loading habits</Text>
+          </View>
+        ) : (
+          <HabitsList data={data} />
+        )}
       </ScrollView>
       <View className="absolute bottom-4 right-4">
         <Link href={`/habits/new`} asChild>
@@ -58,8 +72,58 @@ export default function Habits() {
   )
 }
 
-function HabitItem({ habit, entries }: { habit: Habit; entries: HabitEntries }) {
-  const isComplete = entries.length > 0
+const HABIT_HEIGHT = 80
+type Posistions = { [key: string]: Habit }
+function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"]> }) {
+  const habits = data.habits
+  const habitEntries = data.habitEntries
+
+  const {} = api.habit.updateOrder.useMutation()
+
+  const posistions = useSharedValue(
+    habits.reduce<Posistions>((acc, habit) => {
+      acc[habit.id] = habit
+      return acc
+    }, {}),
+  )
+
+  React.useEffect(() => {
+    posistions.value = habits.reduce<Posistions>((acc, habit) => {
+      acc[habit.id] = habit
+      return acc
+    }, {})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [habits])
+
+  const handleUpdateOrder = (id: string) => {
+    // mutate({})
+  }
+  return (
+    <>
+      {habits.map((habit) => (
+        <HabitItem
+          key={habit.id}
+          positions={posistions}
+          habit={habit}
+          onDrop={() => handleUpdateOrder(habit.id)}
+          isComplete={habitEntries.some((entry) => entry.habitId === habit.id)}
+        />
+      ))}
+    </>
+  )
+}
+
+function HabitItem({
+  habit,
+  isComplete,
+  positions,
+  onDrop,
+}: {
+  onDrop: () => void
+  positions: SharedValue<Posistions>
+  habit: Habit
+  isComplete: boolean
+}) {
   const isDark = useColorScheme() === "dark"
   const utils = api.useUtils()
   const router = useRouter()
@@ -119,38 +183,116 @@ function HabitItem({ habit, entries }: { habit: Habit; entries: HabitEntries }) 
       }
     })
   }
-  return (
-    <TouchableOpacity
-      className="flex flex-row items-center justify-between rounded border border-gray-100 p-3 dark:border-gray-700"
-      onPress={handleToggleComplete}
-      onLongPress={handleOpenMenu}
-      activeOpacity={0.6}
-    >
-      <Text className="text-lg">{habit.name}</Text>
-      <View className="flex flex-row items-center space-x-2">
-        {habit.reminderTime && (
-          <View className="flex flex-row items-center space-x-1 opacity-70">
-            <Icon icon={Clock} size={14} />
-            <Text className="text-xs">
-              {habit.reminderTime.getHours().toString().padStart(2, "0")}:
-              {habit.reminderTime.getMinutes().toString().padStart(2, "0")}
-            </Text>
-          </View>
-        )}
+  const translateY = useSharedValue((positions.value[habit.id]?.order || 0) * HABIT_HEIGHT)
+  const offsetY = useSharedValue(translateY.value)
+  const scale = useSharedValue(1)
+  const isActive = useSharedValue(false)
 
-        <View className="relative">
-          <Circle
-            size={26}
-            color={isComplete ? colors.primary[500] : isDark ? colors.gray[700] : colors.gray[100]}
-            fill={isComplete ? colors.primary[500] : "transparent"}
-          />
-          {isComplete && (
-            <View className="absolute left-1 top-[5px]">
-              <Icon icon={Check} size={18} strokeWidth={3} fill="transparent" color="white" />
+  useAnimatedReaction(
+    () => positions.value[habit.id]!,
+    (newPosition) => {
+      const y = newPosition.order * HABIT_HEIGHT
+      translateY.value = withTiming(y)
+    },
+  )
+
+  const styles = useAnimatedStyle(() => {
+    return {
+      position: "absolute",
+      width: "100%",
+      zIndex: isActive.value ? 10 : 0,
+      transform: [{ translateY: translateY.value }, { scale: scale.value }],
+    }
+  })
+
+  const pan = Gesture.Pan()
+    .onStart(() => {
+      offsetY.value = translateY.value
+      scale.value = withTiming(1.05)
+      isActive.value = true
+      // runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium)
+    })
+    .onUpdate((event) => {
+      translateY.value = Math.max(offsetY.value + event.translationY, 0)
+
+      const currentHabit = positions.value[habit.id]!
+      const newPositions = { ...positions.value }
+      const newOrder = Math.floor((translateY.value + HABIT_HEIGHT * 0.5) / HABIT_HEIGHT)
+      // reorder current date tasks
+      const habitToSwap = Object.values(newPositions).find((t) => t.order === newOrder)
+      if (!habitToSwap || habitToSwap.id === currentHabit.id) return
+      newPositions[currentHabit.id]! = {
+        ...currentHabit,
+        order: newOrder,
+      }
+      newPositions[habitToSwap.id]! = {
+        ...habitToSwap,
+        order: currentHabit.order,
+      }
+
+      positions.value = newPositions
+    })
+    .onEnd(() => {
+      const newOrder = positions.value[habit.id]!.order
+      translateY.value = withTiming(newOrder * HABIT_HEIGHT)
+    })
+    .onFinalize(() => {
+      scale.value = withTiming(1, undefined, () => {
+        isActive.value = false
+      })
+      runOnJS(onDrop)()
+    })
+
+  const longPress = Gesture.LongPress()
+    .minDuration(1000)
+    .runOnJS(true)
+    .onStart(() => {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+      handleOpenMenu()
+      // isComplete.value = !isComplete.value
+      // if (me) {
+      //   mutate({ id: task.id, isComplete: !task.isComplete })
+      // } else {
+      //   updateTask({ isComplete: !task.isComplete })
+      // }
+    })
+
+  const tap = Gesture.Tap().runOnJS(true).onStart(handleToggleComplete)
+
+  const gesture = Gesture.Race(Gesture.Simultaneous(pan, longPress), tap)
+  return (
+    <Animated.View style={styles}>
+      <GestureDetector gesture={gesture}>
+        <View style={{ height: HABIT_HEIGHT }} className="w-full px-4 py-1">
+          <View className="flex h-full w-full flex-row items-center justify-between rounded border border-gray-100 bg-white p-3 dark:border-gray-700 dark:bg-black">
+            <Text className="text-lg">{habit.name}</Text>
+            <View className="flex flex-row items-center space-x-2">
+              {habit.reminderTime && (
+                <View className="flex flex-row items-center space-x-1 opacity-70">
+                  <Icon icon={Clock} size={14} />
+                  <Text className="text-xs">
+                    {habit.reminderTime.getHours().toString().padStart(2, "0")}:
+                    {habit.reminderTime.getMinutes().toString().padStart(2, "0")}
+                  </Text>
+                </View>
+              )}
+
+              <View className="relative">
+                <Circle
+                  size={26}
+                  color={isComplete ? colors.primary[500] : isDark ? colors.gray[700] : colors.gray[100]}
+                  fill={isComplete ? colors.primary[500] : "transparent"}
+                />
+                {isComplete && (
+                  <View className="absolute left-1 top-[5px]">
+                    <Icon icon={Check} size={18} strokeWidth={3} fill="transparent" color="white" />
+                  </View>
+                )}
+              </View>
             </View>
-          )}
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </GestureDetector>
+    </Animated.View>
   )
 }

@@ -28,11 +28,10 @@ export const habitRouter = createTRPCRouter({
     const today = dayjs().toDate()
     const [habits, habitEntries] = await Promise.all([
       ctx.prisma.habit.findMany({
-        orderBy: { createdAt: "asc" },
-        select: { id: true, name: true, reminderTime: true, startDate: true, archivedAt: true },
+        orderBy: { order: "asc" },
+        select: { id: true, name: true, order: true, reminderTime: true, startDate: true, archivedAt: true },
         where: {
           OR: [{ archivedAt: { equals: null } }, { archivedAt: { gte: dayjs(today).endOf("day").toDate() } }],
-          startDate: { lt: dayjs(today).endOf("day").toDate() },
           creatorId: { equals: ctx.user.id },
         },
       }),
@@ -47,7 +46,7 @@ export const habitRouter = createTRPCRouter({
         },
       }),
     ])
-    return { habits, habitEntries }
+    return { habits: habits.map((h, i) => ({ ...h, order: i })), habitEntries }
   }),
   byId: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
     const habit = await ctx.prisma.habit.findFirst({ where: { id: input.id, creatorId: { equals: ctx.user.id } } })
@@ -56,7 +55,13 @@ export const habitRouter = createTRPCRouter({
   }),
   create: protectedProcedure.input(habitSchema.pick({ name: true, reminderTime: true })).mutation(async ({ ctx, input }) => {
     const startDate = dayjs().startOf("day").add(12, "h").toDate()
-    const habit = await ctx.prisma.habit.create({ data: { ...input, startDate, creatorId: ctx.user.id } })
+    const lastHabit = await ctx.prisma.habit.findFirst({
+      where: { archivedAt: null, creatorId: { equals: ctx.user.id } },
+      orderBy: { order: "desc" },
+    })
+    const habit = await ctx.prisma.habit.create({
+      data: { ...input, order: lastHabit?.order ? lastHabit.order + 1 : 0, startDate, creatorId: ctx.user.id },
+    })
     if (input.reminderTime) {
       const schedule = await createHabitReminder({ id: habit.id, reminderTime: input.reminderTime, name: habit.name })
       // TODO: handle error
@@ -92,6 +97,18 @@ export const habitRouter = createTRPCRouter({
 
     return ctx.prisma.habit.delete({ where: { id: habit.id } })
   }),
+  updateOrder: protectedProcedure
+    .input(z.array(z.object({ id: z.string(), order: z.number() })))
+    .mutation(async ({ ctx, input }) => {
+      const habits = await ctx.prisma.habit.findMany({ where: { id: { in: input.map((i) => i.id) } } })
+      const updates = input.map((i) => {
+        const habit = habits.find((h) => h.id === i.id)
+        if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
+        return ctx.prisma.habit.update({ where: { id: i.id }, data: { order: i.order } })
+      })
+      await Promise.all(updates)
+      return true
+    }),
   archive: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     const habit = await ctx.prisma.habit.update({
       where: { id: input.id },
