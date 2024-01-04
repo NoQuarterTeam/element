@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server"
 import { z } from "zod"
 
-import { type Element } from "@element/database/types"
+import { Prisma, type Element } from "@element/database/types"
 import { elementSchema, updateElementSchema } from "@element/server-schemas"
 
 import { createTRPCRouter, protectedProcedure } from "../trpc"
@@ -34,6 +34,31 @@ export const elementRouter = createTRPCRouter({
 	      task.latestTaskDate DESC,
 	      Element.createdAt DESC;
     `
+  }),
+  grouped: protectedProcedure.query(({ ctx }) => {
+    const elementSelectFields = {
+      id: true,
+      name: true,
+      archivedAt: true,
+      color: true,
+    } satisfies Prisma.ElementSelect
+    return ctx.prisma.element.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        ...elementSelectFields,
+        children: {
+          where: { archivedAt: null },
+          select: {
+            ...elementSelectFields,
+            children: {
+              where: { archivedAt: null },
+              select: { ...elementSelectFields, children: { where: { archivedAt: null }, select: elementSelectFields } },
+            },
+          },
+        },
+      },
+      where: { archivedAt: null, parentId: { equals: null }, creatorId: { equals: ctx.user.id } },
+    })
   }),
   byId: protectedProcedure.input(z.object({ id: z.string() })).query(({ ctx, input }) => {
     return ctx.prisma.element.findUnique({ where: { id: input.id, creatorId: { equals: ctx.user.id } } })
