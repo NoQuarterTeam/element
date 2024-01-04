@@ -405,8 +405,8 @@ importers:
         specifier: 2.3.1
         version: 2.3.1(@remix-run/serve@2.3.1)(typescript@5.3.3)
       '@remix-run/eslint-config':
-        specifier: 2.3.1
-        version: 2.3.1(eslint@8.56.0)(react@18.2.0)(typescript@5.3.3)
+        specifier: 2.4.1
+        version: 2.4.1(eslint@8.56.0)(react@18.2.0)(typescript@5.3.3)
       '@tailwindcss/forms':
         specifier: 0.5.7
         version: 0.5.7(tailwindcss@3.4.0)
@@ -544,8 +544,8 @@ importers:
         specifier: 10.0.0
         version: 10.0.0(eslint@8.56.0)
       eslint-plugin-tailwindcss:
-        specifier: 3.13.0
-        version: 3.13.0(tailwindcss@3.4.0)
+        specifier: 3.13.1
+        version: 3.13.1(tailwindcss@3.4.0)
       tailwindcss:
         specifier: 3.4.0
         version: 3.4.0
@@ -5603,8 +5603,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@remix-run/eslint-config@2.3.1(eslint@8.56.0)(react@18.2.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-nSPsgsEz6e3UDh2cDNq+tIoOf4yBnteuLyYGXyeOlW14oQoC4k5apfsjGAb3nphZtTNvTKP2qJhyYmje8Mr3Zw==}
+  /@remix-run/eslint-config@2.4.1(eslint@8.56.0)(react@18.2.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-kzl520uCcIi7OlqItzy/OSb3YVBklxeov8d39fFPbcSAmwO99l0PXmstQcRCQphAkGC7uRNl3LSJ9LpD3Gj2dQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       eslint: ^8.0.0
@@ -9413,17 +9413,6 @@ packages:
       eslint: '>=5.0.0'
     dependencies:
       eslint: 8.56.0
-    dev: true
-
-  /eslint-plugin-tailwindcss@3.13.0(tailwindcss@3.4.0):
-    resolution: {integrity: sha512-Fcep4KDRLWaK3KmkQbdyKHG0P4GdXFmXdDaweTIPcgOP60OOuWFbh1++dufRT28Q4zpKTKaHwTsXPJ4O/EjU2Q==}
-    engines: {node: '>=12.13.0'}
-    peerDependencies:
-      tailwindcss: ^3.3.2
-    dependencies:
-      fast-glob: 3.3.2
-      postcss: 8.4.32
-      tailwindcss: 3.4.0
     dev: true
 
   /eslint-plugin-tailwindcss@3.13.1(tailwindcss@3.4.0):
