@@ -207,7 +207,7 @@ function HabitItem({ habit, isComplete, positions }: { positions: SharedValue<Po
       offsetY.value = translateY.value
       scale.value = withTiming(1.05)
       isActive.value = true
-      // runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium)
+      runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium)
     })
     .onUpdate((event) => {
       translateY.value = Math.max(offsetY.value + event.translationY, 0)
@@ -241,14 +241,19 @@ function HabitItem({ habit, isComplete, positions }: { positions: SharedValue<Po
     })
 
   const longPress = Gesture.LongPress()
-    .minDuration(1000)
+    .minDuration(800)
     .runOnJS(true)
     .onStart(() => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
       handleOpenMenu()
     })
 
-  const tap = Gesture.Tap().runOnJS(true).onStart(handleToggleComplete)
+  const tap = Gesture.Tap()
+    .runOnJS(true)
+    .onStart(() => {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+      handleToggleComplete()
+    })
 
   const gesture = Gesture.Race(Gesture.Simultaneous(pan, longPress), tap)
   return (
