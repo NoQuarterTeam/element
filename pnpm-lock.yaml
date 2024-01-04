@@ -332,8 +332,8 @@ importers:
         specifier: 4.1.0
         version: 4.1.0
       lucide-react:
-        specifier: 0.303.0
-        version: 0.303.0(react@18.2.0)
+        specifier: 0.304.0
+        version: 0.304.0(react@18.2.0)
       match-sorter:
         specifier: 6.3.1
         version: 6.3.1
@@ -11995,8 +11995,8 @@ packages:
       react-native-svg: 13.9.0(react-native@0.72.6)(react@18.2.0)
     dev: false
 
-  /lucide-react@0.303.0(react@18.2.0):
-    resolution: {integrity: sha512-B0B9T3dLEFBYPCUlnUS1mvAhW1craSbF9HO+JfBjAtpFUJ7gMIqmEwNSclikY3RiN2OnCkj/V1ReAQpaHae8Bg==}
+  /lucide-react@0.304.0(react@18.2.0):
+    resolution: {integrity: sha512-BlaKhPYo2hcZDjM34DpvypC3DoQ2x1NDugocmJP/G7y/hUmoV+/gK/4eXkIWaWwJ5naD1EBdF5n+XDCiUNXQ2w==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
