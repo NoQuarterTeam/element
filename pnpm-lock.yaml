@@ -163,8 +163,8 @@ importers:
         specifier: 2.4.2
         version: 2.4.2(expo@49.0.21)(react-native-gesture-handler@2.12.1)(react-native-reanimated@3.3.0)(react-native@0.72.6)(react@18.2.0)
       superjson:
-        specifier: 1.12.2
-        version: 1.12.2
+        specifier: 1.13.3
+        version: 1.13.3
       uuid:
         specifier: 3.4.0
         version: 3.4.0
@@ -504,8 +504,8 @@ importers:
         specifier: 9.0.2
         version: 9.0.2
       superjson:
-        specifier: 1.12.2
-        version: 1.12.2
+        specifier: 1.13.3
+        version: 1.13.3
       zod:
         specifier: 3.22.4
         version: 3.22.4
@@ -16057,8 +16057,8 @@ packages:
     resolution: {integrity: sha512-Mu7R0g4ig9TUuGSxJavny5Rv0egCEtpZRNMrZaYS1vxkiIxGiGUwoezU3LazIQ+KE04hTrTfNPgxU5gzi7F5Pw==}
     dev: false
 
-  /superjson@1.12.2:
-    resolution: {integrity: sha512-ugvUo9/WmvWOjstornQhsN/sR9mnGtWGYeTxFuqLb4AiT4QdUavjGFRALCPKWWnAiUJ4HTpytj5e0t5HoMRkXg==}
+  /superjson@1.13.3:
+    resolution: {integrity: sha512-mJiVjfd2vokfDxsQPOwJ/PtanO87LhpYY88ubI5dUB1Ab58Txbyje3+jpm+/83R/fevaq/107NNhtYBLuoTrFg==}
     engines: {node: '>=10'}
     dependencies:
       copy-anything: 3.0.5
