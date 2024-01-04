@@ -82,7 +82,7 @@
     "@element/eslint-config": "workspace:*",
     "@element/tailwind-config": "workspace:*",
     "@remix-run/dev": "2.3.1",
-    "@remix-run/eslint-config": "2.3.1",
+    "@remix-run/eslint-config": "2.4.1",
     "@tailwindcss/forms": "0.5.7",
     "@types/cookie": "0.6.0",
     "@types/deep-equal": "1.0.4",
