@@ -23,6 +23,7 @@ export default function ElementDetail() {
     onSuccess: () => {
       void utils.element.byId.refetch({ id: String(id) })
       void utils.element.all.refetch()
+      void utils.element.grouped.refetch()
       void utils.task.timeline.refetch({ daysBack, daysForward })
       if (router.canGoBack()) {
         router.back()

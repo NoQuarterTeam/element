@@ -13,6 +13,7 @@ export default function CreateElement() {
 
   const { mutate, isLoading, error } = api.element.create.useMutation({
     onSuccess: async (data) => {
+      void utils.element.grouped.refetch()
       await utils.element.all.refetch()
       if (!redirect) return router.back()
       router.push({ pathname: redirect as string, params: { ...params, elementId: data.id } })

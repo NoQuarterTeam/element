@@ -54,11 +54,12 @@ export default function Timeline() {
   const hasSeenOnboarding = useOnboarding((s) => s.hasSeenOnboarding)
 
   React.useEffect(() => {
-    if (!hasSeenOnboarding) {
-      setTimeout(() => {
+    const timeout = setTimeout(() => {
+      if (!hasSeenOnboarding) {
         router.push("/onboarding")
-      }, 1000)
-    }
+      }
+    }, 1000)
+    return () => clearTimeout(timeout)
   }, [hasSeenOnboarding])
 
   const [isLoaded, setIsLoaded] = React.useState(false)

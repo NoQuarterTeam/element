@@ -9,7 +9,7 @@ import { Text } from "../../../../components/Text"
 import { api, type RouterOutputs } from "../../../../lib/utils/api"
 
 export default function Elements() {
-  const { data, isLoading } = api.element.all.useQuery()
+  const { data, isLoading } = api.element.grouped.useQuery()
 
   return (
     <ModalView title="Elements">
@@ -41,13 +41,25 @@ export default function Elements() {
   )
 }
 
-function ElementItem({ element }: { element: RouterOutputs["element"]["all"][number] }) {
+function ElementItem({ element }: { element: RouterOutputs["element"]["grouped"][number] }) {
   return (
-    <Link href={`/elements/${element.id}`} asChild>
-      <TouchableOpacity activeOpacity={0.7} className="flex flex-row items-center space-x-2 py-1">
-        <View className="sq-4 rounded-full" style={{ backgroundColor: element.color }} />
-        <Text className="text-lg">{element.name}</Text>
-      </TouchableOpacity>
-    </Link>
+    <View>
+      <Link href={`/elements/${element.id}`} asChild>
+        <TouchableOpacity activeOpacity={0.7} className="flex flex-row items-center space-x-2 py-1">
+          <View
+            className="sq-5 rounded-full border border-gray-300 dark:border-gray-700"
+            style={{ backgroundColor: element.color }}
+          />
+          <Text className="text-lg">{element.name}</Text>
+        </TouchableOpacity>
+      </Link>
+      {element.children && element.children.length > 0 && (
+        <View className="pl-4">
+          {element.children.map((child) => (
+            <ElementItem key={child.id} element={child} />
+          ))}
+        </View>
+      )}
+    </View>
   )
 }
