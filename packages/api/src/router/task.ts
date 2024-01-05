@@ -191,10 +191,20 @@ export const taskRouter = createTRPCRouter({
     })
     return { ...task, date: task.date ? dayjs(task.date).startOf("day").add(12, "hours").format("YYYY-MM-DD") : null }
   }),
-  delete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input: { id } }) => {
-    const task = await ctx.prisma.task.findFirst({ where: { id, creatorId: { equals: ctx.user.id } } })
-    if (!task) throw new TRPCError({ code: "NOT_FOUND" })
-    await ctx.prisma.task.delete({ where: { id } })
-    return true
-  }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string(), shouldDeleteFuture: z.boolean().optional() }))
+    .mutation(async ({ ctx, input: { id, shouldDeleteFuture } }) => {
+      const task = await ctx.prisma.task.findFirst({ where: { id, creatorId: { equals: ctx.user.id } } })
+      if (!task) throw new TRPCError({ code: "NOT_FOUND" })
+
+      await ctx.prisma.$transaction(async (transaction) => {
+        if (shouldDeleteFuture && task.date) {
+          await transaction.task.deleteMany({
+            where: { repeatParentId: { equals: task.repeat ? task.id : task.repeatParentId }, date: { gt: task.date } },
+          })
+        }
+        await transaction.task.delete({ where: { id } })
+      })
+      return true
+    }),
 })

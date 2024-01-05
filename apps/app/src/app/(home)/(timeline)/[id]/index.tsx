@@ -5,13 +5,13 @@ import { StatusBar } from "expo-status-bar"
 
 import { join } from "@element/shared"
 
-import { TaskForm } from "../../../components/TaskForm"
-import { Text } from "../../../components/Text"
-import { Toast } from "../../../components/Toast"
-import { useMe } from "../../../lib/hooks/useMe"
-import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
-import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
-import { api, type RouterInputs, type RouterOutputs } from "../../../lib/utils/api"
+import { TaskForm } from "../../../../components/TaskForm"
+import { Text } from "../../../../components/Text"
+import { Toast } from "../../../../components/Toast"
+import { useMe } from "../../../../lib/hooks/useMe"
+import { useTemporaryData } from "../../../../lib/hooks/useTemporaryTasks"
+import { useTimelineDays } from "../../../../lib/hooks/useTimelineDays"
+import { api, type RouterInputs, type RouterOutputs } from "../../../../lib/utils/api"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 export default function TaskDetail() {
