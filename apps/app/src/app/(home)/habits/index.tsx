@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ScrollView, TouchableOpacity, useColorScheme, View } from "react-native"
+import { ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   runOnJS,
@@ -20,7 +20,6 @@ import colors from "@element/tailwind-config/src/colors"
 
 import { Heading } from "../../../components/Heading"
 import { Icon } from "../../../components/Icon"
-import { Spinner } from "../../../components/Spinner"
 import { Text } from "../../../components/Text"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
 
@@ -46,7 +45,7 @@ export default function Habits() {
       <Heading className="px-4 pb-2 text-3xl">Habits</Heading>
       {isLoading ? (
         <View className="flex items-center justify-center pt-4">
-          <Spinner />
+          <ActivityIndicator />
         </View>
       ) : !data ? (
         <View className="flex items-center justify-center pt-4">
@@ -283,7 +282,7 @@ function HabitItem({ habit, isComplete, positions }: { positions: SharedValue<Po
                   fill={isComplete ? colors.primary[500] : "transparent"}
                 />
                 {isComplete && (
-                  <View className="absolute left-1 top-[5px]">
+                  <View style={StyleSheet.absoluteFill} className="flex items-center justify-center">
                     <Icon icon={Check} size={18} strokeWidth={3} fill="transparent" color="white" />
                   </View>
                 )}

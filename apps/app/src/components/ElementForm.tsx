@@ -9,7 +9,7 @@ import { type FormResponseError } from "../lib/form"
 import { type RouterInputs } from "../lib/utils/api"
 import { Button } from "./Button"
 import { FormError } from "./FormError"
-import { FormInput } from "./FormInput"
+import { FormInput, FormInputError } from "./FormInput"
 
 type Props = { isLoading: boolean; error?: FormResponseError } & (
   | {
@@ -40,6 +40,7 @@ export function ElementForm(props: Props) {
         <Panel1 />
         <HueSlider />
       </ColorPicker>
+      {props.error?.zodError?.fieldErrors?.color?.map((error) => <FormInputError key={error} error={error} />)}
       <Button
         isLoading={props.isLoading}
         onPress={() => (props.element ? props.onUpdate({ ...form, id: props.element.id }) : props.onCreate(form))}

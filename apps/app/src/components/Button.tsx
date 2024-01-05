@@ -1,10 +1,9 @@
 import * as React from "react"
-import { TouchableOpacity, type TouchableOpacityProps, useColorScheme, View } from "react-native"
+import { TouchableOpacity, type TouchableOpacityProps, useColorScheme, View, ActivityIndicator } from "react-native"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { join, merge } from "@element/shared"
 
-import { Spinner } from "./Spinner"
 import { Text } from "./Text"
 
 export const buttonStyles = cva("rounded-xs flex flex-row items-center justify-center border", {
@@ -79,25 +78,24 @@ export const Button = React.forwardRef(function _Button(
       )}
     >
       {leftIcon && <View className={join(isLoading && "opacity-0")}>{leftIcon}</View>}
-      <Text className={buttonTextStyles({ variant, size, className: join(props.textClassName, isLoading && "opacity-0") })}>
+      <Text
+        className={buttonTextStyles({
+          variant,
+          size,
+          className: join(props.textClassName, isLoading && "opacity-0"),
+        })}
+      >
         {props.children}
       </Text>
 
       {isLoading && (
-        <Spinner
-          className="absolute"
-          color={
-            variant === "primary"
-              ? isDark
-                ? "black"
-                : "white"
-              : variant === "destructive"
-                ? "white"
-                : isDark
-                  ? "white"
-                  : "black"
-          }
-        />
+        <View className="absolute">
+          <ActivityIndicator
+            color={
+              variant === "primary" ? (isDark ? "#000" : "#fff") : variant === "destructive" ? "#fff" : isDark ? "#fff" : "#000"
+            }
+          />
+        </View>
       )}
       {rightIcon && <View className={join(isLoading && "opacity-0")}>{rightIcon}</View>}
     </TouchableOpacity>

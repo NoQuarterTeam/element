@@ -5,38 +5,25 @@ import { z } from "zod"
 import { type Prisma } from "@element/database/types"
 
 import { createTRPCRouter, protectedProcedure } from "../trpc"
+import { taskSchema, todoSchema } from "@element/server-schemas"
 
-const timelineTaskFields = {
+const taskItemSelectFields = {
   id: true,
-  isComplete: true,
-  isImportant: true,
+  createdAt: true,
+  name: true,
   description: true,
   durationHours: true,
   durationMinutes: true,
-  startTime: true,
-  order: true,
   date: true,
-  name: true,
-  element: { select: { id: true, name: true, color: true } },
+  isComplete: true,
+  isImportant: true,
+  repeat: true,
+  repeatParentId: true,
+  order: true,
+  startTime: true,
+  element: { select: { id: true, color: true, name: true } },
+  todos: { orderBy: { createdAt: "asc" }, select: { id: true, isComplete: true, name: true } },
 } satisfies Prisma.TaskSelect
-
-export const NullableFormString = z.preprocess((v) => (v === "" ? null : v), z.string().nullish())
-
-export const NullableFormNumber = z.preprocess(
-  (v) => (v === "" ? null : v),
-  z.coerce.number({ invalid_type_error: "Not a number" }).nullish(),
-)
-const taskSchema = z.object({
-  name: z.string().min(1, { message: "Please enter a name" }),
-  elementId: z.string().min(1, { message: "Please select an element" }),
-  date: NullableFormString,
-  isComplete: z.boolean().optional(),
-  isImportant: z.boolean().optional(),
-  description: NullableFormString,
-  startTime: NullableFormString,
-  durationHours: NullableFormNumber,
-  durationMinutes: NullableFormNumber,
-})
 
 export const taskRouter = createTRPCRouter({
   timeline: protectedProcedure
@@ -45,7 +32,7 @@ export const taskRouter = createTRPCRouter({
       const startOfDay = dayjs().subtract(input.daysBack, "days").startOf("day").toDate()
       const endOfDay = dayjs().endOf("day").add(input.daysForward, "days").toDate()
       const tasks = await ctx.prisma.task.findMany({
-        select: timelineTaskFields,
+        select: taskItemSelectFields,
         orderBy: [{ order: "asc" }, { createdAt: "asc" }],
         where: {
           creatorId: { equals: ctx.user.id },
@@ -61,7 +48,7 @@ export const taskRouter = createTRPCRouter({
       }, {})
       return tasks.map((task) => ({
         ...task,
-        // get real order in case there are gaps created by deleted tasks or similar orders after a duplicate
+        // get real order in case there are gaps created by deleted tasks or similar orders after a duplicate, ideally each action would be in charge of making sure the order is correct
         order: task.date
           ? groupedTasks[dayjs(task.date).startOf("day").add(12, "hours").format("YYYY-MM-DD")]!.findIndex(
               (t) => t.id === task.id,
@@ -72,14 +59,17 @@ export const taskRouter = createTRPCRouter({
     }),
   backlog: protectedProcedure.query(async ({ ctx }) => {
     const tasks = await ctx.prisma.task.findMany({
-      select: timelineTaskFields,
+      select: taskItemSelectFields,
       orderBy: [{ order: "asc" }, { createdAt: "asc" }],
       where: { creatorId: { equals: ctx.user.id }, date: null },
     })
     return tasks.map((task) => ({ ...task, date: dayjs(task.date).startOf("day").add(12, "hours").format("YYYY-MM-DD") }))
   }),
   byId: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input: { id } }) => {
-    const task = await ctx.prisma.task.findUnique({ where: { id }, select: timelineTaskFields })
+    const task = await ctx.prisma.task.findUnique({
+      where: { id },
+      select: taskItemSelectFields,
+    })
     if (!task) return null
     return { ...task, date: task.date ? dayjs(task.date).startOf("day").add(12, "hours").format("YYYY-MM-DD") : null }
   }),
@@ -102,28 +92,40 @@ export const taskRouter = createTRPCRouter({
       )
       return true
     }),
-  create: protectedProcedure.input(taskSchema).mutation(async ({ ctx, input }) => {
-    const date = input.date ? dayjs(input.date).startOf("day").add(12, "hours").toDate() : undefined
-    const lastTask = await ctx.prisma.task.findFirst({
-      select: { order: true },
-      where: { creatorId: ctx.user.id, date },
-      orderBy: { order: "desc" },
-    })
-    const createdTask = await ctx.prisma.task.create({
-      select: timelineTaskFields,
-      data: { ...input, date, order: lastTask ? lastTask.order + 1 : 0, creatorId: ctx.user.id },
-    })
-    return {
-      ...createdTask,
-      date: dayjs(createdTask.date).startOf("day").add(12, "hours").format("YYYY-MM-DD"),
-    }
-  }),
+  create: protectedProcedure
+    .input(taskSchema.merge(z.object({ todos: z.array(todoSchema) })))
+    .mutation(async ({ ctx, input: { todos, ...data } }) => {
+      const date = data.date ? dayjs(data.date).startOf("day").add(12, "hours").toDate() : undefined
+      const lastTask = await ctx.prisma.task.findFirst({
+        select: { order: true },
+        where: { creatorId: ctx.user.id, date },
+        orderBy: { order: "desc" },
+      })
+      const createdTask = await ctx.prisma.task.create({
+        select: taskItemSelectFields,
+        data: {
+          ...data,
+          todos: { createMany: { data: todos } },
+          date,
+          order: lastTask ? lastTask.order + 1 : 0,
+          creatorId: ctx.user.id,
+        },
+      })
+      return {
+        ...createdTask,
+        date: dayjs(createdTask.date).startOf("day").add(12, "hours").format("YYYY-MM-DD"),
+      }
+    }),
   update: protectedProcedure
-    .input(taskSchema.partial().merge(z.object({ id: z.string() })))
-    .mutation(async ({ ctx, input: { id, ...data } }) => {
+    .input(taskSchema.partial().merge(z.object({ id: z.string(), todos: z.array(todoSchema).optional() })))
+    .mutation(async ({ ctx, input: { id, todos, ...data } }) => {
       // can be set to null
       const date = data.date ? dayjs(data.date).startOf("day").add(12, "hours").toDate() : data.date
-      const task = await ctx.prisma.task.update({ where: { id }, select: timelineTaskFields, data: { ...data, date } })
+      const task = await ctx.prisma.task.update({
+        where: { id },
+        select: taskItemSelectFields,
+        data: { ...data, todos: todos ? { deleteMany: {}, createMany: { data: todos } } : undefined, date },
+      })
       return {
         ...task,
         date: task.date ? dayjs(task.date).startOf("day").add(12, "hours").format("YYYY-MM-DD") : null,
@@ -132,7 +134,7 @@ export const taskRouter = createTRPCRouter({
   duplicate: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input: { id } }) => {
     const taskToDupe = await ctx.prisma.task.findUniqueOrThrow({ where: { id }, include: { todos: true } })
     const task = await ctx.prisma.task.create({
-      select: timelineTaskFields,
+      select: taskItemSelectFields,
       data: {
         ...taskToDupe,
         order: taskToDupe.order + 1,

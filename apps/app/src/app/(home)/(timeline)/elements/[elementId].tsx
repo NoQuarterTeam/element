@@ -1,11 +1,10 @@
-import { ScrollView, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, ScrollView, TouchableOpacity, View } from "react-native"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import { Trash } from "lucide-react-native"
 
 import { ElementForm } from "../../../../components/ElementForm"
 import { Icon } from "../../../../components/Icon"
 import { ModalView } from "../../../../components/ModalView"
-import { Spinner } from "../../../../components/Spinner"
 import { Text } from "../../../../components/Text"
 import { useTimelineDays } from "../../../../lib/hooks/useTimelineDays"
 import { api } from "../../../../lib/utils/api"
@@ -37,7 +36,7 @@ export default function ElementDetail() {
     <ModalView title="Edit Element">
       {isLoading ? (
         <View className="flex items-center justify-center pt-4">
-          <Spinner />
+          <ActivityIndicator />
         </View>
       ) : !data ? (
         <View className="pt-4">

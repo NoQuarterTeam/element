@@ -1,4 +1,4 @@
-import { FlatList, RefreshControl, TouchableOpacity, useColorScheme, View } from "react-native"
+import { ActivityIndicator, FlatList, RefreshControl, TouchableOpacity, useColorScheme, View } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated"
 import dayjs from "dayjs"
@@ -10,7 +10,6 @@ import colors from "@element/tailwind-config/src/colors"
 
 import { Icon } from "../../../components/Icon"
 import { ModalView } from "../../../components/ModalView"
-import { Spinner } from "../../../components/Spinner"
 import { Text } from "../../../components/Text"
 import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
@@ -26,7 +25,7 @@ export default function Backlog() {
     <ModalView title="Backlog">
       {isLoading ? (
         <View className="flex flex-row items-end justify-center pt-6">
-          <Spinner />
+          <ActivityIndicator />
         </View>
       ) : (
         <FlatList

@@ -28,17 +28,9 @@ export default function NewTask() {
   const addTempTask = useTemporaryData((s) => s.addTask)
   const handleCreate = (data: RouterInputs["task"]["create"]) => {
     if (me) {
-      create.mutate({
-        ...data,
-        durationHours: Number(data.durationHours),
-        durationMinutes: Number(data.durationMinutes),
-      })
+      create.mutate(data)
     } else {
-      addTempTask({
-        ...data,
-        durationHours: Number(data.durationHours),
-        durationMinutes: Number(data.durationMinutes),
-      })
+      addTempTask(data)
       router.back()
     }
   }

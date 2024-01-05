@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Pressable, ScrollView, View } from "react-native"
+import { ActivityIndicator, Pressable, ScrollView, View } from "react-native"
 import dayjs from "dayjs"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import { matchSorter } from "match-sorter"
@@ -8,7 +8,6 @@ import { join } from "@element/shared"
 
 import { Input } from "../../../../components/Input"
 import { ModalView } from "../../../../components/ModalView"
-import { Spinner } from "../../../../components/Spinner"
 import { Text } from "../../../../components/Text"
 import { useMe } from "../../../../lib/hooks/useMe"
 import { useTemporaryData } from "../../../../lib/hooks/useTemporaryTasks"
@@ -51,9 +50,9 @@ export default function SelectElement() {
         showsVerticalScrollIndicator={false}
       >
         <View className="space-y-1 pt-2">
-          {isLoading ? (
+          {me && isLoading ? (
             <View className="flex items-center justify-center pt-2">
-              <Spinner />
+              <ActivityIndicator />
             </View>
           ) : (
             matchedElements.map((element, i) => (

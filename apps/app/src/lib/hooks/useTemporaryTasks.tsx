@@ -46,8 +46,12 @@ export const useTemporaryData = create<{
             ...state.tasks,
             {
               id: new Date().getMilliseconds().toString(),
+              createdAt: new Date(),
+              repeat: null,
+              repeatParentId: null,
               ...formatTask(task),
               isComplete: false,
+              todos: task.todos.map((t, i) => ({ ...t, id: i + new Date().getMilliseconds().toString() })),
               order: state.tasks.filter((t) => t.date === task.date).length,
               element: state.elements.find((e) => e.id === task.elementId)!,
               elementId: task.elementId,
@@ -77,6 +81,7 @@ export const useTemporaryData = create<{
               ? {
                   ...t,
                   ...formatTask(task),
+                  todos: task.todos?.map((t, i) => ({ ...t, id: i + new Date().getMilliseconds().toString() })) || [],
                   element: state.elements.find((e) => e.id === task.elementId)!,
                   elementId: task.elementId,
                 }

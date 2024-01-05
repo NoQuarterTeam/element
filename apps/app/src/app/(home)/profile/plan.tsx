@@ -1,10 +1,9 @@
-import { ScrollView, View } from "react-native"
+import { ActivityIndicator, ScrollView, View } from "react-native"
 import dayjs from "dayjs"
 
 import { join, MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "@element/shared"
 
 import { ScreenView } from "../../../components/ScreenView"
-import { Spinner } from "../../../components/Spinner"
 import { Text } from "../../../components/Text"
 import { api } from "../../../lib/utils/api"
 
@@ -16,7 +15,7 @@ export default function Plan() {
       <ScrollView contentContainerStyle={{ paddingBottom: 200 }}>
         {isLoading ? (
           <View className="flex w-full items-center justify-center pt-4">
-            <Spinner />
+            <ActivityIndicator />
           </View>
         ) : !data ? null : data.subscription ? (
           <View className="space-y-3">

@@ -1,10 +1,9 @@
-import { FlatList, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, FlatList, TouchableOpacity, View } from "react-native"
 import { Link } from "expo-router"
 import { Plus } from "lucide-react-native"
 
 import { Icon } from "../../../../components/Icon"
 import { ModalView } from "../../../../components/ModalView"
-import { Spinner } from "../../../../components/Spinner"
 import { Text } from "../../../../components/Text"
 import { api, type RouterOutputs } from "../../../../lib/utils/api"
 
@@ -16,7 +15,7 @@ export default function Elements() {
       <View className="relative flex-1">
         {isLoading ? (
           <View className="flex items-center justify-center pt-4">
-            <Spinner />
+            <ActivityIndicator />
           </View>
         ) : !data ? null : (
           <FlatList

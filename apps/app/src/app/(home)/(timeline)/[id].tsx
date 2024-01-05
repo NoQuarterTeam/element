@@ -1,4 +1,4 @@
-import { ScrollView, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, ScrollView, TouchableOpacity, View } from "react-native"
 import { Alert } from "react-native"
 import dayjs from "dayjs"
 import { useLocalSearchParams, useRouter } from "expo-router"
@@ -8,7 +8,6 @@ import { Clock, Copy, Trash } from "lucide-react-native"
 import { join } from "@element/shared"
 
 import { Icon } from "../../../components/Icon"
-import { Spinner } from "../../../components/Spinner"
 import { TaskForm } from "../../../components/TaskForm"
 import { Text } from "../../../components/Text"
 import { Toast } from "../../../components/Toast"
@@ -34,7 +33,7 @@ export default function TaskDetail() {
       {me ? (
         isLoading && !data ? (
           <View className="flex flex-row items-end justify-center pt-6">
-            <Spinner />
+            <ActivityIndicator />
           </View>
         ) : !data ? (
           <Text className="pt-6 text-center">Task not found</Text>
@@ -124,10 +123,9 @@ function EditTaskForm({ task }: { task: Task }) {
   }
 
   const duplicate = api.task.duplicate.useMutation({
-    onSuccess: async (dupeTask) => {
-      utils.task.timeline.setData({ daysBack, daysForward }, (old) =>
-        old ? [...old, { ...dupeTask, date: dupeTask.date! }] : [{ ...dupeTask, date: dupeTask.date! }],
-      )
+    onSuccess: () => {
+      // have to refetch to get the new order, or would have to calculate here
+      void utils.task.timeline.refetch({ daysBack, daysForward })
       router.back()
     },
   })
@@ -149,14 +147,23 @@ function EditTaskForm({ task }: { task: Task }) {
     >
       <TaskForm error={update.error?.data} task={task} onUpdate={handleUpdate} isLoading={update.isLoading} />
       <View className="flex w-full flex-row items-center justify-between">
-        <TouchableOpacity onPress={handleDelete} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
-          {deleteTask.isLoading ? <Spinner size={24} /> : <Icon icon={Trash} size={24} color="red" />}
+        <TouchableOpacity
+          onPress={handleDelete}
+          className="sq-14 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-600"
+        >
+          {deleteTask.isLoading ? <ActivityIndicator /> : <Icon icon={Trash} size={24} color="red" />}
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleAddToBacklog} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
-          {addToBacklog.isLoading ? <Spinner size={24} /> : <Icon icon={Clock} size={24} />}
+        <TouchableOpacity
+          onPress={handleAddToBacklog}
+          className="sq-14 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-600"
+        >
+          {addToBacklog.isLoading ? <ActivityIndicator /> : <Icon icon={Clock} size={24} />}
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleDuplicate} className="rounded-full border border-gray-100 p-4 dark:border-gray-600">
-          {duplicate.isLoading ? <Spinner size={24} /> : <Icon icon={Copy} size={24} />}
+        <TouchableOpacity
+          onPress={handleDuplicate}
+          className="sq-14 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-600"
+        >
+          {duplicate.isLoading ? <ActivityIndicator /> : <Icon icon={Copy} size={24} />}
         </TouchableOpacity>
       </View>
     </ScrollView>

@@ -1,18 +1,18 @@
 import * as React from "react"
-import { TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
+import { StyleSheet, TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import dayjs from "dayjs"
 import { useGlobalSearchParams, useRouter } from "expo-router"
-import { AlertTriangle, Plus, X } from "lucide-react-native"
+import { AlertTriangle, Check, Plus, Square, X } from "lucide-react-native"
 
-import { join, useDisclosure } from "@element/shared"
+import { join, merge, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
 import { type FormResponseError } from "../lib/form"
 import { useMe } from "../lib/hooks/useMe"
 import { useTemporaryData } from "../lib/hooks/useTemporaryTasks"
 import { api, type RouterInputs, type RouterOutputs } from "../lib/utils/api"
-import { Button } from "./Button"
+import { Button, buttonStyles } from "./Button"
 import { FormError } from "./FormError"
 import { FormInput, FormInputError, FormInputLabel } from "./FormInput"
 import { Icon } from "./Icon"
@@ -51,19 +51,28 @@ export function TaskForm(props: Props) {
       : (date as string | undefined) || "",
     element: props.task?.element || null,
     isImportant: props.task?.isImportant || false,
+    todos: props.task?.todos || [],
   })
 
-  const { me } = useMe()
+  const { me, isLoading } = useMe()
   const { data } = api.element.all.useQuery(undefined, { enabled: !!me })
 
   const tempElements = useTemporaryData((s) => s.elements)
 
   React.useEffect(() => {
-    if (!elementId || !data) return
-    const element = (me ? data : tempElements).find((e) => e.id === elementId)
+    // if coming back from the select/create element screen, set the element to state
+    if (!elementId || isLoading) return
+    let element: RouterOutputs["element"]["all"][0] | undefined
+    if (me) {
+      if (!data) return
+      element = data.find((e) => e.id === elementId)
+    } else {
+      // if not logged in, check the temp elements
+      element = tempElements.find((e) => e.id === elementId)
+    }
     if (!element) return
-    setForm((f) => ({ ...f, element }))
-  }, [elementId, data, me, tempElements])
+    setForm((f) => ({ ...f, element: element! }))
+  }, [elementId, data, me, isLoading, tempElements])
 
   const timeProps = useDisclosure()
 
@@ -78,7 +87,10 @@ export function TaskForm(props: Props) {
   }
 
   const nameInputRef = React.useRef<TextInput>(null)
-  const colorScheme = useColorScheme()
+
+  const inputsRef = React.useRef(form.todos.map(() => React.createRef<TextInput>()))
+
+  const isDark = useColorScheme() === "dark"
   return (
     <View className="space-y-2">
       <View className="flex flex-row items-start justify-between">
@@ -97,7 +109,7 @@ export function TaskForm(props: Props) {
               }
             }}
             autoFocus={!!!form.name}
-            placeholderTextColor={colorScheme === "dark" ? colors.gray[500] : colors.gray[300]}
+            placeholderTextColor={isDark ? colors.gray[500] : colors.gray[300]}
             placeholder="Name"
             onChangeText={(name) => setForm((f) => ({ ...f, name }))}
           />
@@ -233,16 +245,92 @@ export function TaskForm(props: Props) {
           onChangeText={(description) => setForm((f) => ({ ...f, description }))}
         />
       </View>
-
       <View className="space-y-1">
+        <FormInputLabel label="Todos" />
+        {form.todos.map((todo, index) => (
+          <View key={todo.id} className="flex flex-row items-center space-x-2">
+            <TouchableOpacity
+              className="relative"
+              onPress={() => {
+                setForm((f) => ({
+                  ...f,
+                  todos: f.todos.map((t) => (t.id === todo.id ? { ...t, isComplete: !t.isComplete } : t)),
+                }))
+              }}
+            >
+              <Square
+                size={28}
+                strokeWidth={1}
+                color={todo.isComplete ? colors.primary[500] : isDark ? colors.gray[600] : colors.gray[100]}
+                fill={todo.isComplete ? colors.primary[500] : "transparent"}
+              />
+              {todo.isComplete && (
+                <View style={StyleSheet.absoluteFill} className="flex items-center justify-center">
+                  <Icon icon={Check} size={18} strokeWidth={3} fill="transparent" color="white" />
+                </View>
+              )}
+            </TouchableOpacity>
+            <Input
+              ref={inputsRef.current[index]}
+              className="flex-1 py-1.5"
+              value={todo.name}
+              style={{
+                textDecorationStyle: todo.isComplete ? "solid" : undefined,
+                textDecorationLine: todo.isComplete ? "line-through" : undefined,
+              }}
+              returnKeyType="done"
+              onSubmitEditing={() => {
+                if (index === form.todos.length - 1) {
+                  setForm((f) => ({ ...f, todos: [...f.todos, { id: Date.now().toString(), name: "", isComplete: false }] }))
+                } else {
+                  inputsRef.current[index + 1]?.current?.focus()
+                }
+              }}
+              onChangeText={(text) =>
+                setForm((f) => ({
+                  ...f,
+                  todos: f.todos.map((t) => (t.id === todo.id ? { ...t, name: text } : t)),
+                }))
+              }
+            />
+            <TouchableOpacity
+              className={buttonStyles({
+                size: "xs",
+                variant: "outline",
+                className: "sq-7 rounded border-gray-100 dark:border-gray-600",
+              })}
+              onPress={() => {
+                setForm((f) => ({ ...f, todos: f.todos.filter((t) => t.id !== todo.id) }))
+              }}
+            >
+              <Icon icon={X} size={16} className="opacity-80" />
+            </TouchableOpacity>
+          </View>
+        ))}
+        <TouchableOpacity
+          onPress={() => {
+            setForm((f) => ({ ...f, todos: [...f.todos, { id: Date.now().toString(), name: "", isComplete: false }] }))
+          }}
+          className={merge(buttonStyles({ size: "sm", variant: "outline" }))}
+        >
+          <Icon icon={Plus} size={18} className="mt-1" />
+        </TouchableOpacity>
+      </View>
+
+      <View className="space-y-1 pt-4">
         <Button
           isLoading={props.isLoading}
           onPress={() => {
             if (!form.element) return toast({ title: "Please select an element", type: "error" })
+            const payload = {
+              ...form,
+              durationHours: Number(form.durationHours),
+              durationMinutes: Number(form.durationMinutes),
+            }
             if (props.task) {
-              return props.onUpdate({ id: props.task.id, ...form, elementId: form.element.id })
+              return props.onUpdate({ id: props.task.id, ...payload, elementId: form.element.id })
             } else {
-              return props.onCreate({ ...form, elementId: form.element.id })
+              return props.onCreate({ ...payload, elementId: form.element.id })
             }
           }}
         >

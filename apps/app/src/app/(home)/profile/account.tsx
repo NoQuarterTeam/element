@@ -1,5 +1,5 @@
 import * as React from "react"
-import { KeyboardAvoidingView, ScrollView, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, KeyboardAvoidingView, ScrollView, TouchableOpacity, View } from "react-native"
 import * as ImagePicker from "expo-image-picker"
 import { useRouter } from "expo-router"
 import { Edit2, User2 } from "lucide-react-native"
@@ -12,7 +12,6 @@ import { FormInput } from "../../../components/FormInput"
 import { Icon } from "../../../components/Icon"
 import { OptimizedImage } from "../../../components/OptimisedImage"
 import { ScreenView } from "../../../components/ScreenView"
-import { Spinner } from "../../../components/Spinner"
 import { toast } from "../../../components/Toast"
 import { useMe } from "../../../lib/hooks/useMe"
 import { useS3Upload } from "../../../lib/hooks/useS3"
@@ -70,7 +69,7 @@ export default function Account() {
             <TouchableOpacity onPress={onPickImage}>
               {isUploadLoading || isAvatarSavingLoading ? (
                 <View className="sq-20 flex items-center justify-center rounded-full bg-gray-100 object-cover dark:bg-gray-700">
-                  <Spinner />
+                  <ActivityIndicator />
                 </View>
               ) : me?.avatar ? (
                 <OptimizedImage

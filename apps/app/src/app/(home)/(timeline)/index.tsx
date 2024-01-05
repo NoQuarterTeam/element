@@ -315,18 +315,30 @@ type Tasks = NonNullable<RouterOutputs["task"]["timeline"]>
 
 type Task = Tasks[number]
 
+type DropTask = Pick<Task, "id" | "isComplete" | "order" | "date">
+
 const DAY_WIDTH = 90
 
 function TasksGrid({ days, tasks }: { days: string[]; tasks: Task[] }) {
-  const taskPositions = useSharedValue<{ [key: string]: Task }>(
-    tasks.reduce<{ [key: string]: Task }>((acc, task) => {
-      acc[task.id] = task
+  const taskPositions = useSharedValue(
+    tasks.reduce<{ [key: string]: DropTask }>((acc, task) => {
+      acc[task.id] = {
+        id: task.id,
+        isComplete: task.isComplete,
+        order: task.order,
+        date: task.date,
+      }
       return acc
     }, {}),
   )
   React.useEffect(() => {
-    taskPositions.value = tasks.reduce<{ [key: string]: Task }>((acc, task) => {
-      acc[task.id] = task
+    taskPositions.value = tasks.reduce<{ [key: string]: DropTask }>((acc, task) => {
+      acc[task.id] = {
+        id: task.id,
+        isComplete: task.isComplete,
+        order: task.order,
+        date: task.date,
+      }
       return acc
     }, {})
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -390,7 +402,7 @@ function TaskItem({
 }: {
   days: string[]
   task: Task
-  taskPositions: SharedValue<{ [key: string]: Task }>
+  taskPositions: SharedValue<{ [key: string]: DropTask }>
   onDrop: () => void
 }) {
   const isComplete = useSharedValue(task.isComplete)
