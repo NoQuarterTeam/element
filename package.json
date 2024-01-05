@@ -6,7 +6,7 @@
   },
   "devDependencies": {
     "prettier": "3.1.1",
-    "prettier-plugin-tailwindcss": "0.5.10",
+    "prettier-plugin-tailwindcss": "0.5.11",
     "typescript": "5.3.3"
   },
   "scripts": {
