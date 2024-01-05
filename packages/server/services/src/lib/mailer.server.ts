@@ -1,10 +1,11 @@
 import { render } from "@react-email/render"
 import nodemailer from "nodemailer"
-import type { CreateEmailOptions } from "resend/build/src/emails/interfaces"
 
 import { IS_PRODUCTION } from "@element/server-env"
 
 import { resend } from "./resend.server"
+
+type CreateEmailOptions = Parameters<typeof resend.emails.create>[0]
 
 type Props = Omit<CreateEmailOptions, "from"> & { react: React.ReactElement<unknown>; from?: string }
 class Mailer {
