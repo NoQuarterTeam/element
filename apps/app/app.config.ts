@@ -5,6 +5,17 @@ const BUILD = 24
 
 const IS_DEV = process.env.APP_VARIANT === "development"
 
+const splash: ExpoConfig["splash"] = {
+  image: "./assets/splash.png",
+  resizeMode: "contain",
+  backgroundColor: "#fff",
+  dark: {
+    image: "./assets/splash.png",
+    resizeMode: "contain",
+    backgroundColor: "#000",
+  },
+}
+
 const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   name: "Element: Life Planner",
   description: "A better way to organize your life",
@@ -16,11 +27,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "automatic",
-  splash: {
-    image: "./assets/splash.png",
-    resizeMode: "contain",
-    backgroundColor: "#ffffff",
-  },
+  splash,
   updates: {
     fallbackToCacheTimeout: 0,
     checkAutomatically: "ON_LOAD",
@@ -40,6 +47,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
     infoPlist: {
       CFBundleDisplayName: IS_DEV ? "Element (dev)" : "Element",
     },
+    splash,
     buildNumber: BUILD.toString(),
   },
   android: {
@@ -47,6 +55,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
       foregroundImage: "./assets/icon.png",
       backgroundColor: "#ffffff",
     },
+    splash,
     softwareKeyboardLayoutMode: "resize",
     package: IS_DEV ? "co.noquarter.element.dev" : "co.noquarter.element",
     versionCode: BUILD,
