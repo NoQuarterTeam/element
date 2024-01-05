@@ -11,6 +11,7 @@ export default function TimelineLayout() {
       <Stack.Screen name="elements" options={{ presentation: "modal" }} />
       <Stack.Screen name="new" options={{ presentation: "modal" }} />
       <Stack.Screen name="[id]" options={{ presentation: "modal" }} />
+      <Stack.Screen name="repeat-select" options={{ presentation: "modal" }} />
     </Stack>
   )
 }

@@ -6,6 +6,7 @@ import { type Prisma } from "@element/database/types"
 import { taskSchema, todoSchema } from "@element/server-schemas"
 
 import { createTRPCRouter, protectedProcedure } from "../trpc"
+import { getRepeatingDatesBetween } from "@element/shared"
 
 const taskItemSelectFields = {
   id: true,
@@ -93,27 +94,70 @@ export const taskRouter = createTRPCRouter({
       return true
     }),
   create: protectedProcedure
-    .input(taskSchema.merge(z.object({ todos: z.array(todoSchema) })))
-    .mutation(async ({ ctx, input: { todos, ...data } }) => {
+    .input(
+      taskSchema.merge(z.object({ repeatEndDate: z.date().nullish(), todos: z.array(todoSchema) })).superRefine((data, ctx) => {
+        if (!!data.repeat && !data.repeatEndDate)
+          return ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "End date is required when repeating tasks",
+            path: ["repeatEndDate"],
+          })
+        if (!!data.repeat && !data.date)
+          return ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Date is required when repeating tasks",
+            path: ["date"],
+          })
+      }),
+    )
+    .mutation(async ({ ctx, input: { todos, repeatEndDate, ...data } }) => {
       const date = data.date ? dayjs(data.date).startOf("day").add(12, "hours").toDate() : undefined
       const lastTask = await ctx.prisma.task.findFirst({
         select: { order: true },
         where: { creatorId: ctx.user.id, date },
         orderBy: { order: "desc" },
       })
-      const createdTask = await ctx.prisma.task.create({
-        select: taskItemSelectFields,
-        data: {
-          ...data,
-          todos: { createMany: { data: todos } },
-          date,
-          order: lastTask ? lastTask.order + 1 : 0,
-          creatorId: ctx.user.id,
-        },
+      const newTask = await ctx.prisma.$transaction(async (transaction) => {
+        const task = await transaction.task.create({
+          select: taskItemSelectFields,
+          data: {
+            ...data,
+            todos: { createMany: { data: todos } },
+            date,
+            order: lastTask ? lastTask.order + 1 : 0,
+            creatorId: ctx.user.id,
+          },
+        })
+        if (task.date && data.repeat && repeatEndDate) {
+          const repeatEndDateAsDate = dayjs(repeatEndDate).startOf("d").add(12, "h").toDate()
+          const dates = getRepeatingDatesBetween(task.date, repeatEndDateAsDate, data.repeat)
+          await Promise.all(
+            dates.map((date) =>
+              transaction.task.create({
+                data: {
+                  repeatParent: { connect: { id: task.id } },
+                  isComplete: false,
+                  isImportant: task.isImportant,
+                  durationHours: task.durationHours,
+                  durationMinutes: task.durationMinutes,
+                  startTime: task.startTime,
+                  date,
+                  creator: { connect: { id: ctx.user.id } },
+                  name: task.name,
+                  description: task.description,
+                  element: { connect: { id: task.element.id } },
+                  todos: { createMany: { data: task.todos.map((t) => ({ name: t.name, isComplete: t.isComplete })) } },
+                },
+              }),
+            ),
+          )
+        }
+
+        return task
       })
       return {
-        ...createdTask,
-        date: dayjs(createdTask.date).startOf("day").add(12, "hours").format("YYYY-MM-DD"),
+        ...newTask,
+        date: dayjs(newTask.date).startOf("day").add(12, "hours").format("YYYY-MM-DD"),
       }
     }),
   update: protectedProcedure

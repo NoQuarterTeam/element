@@ -1,14 +1,14 @@
 import * as React from "react"
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
 import { useSoftInputHeightChanged } from "react-native-avoid-softinput"
-// import { AvoidSoftInput } from "react-native-avoid-softinput"
+
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 import dayjs from "dayjs"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import { AlertTriangle, Check, Clock, Copy, Plus, Square, Trash, X } from "lucide-react-native"
 
-import { join, merge, useDisclosure } from "@element/shared"
+import { getRepeatingDatesBetween, join, merge, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
 import { type FormResponseError } from "../lib/form"
@@ -23,6 +23,8 @@ import { Icon } from "./Icon"
 import { Input, inputClassName } from "./Input"
 import { Text } from "./Text"
 import { toast } from "./Toast"
+import { TaskRepeat } from "@element/database/types"
+import { TaskRepeatOptions } from "../lib/taskRepeat"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 
@@ -45,7 +47,7 @@ const MIN_FOOTER_PADDING = 20
 export function TaskForm(props: Props) {
   const router = useRouter()
   const canGoBack = router.canGoBack()
-  const { date, elementId } = useGlobalSearchParams()
+  const { date, repeat, elementId } = useGlobalSearchParams()
 
   const [form, setForm] = React.useState({
     name: props.task?.name || "",
@@ -81,6 +83,12 @@ export function TaskForm(props: Props) {
     setForm((f) => ({ ...f, element: element! }))
   }, [elementId, data, me, isLoading, tempElements])
 
+  React.useEffect(() => {
+    if (!repeat || !me) return
+    setRepeatEndDate(dayjs().add(1, "week").format("YYYY-MM-DD"))
+    setForm((f) => ({ ...f, repeat: repeat as TaskRepeat }))
+  }, [repeat, me])
+
   const timeProps = useDisclosure()
 
   const handlePickTime = (startTime: Date) => {
@@ -91,6 +99,14 @@ export function TaskForm(props: Props) {
   const handlePickDate = (date: Date) => {
     dateProps.onClose()
     setForm((f) => ({ ...f, date: dayjs(date).format("YYYY-MM-DD") }))
+  }
+
+  const [repeatEndDate, setRepeatEndDate] = React.useState<string | undefined>(undefined)
+  const repeatEndDateProps = useDisclosure()
+
+  const handlePickRepeatEndDate = (date: Date) => {
+    repeatEndDateProps.onClose()
+    setRepeatEndDate(dayjs(date).format("YYYY-MM-DD"))
   }
 
   const scrollRef = React.useRef<ScrollView>(null)
@@ -132,7 +148,7 @@ export function TaskForm(props: Props) {
                   if (!form.element) {
                     router.push({
                       pathname: "/elements/select",
-                      params: { date: form.date, redirect: "/new" },
+                      params: { date: form.date, repeat, redirect: "/new" },
                     })
                   }
                 }}
@@ -167,7 +183,7 @@ export function TaskForm(props: Props) {
                   onPress={() => {
                     router.push({
                       pathname: "/elements/select",
-                      params: { date: form.date, redirect: props.task ? `/${props.task.id}` : "/new" },
+                      params: { date: form.date, repeat, redirect: props.task ? `/${props.task.id}` : "/new" },
                     })
                   }}
                   className={join(inputClassName, "flex-1")}
@@ -263,6 +279,58 @@ export function TaskForm(props: Props) {
               onCancel={timeProps.onClose}
             />
           </View>
+
+          {!props.task && me && (
+            <View className="space-y-2">
+              <FormInput
+                label="Repeat"
+                error={props.error?.zodError?.fieldErrors?.repeat}
+                input={
+                  <TouchableOpacity
+                    className={inputClassName}
+                    onPress={() => {
+                      router.push({ pathname: "/repeat-select", params: { date: form.date, repeat, redirect: "/new" } })
+                    }}
+                  >
+                    <Text className={join("text-sm", !repeat && "opacity-60")}>
+                      {TaskRepeatOptions[repeat as TaskRepeat] || "Doesn't repeat"}
+                    </Text>
+                  </TouchableOpacity>
+                }
+              />
+              {repeat && (
+                <View>
+                  <View className="flex flex-row space-x-2">
+                    <View className="w-[80px] pr-2 pt-1">
+                      <FormInputLabel label="End date" />
+                      <Text className="text-xxs opacity-70">
+                        Creating{" "}
+                        {1 +
+                          getRepeatingDatesBetween(dayjs(form.date).toDate(), dayjs(repeatEndDate).toDate(), repeat as TaskRepeat)
+                            .length}
+                      </Text>
+                    </View>
+                    <FormInput
+                      error={props.error?.zodError?.fieldErrors?.repeatEndDate}
+                      input={
+                        <TouchableOpacity className={inputClassName} onPress={repeatEndDateProps.onOpen}>
+                          <Text className={join("text-sm", !repeat && "opacity-60")}>
+                            {repeatEndDate ? dayjs(repeatEndDate).format("DD/MM/YYYY") : "Select a date"}
+                          </Text>
+                        </TouchableOpacity>
+                      }
+                    />
+                  </View>
+                  <DateTimePickerModal
+                    isVisible={repeatEndDateProps.isOpen}
+                    date={repeatEndDate ? dayjs(form.date).toDate() : undefined}
+                    onConfirm={handlePickRepeatEndDate}
+                    onCancel={repeatEndDateProps.onClose}
+                  />
+                </View>
+              )}
+            </View>
+          )}
 
           <View>
             <FormInput
@@ -368,7 +436,12 @@ export function TaskForm(props: Props) {
               if (props.task) {
                 return props.onUpdate({ id: props.task.id, ...payload, elementId: form.element.id })
               } else {
-                return props.onCreate({ ...payload, elementId: form.element.id })
+                return props.onCreate({
+                  ...payload,
+                  repeat: repeat as TaskRepeat,
+                  repeatEndDate: repeatEndDate ? dayjs(repeatEndDate).toDate() : null,
+                  elementId: form.element.id,
+                })
               }
             }}
           >

@@ -1,6 +1,7 @@
 import { z } from "zod"
 
 import { NullableFormNumber, NullableFormString } from "./utils/form"
+import { TaskRepeat } from "@element/database/types"
 
 export const taskSchema = z.object({
   name: z.string().min(1, { message: "Please enter a name" }),
@@ -9,6 +10,7 @@ export const taskSchema = z.object({
   isComplete: z.boolean().optional(),
   isImportant: z.boolean().optional(),
   description: NullableFormString,
+  repeat: z.nativeEnum(TaskRepeat).nullish(),
   startTime: NullableFormString,
   durationHours: NullableFormNumber,
   durationMinutes: NullableFormNumber,
