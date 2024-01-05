@@ -1,5 +1,5 @@
 import * as React from "react"
-import { TouchableOpacity, type TouchableOpacityProps, useColorScheme, View, ActivityIndicator } from "react-native"
+import { ActivityIndicator, TouchableOpacity, type TouchableOpacityProps, useColorScheme, View } from "react-native"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { join, merge } from "@element/shared"

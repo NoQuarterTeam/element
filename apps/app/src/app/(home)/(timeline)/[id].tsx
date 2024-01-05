@@ -1,7 +1,7 @@
+import { ActivityIndicator, View } from "react-native"
 import dayjs from "dayjs"
 import { useLocalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
-import { ActivityIndicator, View } from "react-native"
 
 import { join } from "@element/shared"
 

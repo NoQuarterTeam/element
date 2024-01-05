@@ -12,10 +12,14 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "ci": "turbo run typecheck lint prettier",
     "lint": "turbo run lint",
-    "test": "turbo run test",
+    "fix": "turbo run lint:fix prettier:fix",
+    "prettier": "turbo run prettier",
+    "prettier:fix": "turbo run prettier:fix",
+    "lint:fix": "turbo run lint:fix",
+    "format": "turbo run lint:fix && turbo run prettier:fix",
     "typecheck": "turbo run typecheck",
-    "test:ci": "turbo run test:ci",
     "db:generate": "turbo run db:generate"
   },
   "prisma": {

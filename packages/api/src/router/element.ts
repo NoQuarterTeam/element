@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server"
 import { z } from "zod"
 
-import { Prisma, type Element } from "@element/database/types"
+import { type Element, type Prisma } from "@element/database/types"
 import { elementSchema, updateElementSchema } from "@element/server-schemas"
 
 import { createTRPCRouter, protectedProcedure } from "../trpc"

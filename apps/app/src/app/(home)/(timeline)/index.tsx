@@ -1,7 +1,7 @@
 import * as React from "react"
 import { ActivityIndicator, RefreshControl, TouchableOpacity, useColorScheme, View } from "react-native"
-import * as Progress from "react-native-progress"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
+import * as Progress from "react-native-progress"
 import Animated, {
   runOnJS,
   type SharedValue,
@@ -21,6 +21,7 @@ import { Link, router } from "expo-router"
 import { Book, Calendar, Clock, MoreVertical, Plus, X } from "lucide-react-native"
 
 import { formatDuration, join, safeReadableColor } from "@element/shared"
+import colors from "@element/tailwind-config/src/colors"
 
 import { Heading } from "../../../components/Heading"
 import { Icon } from "../../../components/Icon"
@@ -31,7 +32,6 @@ import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
 import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
 import { height } from "../../../lib/utils/device"
-import colors from "@element/tailwind-config/src/colors"
 
 dayjs.extend(advancedFormat)
 

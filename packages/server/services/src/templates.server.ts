@@ -1,5 +1,6 @@
-import type { Prisma } from "@element/database/types"
 import dayjs from "dayjs"
+
+import type { Prisma } from "@element/database/types"
 
 export function createTemplates(userId: string) {
   const elements: Prisma.ElementCreateInput[] = [

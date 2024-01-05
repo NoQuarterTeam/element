@@ -1,8 +1,10 @@
-import { FULL_WEB_URL, IS_DEV } from "@element/server-env"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
+
+import { type Habit } from "@element/database/types"
+import { FULL_WEB_URL, IS_DEV } from "@element/server-env"
+
 import { qstash } from "./lib/qstash.server"
-import { Habit } from "@element/database/types"
 dayjs.extend(utc)
 
 export type HabitReminderBody = Pick<Habit, "id" | "name">
