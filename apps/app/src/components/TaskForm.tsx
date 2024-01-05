@@ -85,7 +85,6 @@ export function TaskForm(props: Props) {
 
   React.useEffect(() => {
     if (!repeat || !me) return
-    setRepeatEndDate(dayjs().add(1, "week").format("YYYY-MM-DD"))
     setForm((f) => ({ ...f, repeat: repeat as TaskRepeat }))
   }, [repeat, me])
 
@@ -101,7 +100,7 @@ export function TaskForm(props: Props) {
     setForm((f) => ({ ...f, date: dayjs(date).format("YYYY-MM-DD") }))
   }
 
-  const [repeatEndDate, setRepeatEndDate] = React.useState<string | undefined>(undefined)
+  const [repeatEndDate, setRepeatEndDate] = React.useState<string>(dayjs().add(1, "week").format("YYYY-MM-DD"))
   const repeatEndDateProps = useDisclosure()
 
   const handlePickRepeatEndDate = (date: Date) => {
@@ -289,6 +288,7 @@ export function TaskForm(props: Props) {
                   <TouchableOpacity
                     className={inputClassName}
                     onPress={() => {
+                      nameInputRef.current?.blur()
                       router.push({ pathname: "/repeat-select", params: { date: form.date, repeat, redirect: "/new" } })
                     }}
                   >
@@ -301,7 +301,7 @@ export function TaskForm(props: Props) {
               {repeat && (
                 <View>
                   <View className="flex flex-row space-x-2">
-                    <View className="w-[80px] pr-2 pt-1">
+                    <View className="w-[70px] pt-1">
                       <FormInputLabel label="End date" />
                       <Text className="text-xxs opacity-70">
                         Creating{" "}
@@ -310,20 +310,24 @@ export function TaskForm(props: Props) {
                             .length}
                       </Text>
                     </View>
-                    <FormInput
-                      error={props.error?.zodError?.fieldErrors?.repeatEndDate}
-                      input={
-                        <TouchableOpacity className={inputClassName} onPress={repeatEndDateProps.onOpen}>
-                          <Text className={join("text-sm", !repeat && "opacity-60")}>
-                            {repeatEndDate ? dayjs(repeatEndDate).format("DD/MM/YYYY") : "Select a date"}
-                          </Text>
-                        </TouchableOpacity>
-                      }
-                    />
+                    <TouchableOpacity
+                      className={join(inputClassName, "flex-1")}
+                      onPress={() => {
+                        nameInputRef.current?.blur()
+                        repeatEndDateProps.onOpen()
+                      }}
+                    >
+                      <Text className={join("text-sm", !repeat && "opacity-60")}>
+                        {dayjs(repeatEndDate).format("DD/MM/YYYY")}
+                      </Text>
+                    </TouchableOpacity>
                   </View>
+                  {props.error?.zodError?.fieldErrors?.repeatEndDate?.map((error) => (
+                    <FormInputError key={error} error={error} />
+                  ))}
                   <DateTimePickerModal
                     isVisible={repeatEndDateProps.isOpen}
-                    date={repeatEndDate ? dayjs(form.date).toDate() : undefined}
+                    date={dayjs(repeatEndDate).toDate()}
                     onConfirm={handlePickRepeatEndDate}
                     onCancel={repeatEndDateProps.onClose}
                   />
@@ -438,8 +442,8 @@ export function TaskForm(props: Props) {
               } else {
                 return props.onCreate({
                   ...payload,
-                  repeat: repeat as TaskRepeat,
-                  repeatEndDate: repeatEndDate ? dayjs(repeatEndDate).toDate() : null,
+                  repeat: repeat as TaskRepeat | null,
+                  repeatEndDate: repeat ? dayjs(repeatEndDate).toDate() : null,
                   elementId: form.element.id,
                 })
               }
