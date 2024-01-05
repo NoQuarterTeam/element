@@ -13,6 +13,6 @@ export const taskSchema = z.object({
   durationMinutes: NullableFormNumber,
 })
 export const todoSchema = z.object({
-  name: z.string().min(1, { message: "Please enter a name" }),
+  name: z.string(),
   isComplete: z.boolean(),
 })

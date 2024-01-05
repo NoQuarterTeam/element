@@ -27,6 +27,7 @@
     "@react-native-community/datetimepicker",
     "react-native-progress",
     "@react-native-picker/picker",
+    "expo-build-properties",
     "@expo/config-plugins",
     "@react-email/components",
     "@sentry/react-native",

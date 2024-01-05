@@ -37,7 +37,7 @@ export function ElementForm(props: Props) {
         onChangeText={(name) => setForm({ ...form, name })}
       />
       <ColorPicker value={form.color} onChange={({ hex }) => setForm((f) => ({ ...f, color: hex }))}>
-        <Panel1 />
+        <Panel1 style={{ height: 150 }} />
         <HueSlider />
       </ColorPicker>
       {props.error?.zodError?.fieldErrors?.color?.map((error) => <FormInputError key={error} error={error} />)}

@@ -1,7 +1,7 @@
 import { ConfigContext, ExpoConfig } from "expo/config"
 
 const VERSION = "1.0.7"
-const BUILD = 24
+const BUILD = 25
 
 const IS_DEV = process.env.APP_VARIANT === "development"
 
@@ -65,7 +65,17 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
       projectId: "93cfd208-76bb-4e7c-b368-5a09679e1a72",
     },
   },
-  plugins: ["./expo-plugins/with-modify-gradle.js"],
+  plugins: [
+    "./expo-plugins/with-modify-gradle.js",
+    [
+      "expo-build-properties",
+      {
+        android: {
+          kotlinVersion: "1.7.22", // <-- add a version here for resolution, version can be newer depending on the Expo SDK version used in the project
+        },
+      },
+    ],
+  ],
 })
 
 export default defineConfig
