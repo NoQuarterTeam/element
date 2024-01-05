@@ -470,6 +470,7 @@ function TaskActions({ task }: { task: Task }) {
     },
   })
   const handleDelete = () => {
+    if (task.repeatParentId) return router.push(`/${task.id}/delete`)
     if (me) {
       deleteTask.mutate({ id: task.id })
     } else {
