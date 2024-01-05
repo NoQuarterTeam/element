@@ -313,9 +313,6 @@ importers:
       expo-server-sdk:
         specifier: ^3.7.0
         version: 3.7.0
-      isbot:
-        specifier: 3.8.0
-        version: 3.8.0
       jose:
         specifier: 5.2.0
         version: 5.2.0
@@ -662,7 +659,7 @@ importers:
         version: 3.22.4
       zodix:
         specifier: 0.4.4
-        version: 0.4.4(@remix-run/server-runtime@2.3.1)(zod@3.22.4)
+        version: 0.4.4(@remix-run/server-runtime@2.4.1)(zod@3.22.4)
     devDependencies:
       '@element/eslint-config':
         specifier: workspace:*
@@ -5663,11 +5660,6 @@ packages:
       typescript: 5.3.3
     dev: false
 
-  /@remix-run/router@1.13.0:
-    resolution: {integrity: sha512-5dMOnVnefRsl4uRnAdoWjtVTdh8e6aZqgM4puy9nmEADH72ck+uXwzpJLEKE9Q6F8ZljNewLgmTfkxUrBdv4WA==}
-    engines: {node: '>=14.0.0'}
-    dev: false
-
   /@remix-run/router@1.14.1:
     resolution: {integrity: sha512-Qg4DMQsfPNAs88rb2xkdk03N3bjK4jgX5fR24eHCTR9q6PrhZQZ4UJBPzCHJkIpTRN1UKxx2DzjZmnC+7Lj0Ow==}
     engines: {node: '>=14.0.0'}
@@ -5688,24 +5680,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
       - typescript
-
-  /@remix-run/server-runtime@2.3.1(typescript@5.3.3):
-    resolution: {integrity: sha512-ym1nfuYJKn5Vd4bqGIJbZMR1wh/A/qXSzOwqCrZxjdsAmb4YLUBnUAJFIoCRBrvcge92kXq/lXjGOFYf+qidZg==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      typescript: ^5.1.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@remix-run/router': 1.13.0
-      '@types/cookie': 0.5.3
-      '@web3-storage/multipart-parser': 1.0.0
-      cookie: 0.5.0
-      set-cookie-parser: 2.6.0
-      source-map: 0.7.4
-      typescript: 5.3.3
-    dev: false
 
   /@remix-run/server-runtime@2.4.1(typescript@5.3.3):
     resolution: {integrity: sha512-aQyBa0U8Db4E9sv2sruMfPDBYB4jlqvZ43YvkaZ1BGjUzi84ssfmaHdWgX/QveB6hi61RABTi6v8DV548kmRQg==}
@@ -11274,11 +11248,6 @@ packages:
 
   /isarray@2.0.5:
     resolution: {integrity: sha512-xHjhDr3cNBK0BzdUJSPXZntQUx/mwMS5Rw4A7lPJ90XGAO6ISP/ePDNuo0vhqOZU+UD5JoodwCAAoZQd3FeAKw==}
-
-  /isbot@3.8.0:
-    resolution: {integrity: sha512-vne1mzQUTR+qsMLeCBL9+/tgnDXRyc2pygLGl/WsgA+EZKIiB5Ehu0CiVTHIIk30zhJ24uGz4M5Ppse37aR0Hg==}
-    engines: {node: '>=12'}
-    dev: false
 
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
@@ -17254,13 +17223,13 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  /zodix@0.4.4(@remix-run/server-runtime@2.3.1)(zod@3.22.4):
+  /zodix@0.4.4(@remix-run/server-runtime@2.4.1)(zod@3.22.4):
     resolution: {integrity: sha512-msoW2RM8t0ktSKmQYT7/AjsGTqzWHeEwY+U/6w7Jzd29yoeh/QceseQG8PBb5lpY4KUUowMsYRWm926vGrwrdQ==}
     peerDependencies:
       '@remix-run/server-runtime': 1.x || 2.x
       zod: 3.x
     dependencies:
-      '@remix-run/server-runtime': 2.3.1(typescript@5.3.3)
+      '@remix-run/server-runtime': 2.4.1(typescript@5.3.3)
       zod: 3.22.4
     dev: false
 
