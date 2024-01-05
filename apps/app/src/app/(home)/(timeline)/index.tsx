@@ -1,5 +1,6 @@
 import * as React from "react"
-import { ActivityIndicator, RefreshControl, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, RefreshControl, TouchableOpacity, useColorScheme, View } from "react-native"
+import * as Progress from "react-native-progress"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   runOnJS,
@@ -30,6 +31,7 @@ import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
 import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
 import { height } from "../../../lib/utils/device"
+import colors from "@element/tailwind-config/src/colors"
 
 dayjs.extend(advancedFormat)
 
@@ -529,6 +531,7 @@ function TaskItem({
 
   const { mutate } = api.task.update.useMutation()
 
+  const isDark = useColorScheme() === "dark"
   const { me } = useMe()
   const { updateTask } = useTemporaryData()
   const longPress = Gesture.LongPress()
@@ -566,14 +569,27 @@ function TaskItem({
               >
                 {task.name}
               </Text>
-              {!isComplete.value && task.description && (
-                <View
-                  style={{ backgroundColor: task.element.color }}
-                  className="sq-1.5 absolute right-1 top-1 rounded-full opacity-70"
-                />
-              )}
               {isComplete.value && <BlurView intensity={isComplete.value ? 6 : 0} className="absolute h-full w-full" />}
             </View>
+            {!isComplete.value && task.description && (
+              <View
+                style={{ backgroundColor: task.element.color }}
+                className="sq-1.5 absolute right-1 top-1 rounded-full opacity-70"
+              />
+            )}
+            {!isComplete.value && task.todos.length > 0 && (
+              <View className={join("absolute right-1 top-1 opacity-70", task.description && "top-4")}>
+                <Progress.Circle
+                  thickness={2}
+                  size={8}
+                  animated={false}
+                  borderWidth={0}
+                  progress={task.todos.filter((t) => t.isComplete).length / task.todos.length}
+                  unfilledColor={isDark ? colors.gray[900] : colors.gray[100]}
+                  color={task.element.color}
+                />
+              </View>
+            )}
 
             {!isComplete.value && (
               <View className="flex flex-row items-end justify-between px-1 pb-0.5">
