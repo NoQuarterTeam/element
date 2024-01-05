@@ -53,8 +53,8 @@ export function TaskForm(props: Props) {
     name: props.task?.name || "",
     description: props.task?.description || "",
     startTime: props.task?.startTime || "",
-    durationHours: props.task?.durationHours?.toString() || "",
-    durationMinutes: props.task?.durationMinutes?.toString() || "",
+    durationHours: props.task?.durationHours ? props.task?.durationHours?.toString() : "",
+    durationMinutes: props.task?.durationMinutes ? props.task?.durationMinutes?.toString() : "",
     date: props.task?.date
       ? dayjs(props.task.date).startOf("day").add(12, "hours").toISOString()
       : (date as string | undefined) || "",
@@ -179,17 +179,25 @@ export function TaskForm(props: Props) {
               error={props.error?.zodError?.fieldErrors?.elementId}
               input={
                 <TouchableOpacity
+                  className={join(inputClassName, "flex-1")}
                   onPress={() => {
                     router.push({
                       pathname: "/elements/select",
                       params: { date: form.date, repeat, redirect: props.task ? `/${props.task.id}` : "/new" },
                     })
                   }}
-                  className={join(inputClassName, "flex-1")}
                 >
-                  <Text className={join("text-sm", !form.element?.name && "opacity-60")}>
-                    {form.element?.name || "Select an element"}
-                  </Text>
+                  <View className="flex flex-row items-center space-x-2">
+                    {form.element && (
+                      <View
+                        className="sq-4 rounded-full border border-gray-300 dark:border-gray-700"
+                        style={{ backgroundColor: form.element.color }}
+                      />
+                    )}
+                    <Text className={join("text-sm", !form.element?.name && "opacity-60")}>
+                      {form.element?.name || "Select an element"}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               }
               rightElement={
