@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from "react-native"
+import { ActivityIndicator, StyleSheet, TouchableOpacity, useColorScheme, View } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   runOnJS,
@@ -8,6 +8,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
+  useAnimatedRef,
 } from "react-native-reanimated"
 import { useActionSheet } from "@expo/react-native-action-sheet"
 import dayjs from "dayjs"
@@ -67,6 +68,7 @@ export default function Habits() {
 
 const HABIT_HEIGHT = 65
 type Positions = { [key: string]: Habit }
+
 function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"]> }) {
   const habits = data.habits
   const habitEntries = data.habitEntries
@@ -86,8 +88,31 @@ function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [habits])
 
+  const scrollRef = useAnimatedRef<Animated.ScrollView>()
+  // const scrollTranslateY = useSharedValue(0)
+  // const scrollViewSize = useSharedValue(0)
+
+  // const onListContentSizeChange = (_: number, h: number) => {
+  //   scrollViewSize.value = h
+  // }
+
+  // console.log(scrollViewSize.value)
+
+  // useAnimatedReaction(
+  //   () => scrollTranslateY.value,
+  //   (y) => {
+  //     if (!scrollRef.current) return
+  //     scrollRef.current?.scrollTo({ y, animated: true })
+  //   },
+  // )
+
+  // const onScroll = useAnimatedScrollHandler((e) => {
+  //   scrollTranslateY.value = e.contentOffset.y
+  // })
+
   return (
-    <ScrollView
+    <Animated.ScrollView
+      ref={scrollRef}
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{
         flexGrow: 1,
@@ -103,7 +128,7 @@ function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"
           isComplete={habitEntries.some((entry) => entry.habitId === habit.id)}
         />
       ))}
-    </ScrollView>
+    </Animated.ScrollView>
   )
 }
 
@@ -225,18 +250,17 @@ function HabitItem({ habit, isComplete, positions }: { positions: SharedValue<Po
         ...habitToSwap,
         order: currentHabit.order,
       }
-
       positions.value = newPositions
     })
     .onEnd(() => {
       const newOrder = positions.value[habit.id]!.order
       translateY.value = withTiming(newOrder * HABIT_HEIGHT)
+      runOnJS(handleUpdateOrder)()
     })
     .onFinalize(() => {
       scale.value = withTiming(1, undefined, () => {
         isActive.value = false
       })
-      runOnJS(handleUpdateOrder)()
     })
 
   const longPress = Gesture.LongPress()

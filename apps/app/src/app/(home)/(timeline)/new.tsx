@@ -20,6 +20,7 @@ export default function NewTask() {
   const create = api.task.create.useMutation({
     onSuccess: async (createdTask) => {
       if (!createdTask.date) return
+      // TODO: set to timeline data with correct order, instead of refetching
       await utils.task.timeline.refetch({ daysBack, daysForward })
       router.back()
     },

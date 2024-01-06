@@ -512,12 +512,12 @@ function TaskItem({
       const newOrder = taskPositions.value[task.id]!.order
       translateX.value = withTiming(newDate * DAY_WIDTH)
       translateY.value = withTiming(newOrder * TASK_HEIGHT)
+      runOnJS(onDrop)()
     })
     .onFinalize(() => {
       scale.value = withTiming(1, undefined, () => {
         isActive.value = false
       })
-      runOnJS(onDrop)()
     })
 
   const handleNavigate = () => router.push({ pathname: "index", params: { id: task.id } })
