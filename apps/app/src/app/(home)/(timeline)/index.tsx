@@ -411,7 +411,8 @@ function TaskItem({
   const position = useDerivedValue(() => {
     const taskPosition = taskPositions.value[task.id]
     const column = days.findIndex((day) => day === task.date)
-    const order = taskPosition?.order || 0
+    const dayTasksCount = Object.values(taskPositions.value).filter((t) => t.date === task.date).length
+    const order = taskPosition ? taskPosition.order : dayTasksCount
     return { x: column * DAY_WIDTH, y: order * TASK_HEIGHT }
   })
 

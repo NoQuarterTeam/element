@@ -52,16 +52,7 @@ export default function Habits() {
           <Text>Error loading habits</Text>
         </View>
       ) : (
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{
-            flexGrow: 1,
-            minHeight: data.habits.length * HABIT_HEIGHT + 100,
-          }}
-          showsVerticalScrollIndicator={false}
-        >
-          <HabitsList data={data} />
-        </ScrollView>
+        <HabitsList data={data} />
       )}
       <View className="absolute bottom-4 right-4">
         <Link href={`/habits/new`} asChild>
@@ -96,7 +87,14 @@ function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"
   }, [habits])
 
   return (
-    <>
+    <ScrollView
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={{
+        flexGrow: 1,
+        minHeight: data.habits.length * HABIT_HEIGHT + 100,
+      }}
+      showsVerticalScrollIndicator={false}
+    >
       {habits.map((habit) => (
         <HabitItem
           key={habit.id}
@@ -105,7 +103,7 @@ function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"
           isComplete={habitEntries.some((entry) => entry.habitId === habit.id)}
         />
       ))}
-    </>
+    </ScrollView>
   )
 }
 
@@ -178,7 +176,9 @@ function HabitItem({ habit, isComplete, positions }: { positions: SharedValue<Po
     mutate(data)
   }
 
-  const translateY = useSharedValue((positions.value[habit.id]?.order || 0) * HABIT_HEIGHT)
+  const translateY = useSharedValue(
+    (positions.value[habit.id] ? positions.value[habit.id]!.order : Object.values(positions.value).length) * HABIT_HEIGHT,
+  )
   const offsetY = useSharedValue(translateY.value)
   const scale = useSharedValue(1)
   const isActive = useSharedValue(false)

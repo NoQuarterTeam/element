@@ -37,7 +37,13 @@ export function HabitForm(props: Props) {
   const [shouldRemind, setShouldRemind] = React.useState(!!props.habit?.reminderTime)
   return (
     <View className="space-y-2">
-      <FormInput label="Name" value={name} error={props.error?.zodError?.fieldErrors?.name} onChangeText={setName} />
+      <FormInput
+        autoFocus={!!!props.habit}
+        label="Name"
+        value={name}
+        error={props.error?.zodError?.fieldErrors?.name}
+        onChangeText={setName}
+      />
       <View className="flex flex-row items-center justify-between">
         <Text className="pt-1 text-lg">Reminder</Text>
         <Switch
