@@ -1,4 +1,4 @@
-import { useColorScheme } from "react-native"
+import { View, useColorScheme } from "react-native"
 import * as Progress from "react-native-progress"
 import { Tabs } from "expo-router"
 import { Home, UserCircle } from "lucide-react-native"
@@ -48,18 +48,23 @@ export default function HomeLayout() {
         name="habits"
         options={{
           href: !me || !features.includes("habits") ? null : undefined,
-          tabBarIcon: () => (
-            <Progress.Circle
-              thickness={4}
-              size={26}
-              animated={true}
-              borderWidth={0}
-              progress={progress === 1 ? 0.99999 : progress}
-              unfilledColor={
-                progress === 0 ? (isDark ? colors.red[900] : colors.red[100]) : isDark ? colors.gray[800] : colors.gray[50]
-              }
-              color={isDark ? colors.green[600] : colors.green[500]}
-            />
+          tabBarIcon: (props) => (
+            <View className="relative">
+              {props.focused && (
+                <View className="bg-primary-400 dark:bg-primary-800 sq-1 absolute left-[11px] top-[11px] rounded-full" />
+              )}
+              <Progress.Circle
+                thickness={4}
+                size={26}
+                animated={true}
+                borderWidth={0}
+                progress={progress === 1 ? 0.99999 : progress}
+                unfilledColor={
+                  progress === 0 ? (isDark ? colors.red[900] : colors.red[100]) : isDark ? colors.gray[800] : colors.gray[50]
+                }
+                color={isDark ? colors.green[600] : colors.green[500]}
+              />
+            </View>
           ),
         }}
       />

@@ -578,7 +578,7 @@ function TaskItem({
               />
             )}
             {!isComplete.value && task.todos.length > 0 && (
-              <View className={join("absolute right-1 top-1 opacity-70", task.description && "top-4")}>
+              <View className={join("absolute right-[3px] top-1 opacity-70", task.description && "top-3.5")}>
                 <Progress.Circle
                   thickness={2}
                   size={8}
