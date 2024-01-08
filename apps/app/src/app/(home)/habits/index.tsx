@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ActivityIndicator, StyleSheet, TouchableOpacity, useColorScheme, View } from "react-native"
+import { ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   runOnJS,
@@ -12,9 +12,11 @@ import Animated, {
 import { useActionSheet } from "@expo/react-native-action-sheet"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
+import updateLocale from "dayjs/plugin/updateLocale"
+
 import * as Haptics from "expo-haptics"
 import { Link, useRouter } from "expo-router"
-import { Check, Circle, Clock, GripVertical, Plus, TrendingUp } from "lucide-react-native"
+import { Calendar, Check, Circle, Clock, Plus, TrendingUp } from "lucide-react-native"
 
 import colors from "@element/tailwind-config/src/colors"
 
@@ -22,14 +24,26 @@ import { Heading } from "../../../components/Heading"
 import { Icon } from "../../../components/Icon"
 import { Text } from "../../../components/Text"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
+import { join } from "@element/shared"
+import { width } from "../../../lib/utils/device"
 
 dayjs.extend(advancedFormat)
+dayjs.extend(updateLocale)
 
-type Habit = NonNullable<RouterOutputs["habit"]["byDate"]>["habits"][number]
+dayjs.updateLocale("en", {
+  weekStart: 1,
+})
+type Habit = NonNullable<RouterOutputs["habit"]["allByDate"]>["habits"][number]
+
+const WEEKS_BACK = 6
+const todaysWeek = dayjs().startOf("week")
+const weeks = Array.from({ length: WEEKS_BACK })
+  .map((_, i) => todaysWeek.subtract(i, "week"))
+  .reverse()
 
 export default function Habits() {
-  const [date, _setDate] = React.useState(new Date())
-  const { data, isLoading } = api.habit.byDate.useQuery({ date })
+  const [date, setDate] = React.useState(new Date())
+  const { data, isLoading } = api.habit.allByDate.useQuery({ date })
 
   // const dateLabel = dayjs(date).isSame(dayjs(), "date")
   //   ? "Today"
@@ -40,7 +54,15 @@ export default function Habits() {
   //       dayjs(date).isSame(dayjs().add(1, "day"), "date")
   //       ? "Tomorrow"
   //       : dayjs(date).format("ddd Do")
+  const scrollViewRef = React.useRef<ScrollView>(null)
 
+  const isMounted = React.useRef(false)
+  React.useEffect(() => {
+    if (!isMounted.current) {
+      scrollViewRef.current?.scrollToEnd()
+    }
+    isMounted.current = true
+  }, [])
   return (
     <View className="relative w-full flex-1 pt-16">
       <View className="flex flex-row items-center justify-between px-4 pb-2">
@@ -51,6 +73,50 @@ export default function Habits() {
           </TouchableOpacity>
         </Link>
       </View>
+      <View className="border-gray-75 border-b dark:border-gray-800">
+        <ScrollView
+          ref={scrollViewRef}
+          pagingEnabled
+          style={{ height: 60, flexGrow: 0 }}
+          // onLayout={() => scrollViewRef.current?.scrollToEnd()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          {weeks.map((week) => {
+            return (
+              <View key={week.format("YYYY-MM-DD")} style={{ width }} className="flex flex-row">
+                {Array.from({ length: 7 }).map((_, i) => {
+                  const currentDay = week.add(i, "day")
+
+                  return (
+                    <TouchableOpacity
+                      disabled={dayjs().isBefore(dayjs(currentDay), "date")}
+                      key={currentDay.format("YYYY-MM-DD")}
+                      style={{ width: width / 7 }}
+                      onPress={() => setDate(currentDay.toDate())}
+                      className={join("flex flex-col items-center", dayjs().isBefore(dayjs(currentDay), "date") && "opacity-50")}
+                    >
+                      <Text className="text-xxs opacity-80">{dayjs(currentDay).format("ddd")}</Text>
+                      <View
+                        className={join(
+                          "flex h-8 w-8 items-center justify-center rounded-full border border-gray-100 dark:border-gray-800",
+                          dayjs(currentDay).isSame(dayjs(date), "date") && "bg-black dark:bg-white",
+                          dayjs(currentDay).isSame(dayjs(), "date") && "border-primary",
+                        )}
+                      >
+                        <Text className={join("text-xs", dayjs(currentDay).isSame(date, "date") && "text-white dark:text-black")}>
+                          {dayjs(currentDay).date()}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  )
+                })}
+              </View>
+            )
+          })}
+        </ScrollView>
+      </View>
+
       {isLoading ? (
         <View className="flex items-center justify-center pt-4">
           <ActivityIndicator />
@@ -62,7 +128,16 @@ export default function Habits() {
       ) : (
         <HabitsList data={data} date={date} />
       )}
-      <View className="absolute bottom-4 right-4">
+      <View className="absolute bottom-4 right-4 space-y-1">
+        <TouchableOpacity
+          onPress={() => {
+            scrollViewRef.current?.scrollToEnd()
+            setDate(new Date())
+          }}
+          className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
+        >
+          <Icon icon={Calendar} size={24} />
+        </TouchableOpacity>
         <Link href={`/habits/new`} asChild>
           <TouchableOpacity className="bg-primary-500/90 rounded-full p-4">
             <Icon icon={Plus} size={24} color="black" />
@@ -76,7 +151,7 @@ export default function Habits() {
 const HABIT_HEIGHT = 65
 type Positions = { [key: string]: Habit }
 
-function HabitsList({ data, date }: { data: NonNullable<RouterOutputs["habit"]["byDate"]>; date: Date }) {
+function HabitsList({ data, date }: { data: NonNullable<RouterOutputs["habit"]["allByDate"]>; date: Date }) {
   const habits = data.habits
   const habitEntries = data.habitEntries
 
@@ -123,6 +198,7 @@ function HabitsList({ data, date }: { data: NonNullable<RouterOutputs["habit"]["
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{
         flexGrow: 1,
+        marginTop: 8,
         minHeight: data.habits.length * HABIT_HEIGHT + 100,
       }}
       showsVerticalScrollIndicator={false}
@@ -156,7 +232,7 @@ function HabitItem({
   const router = useRouter()
   const toggleComplete = api.habit.toggleComplete.useMutation({
     onMutate: () => {
-      utils.habit.byDate.setData({ date }, (old) => ({
+      utils.habit.allByDate.setData({ date }, (old) => ({
         habits: old?.habits || [],
         habitEntries: old?.habitEntries?.find((entry) => entry.habitId === habit.id)
           ? old.habitEntries.filter((entry) => entry.habitId !== habit.id)
@@ -171,13 +247,13 @@ function HabitItem({
   const deleteHabit = api.habit.delete.useMutation({
     onSuccess: () => {
       void utils.habit.progressToday.invalidate()
-      void utils.habit.byDate.invalidate()
+      void utils.habit.allByDate.invalidate()
     },
   })
   const archiveHabit = api.habit.archive.useMutation({
     onSuccess: () => {
       void utils.habit.progressToday.invalidate()
-      void utils.habit.byDate.invalidate()
+      void utils.habit.allByDate.invalidate()
     },
   })
 
@@ -295,9 +371,8 @@ function HabitItem({
     <Animated.View style={styles}>
       <GestureDetector gesture={gesture}>
         <View style={{ height: HABIT_HEIGHT }} className="w-full px-4 py-1">
-          <View className="flex h-full w-full flex-row items-center justify-between rounded border border-gray-100 bg-white p-3 dark:border-gray-700 dark:bg-black">
+          <View className="flex h-full w-full flex-row items-center justify-between rounded-md border border-gray-100 bg-white p-3 dark:border-gray-700 dark:bg-black">
             <View className="flex flex-row items-center space-x-2">
-              <Icon icon={GripVertical} size={16} />
               <Text className="text-lg">{habit.name}</Text>
             </View>
             <View className="flex flex-row items-center space-x-2">
@@ -314,12 +389,13 @@ function HabitItem({
               <View className="relative">
                 <Circle
                   size={26}
+                  strokeWidth={1}
                   color={isComplete ? colors.primary[500] : isDark ? colors.gray[700] : colors.gray[100]}
                   fill={isComplete ? colors.primary[500] : "transparent"}
                 />
                 {isComplete && (
                   <View style={StyleSheet.absoluteFill} className="flex items-center justify-center">
-                    <Icon icon={Check} size={18} strokeWidth={3} fill="transparent" color="white" />
+                    <Icon icon={Check} size={16} strokeWidth={3} fill="transparent" color="white" />
                   </View>
                 )}
               </View>

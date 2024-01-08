@@ -21,7 +21,7 @@ export default function Settings() {
             onValueChange={() => {
               toggle("habits")
               utils.habit.progressToday.refetch()
-              utils.habit.byDate.refetch()
+              utils.habit.allByDate.refetch()
             }}
           />
         </View>
