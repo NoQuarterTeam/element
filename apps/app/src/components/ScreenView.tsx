@@ -8,7 +8,7 @@ import { Icon } from "./Icon"
 
 interface Props {
   title: string
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 export function ScreenView(props: Props) {

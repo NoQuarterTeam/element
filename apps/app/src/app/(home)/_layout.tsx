@@ -20,7 +20,7 @@ export default function HomeLayout() {
   const features = useFeatures((s) => s.features)
   const { me } = useMe()
 
-  const { data, isLoading } = api.habit.progressCompleteToday.useQuery(undefined, {
+  const { data, isLoading } = api.habit.progressToday.useQuery(undefined, {
     enabled: !!me && features.includes("habits"),
   })
 

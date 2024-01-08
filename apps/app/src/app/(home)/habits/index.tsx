@@ -8,14 +8,13 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  useAnimatedRef,
 } from "react-native-reanimated"
 import { useActionSheet } from "@expo/react-native-action-sheet"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import * as Haptics from "expo-haptics"
 import { Link, useRouter } from "expo-router"
-import { Check, Circle, Clock, GripVertical, Plus } from "lucide-react-native"
+import { BarChart3, Check, Circle, Clock, GripVertical, Plus } from "lucide-react-native"
 
 import colors from "@element/tailwind-config/src/colors"
 
@@ -26,10 +25,11 @@ import { api, type RouterOutputs } from "../../../lib/utils/api"
 
 dayjs.extend(advancedFormat)
 
-type Habit = NonNullable<RouterOutputs["habit"]["today"]>["habits"][number]
+type Habit = NonNullable<RouterOutputs["habit"]["byDate"]>["habits"][number]
 
 export default function Habits() {
-  const { data, isLoading } = api.habit.today.useQuery()
+  const [date, _setDate] = React.useState(new Date())
+  const { data, isLoading } = api.habit.byDate.useQuery({ date })
 
   // const dateLabel = dayjs(date).isSame(dayjs(), "date")
   //   ? "Today"
@@ -43,7 +43,14 @@ export default function Habits() {
 
   return (
     <View className="relative w-full flex-1 pt-16">
-      <Heading className="px-4 pb-2 text-3xl">Habits</Heading>
+      <View className="flex flex-row items-center justify-between px-4 pb-2">
+        <Heading className="text-3xl">Habits</Heading>
+        <Link href="/habits/stats" asChild>
+          <TouchableOpacity>
+            <Icon icon={BarChart3} />
+          </TouchableOpacity>
+        </Link>
+      </View>
       {isLoading ? (
         <View className="flex items-center justify-center pt-4">
           <ActivityIndicator />
@@ -53,7 +60,7 @@ export default function Habits() {
           <Text>Error loading habits</Text>
         </View>
       ) : (
-        <HabitsList data={data} />
+        <HabitsList data={data} date={date} />
       )}
       <View className="absolute bottom-4 right-4">
         <Link href={`/habits/new`} asChild>
@@ -69,7 +76,7 @@ export default function Habits() {
 const HABIT_HEIGHT = 65
 type Positions = { [key: string]: Habit }
 
-function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"]> }) {
+function HabitsList({ data, date }: { data: NonNullable<RouterOutputs["habit"]["byDate"]>; date: Date }) {
   const habits = data.habits
   const habitEntries = data.habitEntries
 
@@ -88,7 +95,7 @@ function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [habits])
 
-  const scrollRef = useAnimatedRef<Animated.ScrollView>()
+  // const scrollRef = useAnimatedRef<Animated.ScrollView>()
   // const scrollTranslateY = useSharedValue(0)
   // const scrollViewSize = useSharedValue(0)
 
@@ -112,7 +119,7 @@ function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"
 
   return (
     <Animated.ScrollView
-      ref={scrollRef}
+      // ref={scrollRef}
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{
         flexGrow: 1,
@@ -125,6 +132,7 @@ function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"
           key={habit.id}
           positions={posistions}
           habit={habit}
+          date={date}
           isComplete={habitEntries.some((entry) => entry.habitId === habit.id)}
         />
       ))}
@@ -132,13 +140,23 @@ function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["today"
   )
 }
 
-function HabitItem({ habit, isComplete, positions }: { positions: SharedValue<Positions>; habit: Habit; isComplete: boolean }) {
+function HabitItem({
+  date,
+  habit,
+  isComplete,
+  positions,
+}: {
+  date: Date
+  positions: SharedValue<Positions>
+  habit: Habit
+  isComplete: boolean
+}) {
   const isDark = useColorScheme() === "dark"
   const utils = api.useUtils()
   const router = useRouter()
   const toggleComplete = api.habit.toggleComplete.useMutation({
     onMutate: () => {
-      utils.habit.today.setData(undefined, (old) => ({
+      utils.habit.byDate.setData({ date }, (old) => ({
         habits: old?.habits || [],
         habitEntries: old?.habitEntries?.find((entry) => entry.habitId === habit.id)
           ? old.habitEntries.filter((entry) => entry.habitId !== habit.id)
@@ -146,20 +164,20 @@ function HabitItem({ habit, isComplete, positions }: { positions: SharedValue<Po
       }))
     },
     onSuccess: () => {
-      void utils.habit.progressCompleteToday.invalidate()
+      void utils.habit.progressToday.invalidate()
     },
   })
 
   const deleteHabit = api.habit.delete.useMutation({
     onSuccess: () => {
-      void utils.habit.progressCompleteToday.invalidate()
-      void utils.habit.today.invalidate()
+      void utils.habit.progressToday.invalidate()
+      void utils.habit.byDate.invalidate()
     },
   })
   const archiveHabit = api.habit.archive.useMutation({
     onSuccess: () => {
-      void utils.habit.progressCompleteToday.invalidate()
-      void utils.habit.today.invalidate()
+      void utils.habit.progressToday.invalidate()
+      void utils.habit.byDate.invalidate()
     },
   })
 

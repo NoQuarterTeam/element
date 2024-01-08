@@ -28,7 +28,7 @@ function EditHabitForm({ habit }: { habit: Habit }) {
   const updateHabit = api.habit.update.useMutation({
     onSuccess: async () => {
       void utils.habit.byId.invalidate({ id: habit.id })
-      await utils.habit.today.invalidate()
+      await utils.habit.byDate.invalidate()
       router.back()
     },
   })

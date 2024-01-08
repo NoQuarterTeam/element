@@ -8,7 +8,7 @@ import { createHabitReminder, deleteHabitReminder } from "@element/server-servic
 import { createTRPCRouter, protectedProcedure } from "../trpc"
 
 export const habitRouter = createTRPCRouter({
-  progressCompleteToday: protectedProcedure.query(async ({ ctx }) => {
+  progressToday: protectedProcedure.query(async ({ ctx }) => {
     // return percentage of habits completed on given date
     const habits = await ctx.prisma.habit.findMany({
       include: {
@@ -26,14 +26,14 @@ export const habitRouter = createTRPCRouter({
     const completed = habits.filter((h) => h.entries.length > 0).length
     return Math.round((completed / total) * 100)
   }),
-  today: protectedProcedure.query(async ({ ctx }) => {
-    const today = dayjs().toDate()
+  byDate: protectedProcedure.input(z.object({ date: z.date() })).query(async ({ input, ctx }) => {
+    const date = input.date
     const [habits, habitEntries] = await Promise.all([
       ctx.prisma.habit.findMany({
         orderBy: { order: "asc" },
         select: { id: true, name: true, order: true, reminderTime: true, startDate: true, archivedAt: true },
         where: {
-          OR: [{ archivedAt: { equals: null } }, { archivedAt: { gte: dayjs(today).endOf("day").toDate() } }],
+          OR: [{ archivedAt: { equals: null } }, { archivedAt: { gte: dayjs(date).endOf("day").toDate() } }],
           creatorId: { equals: ctx.user.id },
         },
       }),
@@ -42,8 +42,8 @@ export const habitRouter = createTRPCRouter({
         where: {
           creatorId: { equals: ctx.user.id },
           createdAt: {
-            gte: dayjs(today).startOf("day").toDate(),
-            lte: dayjs(today).endOf("day").toDate(),
+            gte: dayjs(date).startOf("day").toDate(),
+            lte: dayjs(date).endOf("day").toDate(),
           },
         },
       }),

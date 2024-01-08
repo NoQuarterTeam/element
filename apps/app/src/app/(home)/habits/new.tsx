@@ -9,8 +9,8 @@ export default function NewHabit() {
   const router = useRouter()
   const createHabit = api.habit.create.useMutation({
     onSuccess: async () => {
-      await utils.habit.today.invalidate()
-      void utils.habit.progressCompleteToday.invalidate()
+      await utils.habit.byDate.invalidate()
+      void utils.habit.progressToday.invalidate()
       router.back()
     },
   })
