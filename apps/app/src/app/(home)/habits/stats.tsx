@@ -54,7 +54,7 @@ export default function HabitStat() {
             {data.map((habit) => {
               const totalDays = dayjs().diff(startDate, "days")
               return (
-                <View key={habit.id} className="flex flex-row items-center justify-between py-2">
+                <View key={habit.id} className="flex flex-row items-center justify-between py-1">
                   <View className="flex-1">
                     <Text className="font-label text-lg">{habit.name}</Text>
                     <Text className="text-xs">

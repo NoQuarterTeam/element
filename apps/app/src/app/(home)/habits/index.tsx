@@ -281,13 +281,7 @@ function HabitItem({
       })
     })
 
-  const longPress = Gesture.LongPress()
-    .minDuration(800)
-    .runOnJS(true)
-    .onStart(() => {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-      handleOpenMenu()
-    })
+  const longPress = Gesture.LongPress().minDuration(800).runOnJS(true).onStart(handleOpenMenu)
 
   const tap = Gesture.Tap()
     .runOnJS(true)

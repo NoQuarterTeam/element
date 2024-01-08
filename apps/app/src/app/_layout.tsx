@@ -67,7 +67,7 @@ function PrefetchTabs(props: { children: React.ReactNode }) {
     if (isLoading) return
     if (!me) return setIsDoneChecking(true)
     if (!features.includes("habits")) return setIsDoneChecking(true)
-    Promise.all([utils.habit.progressToday.prefetch(), utils.habit.byDate.prefetch({ date: new Date() })])
+    Promise.all([utils.habit.progressToday.fetch(), utils.habit.byDate.fetch({ date: new Date() })])
       .catch()
       .finally(() => setIsDoneChecking(true))
   }, [me, isLoading, features, utils.habit.progressToday, utils.habit.byDate])

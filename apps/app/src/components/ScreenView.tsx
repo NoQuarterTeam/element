@@ -20,12 +20,12 @@ export function ScreenView(props: Props) {
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={canGoBack ? () => router.push("../") : () => router.replace("/")}
-          className="mb-1 p-2"
+          className="p-2"
         >
           <Icon icon={ChevronLeft} size={24} />
         </TouchableOpacity>
 
-        <Heading className="text-3xl dark:text-white">{props.title}</Heading>
+        <Heading className="text-2xl dark:text-white">{props.title}</Heading>
       </View>
       {props.children}
     </View>

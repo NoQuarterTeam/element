@@ -4,7 +4,7 @@ import { merge } from "@element/shared"
 
 export function Text(props: TextProps) {
   return (
-    <RText {...props} className={merge("font-body text-base text-black dark:text-white", props.className)}>
+    <RText {...props} className={merge("font-body text-black dark:text-white", props.className)}>
       {props.children}
     </RText>
   )

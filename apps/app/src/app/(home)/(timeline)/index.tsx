@@ -548,7 +548,13 @@ function TaskItem({
       }
     })
 
-  const tap = Gesture.Tap().runOnJS(true).onStart(handleNavigate)
+  const utils = api.useUtils()
+  const tap = Gesture.Tap()
+    .runOnJS(true)
+    .onTouchesDown(() => {
+      void utils.task.byId.prefetch({ id: task.id })
+    })
+    .onStart(handleNavigate)
 
   const gesture = Gesture.Race(Gesture.Simultaneous(pan, longPress), tap)
 
