@@ -9,10 +9,10 @@ import { Text } from "./Text"
 export const buttonStyles = cva("rounded-xs flex flex-row items-center justify-center border", {
   variants: {
     size: {
-      xs: "h-8 px-2",
-      sm: "h-10 px-3",
-      md: "h-12 px-4",
-      lg: "h-14 px-5",
+      xs: "h-9 px-2",
+      sm: "h-8 px-3",
+      md: "h-10 px-3",
+      lg: "h-12 px-4",
     },
     variant: {
       primary: "border-transparent bg-gray-900 dark:bg-white",

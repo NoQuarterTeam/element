@@ -28,7 +28,7 @@ export default function DeleteTask() {
   return (
     <ModalView title="Delete task">
       <ScrollView className="flex-1 space-y-2">
-        <Text className="text-lg">Do you want to only delete this task or all future tasks as well?</Text>
+        <Text>Do you want to only delete this task or all future tasks as well?</Text>
         <Button
           isLoading={deleteTask.isLoading}
           disabled={deleteTask.isLoading || deleteFutureTasks.isLoading}
@@ -42,7 +42,7 @@ export default function DeleteTask() {
           variant="destructive"
           onPress={() => handleDelete(true)}
         >
-          Delete future tasks aswell
+          Delete future tasks as well
         </Button>
       </ScrollView>
     </ModalView>

@@ -30,7 +30,7 @@ export function ModalView(props: Props) {
       )}
     >
       <View className="flex flex-row justify-between">
-        {props.title ? <Heading className="text-3xl">{props.title}</Heading> : <Text />}
+        {props.title ? <Heading className="text-2xl">{props.title}</Heading> : <Text />}
 
         <TouchableOpacity
           onPress={props.onBack ? props.onBack : canGoBack ? router.back : () => router.replace("/")}
