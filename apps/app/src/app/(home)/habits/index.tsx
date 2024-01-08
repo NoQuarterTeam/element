@@ -14,7 +14,7 @@ import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import * as Haptics from "expo-haptics"
 import { Link, useRouter } from "expo-router"
-import { BarChart3, Check, Circle, Clock, GripVertical, Plus } from "lucide-react-native"
+import { Check, Circle, Clock, GripVertical, Plus, TrendingUp } from "lucide-react-native"
 
 import colors from "@element/tailwind-config/src/colors"
 
@@ -47,7 +47,7 @@ export default function Habits() {
         <Heading className="text-3xl">Habits</Heading>
         <Link href="/habits/stats" asChild>
           <TouchableOpacity>
-            <Icon icon={BarChart3} />
+            <Icon icon={TrendingUp} />
           </TouchableOpacity>
         </Link>
       </View>

@@ -99,6 +99,19 @@ export const habitRouter = createTRPCRouter({
 
     return ctx.prisma.habit.delete({ where: { id: habit.id } })
   }),
+  stats: protectedProcedure.input(z.object({ startDate: z.date() })).query(async ({ ctx, input }) => {
+    return ctx.prisma.habit.findMany({
+      where: { creatorId: ctx.user.id, archivedAt: { equals: null } },
+      orderBy: { createdAt: "asc" },
+      select: {
+        id: true,
+        name: true,
+        startDate: true,
+        archivedAt: true,
+        _count: { select: { entries: { where: { createdAt: { gte: input.startDate, lte: dayjs().endOf("day").toDate() } } } } },
+      },
+    })
+  }),
   updateOrder: protectedProcedure
     .input(z.array(z.object({ id: z.string(), order: z.number() })))
     .mutation(async ({ ctx, input }) => {
