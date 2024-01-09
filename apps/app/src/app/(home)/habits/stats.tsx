@@ -12,7 +12,7 @@ import { merge, useDisclosure } from "@element/shared"
 import { inputClassName } from "../../../components/Input"
 
 export default function HabitStat() {
-  const [startDate, setStartDate] = React.useState(dayjs().subtract(3, "months").toDate())
+  const [startDate, setStartDate] = React.useState(dayjs().subtract(1, "months").toDate())
   const { data, isLoading } = api.habit.stats.useQuery({ startDate }, { keepPreviousData: true })
   const isDark = useColorScheme() === "dark"
   const dateProps = useDisclosure()
