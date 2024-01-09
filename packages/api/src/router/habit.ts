@@ -102,7 +102,7 @@ export const habitRouter = createTRPCRouter({
   stats: protectedProcedure.input(z.object({ startDate: z.date() })).query(async ({ ctx, input }) => {
     return ctx.prisma.habit.findMany({
       where: { creatorId: ctx.user.id, archivedAt: { equals: null } },
-      orderBy: { createdAt: "asc" },
+      orderBy: { order: "asc" },
       select: {
         id: true,
         name: true,
