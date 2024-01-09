@@ -12,8 +12,8 @@ import { merge, useDisclosure } from "@element/shared"
 import { inputClassName } from "../../../components/Input"
 
 export default function HabitStat() {
-  const [startDate, setStartDate] = React.useState(dayjs().subtract(3, "months").toDate())
-  const { data, isLoading } = api.habit.stats.useQuery({ startDate })
+  const [startDate, setStartDate] = React.useState(dayjs().subtract(1, "months").toDate())
+  const { data, isLoading } = api.habit.stats.useQuery({ startDate }, { keepPreviousData: true })
   const isDark = useColorScheme() === "dark"
   const dateProps = useDisclosure()
   return (
@@ -41,7 +41,7 @@ export default function HabitStat() {
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 200 }}
         showsVerticalScrollIndicator={false}
       >
-        {isLoading ? (
+        {isLoading && !data ? (
           <View className="flex items-center justify-center pt-4">
             <ActivityIndicator />
           </View>
@@ -64,7 +64,7 @@ export default function HabitStat() {
 
                   <View className="relative flex-1">
                     <Progress.Bar
-                      progress={Math.round((habit._count.entries / 90) * 100) / 100}
+                      progress={habit._count.entries / totalDays}
                       height={40}
                       width={null}
                       color={colors.primary.DEFAULT}
