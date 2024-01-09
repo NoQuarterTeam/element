@@ -15,7 +15,6 @@ const habitSelectFields = {
   name: true,
   startDate: true,
   archivedAt: true,
-  reminderTime: true,
 } satisfies Prisma.HabitSelect
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

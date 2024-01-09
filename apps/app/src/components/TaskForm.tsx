@@ -1,13 +1,13 @@
 import * as React from "react"
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
 import { useSoftInputHeightChanged } from "react-native-avoid-softinput"
-
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 import dayjs from "dayjs"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import { AlertTriangle, Check, Clock, Copy, Plus, Square, Trash, X } from "lucide-react-native"
 
+import { type TaskRepeat } from "@element/database/types"
 import { getRepeatingDatesBetween, join, merge, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
@@ -15,6 +15,7 @@ import { type FormResponseError } from "../lib/form"
 import { useMe } from "../lib/hooks/useMe"
 import { useTemporaryData } from "../lib/hooks/useTemporaryTasks"
 import { useTimelineDays } from "../lib/hooks/useTimelineDays"
+import { TaskRepeatOptions } from "../lib/taskRepeat"
 import { api, type RouterInputs, type RouterOutputs } from "../lib/utils/api"
 import { Button, buttonStyles } from "./Button"
 import { FormError } from "./FormError"
@@ -23,8 +24,6 @@ import { Icon } from "./Icon"
 import { Input, inputClassName } from "./Input"
 import { Text } from "./Text"
 import { toast } from "./Toast"
-import { TaskRepeat } from "@element/database/types"
-import { TaskRepeatOptions } from "../lib/taskRepeat"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
 

@@ -14,7 +14,7 @@ import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import * as Haptics from "expo-haptics"
 import { Link, useRouter } from "expo-router"
-import { Check, Circle, Clock, GripVertical, Plus, TrendingUp } from "lucide-react-native"
+import { Check, Circle, Clock, Plus, TrendingUp } from "lucide-react-native"
 
 import colors from "@element/tailwind-config/src/colors"
 
@@ -295,19 +295,14 @@ function HabitItem({
     <Animated.View style={styles}>
       <GestureDetector gesture={gesture}>
         <View style={{ height: HABIT_HEIGHT }} className="w-full px-4 py-1">
-          <View className="flex h-full w-full flex-row items-center justify-between rounded border border-gray-100 bg-white p-3 dark:border-gray-700 dark:bg-black">
+          <View className="flex h-full w-full flex-row items-center justify-between rounded border border-gray-100 bg-white p-3 px-4 dark:border-gray-700 dark:bg-black">
+            <Text className="text-lg">{habit.name}</Text>
+
             <View className="flex flex-row items-center space-x-2">
-              <Icon icon={GripVertical} size={16} />
-              <Text className="text-lg">{habit.name}</Text>
-            </View>
-            <View className="flex flex-row items-center space-x-2">
-              {habit.reminderTime && (
+              {habit.reminders.length > 0 && (
                 <View className="flex flex-row items-center space-x-1 opacity-70">
+                  <Text className="text-xs">{habit.reminders.length}x</Text>
                   <Icon icon={Clock} size={14} />
-                  <Text className="text-xs">
-                    {habit.reminderTime.getHours().toString().padStart(2, "0")}:
-                    {habit.reminderTime.getMinutes().toString().padStart(2, "0")}
-                  </Text>
                 </View>
               )}
 

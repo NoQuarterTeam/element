@@ -1,32 +1,31 @@
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 
-import { type Habit } from "@element/database/types"
+import { type HabitReminder } from "@element/database/types"
 import { FULL_WEB_URL, IS_DEV } from "@element/server-env"
 
 import { qstash } from "./lib/qstash.server"
 dayjs.extend(utc)
 
-export type HabitReminderBody = Pick<Habit, "id" | "name">
+export type HabitReminderBody = Pick<HabitReminder, "id">
 
-export function createHabitReminder(habit: Pick<Habit, "id" | "name" | "reminderTime">) {
+export async function createHabitReminder(reminder: Pick<HabitReminder, "id" | "time">) {
   try {
-    if (!habit.reminderTime) throw new Error()
-
     // upstashs servers on utc
-    const hour = dayjs.utc(habit.reminderTime).hour()
-    const minute = dayjs.utc(habit.reminderTime).minute()
+    const hour = dayjs.utc(reminder.time).hour()
+    const minute = dayjs.utc(reminder.time).minute()
 
     const cron = `${minute} ${hour} * * *`
     const headers = new Headers()
     headers.append("Content-Type", "application/json")
 
-    return qstash.schedules.create({
+    const schedule = await qstash.schedules.create({
       cron,
-      body: JSON.stringify({ id: habit.id, name: habit.name } satisfies HabitReminderBody),
+      body: JSON.stringify({ id: reminder.id } satisfies HabitReminderBody),
       headers,
       destination: IS_DEV ? "https://element.requestcatcher.com" : FULL_WEB_URL + "/api/habit-reminders",
     })
+    return schedule.scheduleId
   } catch (error) {
     console.log("Error creating schedule")
   }

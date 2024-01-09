@@ -1,7 +1,8 @@
 import { z } from "zod"
 
-import { NullableFormNumber, NullableFormString } from "./utils/form"
 import { TaskRepeat } from "@element/database/types"
+
+import { NullableFormNumber, NullableFormString } from "./utils/form"
 
 export const taskSchema = z.object({
   name: z.string().min(1, { message: "Please enter a name" }),

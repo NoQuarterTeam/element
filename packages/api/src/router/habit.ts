@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server"
 import dayjs from "dayjs"
 import { z } from "zod"
 
-import { habitSchema, updateHabitSchema } from "@element/server-schemas"
+import { habitReminderSchema, habitSchema, updateHabitSchema } from "@element/server-schemas"
 import { createHabitReminder, deleteHabitReminder } from "@element/server-services"
 
 import { createTRPCRouter, protectedProcedure } from "../trpc"
@@ -31,7 +31,7 @@ export const habitRouter = createTRPCRouter({
     const [habits, habitEntries] = await Promise.all([
       ctx.prisma.habit.findMany({
         orderBy: { order: "asc" },
-        select: { id: true, name: true, order: true, reminderTime: true, startDate: true, archivedAt: true },
+        select: { id: true, name: true, order: true, reminders: true, startDate: true, archivedAt: true },
         where: {
           OR: [{ archivedAt: { equals: null } }, { archivedAt: { gte: dayjs(date).endOf("day").toDate() } }],
           creatorId: { equals: ctx.user.id },
@@ -51,52 +51,88 @@ export const habitRouter = createTRPCRouter({
     return { habits: habits.map((h, i) => ({ ...h, order: i })), habitEntries }
   }),
   byId: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
-    const habit = await ctx.prisma.habit.findFirst({ where: { id: input.id, creatorId: { equals: ctx.user.id } } })
+    const habit = await ctx.prisma.habit.findFirst({
+      where: { id: input.id, creatorId: { equals: ctx.user.id } },
+      include: { reminders: true },
+    })
     if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
     return habit
   }),
-  create: protectedProcedure.input(habitSchema.pick({ name: true, reminderTime: true })).mutation(async ({ ctx, input }) => {
-    const startDate = dayjs().startOf("day").add(12, "h").toDate()
-    const lastHabit = await ctx.prisma.habit.findFirst({
-      where: { archivedAt: null, creatorId: { equals: ctx.user.id } },
-      orderBy: { order: "desc" },
-    })
-    const habit = await ctx.prisma.habit.create({
-      data: { ...input, order: lastHabit?.order ? lastHabit.order + 1 : 0, startDate, creatorId: ctx.user.id },
-    })
-    if (input.reminderTime) {
-      const schedule = await createHabitReminder({ id: habit.id, reminderTime: input.reminderTime, name: habit.name })
-      // TODO: handle error
-      if (schedule) {
-        await ctx.prisma.habit.update({ where: { id: habit.id }, data: { reminderScheduleId: schedule.scheduleId } })
+  create: protectedProcedure
+    .input(habitSchema.merge(z.object({ reminders: z.array(habitReminderSchema).optional() })))
+    .mutation(async ({ ctx, input: { reminders, ...input } }) => {
+      const startDate = dayjs().startOf("day").add(12, "h").toDate()
+      const lastHabit = await ctx.prisma.habit.findFirst({
+        where: { archivedAt: null, creatorId: { equals: ctx.user.id } },
+        orderBy: { order: "desc" },
+      })
+      const habit = await ctx.prisma.habit.create({
+        data: { ...input, order: lastHabit?.order ? lastHabit.order + 1 : 0, startDate, creatorId: ctx.user.id },
+      })
+      if (reminders && reminders.length > 0) {
+        await Promise.all(
+          reminders.map(async (r) => {
+            const reminder = await ctx.prisma.habitReminder.create({ data: { ...r, habitId: habit.id } })
+            const upstashScheduleId = await createHabitReminder({ id: reminder.id, time: r.time })
+            if (!upstashScheduleId) return
+            return ctx.prisma.habitReminder.update({ where: { id: reminder.id }, data: { upstashScheduleId } })
+          }),
+        )
       }
-    }
-    return habit
-  }),
+      return habit
+    }),
   update: protectedProcedure
-    .input(updateHabitSchema.merge(z.object({ id: z.string() })))
-    .mutation(async ({ ctx, input: { id, ...data } }) => {
-      const habit = await ctx.prisma.habit.findUnique({ where: { id, creatorId: { equals: ctx.user.id } } })
+    .input(
+      updateHabitSchema.merge(
+        z.object({
+          id: z.string(),
+          reminders: z.array(habitReminderSchema.merge(z.object({ id: z.string() }))).optional(),
+        }),
+      ),
+    )
+    .mutation(async ({ ctx, input: { id, reminders, ...data } }) => {
+      const habit = await ctx.prisma.habit.findUnique({
+        where: { id, creatorId: { equals: ctx.user.id } },
+        include: { reminders: true },
+      })
       if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
-      let reminderScheduleId = habit.reminderScheduleId
-      if (data.reminderTime === null && habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
-
-      if (data.reminderTime && habit.reminderTime !== data.reminderTime) {
-        if (habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
-        const schedule = await createHabitReminder({ id: habit.id, reminderTime: data.reminderTime, name: habit.name })
-        // TODO: handle error
-        if (schedule) {
-          reminderScheduleId = schedule.scheduleId
+      if (reminders) {
+        const remindersToDelete = habit.reminders.filter(
+          (oldReminder) => !reminders.find((newReminder) => newReminder.id === oldReminder.id),
+        )
+        if (remindersToDelete.length > 0) {
+          await ctx.prisma.habitReminder.deleteMany({ where: { id: { in: remindersToDelete.map((r) => r.id) } } })
+          await Promise.all(remindersToDelete.map((r) => r.upstashScheduleId && deleteHabitReminder(r.upstashScheduleId)))
+        }
+        if (reminders.length > 0) {
+          await Promise.all(
+            reminders.map(async (r) => {
+              let reminder = await ctx.prisma.habitReminder.findFirst({ where: { id: r.id } })
+              if (reminder) {
+                if (r.time === reminder.time) return
+                if (reminder.upstashScheduleId) await deleteHabitReminder(reminder.upstashScheduleId)
+              } else {
+                reminder = await ctx.prisma.habitReminder.create({ data: { ...r, habitId: habit.id } })
+              }
+              const upstashScheduleId = await createHabitReminder({ id: reminder.id, time: r.time })
+              if (!upstashScheduleId) return
+              return ctx.prisma.habitReminder.update({ where: { id: r.id }, data: { time: r.time, upstashScheduleId } })
+            }),
+          )
         }
       }
-      return ctx.prisma.habit.update({ where: { id }, data: { ...data, reminderScheduleId } })
+
+      return ctx.prisma.habit.update({ where: { id }, data })
     }),
   delete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    const habit = await ctx.prisma.habit.findFirst({ where: { id: input.id, creatorId: { equals: ctx.user.id } } })
+    const habit = await ctx.prisma.habit.findFirst({
+      where: { id: input.id, creatorId: { equals: ctx.user.id } },
+      include: { reminders: true },
+    })
     if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
 
-    if (habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
-
+    await Promise.all(habit.reminders.map((r) => r.upstashScheduleId && deleteHabitReminder(r.upstashScheduleId)))
+    await ctx.prisma.habitReminder.deleteMany({ where: { habitId: { equals: habit.id } } })
     return ctx.prisma.habit.delete({ where: { id: habit.id } })
   }),
   stats: protectedProcedure.input(z.object({ startDate: z.date() })).query(async ({ ctx, input }) => {
@@ -126,8 +162,10 @@ export const habitRouter = createTRPCRouter({
     const habit = await ctx.prisma.habit.update({
       where: { id: input.id },
       data: { archivedAt: dayjs().startOf("day").add(12, "h").toDate() },
+      include: { reminders: true },
     })
-    if (habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
+    await ctx.prisma.habitReminder.deleteMany({ where: { habitId: { equals: habit.id } } })
+    await Promise.all(habit.reminders.map((r) => r.upstashScheduleId && deleteHabitReminder(r.upstashScheduleId)))
   }),
   toggleComplete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     const date = dayjs().toDate()
