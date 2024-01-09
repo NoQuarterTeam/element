@@ -64,7 +64,7 @@ export default function HabitStat() {
 
                   <View className="relative flex-1">
                     <Progress.Bar
-                      progress={Math.round((habit._count.entries / 90) * 100) / 100}
+                      progress={Math.round(habit._count.entries / totalDays)}
                       height={40}
                       width={null}
                       color={colors.primary.DEFAULT}
