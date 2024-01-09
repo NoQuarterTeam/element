@@ -71,16 +71,17 @@ model Task {
   durationMinutes Int?
   isImportant     Boolean     @default(false)
   order           Int         @default(50)
-  todos           Todo[]
-  repeatChildren  Task[]      @relation(name: "RepeatChildren")
-  repeatParentId  String?
-  repeatParent    Task?       @relation(name: "RepeatChildren", fields: [repeatParentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  creatorId       String
-  creator         User        @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  elementId       String
-  element         Element     @relation(fields: [elementId], references: [id], onDelete: Cascade)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @default(now()) @updatedAt
+
+  todos          Todo[]
+  repeatChildren Task[]   @relation(name: "RepeatChildren")
+  repeatParentId String?
+  repeatParent   Task?    @relation(name: "RepeatChildren", fields: [repeatParentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  creatorId      String
+  creator        User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  elementId      String
+  element        Element  @relation(fields: [elementId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
 
   @@index([date])
   @@index([createdAt])

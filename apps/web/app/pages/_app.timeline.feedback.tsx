@@ -35,7 +35,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const data = result.data
         if (!result.success) return formError(result)
         const feedbackCount = await db.feedback.count({
-          where: { creatorId: { equals: user.id }, createdAt: { gte: dayjs().startOf("d").toDate() } },
+          where: { creatorId: { equals: user.id }, createdAt: { gte: dayjs().startOf("day").toDate() } },
         })
         if (feedbackCount >= 10) {
           return redirect("/timeline", request, {

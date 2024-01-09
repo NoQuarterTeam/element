@@ -39,7 +39,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     where: {
       isComplete: { equals: false },
       creatorId: { equals: user.id },
-      date: { gt: dayjs().startOf("d").toDate(), lte: dayjs().endOf("d").toDate() },
+      date: { gt: dayjs().startOf("day").toDate(), lte: dayjs().endOf("d").toDate() },
     },
   })
 

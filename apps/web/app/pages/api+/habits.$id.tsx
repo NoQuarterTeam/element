@@ -53,7 +53,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
           .set("second", now.get("second"))
           .set("millisecond", now.get("millisecond"))
           .toDate()
-        const gte = dayjs(data.date).startOf("d").toDate()
+        const gte = dayjs(data.date).startOf("day").toDate()
         const lte = dayjs(data.date).endOf("d").toDate()
 
         const entries = await db.habitEntry.findMany({

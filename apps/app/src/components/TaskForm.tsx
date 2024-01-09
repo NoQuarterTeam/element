@@ -36,7 +36,7 @@ type Props = {
       onCreate: (data: RouterInputs["task"]["create"]) => void
     }
   | {
-      task: Task
+      task: RouterOutputs["task"]["byId"]
       onUpdate: (data: RouterInputs["task"]["update"]) => void
     }
 )
@@ -50,13 +50,13 @@ export function TaskForm(props: Props) {
 
   const [form, setForm] = React.useState({
     name: props.task?.name || "",
-    description: props.task?.description || "",
-    startTime: props.task?.startTime || "",
-    durationHours: props.task?.durationHours ? props.task?.durationHours?.toString() : "",
-    durationMinutes: props.task?.durationMinutes ? props.task?.durationMinutes?.toString() : "",
+    description: props.task?.description || null,
+    startTime: props.task?.startTime || null,
+    durationHours: props.task?.durationHours ? props.task?.durationHours?.toString() : null,
+    durationMinutes: props.task?.durationMinutes ? props.task?.durationMinutes?.toString() : null,
     date: props.task?.date
       ? dayjs(props.task.date).startOf("day").add(12, "hours").toISOString()
-      : (date as string | undefined) || "",
+      : (date as string | undefined) || null,
     element: props.task?.element || null,
     isImportant: props.task?.isImportant || false,
     todos: props.task?.todos || [],
@@ -93,6 +93,7 @@ export function TaskForm(props: Props) {
     timeProps.onClose()
     setForm((f) => ({ ...f, startTime: dayjs(startTime).format("HH:mm") }))
   }
+
   const dateProps = useDisclosure()
   const handlePickDate = (date: Date) => {
     dateProps.onClose()
@@ -239,7 +240,7 @@ export function TaskForm(props: Props) {
               <View className="flex flex-row items-center space-x-2">
                 <Input
                   className="w-11 px-1 text-center text-sm"
-                  value={form.durationHours}
+                  value={form.durationHours || ""}
                   keyboardType="number-pad"
                   onChangeText={(durationHours) => setForm((f) => ({ ...f, durationHours }))}
                 />
@@ -248,7 +249,7 @@ export function TaskForm(props: Props) {
               <View className="flex flex-row items-center space-x-2">
                 <Input
                   className="w-11 px-1 text-center text-sm"
-                  value={form.durationMinutes}
+                  value={form.durationMinutes || ""}
                   keyboardType="number-pad"
                   onChangeText={(durationMinutes) => setForm((f) => ({ ...f, durationMinutes }))}
                 />
@@ -285,7 +286,6 @@ export function TaskForm(props: Props) {
               onCancel={timeProps.onClose}
             />
           </View>
-
           {!props.task && me && (
             <View className="space-y-2">
               <FormInput
@@ -347,7 +347,7 @@ export function TaskForm(props: Props) {
             <FormInput
               error={props.error?.zodError?.fieldErrors?.description}
               label="Description"
-              value={form.description}
+              value={form.description || ""}
               multiline
               onChangeText={(description) => setForm((f) => ({ ...f, description }))}
             />

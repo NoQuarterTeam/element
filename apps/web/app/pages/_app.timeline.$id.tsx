@@ -86,7 +86,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
           select: taskItemSelectFields,
           where: { id: taskId },
           data: {
-            date: data.date ? dayjs(data.date).startOf("d").add(12, "h").toDate() : undefined,
+            date: data.date ? dayjs(data.date).startOf("day").add(12, "hours").toDate() : undefined,
             durationHours: data.durationHours,
             durationMinutes: data.durationMinutes,
             startTime: data.startTime,
@@ -107,7 +107,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         const updatedTask = await db.task.update({
           select: taskItemSelectFields,
           where: { id: taskId },
-          data: { date: dayjs().startOf("d").add(12, "h").toDate(), isComplete: true },
+          data: { date: dayjs().startOf("day").add(12, "hours").toDate(), isComplete: true },
         })
         return formSuccess({ task: updatedTask })
       } catch (e: any) {

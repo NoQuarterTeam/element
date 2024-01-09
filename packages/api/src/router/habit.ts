@@ -61,7 +61,7 @@ export const habitRouter = createTRPCRouter({
   create: protectedProcedure
     .input(habitSchema.merge(z.object({ reminders: z.array(habitReminderSchema).optional() })))
     .mutation(async ({ ctx, input: { reminders, ...input } }) => {
-      const startDate = dayjs().startOf("day").add(12, "h").toDate()
+      const startDate = dayjs().startOf("day").add(12, "hours").toDate()
       const lastHabit = await ctx.prisma.habit.findFirst({
         where: { archivedAt: null, creatorId: { equals: ctx.user.id } },
         orderBy: { order: "desc" },
@@ -74,7 +74,6 @@ export const habitRouter = createTRPCRouter({
           reminders.map(async (r) => {
             const reminder = await ctx.prisma.habitReminder.create({ data: { ...r, habitId: habit.id } })
             const upstashScheduleId = await createHabitReminder({ id: reminder.id, time: r.time })
-            if (!upstashScheduleId) return
             return ctx.prisma.habitReminder.update({ where: { id: reminder.id }, data: { upstashScheduleId } })
           }),
         )
@@ -115,7 +114,6 @@ export const habitRouter = createTRPCRouter({
                 reminder = await ctx.prisma.habitReminder.create({ data: { ...r, habitId: habit.id } })
               }
               const upstashScheduleId = await createHabitReminder({ id: reminder.id, time: r.time })
-              if (!upstashScheduleId) return
               return ctx.prisma.habitReminder.update({ where: { id: r.id }, data: { time: r.time, upstashScheduleId } })
             }),
           )
@@ -161,7 +159,7 @@ export const habitRouter = createTRPCRouter({
   archive: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     const habit = await ctx.prisma.habit.update({
       where: { id: input.id },
-      data: { archivedAt: dayjs().startOf("day").add(12, "h").toDate() },
+      data: { archivedAt: dayjs().startOf("day").add(12, "hours").toDate() },
       include: { reminders: true },
     })
     await ctx.prisma.habitReminder.deleteMany({ where: { habitId: { equals: habit.id } } })

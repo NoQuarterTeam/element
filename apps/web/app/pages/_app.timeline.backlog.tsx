@@ -141,7 +141,7 @@ function BacklogItem({ task }: { task: BacklogTask }) {
           </ModalRoot>
 
           <updateFetcher.Form action={`/timeline/${task.id}`} method="POST">
-            <input type="hidden" name="date" value={dayjs().startOf("d").add(12, "h").format()} />
+            <input type="hidden" name="date" value={dayjs().startOf("day").add(12, "hours").format()} />
             <Tooltip label="Add to timeline">
               <IconButton
                 variant="outline"
