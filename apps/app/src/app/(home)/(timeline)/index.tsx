@@ -158,7 +158,7 @@ export default function Timeline() {
             setTimeout(() => {
               timelineRef.current?.scrollTo({ x: DAY_WIDTH * daysBack, animated: false })
               setIsLoaded(true)
-            }, 1000)
+            }, 500)
           }}
           // contentOffset={{ x: 7 * DAY_WIDTH, y: 0 }}
           onScroll={onScroll}

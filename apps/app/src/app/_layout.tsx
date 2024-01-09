@@ -14,6 +14,7 @@ import { useMe } from "../lib/hooks/useMe"
 import { useNotificationObserver } from "../lib/hooks/useNotificationObserver"
 import { useBackgroundColor } from "../lib/tailwind"
 import { api, TRPCProvider } from "../lib/utils/api"
+import dayjs from "dayjs"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -67,7 +68,10 @@ function PrefetchTabs(props: { children: React.ReactNode }) {
     if (isLoading) return
     if (!me) return setIsDoneChecking(true)
     if (!features.includes("habits")) return setIsDoneChecking(true)
-    Promise.all([utils.habit.progressToday.fetch(), utils.habit.allByDate.fetch({ date: new Date() })])
+    Promise.all([
+      utils.habit.progressToday.fetch(),
+      utils.habit.allByDate.fetch({ date: dayjs().startOf("day").add(12, "hours").toDate() }),
+    ])
       .catch()
       .finally(() => setIsDoneChecking(true))
   }, [me, isLoading, features, utils.habit.progressToday, utils.habit.allByDate])

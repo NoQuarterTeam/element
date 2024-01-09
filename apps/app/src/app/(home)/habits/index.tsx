@@ -33,16 +33,11 @@ dayjs.extend(updateLocale)
 dayjs.updateLocale("en", {
   weekStart: 1,
 })
+
 type Habit = NonNullable<RouterOutputs["habit"]["allByDate"]>["habits"][number]
 
-const WEEKS_BACK = 6
-const todaysWeek = dayjs().startOf("week")
-const weeks = Array.from({ length: WEEKS_BACK })
-  .map((_, i) => todaysWeek.subtract(i, "week"))
-  .reverse()
-
 export default function Habits() {
-  const [date, setDate] = React.useState(new Date())
+  const [date, setDate] = React.useState(dayjs().startOf("day").add(12, "hours").toDate())
   const { data, isLoading } = api.habit.allByDate.useQuery({ date })
 
   // const dateLabel = dayjs(date).isSame(dayjs(), "date")
@@ -73,47 +68,16 @@ export default function Habits() {
           </TouchableOpacity>
         </Link>
       </View>
-      <View className="border-gray-75 border-b dark:border-gray-800">
+      <View className="border-gray-75 border-b pb-2 dark:border-gray-800">
         <ScrollView
           ref={scrollViewRef}
           pagingEnabled
-          style={{ height: 60, flexGrow: 0 }}
+          style={{ flexGrow: 0 }}
           // onLayout={() => scrollViewRef.current?.scrollToEnd()}
           horizontal
           showsHorizontalScrollIndicator={false}
         >
-          {weeks.map((week) => {
-            return (
-              <View key={week.format("YYYY-MM-DD")} style={{ width }} className="flex flex-row">
-                {Array.from({ length: 7 }).map((_, i) => {
-                  const currentDay = week.add(i, "day")
-
-                  return (
-                    <TouchableOpacity
-                      disabled={dayjs().isBefore(dayjs(currentDay), "date")}
-                      key={currentDay.format("YYYY-MM-DD")}
-                      style={{ width: width / 7 }}
-                      onPress={() => setDate(currentDay.toDate())}
-                      className={join("flex flex-col items-center", dayjs().isBefore(dayjs(currentDay), "date") && "opacity-50")}
-                    >
-                      <Text className="text-xxs opacity-80">{dayjs(currentDay).format("ddd")}</Text>
-                      <View
-                        className={join(
-                          "flex h-8 w-8 items-center justify-center rounded-full border border-gray-100 dark:border-gray-800",
-                          dayjs(currentDay).isSame(dayjs(date), "date") && "bg-black dark:bg-white",
-                          dayjs(currentDay).isSame(dayjs(), "date") && "border-primary",
-                        )}
-                      >
-                        <Text className={join("text-xs", dayjs(currentDay).isSame(date, "date") && "text-white dark:text-black")}>
-                          {dayjs(currentDay).date()}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  )
-                })}
-              </View>
-            )
-          })}
+          <Timeline date={date} onSetDate={setDate} />
         </ScrollView>
       </View>
 
@@ -145,6 +109,54 @@ export default function Habits() {
         </Link>
       </View>
     </View>
+  )
+}
+
+const WEEKS_BACK = 3
+const todaysWeek = dayjs().startOf("week")
+const weeks = Array.from({ length: WEEKS_BACK })
+  .map((_, i) => todaysWeek.subtract(i, "week"))
+  .reverse()
+
+function Timeline({ date, onSetDate }: { date: Date; onSetDate: (date: Date) => void }) {
+  return (
+    <>
+      {weeks.map((week, weekIndex) => {
+        return (
+          <View key={weekIndex} style={{ width, flexDirection: "row" }}>
+            {Array.from({ length: 7 }).map((_, dayIndex) => (
+              <HabitDay key={dayIndex} onSetDate={onSetDate} activeDate={date} day={week.add(dayIndex, "day")} />
+            ))}
+          </View>
+        )
+      })}
+    </>
+  )
+}
+
+function HabitDay({ activeDate, day, onSetDate }: { activeDate: Date; day: dayjs.Dayjs; onSetDate: (date: Date) => void }) {
+  const isActive = dayjs(day).isSame(activeDate, "date")
+
+  return (
+    <TouchableOpacity
+      disabled={dayjs().isBefore(dayjs(day), "date")}
+      key={day.format("YYYY-MM-DD")}
+      style={{ width: width / 7, display: "flex", alignItems: "center" }}
+      onPress={() => onSetDate(dayjs(day).startOf("day").add(12, "hours").toDate())}
+      className={join("flex flex-col items-center", dayjs().isBefore(dayjs(day), "date") && "opacity-50")}
+    >
+      <Text>{dayjs(day).format("ddd")}</Text>
+
+      <View
+        className={join(
+          "flex h-8 w-8 items-center justify-center rounded-full border border-gray-100 dark:border-gray-800",
+          dayjs(day).isSame(dayjs(activeDate), "date") && "bg-black dark:bg-white",
+          dayjs(day).isSame(dayjs(), "date") && "border-primary",
+        )}
+      >
+        <Text className={join("text-xs", isActive && "text-white dark:text-black")}>{dayjs(day).date()}</Text>
+      </View>
+    </TouchableOpacity>
   )
 }
 
