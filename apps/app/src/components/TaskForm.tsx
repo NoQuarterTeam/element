@@ -41,8 +41,6 @@ type Props = {
     }
 )
 
-const MIN_FOOTER_PADDING = 20
-
 export function TaskForm(props: Props) {
   const router = useRouter()
   const canGoBack = router.canGoBack()
@@ -114,14 +112,14 @@ export function TaskForm(props: Props) {
 
   const inputsRef = React.useRef(form.todos.map(() => React.createRef<TextInput>()))
 
-  const buttonContainerPaddingValue = useSharedValue(MIN_FOOTER_PADDING)
+  const buttonContainerPaddingValue = useSharedValue(0)
   const buttonContainerAnimatedStyle = useAnimatedStyle(() => {
     return {
       paddingBottom: buttonContainerPaddingValue.value,
     }
   })
   useSoftInputHeightChanged(({ softInputHeight }) => {
-    buttonContainerPaddingValue.value = withTiming(Math.max(softInputHeight, MIN_FOOTER_PADDING))
+    buttonContainerPaddingValue.value = withTiming(Math.max(0, softInputHeight - 20))
   })
 
   const isDark = useColorScheme() === "dark"
@@ -129,7 +127,7 @@ export function TaskForm(props: Props) {
     <View className="flex-1">
       <ScrollView
         ref={scrollRef}
-        contentContainerStyle={{ paddingBottom: MIN_FOOTER_PADDING * 4 }}
+        contentContainerStyle={{ paddingBottom: 80 }}
         className="px-4"
         contentInsetAdjustmentBehavior="always"
         keyboardShouldPersistTaps="handled"
