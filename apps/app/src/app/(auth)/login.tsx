@@ -25,7 +25,10 @@ export default function Login() {
     onSuccess: async (data) => {
       await AsyncStorage.setItem(AUTH_TOKEN, data.token)
       queryClient.user.me.setData(undefined, data.user)
-      router.replace("/")
+
+      router.push("/")
+      // router.back()
+
       const token = await registerPushToken()
       if (!token) return
       pushToken.mutate({ token })

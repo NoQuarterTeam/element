@@ -9,6 +9,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated"
+import { SafeAreaView } from "react-native-safe-area-context"
 import { useActionSheet } from "@expo/react-native-action-sheet"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
@@ -59,7 +60,7 @@ export default function Habits() {
     isMounted.current = true
   }, [])
   return (
-    <View className="relative w-full flex-1 pt-16">
+    <SafeAreaView edges={["top"]} className="flex-1 pt-2">
       <View className="flex flex-row items-center justify-between px-4 pb-2">
         <Heading className="text-3xl">Habits</Heading>
         <Link href="/habits/stats" asChild>
@@ -108,7 +109,7 @@ export default function Habits() {
           </TouchableOpacity>
         </Link>
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 

@@ -53,7 +53,7 @@ export const habitRouter = createTRPCRouter({
   byId: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
     const habit = await ctx.prisma.habit.findFirst({
       where: { id: input.id, creatorId: { equals: ctx.user.id } },
-      include: { reminders: true },
+      include: { reminders: { orderBy: { time: "asc" } } },
     })
     if (!habit) throw new TRPCError({ code: "NOT_FOUND" })
     return habit

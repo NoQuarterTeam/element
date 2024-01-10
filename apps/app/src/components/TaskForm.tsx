@@ -286,7 +286,7 @@ export function TaskForm(props: Props) {
               onCancel={timeProps.onClose}
             />
           </View>
-          {!props.task && me && (
+          {!props.task && me && me.stripeSubscriptionId && (
             <View className="space-y-2">
               <FormInput
                 label="Repeat"
@@ -424,40 +424,42 @@ export function TaskForm(props: Props) {
               <Icon icon={Plus} size={18} className="mt-1" />
             </TouchableOpacity>
           </View>
-
-          <FormError error={props.error?.formError} />
         </View>
       </ScrollView>
       <Animated.View
         style={buttonContainerAnimatedStyle}
         className="border-t border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
       >
-        <View className="flex flex-row items-center space-x-2 px-4 py-2">
-          {props.task && <TaskActions task={props.task} />}
-          <Button
-            className="flex-1"
-            isLoading={props.isLoading}
-            onPress={() => {
-              if (!form.element) return toast({ title: "Please select an element", type: "error" })
-              const payload = {
-                ...form,
-                durationHours: Number(form.durationHours),
-                durationMinutes: Number(form.durationMinutes),
-              }
-              if (props.task) {
-                return props.onUpdate({ id: props.task.id, ...payload, elementId: form.element.id })
-              } else {
-                return props.onCreate({
-                  ...payload,
-                  repeat: repeat as TaskRepeat | null,
-                  repeatEndDate: repeat ? dayjs(repeatEndDate).toDate() : null,
-                  elementId: form.element.id,
-                })
-              }
-            }}
-          >
-            {props.task ? "Update" : "Create"}
-          </Button>
+        <View className="space-y-2 px-4 py-2">
+          <FormError error={props.error?.formError} />
+
+          <View className="flex flex-row items-center space-x-2">
+            {props.task && <TaskActions task={props.task} />}
+            <Button
+              className="flex-1"
+              isLoading={props.isLoading}
+              onPress={() => {
+                if (!form.element) return toast({ title: "Please select an element", type: "error" })
+                const payload = {
+                  ...form,
+                  durationHours: Number(form.durationHours),
+                  durationMinutes: Number(form.durationMinutes),
+                }
+                if (props.task) {
+                  return props.onUpdate({ id: props.task.id, ...payload, elementId: form.element.id })
+                } else {
+                  return props.onCreate({
+                    ...payload,
+                    repeat: repeat as TaskRepeat | null,
+                    repeatEndDate: repeat ? dayjs(repeatEndDate).toDate() : null,
+                    elementId: form.element.id,
+                  })
+                }
+              }}
+            >
+              {props.task ? "Update" : "Create"}
+            </Button>
+          </View>
         </View>
       </Animated.View>
     </View>
@@ -504,6 +506,9 @@ function TaskActions({ task }: { task: Task }) {
       // have to refetch to get the new order, or would have to calculate here
       void utils.task.timeline.refetch({ daysBack, daysForward })
       router.back()
+    },
+    onError: (error) => {
+      toast({ title: error.message })
     },
   })
   const handleDuplicate = () => {

@@ -1,5 +1,6 @@
 import type * as React from "react"
 import { Text, TouchableOpacity, View } from "react-native"
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
 import { useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 import { X } from "lucide-react-native"
@@ -22,26 +23,22 @@ export function ModalView(props: Props) {
 
   const canGoBack = router.canGoBack()
   return (
-    <View
-      className={join(
-        "h-full bg-white px-4 dark:bg-black",
-        props.onBack || canGoBack ? "pt-6" : "pt-16",
-        props.containerClassName,
-      )}
-    >
-      <View className="flex flex-row justify-between">
-        {props.title ? <Heading className="text-2xl">{props.title}</Heading> : <Text />}
+    <SafeAreaProvider style={{ flex: 1 }}>
+      <SafeAreaView className={join("flex-1 bg-white px-4 pt-4 dark:bg-black", props.containerClassName)}>
+        <View className="flex flex-row justify-between">
+          {props.title ? <Heading className="text-2xl">{props.title}</Heading> : <Text />}
 
-        <TouchableOpacity
-          onPress={props.onBack ? props.onBack : canGoBack ? router.back : () => router.replace("/")}
-          className="p-2"
-        >
-          <Icon icon={X} size={24} />
-        </TouchableOpacity>
-      </View>
-      {props.children}
-      <StatusBar style="light" />
-      <Toast />
-    </View>
+          <TouchableOpacity
+            onPress={props.onBack ? props.onBack : canGoBack ? router.back : () => router.replace("/")}
+            className="p-2"
+          >
+            <Icon icon={X} size={24} />
+          </TouchableOpacity>
+        </View>
+        {props.children}
+        <StatusBar style="light" />
+        <Toast />
+      </SafeAreaView>
+    </SafeAreaProvider>
   )
 }

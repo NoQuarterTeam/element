@@ -1,5 +1,6 @@
 import type * as React from "react"
 import { TouchableOpacity, View } from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
 import { useRouter } from "expo-router"
 import { ChevronLeft } from "lucide-react-native"
 
@@ -15,7 +16,7 @@ export function ScreenView(props: Props) {
   const router = useRouter()
   const canGoBack = router.canGoBack()
   return (
-    <View className="px-4 pt-16">
+    <SafeAreaView className="flex-1 px-4 pt-2">
       <View className="flex flex-row items-center">
         <TouchableOpacity
           activeOpacity={0.7}
@@ -28,6 +29,6 @@ export function ScreenView(props: Props) {
         <Heading className="text-2xl dark:text-white">{props.title}</Heading>
       </View>
       {props.children}
-    </View>
+    </SafeAreaView>
   )
 }

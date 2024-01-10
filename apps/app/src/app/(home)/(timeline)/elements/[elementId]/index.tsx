@@ -1,13 +1,11 @@
-import { ActivityIndicator, ScrollView, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, ScrollView, View } from "react-native"
 import { useGlobalSearchParams, useRouter } from "expo-router"
-import { Trash } from "lucide-react-native"
 
-import { ElementForm } from "../../../../components/ElementForm"
-import { Icon } from "../../../../components/Icon"
-import { ModalView } from "../../../../components/ModalView"
-import { Text } from "../../../../components/Text"
-import { useTimelineDays } from "../../../../lib/hooks/useTimelineDays"
-import { api } from "../../../../lib/utils/api"
+import { ElementForm } from "../../../../../components/ElementForm"
+import { ModalView } from "../../../../../components/ModalView"
+import { Text } from "../../../../../components/Text"
+import { useTimelineDays } from "../../../../../lib/hooks/useTimelineDays"
+import { api } from "../../../../../lib/utils/api"
 
 export default function ElementDetail() {
   const utils = api.useUtils()
@@ -50,14 +48,6 @@ export default function ElementDetail() {
           showsVerticalScrollIndicator={false}
         >
           <ElementForm error={error?.data} element={data} onUpdate={mutate} isLoading={updateLoading} />
-          <View className="flex flex-row items-center justify-center">
-            <TouchableOpacity
-              onPress={() => mutate({ id: data.id, archivedAt: new Date() })}
-              className="rounded-full border border-gray-100 p-4 dark:border-gray-600"
-            >
-              <Icon icon={Trash} size={24} color="red" />
-            </TouchableOpacity>
-          </View>
         </ScrollView>
       )}
     </ModalView>
