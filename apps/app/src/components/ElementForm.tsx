@@ -47,7 +47,9 @@ export function ElementForm(props: Props) {
       >
         Save
       </Button>
-      <FormError error={props.error?.formError} />
+      <View>
+        <FormError error={props.error?.formError} />
+      </View>
     </View>
   )
 }

@@ -5,6 +5,7 @@ import { type Element, type Prisma } from "@element/database/types"
 import { elementSchema, updateElementSchema } from "@element/server-schemas"
 
 import { createTRPCRouter, protectedProcedure } from "../trpc"
+import { MAX_FREE_ELEMENTS } from "@element/shared"
 
 export const elementRouter = createTRPCRouter({
   all: protectedProcedure.query(({ ctx }) => {
@@ -63,7 +64,15 @@ export const elementRouter = createTRPCRouter({
   byId: protectedProcedure.input(z.object({ id: z.string() })).query(({ ctx, input }) => {
     return ctx.prisma.element.findUnique({ where: { id: input.id, creatorId: { equals: ctx.user.id } } })
   }),
-  create: protectedProcedure.input(elementSchema).mutation(({ ctx, input }) => {
+  create: protectedProcedure.input(elementSchema).mutation(async ({ ctx, input }) => {
+    if (ctx.user.role !== "ADMIN" && !ctx.user.stripeSubscriptionId) {
+      const count = await ctx.prisma.element.count({ where: { creatorId: { equals: ctx.user.id } } })
+      if (count >= MAX_FREE_ELEMENTS)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You have reached the maximum number of elements for the free plan. Please upgrade to add more.",
+        })
+    }
     return ctx.prisma.element.create({ data: { ...input, creatorId: ctx.user.id } })
   }),
   update: protectedProcedure

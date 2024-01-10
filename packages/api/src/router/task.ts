@@ -4,7 +4,7 @@ import { z } from "zod"
 
 import { type Prisma } from "@element/database/types"
 import { taskSchema, todoSchema } from "@element/server-schemas"
-import { getRepeatingDatesBetween } from "@element/shared"
+import { MAX_FREE_TASKS, getRepeatingDatesBetween } from "@element/shared"
 
 import { createTRPCRouter, protectedProcedure } from "../trpc"
 
@@ -111,6 +111,15 @@ export const taskRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input: { todos, repeatEndDate, ...data } }) => {
+      if (ctx.user.role !== "ADMIN" && !ctx.user.stripeSubscriptionId) {
+        const taskCount = await ctx.prisma.task.count({ where: { creatorId: { equals: ctx.user.id } } })
+        if (taskCount >= MAX_FREE_TASKS)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "You have reached the maximum number of tasks for the free plan. Please upgrade to add more.",
+          })
+      }
+
       const date = data.date ? dayjs(data.date).startOf("day").add(12, "hours").toDate() : undefined
       const lastTask = await ctx.prisma.task.findFirst({
         select: { order: true },
@@ -129,7 +138,7 @@ export const taskRouter = createTRPCRouter({
           },
         })
 
-        if (task.date && data.repeat && repeatEndDate) {
+        if (task.date && data.repeat && repeatEndDate && ctx.user.stripeSubscriptionId) {
           const repeatEndDateAsDate = dayjs(repeatEndDate).startOf("day").add(12, "hours").toDate()
           const dates = getRepeatingDatesBetween(task.date, repeatEndDateAsDate, data.repeat)
           await Promise.all(
@@ -178,6 +187,11 @@ export const taskRouter = createTRPCRouter({
       }
     }),
   duplicate: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input: { id } }) => {
+    if (ctx.user.role !== "ADMIN" && !ctx.user.stripeSubscriptionId) {
+      const taskCount = await ctx.prisma.task.count({ where: { creatorId: { equals: ctx.user.id } } })
+      if (taskCount >= MAX_FREE_TASKS) throw new TRPCError({ code: "BAD_REQUEST", message: "Maximum number of tasks reached." })
+    }
+
     const taskToDupe = await ctx.prisma.task.findUniqueOrThrow({ where: { id }, include: { todos: true } })
     const task = await ctx.prisma.task.create({
       select: taskItemSelectFields,
