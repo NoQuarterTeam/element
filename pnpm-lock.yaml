@@ -571,8 +571,8 @@ importers:
         specifier: ^1.13.0
         version: 1.13.0
       '@prisma/adapter-planetscale':
-        specifier: ^5.7.1
-        version: 5.7.1(@planetscale/database@1.13.0)
+        specifier: 5.8.0
+        version: 5.8.0(@planetscale/database@1.13.0)
       '@prisma/client':
         specifier: 5.8.0
         version: 5.8.0(prisma@5.8.0)
@@ -4122,13 +4122,13 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
-  /@prisma/adapter-planetscale@5.7.1(@planetscale/database@1.13.0):
-    resolution: {integrity: sha512-RA5p09uveTfh6N2WCB34xVMGPs+ZEsGym3pvlhISPkrjwi81hU3h+Nv0jPSHo4zVcFeGUM/byQibkbh7YCZTrQ==}
+  /@prisma/adapter-planetscale@5.8.0(@planetscale/database@1.13.0):
+    resolution: {integrity: sha512-QENcbJ8Wq89mFO4N5+0h3YY5IDeUiZvqRuqmi5A18aG53+kMaL03rh9063ZQHu+A/c3I04Yo8IEaXTFF9FmqYg==}
     peerDependencies:
       '@planetscale/database': ^1.11.0
     dependencies:
       '@planetscale/database': 1.13.0
-      '@prisma/driver-adapter-utils': 5.7.1
+      '@prisma/driver-adapter-utils': 5.8.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -4150,8 +4150,8 @@ packages:
     resolution: {integrity: sha512-ZqPpkvbovu/kQJ1bvy57NO4dw97fpQGcbQSCtsqlwSE1UNKJP75R3BKxdznk8ZPMY+GJdMRetWNv4oAvSbWn8Q==}
     dev: false
 
-  /@prisma/driver-adapter-utils@5.7.1:
-    resolution: {integrity: sha512-q4cWte5QYCH4RCeo/UBKVG4HvqjG7YoSrNmn2fzWU6da5cCqw9h8MIGO+Jkpb6S5ySSTW32t63khujYvytXsYg==}
+  /@prisma/driver-adapter-utils@5.8.0:
+    resolution: {integrity: sha512-DVeDVgsXU1IEggYBpd53knz8jHuCX6DglstcE1dEmWZ+sV2lvt+hiWZo+YakG3Za/ET5Wrd8TOsCOYiAwfz93A==}
     dependencies:
       debug: 4.3.4
     transitivePeerDependencies:
