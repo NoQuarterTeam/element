@@ -1,13 +1,14 @@
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from "react-native"
+import { useActionSheet } from "@expo/react-native-action-sheet"
+import * as Haptics from "expo-haptics"
 import { Link, useRouter } from "expo-router"
 import { Plus } from "lucide-react-native"
-import * as Haptics from "expo-haptics"
+
 import { Icon } from "../../../../components/Icon"
 import { ModalView } from "../../../../components/ModalView"
 import { Text } from "../../../../components/Text"
-import { api, type RouterOutputs } from "../../../../lib/utils/api"
-import { useActionSheet } from "@expo/react-native-action-sheet"
 import { useTimelineDays } from "../../../../lib/hooks/useTimelineDays"
+import { api, type RouterOutputs } from "../../../../lib/utils/api"
 
 export default function Elements() {
   const { data, isLoading } = api.element.grouped.useQuery()
