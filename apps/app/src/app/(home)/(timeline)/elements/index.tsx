@@ -1,11 +1,13 @@
 import { ActivityIndicator, FlatList, TouchableOpacity, View } from "react-native"
-import { Link } from "expo-router"
+import { Link, useRouter } from "expo-router"
 import { Plus } from "lucide-react-native"
-
+import * as Haptics from "expo-haptics"
 import { Icon } from "../../../../components/Icon"
 import { ModalView } from "../../../../components/ModalView"
 import { Text } from "../../../../components/Text"
 import { api, type RouterOutputs } from "../../../../lib/utils/api"
+import { useActionSheet } from "@expo/react-native-action-sheet"
+import { useTimelineDays } from "../../../../lib/hooks/useTimelineDays"
 
 export default function Elements() {
   const { data, isLoading } = api.element.grouped.useQuery()
@@ -41,17 +43,65 @@ export default function Elements() {
 }
 
 function ElementItem({ element }: { element: RouterOutputs["element"]["grouped"][number] }) {
+  const router = useRouter()
+  const utils = api.useUtils()
+
+  const { daysBack, daysForward } = useTimelineDays()
+  const { mutate } = api.element.update.useMutation({
+    onSuccess: () => {
+      void utils.element.all.refetch()
+      void utils.element.grouped.refetch()
+      void utils.task.timeline.refetch({ daysBack, daysForward })
+      if (router.canGoBack()) {
+        router.back()
+      } else {
+        router.replace("/")
+      }
+    },
+  })
+  const { showActionSheetWithOptions } = useActionSheet()
+  const handleOpenMenu = () => {
+    const options = ["Cancel", "Edit", "Move", "Archive"]
+    const cancelButtonIndex = 0
+    const destructiveButtonIndex = 3
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+
+    showActionSheetWithOptions({ options, cancelButtonIndex, destructiveButtonIndex }, (selectedIndex) => {
+      switch (selectedIndex) {
+        case cancelButtonIndex:
+          // Canceled
+          break
+        case 1:
+          // Edit
+          router.push(`/elements/${element.id}`)
+          break
+        case 2:
+          // Move
+          router.push(`/elements/${element.id}/move?parentId=${element.parentId || ""}`)
+          break
+        case destructiveButtonIndex:
+          // Archive
+          mutate({ id: element.id, archivedAt: new Date() })
+          break
+      }
+    })
+  }
   return (
     <View>
-      <Link href={`/elements/${element.id}`} asChild>
-        <TouchableOpacity activeOpacity={0.7} className="flex flex-row items-center space-x-2 py-1">
-          <View
-            className="sq-5 rounded-full border border-gray-300 dark:border-gray-700"
-            style={{ backgroundColor: element.color }}
-          />
-          <Text className="text-lg">{element.name}</Text>
-        </TouchableOpacity>
-      </Link>
+      <TouchableOpacity
+        onPress={() => router.push(`/elements/${element.id}`)}
+        onLongPress={handleOpenMenu}
+        activeOpacity={0.7}
+        className="flex flex-row items-center space-x-2 py-1"
+      >
+        <View
+          className="sq-5 rounded-full border border-gray-300 dark:border-gray-700"
+          style={{ backgroundColor: element.color }}
+        />
+        <Text className="text-lg">{element.name}</Text>
+      </TouchableOpacity>
+
       {element.children && element.children.length > 0 && (
         <View className="pl-4">
           {element.children.map((child) => (

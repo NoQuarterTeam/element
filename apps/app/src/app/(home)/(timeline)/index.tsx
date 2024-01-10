@@ -240,7 +240,7 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
       {me && (
         <View pointerEvents="box-none" className="space-y-1">
           <Animated.View style={{ opacity: backlogOpacity, transform: [{ translateY: backlogTranslateY }] }}>
-            <Link href={`backlog`} asChild>
+            <Link href={`/backlog`} asChild>
               <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
                 <Icon icon={Clock} size={24} />
               </TouchableOpacity>
@@ -248,7 +248,7 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
           </Animated.View>
 
           <Animated.View style={{ opacity: elementsOpacity, transform: [{ translateY: elementsTranslateY }] }}>
-            <Link href={`elements`} asChild>
+            <Link href={`/elements`} asChild>
               <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
                 <Icon icon={Book} size={24} />
               </TouchableOpacity>
@@ -270,7 +270,7 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
       >
         <Icon icon={Calendar} size={24} />
       </TouchableOpacity>
-      <Link href={`new?date=${dayjs().format("YYYY-MM-DD")}`} asChild>
+      <Link href={`/new?date=${dayjs().format("YYYY-MM-DD")}`} asChild>
         <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
           <Icon icon={Plus} size={24} color="black" />
         </TouchableOpacity>

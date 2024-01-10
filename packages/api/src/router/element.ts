@@ -41,6 +41,7 @@ export const elementRouter = createTRPCRouter({
       id: true,
       name: true,
       archivedAt: true,
+      parentId: true,
       color: true,
     } satisfies Prisma.ElementSelect
     return ctx.prisma.element.findMany({
