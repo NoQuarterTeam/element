@@ -33,11 +33,13 @@ export default function Elements() {
             renderItem={({ item }) => <ElementItem element={item} />}
           />
         )}
-        <Link href={`/elements/create`} asChild>
-          <TouchableOpacity className="bg-primary-500/90 sq-14 absolute bottom-6 right-4 flex items-center justify-center rounded-full">
-            <Icon icon={Plus} size={24} color="black" />
-          </TouchableOpacity>
-        </Link>
+        <View pointerEvents="box-none" className="absolute bottom-4 left-0 right-0 flex items-center justify-center">
+          <Link href={`/elements/create`} asChild>
+            <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
+              <Icon icon={Plus} size={24} color="black" />
+            </TouchableOpacity>
+          </Link>
+        </View>
       </View>
     </ModalView>
   )

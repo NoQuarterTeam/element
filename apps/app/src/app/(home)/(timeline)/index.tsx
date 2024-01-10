@@ -13,6 +13,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated"
+import { SafeAreaView } from "react-native-safe-area-context"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import { BlurView } from "expo-blur"
@@ -53,16 +54,18 @@ export const getDays = (startDate: string, daysBack: number, daysForward: number
 const MONTH_NAMES = ["jan.", "feb.", "mar.", "apr.", "may.", "jun.", "jul.", "aug.", "sept.", "oct.", "nov.", "dec."]
 
 export default function Timeline() {
-  const hasSeenOnboarding = useOnboarding((s) => s.hasSeenOnboarding)
+  const { hasSeenOnboarding } = useOnboarding()
+  const { me } = useMe()
 
   React.useEffect(() => {
+    if (!me) return
     const timeout = setTimeout(() => {
       if (!hasSeenOnboarding) {
         router.push("/onboarding")
       }
     }, 1000)
     return () => clearTimeout(timeout)
-  }, [hasSeenOnboarding])
+  }, [hasSeenOnboarding, me])
 
   const [isLoaded, setIsLoaded] = React.useState(false)
 
@@ -116,7 +119,6 @@ export default function Timeline() {
     // }
   })
 
-  const { me } = useMe()
   const { data, isLoading, refetch } = api.task.timeline.useQuery(
     { daysBack, daysForward },
     { staleTime: Infinity, enabled: !!me },
@@ -132,7 +134,7 @@ export default function Timeline() {
   // }, [data, days])
 
   return (
-    <View className="flex-1 pt-16">
+    <SafeAreaView edges={["top"]} className="flex-1 pt-2">
       <Animated.View className="flex flex-row" style={{ transform: [{ translateX: headerTranslateX }] }}>
         {months.map(({ month, year, width }, i) => {
           // left start is the sum of all previous months' widths
@@ -155,8 +157,10 @@ export default function Timeline() {
       <Animated.ScrollView ref={outerTimelineRef} refreshControl={<RefreshControl refreshing={false} onRefresh={refetch} />}>
         <Animated.ScrollView
           onLayout={() => {
-            setIsLoaded(true)
             timelineRef.current?.scrollTo({ x: DAY_WIDTH * daysBack, animated: false })
+            setTimeout(() => {
+              setIsLoaded(true)
+            }, 500)
           }}
           // contentOffset={{ x: 7 * DAY_WIDTH, y: 0 }}
           onScroll={onScroll}
@@ -198,7 +202,7 @@ export default function Timeline() {
           <ActivityIndicator />
         </View>
       )}
-    </View>
+    </SafeAreaView>
   )
 }
 

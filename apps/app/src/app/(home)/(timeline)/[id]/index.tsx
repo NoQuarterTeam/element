@@ -1,9 +1,8 @@
 import { ActivityIndicator, View } from "react-native"
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
 import dayjs from "dayjs"
 import { useLocalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
-
-import { join } from "@element/shared"
 
 import { TaskForm } from "../../../../components/TaskForm"
 import { Text } from "../../../../components/Text"
@@ -14,11 +13,10 @@ import { useTimelineDays } from "../../../../lib/hooks/useTimelineDays"
 import { api, type RouterInputs, type RouterOutputs } from "../../../../lib/utils/api"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>
+
 export default function TaskDetail() {
   const { id } = useLocalSearchParams()
   const { me } = useMe()
-  const router = useRouter()
-  const canGoBack = router.canGoBack()
 
   const { data, isLoading } = api.task.byId.useQuery({ id: String(id) }, { enabled: !!id && !!me })
 
@@ -26,25 +24,27 @@ export default function TaskDetail() {
   const temporaryTask = tempTasks.find((t) => t.id === id)
 
   return (
-    <View className={join("flex-1", canGoBack ? "pt-6" : "pt-16")}>
-      {me ? (
-        isLoading && !data ? (
-          <View className="flex flex-row items-end justify-center pt-6">
-            <ActivityIndicator />
-          </View>
-        ) : !data ? (
-          <Text className="pt-6 text-center">Task not found</Text>
+    <SafeAreaProvider className="flex-1">
+      <SafeAreaView className="flex-1 pt-4">
+        {me ? (
+          isLoading && !data ? (
+            <View className="flex flex-row items-end justify-center pt-6">
+              <ActivityIndicator />
+            </View>
+          ) : !data ? (
+            <Text className="pt-6 text-center">Task not found</Text>
+          ) : (
+            <EditTaskForm task={data} />
+          )
+        ) : temporaryTask ? (
+          <EditTaskForm task={temporaryTask} />
         ) : (
-          <EditTaskForm task={data} />
-        )
-      ) : temporaryTask ? (
-        <EditTaskForm task={temporaryTask} />
-      ) : (
-        <Text className="pt-6 text-center">Task not found</Text>
-      )}
-      <StatusBar style="light" />
-      <Toast />
-    </View>
+          <Text className="pt-6 text-center">Task not found</Text>
+        )}
+        <StatusBar style="light" />
+        <Toast />
+      </SafeAreaView>
+    </SafeAreaProvider>
   )
 }
 

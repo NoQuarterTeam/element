@@ -22,6 +22,8 @@ interface Props {
   day: string
   habitEntries: TimelineHabitEntry[]
 }
+
+const habitsQueryKey = ["habits"]
 export const Habits = React.memo(_Habits)
 
 function _Habits({ habits, day, habitEntries }: Props) {
@@ -112,14 +114,10 @@ function HabitForm(props: { onClose: () => void; day: string }) {
   >({
     onFinish: (res) => {
       if (!res.success) return
-      console.log("MAKING IT HEE")
-
-      const habitsRes = client.getQueryData<TimelineHabitResponse>(["habits"])
-      if (!habitsRes) return
-      console.log("naywere")
-      client.setQueryData<TimelineHabitResponse>(["habits"], {
-        habits: [...habitsRes.habits, res.habit],
-        habitEntries: habitsRes.habitEntries || [],
+      const habitsRes = client.getQueryData<TimelineHabitResponse>(habitsQueryKey)
+      client.setQueryData<TimelineHabitResponse>(habitsQueryKey, {
+        habits: [...(habitsRes?.habits || []), res.habit],
+        habitEntries: habitsRes?.habitEntries || [],
       })
       props.onClose()
     },
@@ -153,8 +151,8 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
   const updateHabitFetcher = useFetcher()
   const handleUpdateHabit = (name: string) => {
     updateHabitFetcher.submit({ name, _action: HabitActionMethods.Edit }, { action: `/api/habits/${habit.id}`, method: "post" })
-    const res = client.getQueryData<TimelineHabitResponse>(["habits"])
-    client.setQueryData(["habits"], {
+    const res = client.getQueryData<TimelineHabitResponse>(habitsQueryKey)
+    client.setQueryData(habitsQueryKey, {
       habits: res?.habits.map((h) => (h.id === habit.id ? { ...h, name } : h)) || [],
       habitEntries: res?.habitEntries || [],
     })
@@ -168,8 +166,8 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
     )
     // popover closes and cancels fetch if we dont wait
     await new Promise((r) => setTimeout(r, 100))
-    const res = client.getQueryData<TimelineHabitResponse>(["habits"])
-    client.setQueryData(["habits"], {
+    const res = client.getQueryData<TimelineHabitResponse>(habitsQueryKey)
+    client.setQueryData(habitsQueryKey, {
       habits: res?.habits.map((h) => (h.id === habit.id ? { ...h, archivedAt: dayjs(day).toDate() } : h)) || [],
       habitEntries: res?.habitEntries || [],
     })
@@ -181,8 +179,8 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
     deleteHabitFetcher.submit({ _action: HabitActionMethods.Delete }, { action: `/api/habits/${habit.id}`, method: "post" })
     // popover closes and cancels fetch if we dont wait
     await new Promise((r) => setTimeout(r, 100))
-    const res = client.getQueryData<TimelineHabitResponse>(["habits"])
-    client.setQueryData(["habits"], {
+    const res = client.getQueryData<TimelineHabitResponse>(habitsQueryKey)
+    client.setQueryData(habitsQueryKey, {
       habits: res?.habits.filter((h) => h.id !== habit.id) || [],
       habitEntries: res?.habitEntries || [],
     })
@@ -277,9 +275,9 @@ function _HabitItem({ habit, day, habitEntries }: ItemProps) {
               { _action: HabitActionMethods.ToggleComplete, date: dayjs(day).startOf("day").add(12, "hours").format() },
               { action: `/api/habits/${habit.id}`, method: "post" },
             )
-            const res = client.getQueryData<TimelineHabitResponse>(["habits"])
+            const res = client.getQueryData<TimelineHabitResponse>(habitsQueryKey)
             if (!res) return
-            client.setQueryData<TimelineHabitResponse>(["habits"], {
+            client.setQueryData<TimelineHabitResponse>(habitsQueryKey, {
               habits: res.habits || [],
               habitEntries: entry
                 ? res.habitEntries.filter((e) => e.id !== entry.id)

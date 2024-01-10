@@ -1,4 +1,5 @@
 import { ScrollView, TouchableOpacity, View } from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useQueryClient } from "@tanstack/react-query"
 import { Link } from "expo-router"
@@ -28,7 +29,7 @@ export default function Profile() {
   }
   if (!me)
     return (
-      <View className="h-full space-y-6 px-4 pt-16">
+      <SafeAreaView className="flex-1 space-y-6 px-4 pt-2">
         <Heading className="text-3xl">Profile</Heading>
         <LoginPlaceholder text="You are currently using a guest account, tasks will be only saved on this device.">
           <View className="space-y-4">
@@ -46,54 +47,56 @@ export default function Profile() {
             </View>
           </View>
         </LoginPlaceholder>
-      </View>
+      </SafeAreaView>
     )
 
   return (
-    <ScrollView className="h-full space-y-6 px-4 pt-16">
-      <View className="flex flex-row items-center space-x-4 p-2">
-        {me?.avatar ? (
-          <OptimizedImage
-            width={70}
-            height={70}
-            fit="cover"
-            style={{ width: 70, height: 70, borderRadius: 35 }}
-            source={{ uri: createImageUrl(me.avatar) }}
-            contentFit="cover"
-            transition={1000}
-          />
-        ) : (
-          <View className="bg-primary-200 dark:bg-primary-900 flex h-[70] w-[70] items-center justify-center rounded-full">
-            <Text>
-              {me?.firstName[0]}
-              {me?.lastName[0]}
-            </Text>
+    <SafeAreaView className="flex-1 px-4 pt-2">
+      <ScrollView className="flex-1 space-y-6">
+        <View className="flex flex-row items-center space-x-4 p-2">
+          {me?.avatar ? (
+            <OptimizedImage
+              width={70}
+              height={70}
+              fit="cover"
+              style={{ width: 70, height: 70, borderRadius: 35 }}
+              source={{ uri: createImageUrl(me.avatar) }}
+              contentFit="cover"
+              transition={1000}
+            />
+          ) : (
+            <View className="bg-primary-200 dark:bg-primary-900 flex h-[70] w-[70] items-center justify-center rounded-full">
+              <Text>
+                {me?.firstName[0]}
+                {me?.lastName[0]}
+              </Text>
+            </View>
+          )}
+          <View>
+            <Heading className="text-3xl">Hey, {me?.firstName}</Heading>
+            <Text>{me?.email}</Text>
           </View>
-        )}
-        <View>
-          <Heading className="text-3xl">Hey, {me?.firstName}</Heading>
-          <Text>{me?.email}</Text>
         </View>
-      </View>
-      <View>
-        <ProfileLink isFirst href="profile/account">
-          Account
-        </ProfileLink>
-        <ProfileLink href="profile/plan">Plan</ProfileLink>
-        <ProfileLink isLast href="profile/settings">
-          Settings
-        </ProfileLink>
-      </View>
-      <View>
-        <Button size="sm" variant="link" onPress={handleLogout}>
-          Logout
-        </Button>
-      </View>
-      <View>
-        <Text className="text-center">v{VERSION}</Text>
-        <Text className="text-center opacity-60">{UPDATE_ID}</Text>
-      </View>
-    </ScrollView>
+        <View>
+          <ProfileLink isFirst href="profile/account">
+            Account
+          </ProfileLink>
+          <ProfileLink href="profile/plan">Plan</ProfileLink>
+          <ProfileLink isLast href="profile/settings">
+            Settings
+          </ProfileLink>
+        </View>
+        <View>
+          <Button size="sm" variant="link" onPress={handleLogout}>
+            Logout
+          </Button>
+        </View>
+        <View>
+          <Text className="text-center">v{VERSION}</Text>
+          <Text className="text-center opacity-60">{UPDATE_ID}</Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
