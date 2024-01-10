@@ -7,7 +7,10 @@ export const habitSchema = z.object({
   archivedAt: z.date().optional(),
   description: NullableFormString,
   startDate: z.date().optional(),
-  reminderTime: z.date().nullish(),
+})
+
+export const habitReminderSchema = z.object({
+  time: z.date(),
 })
 
 export const updateHabitSchema = habitSchema.partial()

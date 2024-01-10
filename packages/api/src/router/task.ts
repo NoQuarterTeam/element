@@ -4,9 +4,9 @@ import { z } from "zod"
 
 import { type Prisma } from "@element/database/types"
 import { taskSchema, todoSchema } from "@element/server-schemas"
+import { getRepeatingDatesBetween } from "@element/shared"
 
 import { createTRPCRouter, protectedProcedure } from "../trpc"
-import { getRepeatingDatesBetween } from "@element/shared"
 
 const taskItemSelectFields = {
   id: true,
@@ -71,7 +71,7 @@ export const taskRouter = createTRPCRouter({
       where: { id },
       select: taskItemSelectFields,
     })
-    if (!task) return null
+    if (!task) throw new TRPCError({ code: "NOT_FOUND" })
     return { ...task, date: task.date ? dayjs(task.date).startOf("day").add(12, "hours").format("YYYY-MM-DD") : null }
   }),
   toggleComplete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input: { id } }) => {
@@ -128,12 +128,13 @@ export const taskRouter = createTRPCRouter({
             creatorId: ctx.user.id,
           },
         })
+
         if (task.date && data.repeat && repeatEndDate) {
-          const repeatEndDateAsDate = dayjs(repeatEndDate).startOf("d").add(12, "h").toDate()
+          const repeatEndDateAsDate = dayjs(repeatEndDate).startOf("day").add(12, "hours").toDate()
           const dates = getRepeatingDatesBetween(task.date, repeatEndDateAsDate, data.repeat)
           await Promise.all(
-            dates.map((date) =>
-              transaction.task.create({
+            dates.map(async (date) => {
+              const copiedTask = await transaction.task.create({
                 data: {
                   repeatParent: { connect: { id: task.id } },
                   isComplete: false,
@@ -148,8 +149,9 @@ export const taskRouter = createTRPCRouter({
                   element: { connect: { id: task.element.id } },
                   todos: { createMany: { data: task.todos.map((t) => ({ name: t.name, isComplete: t.isComplete })) } },
                 },
-              }),
-            ),
+              })
+              return copiedTask
+            }),
           )
         }
 
@@ -163,7 +165,7 @@ export const taskRouter = createTRPCRouter({
   update: protectedProcedure
     .input(taskSchema.partial().merge(z.object({ id: z.string(), todos: z.array(todoSchema).optional() })))
     .mutation(async ({ ctx, input: { id, todos, ...data } }) => {
-      // can be set to null
+      // date can be set to null or be undefined,
       const date = data.date ? dayjs(data.date).startOf("day").add(12, "hours").toDate() : data.date
       const task = await ctx.prisma.task.update({
         where: { id },

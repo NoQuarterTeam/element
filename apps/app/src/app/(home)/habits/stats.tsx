@@ -1,15 +1,16 @@
 import * as React from "react"
-import dayjs from "dayjs"
+import { ActivityIndicator, ScrollView, TouchableOpacity, useColorScheme, View } from "react-native"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import * as Progress from "react-native-progress"
+import dayjs from "dayjs"
+
+import { merge, useDisclosure } from "@element/shared"
+import colors from "@element/tailwind-config/src/colors"
+
+import { inputClassName } from "../../../components/Input"
 import { ScreenView } from "../../../components/ScreenView"
 import { Text } from "../../../components/Text"
 import { api } from "../../../lib/utils/api"
-import { ActivityIndicator, ScrollView, TouchableOpacity, View, useColorScheme } from "react-native"
-import colors from "@element/tailwind-config/src/colors"
-
-import { merge, useDisclosure } from "@element/shared"
-import { inputClassName } from "../../../components/Input"
 
 export default function HabitStat() {
   const [startDate, setStartDate] = React.useState(dayjs().subtract(1, "months").toDate())

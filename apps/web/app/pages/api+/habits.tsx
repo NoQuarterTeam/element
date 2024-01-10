@@ -15,7 +15,6 @@ const habitSelectFields = {
   name: true,
   startDate: true,
   archivedAt: true,
-  reminderTime: true,
 } satisfies Prisma.HabitSelect
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -37,7 +36,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       where: {
         creatorId: { equals: user.id },
         createdAt: {
-          gte: dayjs(backParam).startOf("d").toDate(),
+          gte: dayjs(backParam).startOf("day").toDate(),
           lte: dayjs(forwardParam || undefined)
             .endOf("d")
             .toDate(),

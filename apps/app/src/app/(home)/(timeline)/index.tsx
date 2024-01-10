@@ -155,10 +155,8 @@ export default function Timeline() {
       <Animated.ScrollView ref={outerTimelineRef} refreshControl={<RefreshControl refreshing={false} onRefresh={refetch} />}>
         <Animated.ScrollView
           onLayout={() => {
-            setTimeout(() => {
-              timelineRef.current?.scrollTo({ x: DAY_WIDTH * daysBack, animated: false })
-              setIsLoaded(true)
-            }, 500)
+            setIsLoaded(true)
+            timelineRef.current?.scrollTo({ x: DAY_WIDTH * daysBack, animated: false })
           }}
           // contentOffset={{ x: 7 * DAY_WIDTH, y: 0 }}
           onScroll={onScroll}

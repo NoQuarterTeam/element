@@ -71,16 +71,17 @@ model Task {
   durationMinutes Int?
   isImportant     Boolean     @default(false)
   order           Int         @default(50)
-  todos           Todo[]
-  repeatChildren  Task[]      @relation(name: "RepeatChildren")
-  repeatParentId  String?
-  repeatParent    Task?       @relation(name: "RepeatChildren", fields: [repeatParentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  creatorId       String
-  creator         User        @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  elementId       String
-  element         Element     @relation(fields: [elementId], references: [id], onDelete: Cascade)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @default(now()) @updatedAt
+
+  todos          Todo[]
+  repeatChildren Task[]   @relation(name: "RepeatChildren")
+  repeatParentId String?
+  repeatParent   Task?    @relation(name: "RepeatChildren", fields: [repeatParentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  creatorId      String
+  creator        User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  elementId      String
+  element        Element  @relation(fields: [elementId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
 
   @@index([date])
   @@index([createdAt])
@@ -122,24 +123,36 @@ model Element {
 }
 
 model Habit {
-  id                 String    @id @default(uuid())
-  name               String
-  description        String?
-  archivedAt         DateTime?
-  startDate          DateTime
-  order              Int       @default(0)
-  reminderTime       DateTime?
-  reminderScheduleId String?
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  archivedAt  DateTime?
+  startDate   DateTime
+  order       Int       @default(0)
 
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @default(now()) @updatedAt
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @default(now()) @updatedAt
   creatorId String
-  creator   User         @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creator   User            @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   entries   HabitEntry[]
+  reminders HabitReminder[]
 
   @@index([archivedAt])
   @@index([startDate])
   @@index([creatorId])
+}
+
+model HabitReminder {
+  id                String   @id @default(uuid())
+  time              DateTime
+  upstashScheduleId String?
+
+  habitId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  habit     Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
+  @@index([habitId])
 }
 
 model HabitEntry {

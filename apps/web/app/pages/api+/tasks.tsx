@@ -29,8 +29,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       element: elementIds.length > 0 ? { id: { in: elementIds } } : { archivedAt: null },
       date: {
         not: { equals: null },
-        gte: dayjs(backParam).startOf("d").toDate(),
-        lte: dayjs(forwardParam).startOf("d").toDate(),
+        gte: dayjs(backParam).startOf("day").toDate(),
+        lte: dayjs(forwardParam).startOf("day").toDate(),
       },
     },
   })
@@ -129,7 +129,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               durationHours: data.durationHours || null,
               durationMinutes: data.durationMinutes || null,
               startTime: data.startTime || null,
-              date: data.date ? dayjs(data.date).startOf("d").add(12, "h").toDate() : null,
+              date: data.date ? dayjs(data.date).startOf("day").add(12, "hours").toDate() : null,
               name: data.name,
               description: data.description || null,
               element: { connect: { id: data.elementId } },
@@ -138,7 +138,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             },
           })
           if (task.date && data.repeat && data.repeatEndDate) {
-            const repeatEndDate = dayjs(data.repeatEndDate).startOf("d").add(12, "h").toDate()
+            const repeatEndDate = dayjs(data.repeatEndDate).startOf("day").add(12, "hours").toDate()
             const dates = getRepeatingDatesBetween(task.date, repeatEndDate, data.repeat)
             await Promise.all(
               dates.map((date) =>
@@ -182,7 +182,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               where: { id: task.id },
               data: {
                 order: task.order,
-                date: dayjs(task.date).startOf("d").add(12, "h").toDate(),
+                date: dayjs(task.date).startOf("day").add(12, "hours").toDate(),
               },
             }),
           ),

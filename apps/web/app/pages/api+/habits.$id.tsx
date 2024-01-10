@@ -24,8 +24,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   const action = formData.get(FORM_ACTION) as HabitActionMethods | undefined
   const id = params.id
   if (!id) throw badRequest("ID required")
-  const habit = await db.habit.findUnique({ where: { id } })
-  if (!habit) return badRequest("Habit not found")
 
   switch (action) {
     case HabitActionMethods.Edit:
@@ -55,7 +53,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
           .set("second", now.get("second"))
           .set("millisecond", now.get("millisecond"))
           .toDate()
-        const gte = dayjs(data.date).startOf("d").toDate()
+        const gte = dayjs(data.date).startOf("day").toDate()
         const lte = dayjs(data.date).endOf("d").toDate()
 
         const entries = await db.habitEntry.findMany({
@@ -78,12 +76,15 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       }
     case HabitActionMethods.Archive:
       try {
+        const habit = await db.habit.findUnique({ where: { id }, include: { reminders: true } })
+        if (!habit) return badRequest("Habit not found")
         const schema = z.object({ archivedAt: z.string() })
         const result = await validateFormData(request, schema)
         if (!result.success) return formError(result)
         const archivedAt = result.data.archivedAt
         await db.habit.update({ where: { id }, data: { archivedAt: dayjs(archivedAt).toDate() } })
-        if (habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
+        await db.habitReminder.deleteMany({ where: { habitId: { equals: habit.id } } })
+        await Promise.all(habit.reminders.map((r) => r.upstashScheduleId && deleteHabitReminder(r.upstashScheduleId)))
         return formSuccess()
       } catch (e: unknown) {
         if (e instanceof Error) {
@@ -94,8 +95,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       }
     case HabitActionMethods.Delete:
       try {
+        const habit = await db.habit.findUnique({ where: { id }, include: { reminders: true } })
+        if (!habit) return badRequest("Habit not found")
         await db.habit.delete({ where: { id } })
-        if (habit.reminderScheduleId) await deleteHabitReminder(habit.reminderScheduleId)
+        await db.habitReminder.deleteMany({ where: { habitId: { equals: habit.id } } })
+        await Promise.all(habit.reminders.map((r) => r.upstashScheduleId && deleteHabitReminder(r.upstashScheduleId)))
         return formSuccess()
       } catch (e: unknown) {
         if (e instanceof Error) {

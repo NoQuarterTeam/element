@@ -18,19 +18,26 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     await qstashReceiver.verify({ signature, body })
 
     const data = JSON.parse(body) as Partial<HabitReminderBody>
-    const habitId = data?.id
-    if (!habitId) return badRequest({ success: false, message: "no habit id provided" })
-    const habit = await db.habit.findUnique({
-      where: { id: habitId },
-      include: {
-        entries: { where: { createdAt: { gte: dayjs().startOf("day").toDate(), lte: dayjs().endOf("day").toDate() } } },
+    const reminderId = data?.id
+    if (!reminderId) return badRequest({ success: false, message: "no habit id provided" })
+    const reminder = await db.habitReminder.findUnique({
+      where: { id: reminderId },
+      select: {
+        habit: {
+          select: {
+            archivedAt: true,
+            creatorId: true,
+            name: true,
+            entries: { where: { createdAt: { gte: dayjs().startOf("day").toDate(), lte: dayjs().endOf("day").toDate() } } },
+          },
+        },
       },
     })
-    if (!habit) return json({ success: true, message: "habit deleted" })
-    if (habit.archivedAt) return json({ success: true, message: "habit archived" })
-    if (habit.entries.length > 0) return json({ success: true, message: "habit already complete" })
+    if (!reminder) return badRequest({ success: false, message: "no habit reminder found" })
+    if (reminder.habit.archivedAt) return json({ success: true, message: "habit archived" })
+    if (reminder.habit.entries.length > 0) return json({ success: true, message: "habit already complete" })
 
-    const pushTokens = await db.pushToken.findMany({ where: { userId: habit.creatorId } })
+    const pushTokens = await db.pushToken.findMany({ where: { userId: reminder.habit.creatorId } })
 
     const messages = pushTokens
       .filter((t) => Expo.isExpoPushToken(t.token))
@@ -38,7 +45,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         (t) =>
           ({
             to: t.token,
-            body: `Here's a reminder to complete your habit: ${habit.name}!`,
+            body: `Here's a reminder to complete your habit: ${reminder.habit.name}!`,
             data: { url: "/habits" },
           }) satisfies ExpoPushMessage,
       )
