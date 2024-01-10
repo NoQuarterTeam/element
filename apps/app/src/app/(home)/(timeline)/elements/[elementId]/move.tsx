@@ -8,8 +8,6 @@ import { join } from "@element/shared"
 export default function ElementsDetailMove() {
   const { elementId: id, parentId } = useGlobalSearchParams()
 
-  console.log({ parentId })
-
   const { data, isLoading } = api.element.grouped.useQuery()
   const router = useRouter()
 
