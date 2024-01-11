@@ -542,12 +542,13 @@ function TaskItem({
     .runOnJS(true)
     .onStart(() => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-      isComplete.value = !isComplete.value
+      const newIsComplete = !isComplete.value
       if (me) {
-        mutate({ id: task.id, isComplete: !task.isComplete })
+        mutate({ id: task.id, isComplete: newIsComplete })
       } else {
-        updateTask({ isComplete: !task.isComplete })
+        updateTask({ isComplete: newIsComplete })
       }
+      isComplete.value = newIsComplete
     })
 
   const utils = api.useUtils()

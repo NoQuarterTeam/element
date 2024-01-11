@@ -193,11 +193,13 @@ export const taskRouter = createTRPCRouter({
     }
 
     const taskToDupe = await ctx.prisma.task.findUniqueOrThrow({ where: { id }, include: { todos: true } })
+    const dayTasks = await ctx.prisma.task.count({ where: { creatorId: ctx.user.id, date: { equals: taskToDupe.date } } })
+
     const task = await ctx.prisma.task.create({
       select: taskItemSelectFields,
       data: {
         ...taskToDupe,
-        order: taskToDupe.order + 1,
+        order: dayTasks + 1,
         repeat: null,
         createdAt: undefined,
         updatedAt: undefined,
