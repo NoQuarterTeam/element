@@ -31,14 +31,14 @@ export const taskRouter = createTRPCRouter({
     .input(z.object({ daysBack: z.number(), daysForward: z.number() }))
     .query(async ({ input, ctx }) => {
       const startOfDay = dayjs().subtract(input.daysBack, "days").startOf("day").toDate()
-      const endOfDay = dayjs().endOf("day").add(input.daysForward, "days").toDate()
+      const endOfDay = dayjs().startOf("day").add(12, "hours").add(input.daysForward, "days").toDate()
       const tasks = await ctx.prisma.task.findMany({
         select: taskItemSelectFields,
         orderBy: [{ order: "asc" }, { createdAt: "asc" }],
         where: {
           creatorId: { equals: ctx.user.id },
           element: { archivedAt: null },
-          date: { not: null, gt: startOfDay, lte: endOfDay },
+          date: { not: null, gt: startOfDay, lt: endOfDay },
         },
       })
       const groupedTasks = tasks.reduce<{ [key: string]: (typeof tasks)[number][] }>((acc, task) => {

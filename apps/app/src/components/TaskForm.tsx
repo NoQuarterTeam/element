@@ -98,7 +98,11 @@ export function TaskForm(props: Props) {
     setForm((f) => ({ ...f, date: dayjs(date).format("YYYY-MM-DD") }))
   }
 
-  const [repeatEndDate, setRepeatEndDate] = React.useState<string>(dayjs().add(1, "week").format("YYYY-MM-DD"))
+  const [repeatEndDate, setRepeatEndDate] = React.useState<string>(
+    dayjs(date as string | undefined)
+      .add(1, "week")
+      .format("YYYY-MM-DD"),
+  )
   const repeatEndDateProps = useDisclosure()
 
   const handlePickRepeatEndDate = (date: Date) => {
