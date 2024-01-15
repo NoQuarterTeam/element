@@ -634,8 +634,8 @@ importers:
         specifier: workspace:*
         version: link:../../config/eslint
       '@types/node':
-        specifier: 18.19.6
-        version: 18.19.6
+        specifier: 18.19.7
+        version: 18.19.7
       '@typescript-eslint/eslint-plugin':
         specifier: 6.18.1
         version: 6.18.1(@typescript-eslint/parser@6.18.1)(eslint@8.56.0)(typescript@5.3.3)
@@ -677,8 +677,8 @@ importers:
         specifier: workspace:*
         version: link:../../config/tailwind
       '@types/node':
-        specifier: 18.19.6
-        version: 18.19.6
+        specifier: 18.19.7
+        version: 18.19.7
       eslint:
         specifier: 8.56.0
         version: 8.56.0
@@ -762,8 +762,8 @@ importers:
         specifier: 9.0.5
         version: 9.0.5
       '@types/node':
-        specifier: 18.19.6
-        version: 18.19.6
+        specifier: 18.19.7
+        version: 18.19.7
       '@types/nodemailer':
         specifier: 6.4.14
         version: 6.4.14
@@ -3907,7 +3907,7 @@ packages:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
       jest-mock: 29.7.0
     dev: false
 
@@ -3917,7 +3917,7 @@ packages:
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -3936,7 +3936,7 @@ packages:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
       '@types/yargs': 15.0.19
       chalk: 4.1.2
     dev: false
@@ -3947,7 +3947,7 @@ packages:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
       '@types/yargs': 16.0.9
       chalk: 4.1.2
     dev: false
@@ -3959,7 +3959,7 @@ packages:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
       '@types/yargs': 17.0.32
       chalk: 4.1.2
     dev: false
@@ -5816,7 +5816,7 @@ packages:
     resolution: {integrity: sha512-DTuBFbqu4gGfajREEMrkq5jBhcnskinhr4+AnfJEk48zhVeEv3XnUKGIX98B74kxhYsIMfApGGySTn7V3b5yBA==}
     engines: {node: '>= 12.13.0', npm: '>= 6.12.0'}
     dependencies:
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
     dev: false
 
   /@slack/types@2.11.0:
@@ -5831,7 +5831,7 @@ packages:
       '@slack/logger': 3.0.0
       '@slack/types': 2.11.0
       '@types/is-stream': 1.1.0
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
       axios: 1.6.5
       eventemitter3: 3.1.2
       form-data: 2.5.1
@@ -6483,7 +6483,7 @@ packages:
   /@types/is-stream@1.1.0:
     resolution: {integrity: sha512-jkZatu4QVbR60mpIzjINmtS1ZF4a/FqdTUTBeQDVOQ2PYyidtwFKr0B5G6ERukKwliq+7mIXvxyppwzG5EgRYg==}
     dependencies:
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
     dev: false
 
   /@types/istanbul-lib-coverage@2.0.6:
@@ -6545,15 +6545,15 @@ packages:
       undici-types: 5.26.5
     dev: true
 
-  /@types/node@18.19.6:
-    resolution: {integrity: sha512-X36s5CXMrrJOs2lQCdDF68apW4Rfx9ixYMawlepwmE4Anezv/AV2LSpKD1Ub8DAc+urp5bk0BGZ6NtmBitfnsg==}
+  /@types/node@18.19.7:
+    resolution: {integrity: sha512-IGRJfoNX10N/PfrReRZ1br/7SQ+2vF/tK3KXNwzXz82D32z5dMQEoOlFew18nLSN+vMNcLY4GrKfzwi/yWI8/w==}
     dependencies:
       undici-types: 5.26.5
 
   /@types/nodemailer@6.4.14:
     resolution: {integrity: sha512-fUWthHO9k9DSdPCSPRqcu6TWhYyxTBg382vlNIttSe9M7XfsT06y0f24KHXtbnijPGGRIcVvdKHTNikOI6qiHA==}
     dependencies:
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
     dev: true
 
   /@types/parse-json@4.0.2:
@@ -9570,7 +9570,7 @@ packages:
     resolution: {integrity: sha512-EzV94NYKoO09GLXGjXj9JIlXijVck4ONSr5wiCWDvhsvj5jxSrzTmRU/9C1DyB6uToszLs8aifA6NQ7lEQdvFw==}
     engines: {node: '>= 0.8'}
     dependencies:
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
       require-like: 0.1.2
     dev: true
 
@@ -11315,7 +11315,7 @@ packages:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
       jest-mock: 29.7.0
       jest-util: 29.7.0
     dev: false
@@ -11345,7 +11345,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
       jest-util: 29.7.0
     dev: false
 
@@ -11359,7 +11359,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -11371,7 +11371,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -11394,7 +11394,7 @@ packages:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
       merge-stream: 2.0.0
       supports-color: 8.1.1
     dev: false
@@ -15940,7 +15940,7 @@ packages:
     resolution: {integrity: sha512-3lze4QdO8fM6nh1vaRsnFpaoA0WV7DerYtjEprOwcwyfdF5LdesfQNZiT22LO1dFiYobBifDzEn8V51MXHPrPQ==}
     engines: {node: '>=12.*'}
     dependencies:
-      '@types/node': 18.19.6
+      '@types/node': 18.19.7
       qs: 6.11.2
     dev: false
 
