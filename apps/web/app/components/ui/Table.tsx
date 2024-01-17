@@ -70,7 +70,7 @@ export function Table<T>({
                   >
                     <div
                       className={join(
-                        "mb-1 flex items-center justify-between whitespace-nowrap px-2 py-1 text-left font-medium",
+                        "mb-1 flex items-center justify-between whitespace-nowrap px-2 py-1 text-left text-sm font-normal",
                         header.column.getCanSort() &&
                           "rounded-xs cursor-pointer select-none hover:bg-gray-100 dark:hover:bg-gray-700",
                       )}
@@ -159,9 +159,9 @@ function Pagination({ count }: { count: number }) {
 
   return (
     <div className="flex items-center justify-between px-2">
-      <p>{count} items</p>
+      <p className="text-sm">{count} items</p>
       <div className="flex items-center gap-1">
-        <Form className="flex items-center gap-1">
+        <Form className="flex items-center gap-2">
           <span className="flex items-center gap-1 text-sm">
             <div>Page</div>
             <strong>{currentPage}</strong>
