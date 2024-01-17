@@ -26,7 +26,7 @@ export const habitRouter = createTRPCRouter({
     const completed = habits.filter((h) => h.entries.length > 0).length
     return Math.round((completed / total) * 100)
   }),
-  byDate: protectedProcedure.input(z.object({ date: z.date() })).query(async ({ input, ctx }) => {
+  allByDate: protectedProcedure.input(z.object({ date: z.date() })).query(async ({ input, ctx }) => {
     const date = input.date
     const [habits, habitEntries] = await Promise.all([
       ctx.prisma.habit.findMany({
@@ -156,19 +156,19 @@ export const habitRouter = createTRPCRouter({
       )
       return true
     }),
-  archive: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+  archive: protectedProcedure.input(z.object({ id: z.string(), date: z.date() })).mutation(async ({ ctx, input }) => {
     const habit = await ctx.prisma.habit.update({
       where: { id: input.id },
-      data: { archivedAt: dayjs().startOf("day").add(12, "hours").toDate() },
+      data: { archivedAt: dayjs(input.date).startOf("day").add(12, "hours").toDate() },
       include: { reminders: true },
     })
     await ctx.prisma.habitReminder.deleteMany({ where: { habitId: { equals: habit.id } } })
     await Promise.all(habit.reminders.map((r) => r.upstashScheduleId && deleteHabitReminder(r.upstashScheduleId)))
   }),
-  toggleComplete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    const date = dayjs().toDate()
-    const gte = dayjs().startOf("day").toDate()
-    const lte = dayjs().endOf("day").toDate()
+  toggleComplete: protectedProcedure.input(z.object({ id: z.string(), date: z.date() })).mutation(async ({ ctx, input }) => {
+    const date = dayjs(input.date).startOf("day").add(12, "hours").toDate()
+    const gte = dayjs(date).startOf("day").toDate()
+    const lte = dayjs(date).endOf("day").toDate()
     const entries = await ctx.prisma.habitEntry.findMany({
       select: { id: true },
       where: { creatorId: { equals: ctx.user.id }, habitId: { equals: input.id }, createdAt: { gte, lte } },

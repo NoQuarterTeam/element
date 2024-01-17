@@ -6,6 +6,7 @@ import { StatusBar } from "expo-status-bar"
 import { HabitForm } from "../../../components/HabitForm"
 import { ModalView } from "../../../components/ModalView"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
+import dayjs from "dayjs"
 
 type Habit = NonNullable<RouterOutputs["habit"]["byId"]>
 export default function HabitDetail() {
@@ -23,12 +24,18 @@ export default function HabitDetail() {
 
 function EditHabitForm({ habit }: { habit: Habit }) {
   const router = useRouter()
-
+  const { date } = useGlobalSearchParams()
   const utils = api.useUtils()
   const updateHabit = api.habit.update.useMutation({
     onSuccess: async () => {
       void utils.habit.byId.invalidate({ id: habit.id })
-      await utils.habit.byDate.invalidate()
+      if (!date) return
+      await utils.habit.allByDate.invalidate({
+        date: dayjs(date as string)
+          .startOf("day")
+          .add(12, "hours")
+          .toDate(),
+      })
       router.back()
     },
   })
