@@ -133,7 +133,6 @@ export default function Feedbacks() {
           <Select
             defaultValue={searchParams.get("type") || ""}
             onChange={(e) => e.currentTarget.form?.dispatchEvent(new Event("submit", { bubbles: true }))}
-            className="w-[100px]"
             name="type"
           >
             <option value="">All types</option>
