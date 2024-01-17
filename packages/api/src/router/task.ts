@@ -31,14 +31,14 @@ export const taskRouter = createTRPCRouter({
     .input(z.object({ daysBack: z.number(), daysForward: z.number() }))
     .query(async ({ input, ctx }) => {
       const startOfDay = dayjs().subtract(input.daysBack, "days").startOf("day").toDate()
-      const endOfDay = dayjs().endOf("day").add(input.daysForward, "days").toDate()
+      const endOfDay = dayjs().startOf("day").add(12, "hours").add(input.daysForward, "days").toDate()
       const tasks = await ctx.prisma.task.findMany({
         select: taskItemSelectFields,
         orderBy: [{ order: "asc" }, { createdAt: "asc" }],
         where: {
           creatorId: { equals: ctx.user.id },
           element: { archivedAt: null },
-          date: { not: null, gt: startOfDay, lte: endOfDay },
+          date: { not: null, gt: startOfDay, lt: endOfDay },
         },
       })
       const groupedTasks = tasks.reduce<{ [key: string]: (typeof tasks)[number][] }>((acc, task) => {
@@ -193,11 +193,13 @@ export const taskRouter = createTRPCRouter({
     }
 
     const taskToDupe = await ctx.prisma.task.findUniqueOrThrow({ where: { id }, include: { todos: true } })
+    const dayTasks = await ctx.prisma.task.count({ where: { creatorId: ctx.user.id, date: { equals: taskToDupe.date } } })
+
     const task = await ctx.prisma.task.create({
       select: taskItemSelectFields,
       data: {
         ...taskToDupe,
-        order: taskToDupe.order + 1,
+        order: dayTasks + 1,
         repeat: null,
         createdAt: undefined,
         updatedAt: undefined,

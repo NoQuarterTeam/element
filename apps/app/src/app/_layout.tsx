@@ -1,5 +1,7 @@
 import * as React from "react"
-import { View } from "react-native"
+import { useColorScheme as useNWColorScheme } from "nativewind"
+import { useColorScheme, View } from "react-native"
+
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { ActionSheetProvider } from "@expo/react-native-action-sheet"
@@ -29,6 +31,13 @@ export default function RootLayout() {
   })
   useNotificationObserver()
   useCheckExpoUpdates()
+
+  const colorScheme = useColorScheme()
+  const { setColorScheme } = useNWColorScheme()
+  React.useEffect(() => {
+    setColorScheme(colorScheme as "light" | "dark")
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [colorScheme])
 
   const onLayoutRootView = React.useCallback(() => SplashScreen.hideAsync(), [])
 

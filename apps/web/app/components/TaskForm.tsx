@@ -39,7 +39,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
   const [isComplete, setIsComplete] = React.useState(task?.isComplete || false)
   const [color, setColor] = React.useState(randomHexColor())
   const [repeat, setRepeat] = React.useState<TaskRepeat | undefined>(task?.repeat || undefined)
-  const [repeatEndDate, setRepeatEndDate] = React.useState<string>(dayjs().add(1, "week").format("YYYY-MM-DD"))
+  const [repeatEndDate, setRepeatEndDate] = React.useState<string>(dayjs(day).add(1, "week").format("YYYY-MM-DD"))
   const [date, setDate] = React.useState(day || (task ? dayjs(task.date).format("YYYY-MM-DD") : dayjs().format("YYYY-MM-DD")))
 
   const createUpdateFetcher = useFetcher<ActionDataErrorResponse<any> | ActionDataSuccessResponse<{ task: TimelineTask }>>({
