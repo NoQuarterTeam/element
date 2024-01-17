@@ -176,7 +176,7 @@ export default function Timeline() {
               style={{ height, width: DAY_WIDTH }}
               className={join(
                 `border-r border-gray-100 dark:border-gray-700`,
-                dayjs(day).isSame(dayjs(), "day")
+                dayjs(day).isSame(dayjs(), "date")
                   ? "bg-primary-100 dark:bg-primary-900/90"
                   : dayjs(day).day() === 6 || dayjs(day).day() === 0
                     ? "bg-gray-50 dark:bg-gray-900"

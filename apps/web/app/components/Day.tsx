@@ -82,7 +82,7 @@ function _Day(props: Props) {
                 ref={dayRef}
                 className={join(
                   "group/day w-day h-full min-h-screen border-r border-gray-100 pb-2 hover:opacity-100 dark:border-gray-700",
-                  dayjs(props.day).isSame(dayjs(), "day")
+                  dayjs(props.day).isSame(dayjs(), "date")
                     ? "bg-primary-100 dark:bg-primary-900/90"
                     : dayjs(props.day).day() === 6 || dayjs(props.day).day() === 0
                       ? "bg-gray-50 dark:bg-gray-900"
@@ -116,7 +116,7 @@ function _Day(props: Props) {
                       <Link
                         className="outline-none"
                         to={`new?day=${dayjs(props.day).format("YYYY-MM-DD")}`}
-                        tabIndex={dayjs(props.day).isSame(dayjs(), "day") ? 1 : -1}
+                        tabIndex={dayjs(props.day).isSame(dayjs(), "date") ? 1 : -1}
                       >
                         <IconButton
                           className="opacity-0 outline-none focus:opacity-100 group-hover/day:opacity-100"

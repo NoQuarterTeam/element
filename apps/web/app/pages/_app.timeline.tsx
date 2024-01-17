@@ -161,7 +161,7 @@ function _Timeline() {
             <DropContainer tasks={dropTasks}>
               <div ref={leftRef} />
               {days.map((day) => (
-                <Day key={day} day={day} tasks={tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))} />
+                <Day key={day} day={day} tasks={tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "date"))} />
               ))}
               <div ref={rightRef} />
             </DropContainer>
@@ -224,7 +224,7 @@ function _Timeline() {
 //       <DropContainer tasks={dropTasks}>
 //         <div ref={leftRef} />
 //         {props.days.map((day) => (
-//           <Day key={day} day={day} tasks={props.tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "day"))} />
+//           <Day key={day} day={day} tasks={props.tasks.filter((t) => dayjs(t.date).isSame(dayjs(day), "date"))} />
 //         ))}
 //         <div ref={rightRef} />
 //       </DropContainer>

@@ -27,6 +27,7 @@ import { Text } from "../../../components/Text"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
 import { join } from "@element/shared"
 import { width } from "../../../lib/utils/device"
+import { create } from "zustand"
 
 dayjs.extend(advancedFormat)
 dayjs.extend(updateLocale)
@@ -37,19 +38,22 @@ dayjs.updateLocale("en", {
 
 type Habit = NonNullable<RouterOutputs["habit"]["allByDate"]>["habits"][number]
 
-export default function Habits() {
-  const [date, setDate] = React.useState(dayjs().startOf("day").add(12, "hours").toDate())
-  const { data, isLoading } = api.habit.allByDate.useQuery({ date })
+const WEEKS_BACK = 3
+const todaysWeek = dayjs().startOf("week")
+const weeks = Array.from({ length: WEEKS_BACK })
+  .map((_, i) => todaysWeek.subtract(i, "week"))
+  .reverse()
 
-  // const dateLabel = dayjs(date).isSame(dayjs(), "date")
-  //   ? "Today"
-  //   : // if yesterday
-  //     dayjs(date).isSame(dayjs().subtract(1, "day"), "date")
-  //     ? "Yesterday"
-  //     : // if tomorrow
-  //       dayjs(date).isSame(dayjs().add(1, "day"), "date")
-  //       ? "Tomorrow"
-  //       : dayjs(date).format("ddd Do")
+export const useActiveDate = create<{
+  date: Date
+  setDate: (date: Date) => void
+}>()((set) => ({
+  date: dayjs().startOf("day").add(12, "hours").toDate(),
+  setDate: (date) => set({ date }),
+}))
+
+export default function Habits() {
+  const setDate = useActiveDate((s) => s.setDate)
   const scrollViewRef = React.useRef<ScrollView>(null)
 
   const isMounted = React.useRef(false)
@@ -59,8 +63,9 @@ export default function Habits() {
     }
     isMounted.current = true
   }, [])
+
   return (
-    <SafeAreaView edges={["top"]} className="flex-1 pt-2">
+    <SafeAreaView className="flex-1 pt-2">
       <View className="flex flex-row items-center justify-between px-4 pb-2">
         <Heading className="text-3xl">Habits</Heading>
         <Link href="/habits/stats" asChild>
@@ -78,21 +83,13 @@ export default function Habits() {
           horizontal
           showsHorizontalScrollIndicator={false}
         >
-          <Timeline date={date} onSetDate={setDate} />
+          {weeks.map((week) => (
+            <Week key={week.toISOString()} week={week} />
+          ))}
         </ScrollView>
       </View>
 
-      {isLoading ? (
-        <View className="flex items-center justify-center pt-4">
-          <ActivityIndicator />
-        </View>
-      ) : !data ? (
-        <View className="flex items-center justify-center pt-4">
-          <Text>Error loading habits</Text>
-        </View>
-      ) : (
-        <HabitsList data={data} date={date} />
-      )}
+      <HabitsListContainer />
       <View className="absolute bottom-4 right-4 space-y-1">
         <TouchableOpacity
           onPress={() => {
@@ -113,58 +110,73 @@ export default function Habits() {
   )
 }
 
-const WEEKS_BACK = 3
-const todaysWeek = dayjs().startOf("week")
-const weeks = Array.from({ length: WEEKS_BACK })
-  .map((_, i) => todaysWeek.subtract(i, "week"))
-  .reverse()
-
-function Timeline({ date, onSetDate }: { date: Date; onSetDate: (date: Date) => void }) {
+const Week = React.memo(function _Week(props: { week: dayjs.Dayjs }) {
   return (
-    <>
-      {weeks.map((week, weekIndex) => {
-        return (
-          <View key={weekIndex} style={{ width, flexDirection: "row" }}>
-            {Array.from({ length: 7 }).map((_, dayIndex) => (
-              <HabitDay key={dayIndex} onSetDate={onSetDate} activeDate={date} day={week.add(dayIndex, "day")} />
-            ))}
-          </View>
-        )
-      })}
-    </>
+    <View style={{ width, flexDirection: "row" }}>
+      {Array.from({ length: 7 }).map((_, dayIndex) => (
+        <HabitDay key={dayIndex} day={props.week.add(dayIndex, "day")} />
+      ))}
+    </View>
   )
-}
+})
 
-function HabitDay({ activeDate, day, onSetDate }: { activeDate: Date; day: dayjs.Dayjs; onSetDate: (date: Date) => void }) {
-  const isActive = dayjs(day).isSame(activeDate, "date")
-
+function HabitDay({ day }: { day: dayjs.Dayjs }) {
+  const setDate = useActiveDate((s) => s.setDate)
   return (
     <TouchableOpacity
       disabled={dayjs().isBefore(dayjs(day), "date")}
-      key={day.format("YYYY-MM-DD")}
       style={{ width: width / 7, display: "flex", alignItems: "center" }}
-      onPress={() => onSetDate(dayjs(day).startOf("day").add(12, "hours").toDate())}
+      onPress={() => setDate(dayjs(day).startOf("day").add(12, "hours").toDate())}
       className={join("flex flex-col items-center", dayjs().isBefore(dayjs(day), "date") && "opacity-50")}
     >
       <Text>{dayjs(day).format("ddd")}</Text>
-
-      <View
-        className={join(
-          "flex h-8 w-8 items-center justify-center rounded-full border border-gray-100 dark:border-gray-800",
-          dayjs(day).isSame(dayjs(activeDate), "date") && "bg-black dark:bg-white",
-          dayjs(day).isSame(dayjs(), "date") && "border-primary",
-        )}
-      >
-        <Text className={join("text-xs", isActive && "text-white dark:text-black")}>{dayjs(day).date()}</Text>
-      </View>
+      <HabitDayDate day={day} />
     </TouchableOpacity>
+  )
+}
+
+function HabitDayDate({ day }: { day: dayjs.Dayjs }) {
+  const { date } = useActiveDate()
+
+  const isActive = dayjs(day).isSame(dayjs(date), "date")
+  return (
+    <View
+      className={join(
+        "flex h-8 w-8 items-center justify-center rounded-full border border-gray-100 dark:border-gray-700",
+        isActive && "bg-black dark:bg-white",
+        dayjs(day).isSame(dayjs(), "date") && "border-primary",
+      )}
+    >
+      <Text className={join("text-xs", isActive && "text-white dark:text-black")}>{dayjs(day).date()}</Text>
+    </View>
+  )
+}
+
+function HabitsListContainer() {
+  const date = useActiveDate((s) => s.date)
+
+  const { data, isLoading } = api.habit.allByDate.useQuery({ date }, { keepPreviousData: true })
+
+  return (
+    <>
+      {isLoading ? (
+        <View className="flex items-center justify-center pt-4">
+          <ActivityIndicator />
+        </View>
+      ) : !data ? (
+        <View className="flex items-center justify-center pt-4">
+          <Text>Error loading habits</Text>
+        </View>
+      ) : (
+        <HabitsList data={data} />
+      )}
+    </>
   )
 }
 
 const HABIT_HEIGHT = 65
 type Positions = { [key: string]: Habit }
-
-function HabitsList({ data, date }: { data: NonNullable<RouterOutputs["habit"]["allByDate"]>; date: Date }) {
+function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["allByDate"]> }) {
   const habits = data.habits
   const habitEntries = data.habitEntries
 
@@ -183,31 +195,8 @@ function HabitsList({ data, date }: { data: NonNullable<RouterOutputs["habit"]["
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [habits])
 
-  // const scrollRef = useAnimatedRef<Animated.ScrollView>()
-  // const scrollTranslateY = useSharedValue(0)
-  // const scrollViewSize = useSharedValue(0)
-
-  // const onListContentSizeChange = (_: number, h: number) => {
-  //   scrollViewSize.value = h
-  // }
-
-  // console.log(scrollViewSize.value)
-
-  // useAnimatedReaction(
-  //   () => scrollTranslateY.value,
-  //   (y) => {
-  //     if (!scrollRef.current) return
-  //     scrollRef.current?.scrollTo({ y, animated: true })
-  //   },
-  // )
-
-  // const onScroll = useAnimatedScrollHandler((e) => {
-  //   scrollTranslateY.value = e.contentOffset.y
-  // })
-
   return (
     <Animated.ScrollView
-      // ref={scrollRef}
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{
         flexGrow: 1,
@@ -221,7 +210,6 @@ function HabitsList({ data, date }: { data: NonNullable<RouterOutputs["habit"]["
           key={habit.id}
           positions={posistions}
           habit={habit}
-          date={date}
           isComplete={habitEntries.some((entry) => entry.habitId === habit.id)}
         />
       ))}
@@ -229,17 +217,8 @@ function HabitsList({ data, date }: { data: NonNullable<RouterOutputs["habit"]["
   )
 }
 
-function HabitItem({
-  date,
-  habit,
-  isComplete,
-  positions,
-}: {
-  date: Date
-  positions: SharedValue<Positions>
-  habit: Habit
-  isComplete: boolean
-}) {
+function HabitItem({ habit, isComplete, positions }: { positions: SharedValue<Positions>; habit: Habit; isComplete: boolean }) {
+  const date = useActiveDate((s) => s.date)
   const isDark = useColorScheme() === "dark"
   const utils = api.useUtils()
   const router = useRouter()
@@ -253,24 +232,30 @@ function HabitItem({
       }))
     },
     onSuccess: () => {
-      void utils.habit.progressToday.invalidate()
+      if (dayjs(date).isSame(dayjs(), "date")) {
+        void utils.habit.progressToday.invalidate()
+      }
     },
   })
 
   const deleteHabit = api.habit.delete.useMutation({
     onSuccess: () => {
-      void utils.habit.progressToday.invalidate()
-      void utils.habit.allByDate.invalidate()
+      if (dayjs(date).isSame(dayjs(), "date")) {
+        void utils.habit.progressToday.invalidate()
+      }
+      void utils.habit.allByDate.invalidate({ date })
     },
   })
   const archiveHabit = api.habit.archive.useMutation({
     onSuccess: () => {
-      void utils.habit.progressToday.invalidate()
-      void utils.habit.allByDate.invalidate()
+      if (dayjs(date).isSame(dayjs(), "date")) {
+        void utils.habit.progressToday.invalidate()
+      }
+      void utils.habit.allByDate.invalidate({ date })
     },
   })
 
-  const handleToggleComplete = () => toggleComplete.mutate({ id: habit.id })
+  const handleToggleComplete = () => toggleComplete.mutate({ id: habit.id, date })
 
   const { showActionSheetWithOptions } = useActionSheet()
   const handleOpenMenu = () => {
@@ -287,11 +272,11 @@ function HabitItem({
           break
         case 1:
           // Edit
-          router.push(`/habits/${habit.id}`)
+          router.push(`/habits/${habit.id}?date=${dayjs(date).toISOString()}`)
           break
         case 2:
           // Archive
-          archiveHabit.mutate({ id: habit.id })
+          archiveHabit.mutate({ id: habit.id, date })
           break
         case destructiveButtonIndex:
           deleteHabit.mutate({ id: habit.id })
