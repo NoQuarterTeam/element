@@ -132,11 +132,11 @@ export default function Billing() {
             <div className="space-y-1">
               <FormField placeholder="Address 1" defaultValue={billing?.address?.line1 || ""} name="address1" />
               <FormField placeholder="Address 2" defaultValue={billing?.address?.line2 || ""} name="address2" />
-              <div className="hstack items-start">
+              <div className="flex items-start space-x-2">
                 <FormField placeholder="City" defaultValue={billing?.address?.city || ""} name="city" />
                 <FormField placeholder="State/Province" defaultValue={billing?.address?.state || ""} name="state" />
               </div>
-              <div className="hstack items-start">
+              <div className="flex items-start space-x-2">
                 <FormField
                   placeholder="Country"
                   defaultValue={billing?.address?.country || ""}
@@ -157,7 +157,7 @@ export default function Billing() {
           </div>
           <div className="flex-wrap justify-between md:flex-nowrap">
             <p className="w-full pt-1 text-sm">Tax ID</p>
-            <div className="hstack items-start">
+            <div className="flex items-start space-x-2">
               <FormField
                 name="taxType"
                 placeholder="Tax type"
@@ -193,7 +193,7 @@ export default function Billing() {
           invoices.map((invoice) => (
             <div key={invoice.id} className="flex justify-between pt-1">
               <p className="text-sm">{dayjs.unix(invoice.created).format("MMM DD, YYYY")}</p>
-              <div className="hstack">
+              <div className="flex items-center space-x-2">
                 <p className="text-right text-sm">
                   <Badge colorScheme={invoice.status === "open" ? "orange" : "gray"}>
                     {INVOICE_STATUS[invoice.status || "draft"]}

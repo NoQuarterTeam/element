@@ -342,7 +342,7 @@ function MoveFormElementInput({ elementId, error }: { elementId: string; error: 
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           formatOptionLabel={(option) => (
-            <div className="hstack">
+            <div className="flex items-center space-x-2">
               <div className="sq-4 rounded-full" style={{ background: option.color }} />
               <p>{option.label}</p>
             </div>

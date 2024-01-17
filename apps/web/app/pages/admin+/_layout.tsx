@@ -23,8 +23,8 @@ export default function AdminLayout() {
   const themeFetcher = useFetcher()
   const isDark = useTheme() === "dark"
   return (
-    <div className="flex">
-      <div className="bg-background fixed left-0 top-0 flex h-screen w-[50px] flex-col justify-between border-r px-0 pb-10 md:w-[200px] md:px-4">
+    <div className="bg-background flex min-h-screen">
+      <div className="fixed left-0 top-0 flex h-screen w-[50px] flex-col justify-between border-r px-0 pb-10 md:w-[200px] md:px-4">
         <div className="flex flex-col space-y-2 py-8">
           <Link to="/" className="w-full pl-0 text-center text-lg md:pl-3 md:text-left">
             <span className="hidden md:block">Element</span>
@@ -66,7 +66,7 @@ function AdminLink({ to, children, Icon, ...props }: NavLinkProps & { children: 
       to={to}
       className={({ isActive }) =>
         merge(
-          buttonStyles({ variant: isActive ? "secondary" : "ghost" }),
+          buttonStyles({ variant: isActive ? "outline" : "ghost" }),
           buttonSizeStyles(),
           "w-full justify-center space-x-2 md:justify-start",
         )

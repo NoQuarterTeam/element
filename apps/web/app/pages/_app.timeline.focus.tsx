@@ -99,7 +99,7 @@ function FocusItem({ task }: { task: FocusTask }) {
       <div className="flex items-start justify-between p-2">
         <p>{task.name}</p>
 
-        <div className="hstack">
+        <div className="flex items-center space-x-2">
           {task.description && (
             <Tooltip label="Show description">
               <IconButton

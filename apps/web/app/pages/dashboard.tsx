@@ -127,7 +127,7 @@ export default function Dashboard() {
               <hr />
               <div className="flex justify-between">
                 <p>Name</p>
-                <div className="hstack">
+                <div className="flex items-center space-x-2">
                   <p className="w-24 text-center">Count</p>
                   <p className="w-24 text-center">Duration</p>
                 </div>
@@ -196,11 +196,11 @@ function ElementStat({ element, depth }: Props) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <div className="hstack">
+        <div className="flex items-center space-x-2">
           <div className="sq-5 rounded-full" style={{ background: element.color }} />
           <p>{element.name}</p>
         </div>
-        <div className="hstack">
+        <div className="flex items-center space-x-2">
           <p className="w-24 text-center text-lg">{element.taskCount}</p>
           <p className="text-md w-24 text-center">{element.taskDuration}</p>
         </div>

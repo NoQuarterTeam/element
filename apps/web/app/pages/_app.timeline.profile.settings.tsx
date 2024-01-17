@@ -52,7 +52,7 @@ export default function Settings() {
     <div className="space-y-2">
       <p className="text-lg font-medium">Settings</p>
       <div className="space-y-2">
-        <div className="hstack">
+        <div className="flex items-center space-x-2">
           <p className="text-sm">Weather</p>
         </div>
         <p className="text-xs">Show the next weeks weather based on your current location.</p>
@@ -60,7 +60,7 @@ export default function Settings() {
       </div>
       <hr />
       <div className="space-y-2">
-        <div className="hstack">
+        <div className="flex items-center space-x-2">
           <p className="text-sm">Habits</p>
           <Badge size="sm" colorScheme="red">
             Pro

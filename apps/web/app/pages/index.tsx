@@ -39,9 +39,9 @@ export default function HomeLayout() {
       <div className="border-b border-solid border-gray-50 dark:border-gray-700">
         <Limiter className="bg-white dark:bg-gray-800">
           <div className="flex justify-between py-5 align-middle">
-            <div className="hstack space-x-6">
+            <div className="flex items-center space-x-6">
               <Link to="/">
-                <div className="hstack">
+                <div className="flex items-center space-x-2">
                   <img alt="element logo" src="/logo.png" className="sq-8" />
                   <p className="text-xl font-semibold">Element</p>
                 </div>
@@ -54,7 +54,7 @@ export default function HomeLayout() {
                 Pricing
               </Link>
             </div>
-            <div className="hstack hidden md:flex">
+            <div className="hidden items-center space-x-2 md:flex">
               <themeFetcher.Form action="/api/theme" method="post">
                 <input type="hidden" name="theme" value={isDark ? "light" : "dark"} />
                 <IconButton
