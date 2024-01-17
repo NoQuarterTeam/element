@@ -13,6 +13,7 @@ import { db } from "~/lib/db.server"
 
 import { getTableParams } from "~/lib/table"
 import { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
+import { Badge } from "~/components/ui/Badge"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { orderBy, search, skip, take } = getTableParams(request)
@@ -30,6 +31,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       where,
       select: {
         id: true,
+        stripeSubscriptionId: true,
         firstName: true,
         lastName: true,
         email: true,
@@ -71,6 +73,31 @@ const columns = [
     id: "email",
     header: () => "Email",
     cell: (info) => <Link to={`/${info.row.original.id}`}>{info.getValue()}</Link>,
+  }),
+  columnHelper.display({
+    id: "type",
+    header: () => "Type",
+    cell: (info) => (
+      <Badge size="sm" colorScheme={info.row.original.stripeSubscriptionId ? "green" : "gray"}>
+        {info.row.original.stripeSubscriptionId ? "Pro" : "Free"}
+      </Badge>
+    ),
+  }),
+
+  columnHelper.accessor((row) => row._count.tasks, {
+    id: "taskCount",
+    header: () => "Tasks",
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor((row) => row._count.elements, {
+    id: "elementCount",
+    header: () => "Elements",
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor((row) => row._count.habits, {
+    id: "habitCount",
+    header: () => "Habits",
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("createdAt", {
     id: "createdAt",
