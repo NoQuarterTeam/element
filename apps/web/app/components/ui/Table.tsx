@@ -21,7 +21,7 @@ export function Table<T>({
   data: T[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<T, any>[]
-  count: number
+  count?: number
   ExpandComponent?: React.ComponentType<{ row: Row<T> }>
 }) {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -70,7 +70,7 @@ export function Table<T>({
                   >
                     <div
                       className={join(
-                        "mb-1 flex items-center justify-between whitespace-nowrap px-2 py-1 text-left text-sm font-normal",
+                        "mb-1 flex items-center justify-between whitespace-nowrap px-2 py-1 text-left font-normal",
                         header.column.getCanSort() &&
                           "rounded-xs cursor-pointer select-none hover:bg-gray-100 dark:hover:bg-gray-700",
                       )}
@@ -97,11 +97,11 @@ export function Table<T>({
             ) : (
               table.getRowModel().rows.map((row, i) => (
                 <React.Fragment key={row.id}>
-                  <tr className={join(i % 2 === 0 ? "bg-gray-100 dark:bg-gray-700/70" : "bg-background")}>
+                  <tr className={join(i % 2 === 0 ? "bg-gray-75 dark:bg-gray-700/70" : "bg-background")}>
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        className="truncate px-2 py-1 text-sm font-normal"
+                        className="truncate px-2 py-1 font-normal"
                         style={{ maxWidth: cell.column.columnDef.maxSize }}
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -121,7 +121,7 @@ export function Table<T>({
           </tbody>
         </table>
       </div>
-      <Pagination count={count} />
+      {(count || count === 0) && <Pagination count={count} />}
     </Tile>
   )
 }

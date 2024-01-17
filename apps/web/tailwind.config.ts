@@ -41,9 +41,6 @@ const config = {
         ".border-hover": {
           "@apply hover:border-gray-200 dark:hover:border-gray-600": {},
         },
-        ".hstack": {
-          "@apply flex flex-row items-center space-x-2": {},
-        },
         ".vstack": {
           "@apply flex flex-col items-center space-y-2": {},
         },

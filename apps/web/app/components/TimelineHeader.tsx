@@ -163,7 +163,7 @@ function _HeaderDay(props: {
                             <WeatherStat icon={<Wind className="sq-3.5" />} label="Wind">
                               <div className="flex h-full flex-col justify-between">
                                 <div>
-                                  <div className="hstack">
+                                  <div className="flex items-center space-x-2">
                                     <p className="text-2xl">
                                       {props.weather.windSpeed}
                                       <span className="text-lg">km/h</span>
@@ -205,7 +205,7 @@ function _HeaderDay(props: {
 function WeatherStat({ icon, children, label }: { icon: React.ReactNode; children: React.ReactNode; label: string }) {
   return (
     <div className="w-32 rounded-md border border-gray-100 p-2 dark:border-gray-600">
-      <div className="hstack space-x-1 opacity-60">
+      <div className="flex items-center space-x-1 opacity-60">
         {icon}
         <p className="text-sm">{label}</p>
       </div>

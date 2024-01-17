@@ -8,7 +8,7 @@ export function TabLink(props: NavLinkProps) {
       className={(linkProps) =>
         merge(
           "font-body border-b-2 pb-1 text-lg hover:opacity-70",
-          linkProps.isActive ? "border-primary-500 text-primary-500" : "border-transparent text-white",
+          linkProps.isActive ? "border-primary-500 text-primary-500" : "border-transparent",
           typeof props.className === "string" ? props.className : props.className?.(linkProps),
         )
       }
@@ -20,7 +20,7 @@ export function TabLink(props: NavLinkProps) {
 
 export function Tabs(props: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>) {
   return (
-    <div {...props} className={merge("hstack space-x-6 border-b border-gray-700", props.className)}>
+    <div {...props} className={merge("flex items-center space-x-4 border-b", props.className)}>
       {props.children}
     </div>
   )

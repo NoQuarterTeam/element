@@ -188,7 +188,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                   value={element}
                   onChange={setElement}
                   formatOptionLabel={(option: any) => (
-                    <div className="hstack">
+                    <div className="flex items-center space-x-2">
                       <div className="sq-4 rounded-full" style={{ background: option.color }} />
                       <p>{option.label}</p>
                     </div>
@@ -261,8 +261,8 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
               (!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.durationMinutes)
             }
             input={
-              <div className="hstack">
-                <div className="hstack space-x-1">
+              <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1">
                   <Input
                     className="sq-8 px-0 text-center"
                     defaultValue={task?.durationHours ? task.durationHours.toString() : undefined}
@@ -273,7 +273,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
                   />
                   <p className="text-xs opacity-80">Hours</p>
                 </div>
-                <div className="hstack space-x-1">
+                <div className="flex items-center space-x-1">
                   <Input
                     className="sq-8 px-0 text-center"
                     defaultValue={task?.durationMinutes ? task.durationMinutes.toString() : undefined}
@@ -373,7 +373,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
               <div className="w-full space-y-1">
                 <input type="hidden" name="hasTodos" value="true" />
                 {todos.map((todo, i) => (
-                  <div key={todo.id} className="hstack">
+                  <div key={todo.id} className="flex items-center space-x-2">
                     <Checkbox className="peer" name={`todos[${i}].isComplete`} defaultChecked={todos[i]?.isComplete} />
                     <Input
                       id={`todo-${todo.id}`}
@@ -464,7 +464,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
         <div className="bg-background absolute bottom-0 left-0 z-20 flex h-14 w-full justify-between border-t px-2">
           {task ? (
             <>
-              <div className="hstack">
+              <div className="flex items-center space-x-2">
                 <Tooltip label="Delete">
                   <IconButton
                     variant="outline"

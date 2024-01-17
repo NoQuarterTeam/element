@@ -18,6 +18,7 @@ import { Badge } from "~/components/ui/Badge"
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { orderBy, search, skip, take } = getTableParams(request)
   const where = {
+    role: "USER",
     OR: search
       ? [{ email: { contains: search } }, { firstName: { contains: search } }, { lastName: { contains: search } }]
       : undefined,
@@ -53,7 +54,7 @@ const columns = [
     id: "firstName",
     header: () => "First name",
     cell: (info) => (
-      <Link to={`/${info.row.original.id}`} className="flex items-center space-x-2">
+      <Link to={`${info.row.original.id}`} className="flex items-center space-x-2">
         <Avatar
           className="sq-10"
           src={createImageUrl(info.row.original.avatar)}
@@ -67,12 +68,12 @@ const columns = [
   columnHelper.accessor("lastName", {
     id: "lastName",
     header: () => "Last name",
-    cell: (info) => <Link to={`/${info.row.original.id}`}>{info.getValue()}</Link>,
+    cell: (info) => <Link to={`${info.row.original.id}`}>{info.getValue()}</Link>,
   }),
   columnHelper.accessor("email", {
     id: "email",
     header: () => "Email",
-    cell: (info) => <Link to={`/${info.row.original.id}`}>{info.getValue()}</Link>,
+    cell: (info) => <Link to={`${info.row.original.id}`}>{info.getValue()}</Link>,
   }),
   columnHelper.display({
     id: "type",

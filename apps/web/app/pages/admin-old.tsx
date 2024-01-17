@@ -135,9 +135,9 @@ export default function Admin() {
           </div>
           <div className="space-y-2">
             <h4>Tasks this month</h4>
-            <div className="hstack">
+            <div className="flex items-center space-x-2">
               <p className="text-3xl">{taskCountThisMonth}</p>
-              <div className="hstack text-sm opacity-50">
+              <div className="flex items-center space-x-2 text-sm opacity-50">
                 {percentageChange < 0 ? <ArrowDown className="sq-5" /> : <ArrowUp className="sq-5" />}
                 {Math.abs(percentageChange)}%
               </div>
