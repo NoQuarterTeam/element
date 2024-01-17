@@ -53,8 +53,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (action) {
     case TasksActionMethods.AddTask:
       try {
+        let taskCount: number
         if (!user.stripeSubscriptionId) {
-          const taskCount = await db.task.count({ where: { creatorId: { equals: user.id } } })
+          taskCount = await db.task.count({ where: { creatorId: { equals: user.id } } })
           if (taskCount >= MAX_FREE_TASKS && user.role !== "ADMIN") return redirect("/timeline/profile/plan/limit-task")
         }
         if (dayjs(user.createdAt).isBefore(dayjs().subtract(1, "month")) && !user.verifiedAt) {
@@ -140,6 +141,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           if (task.date && data.repeat && data.repeatEndDate) {
             const repeatEndDate = dayjs(data.repeatEndDate).startOf("day").add(12, "hours").toDate()
             const dates = getRepeatingDatesBetween(task.date, repeatEndDate, data.repeat)
+            if (dates.length > 200) {
+              return badRequest("Can only create max. 200 tasks", request, { flash: { title: "Can only create max. 200 tasks" } })
+            }
+            if (dates.length + taskCount > MAX_FREE_TASKS) {
+              return badRequest("Maximum number of tasks reached.", request, {
+                flash: { title: "Maximum number of tasks reached." },
+              })
+            }
             await Promise.all(
               dates.map((date) =>
                 transaction.task.create({

@@ -111,8 +111,9 @@ export const taskRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input: { todos, repeatEndDate, ...data } }) => {
+      let taskCount: number
       if (ctx.user.role !== "ADMIN" && !ctx.user.stripeSubscriptionId) {
-        const taskCount = await ctx.prisma.task.count({ where: { creatorId: { equals: ctx.user.id } } })
+        taskCount = await ctx.prisma.task.count({ where: { creatorId: { equals: ctx.user.id } } })
         if (taskCount >= MAX_FREE_TASKS)
           throw new TRPCError({
             code: "BAD_REQUEST",
@@ -141,6 +142,12 @@ export const taskRouter = createTRPCRouter({
         if (task.date && data.repeat && repeatEndDate && ctx.user.stripeSubscriptionId) {
           const repeatEndDateAsDate = dayjs(repeatEndDate).startOf("day").add(12, "hours").toDate()
           const dates = getRepeatingDatesBetween(task.date, repeatEndDateAsDate, data.repeat)
+          if (dates.length > 200) {
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Can only create max. 200 tasks" })
+          }
+          if (dates.length + taskCount > MAX_FREE_TASKS) {
+            throw new TRPCError({ code: "BAD_REQUEST", message: "Maximum number of tasks reached." })
+          }
           await Promise.all(
             dates.map(async (date) => {
               const copiedTask = await transaction.task.create({
