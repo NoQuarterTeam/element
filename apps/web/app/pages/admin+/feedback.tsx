@@ -130,14 +130,13 @@ export default function Feedbacks() {
         </div>
         <Form>
           <ExistingSearchParams exclude={["type"]} />
-          <p className="text-sm font-medium">Type</p>
           <Select
             defaultValue={searchParams.get("type") || ""}
             onChange={(e) => e.currentTarget.form?.dispatchEvent(new Event("submit", { bubbles: true }))}
             className="w-[100px]"
             name="type"
           >
-            <option value="">All</option>
+            <option value="">All types</option>
             <option value="ISSUE">Issue</option>
             <option value="IDEA">Idea</option>
             <option value="OTHER">Other</option>
