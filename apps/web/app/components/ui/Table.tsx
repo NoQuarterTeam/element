@@ -1,224 +1,247 @@
 import * as React from "react"
-import { Prisma } from "@element/database/types"
-import { join, merge } from "@element/shared"
-import { Link as RLink, useSearchParams } from "@remix-run/react"
-import { ArrowDown, ArrowUp } from "lucide-react"
+import { Form, useSearchParams } from "@remix-run/react"
+import type { ColumnDef, Row } from "@tanstack/react-table"
+import { flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from "@tanstack/react-table"
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoveDown, MoveUp } from "lucide-react"
 import queryString from "query-string"
+import { ExistingSearchParams } from "remix-utils/existing-search-params"
 
-import { Button } from "./Button"
-import { NoData } from "./NoData"
+import { join } from "@element/shared"
+import { Tile } from "./Tile"
+import { DEFAULT_TAKE } from "~/lib/table"
+import { IconButton } from "./IconButton"
+import { Select } from "./Inputs"
 
-interface DataType {
-  id: string
-  [key: string]: any
-}
-
-export type Sort = { orderBy: string; order: Prisma.SortOrder }
-
-interface Props<T extends DataType> {
-  children: (React.ReactElement<ColumnProps<T>> | undefined)[] | React.ReactElement<ColumnProps<T>> | undefined
-  count?: number
-  take?: number
-  data?: T[]
-  getRowHref?: (item: T) => string
-  noDataText?: string
-}
-
-export function Table<T extends DataType>(props: Props<T>) {
-  const [params, setParams] = useSearchParams()
-  const orderBy = params.get("orderBy") as string | undefined
-  const order = params.get("order") as Prisma.SortOrder | undefined
-
-  const handleSort = (order: Sort) => {
-    const existingParams = queryString.parse(params.toString())
-    setParams(queryString.stringify({ ...existingParams, ...order }))
-  }
-
-  const columns = React.Children.map(props.children, (child) => child?.props)?.filter(Boolean) || []
-
-  const data = props.data || []
-
-  return (
-    <div className="flex flex-grow flex-col overflow-hidden">
-      <div className="flex px-4 py-3">
-        {columns.map(({ sortKey, header, row, hasNoLink, ...column }: ColumnProps<T>, i: number) => (
-          <div
-            className={join(
-              "flex flex-1 items-center overflow-hidden",
-              i === columns.length - 1 ? "justify-end" : "justify-start",
-            )}
-            key={i.toString()}
-            {...column}
-          >
-            {header && row && (
-              <Header
-                isButton={!!sortKey}
-                onClick={() =>
-                  sortKey
-                    ? handleSort({
-                        orderBy: sortKey,
-                        order: order === Prisma.SortOrder.desc ? Prisma.SortOrder.asc : Prisma.SortOrder.desc,
-                      })
-                    : {}
-                }
-              >
-                {header}
-                {orderBy && !!sortKey && orderBy === sortKey && (
-                  <div className="center ml-2">
-                    {order === Prisma.SortOrder.asc ? <ArrowUp /> : order === Prisma.SortOrder.desc ? <ArrowDown /> : null}
-                  </div>
-                )}
-              </Header>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {data.length > 0 ? (
-        <div className="flex flex-grow flex-col justify-between">
-          {data.map((item) => (
-            <div
-              key={item.id}
-              className={join(
-                "flex w-full items-center border-t border-gray-700 px-4",
-                !!props.getRowHref && "cursor-pointer hover:bg-gray-900",
-              )}
-            >
-              {columns.map(({ row, sortKey, header, ...column }, i) => (
-                <ColumnField key={i.toString()} href={props.getRowHref?.(item)} isLast={i === columns.length - 1} {...column}>
-                  {row?.(item)}
-                </ColumnField>
-              ))}
-            </div>
-          ))}
-
-          <div className="flex items-center justify-between border-t border-gray-700 bg-gray-900 px-4 py-3">
-            <p className="w-100% text-sm">
-              {props.count} {props.count === 1 ? "item" : "items"}
-            </p>
-
-            <Pagination count={props.count} take={props.take} />
-          </div>
-        </div>
-      ) : (
-        <div className="center p-10">
-          <NoData>{props.noDataText || "No data yet"}</NoData>
-        </div>
-      )}
-    </div>
-  )
-}
-
-function Header({
-  isButton,
-  className,
-  children,
-  onClick,
+export function Table<T>({
+  data,
+  columns,
+  count,
+  ExpandComponent,
 }: {
-  isButton?: boolean
-  className?: string
-  children: React.ReactNode
-  onClick?: () => void
+  data: T[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  columns: ColumnDef<T, any>[]
+  count: number
+  ExpandComponent?: React.ComponentType<{ row: Row<T> }>
 }) {
-  const sharedClassName = join(
-    "min-w-auto font-700 flex h-auto items-center text-sm",
-    className,
-    isButton ? "cursor-pointer" : "cursor-default",
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const orderBy = searchParams.get("orderBy")
+  const order = searchParams.get("order")
+
+  const table = useReactTable({
+    data,
+    columns,
+    manualSorting: false,
+    enableMultiSort: false,
+    getCoreRowModel: getCoreRowModel(),
+    getRowCanExpand: () => !!ExpandComponent,
+    getExpandedRowModel: ExpandComponent ? getExpandedRowModel() : undefined,
+  })
+  return (
+    <Tile className="space-y-1 p-2">
+      <div className="scrollbar-hide w-full overflow-x-scroll">
+        <table className="w-full">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    style={{ width: header.getSize() }}
+                    onClick={
+                      header.column.getCanSort()
+                        ? () => {
+                            const newSearchParams = queryString.stringify({
+                              ...queryString.parse(searchParams.toString()),
+                              orderBy: header.column.id,
+                              order:
+                                orderBy && orderBy !== header.column.id
+                                  ? order || "desc"
+                                  : order === "asc" || !order
+                                    ? "desc"
+                                    : "asc",
+                            })
+                            setSearchParams(newSearchParams)
+                          }
+                        : undefined
+                    }
+                  >
+                    <div
+                      className={join(
+                        "mb-1 flex items-center justify-between whitespace-nowrap px-2 py-1 text-left font-medium",
+                        header.column.getCanSort() &&
+                          "rounded-xs cursor-pointer select-none hover:bg-gray-100 dark:hover:bg-gray-700",
+                      )}
+                    >
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      {orderBy && order && header.column.getCanSort() && header.column.id === orderBy ? (
+                        <span className="w-4">{order === "asc" ? <MoveUp size={16} /> : <MoveDown size={16} />}</span>
+                      ) : (
+                        <span className="w-4" />
+                      )}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.length === 0 ? (
+              <tr>
+                <td colSpan={table.getAllFlatColumns().length} className="p-8 text-center">
+                  No items found
+                </td>
+              </tr>
+            ) : (
+              table.getRowModel().rows.map((row, i) => (
+                <React.Fragment key={row.id}>
+                  <tr className={join(i % 2 === 0 ? "bg-gray-100 dark:bg-gray-700/70" : "bg-background")}>
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        key={cell.id}
+                        className="truncate px-2 py-1 text-sm font-normal"
+                        style={{ maxWidth: cell.column.columnDef.maxSize }}
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
+                  {ExpandComponent && row.getIsExpanded() && (
+                    <tr className={join(i % 2 === 0 ? "bg-gray-100 dark:bg-gray-700" : "bg-background")}>
+                      <td style={{ maxWidth: table.getTotalSize() }} colSpan={row.getVisibleCells().length}>
+                        {ExpandComponent && <ExpandComponent row={row} />}
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+      <Pagination count={count} />
+    </Tile>
   )
-  return isButton ? (
-    <button className={sharedClassName} onClick={onClick}>
-      {children}
-    </button>
-  ) : (
-    <div className={sharedClassName}>{children}</div>
-  )
 }
+function Pagination({ count }: { count: number }) {
+  const [searchParams] = useSearchParams()
+  const take = Number(searchParams.get("take") || `${DEFAULT_TAKE}`)
+  const noOfPages = Math.ceil(count / take)
+  const currentPage = Number(searchParams.get("page") || "1")
 
-interface ColumnProps<T> {
-  row?: (item: T) => React.ReactNode
-  sortKey?: string
-  hasNoLink?: boolean
-  header?: React.ReactNode
-  className?: string
-  children?: React.ReactNode
-}
+  const maxPages = 5
+  const halfMaxPages = Math.floor(maxPages / 2)
+  const pageNumbers = [] as Array<number>
+  if (noOfPages <= maxPages) {
+    for (let i = 1; i <= noOfPages; i++) {
+      pageNumbers.push(i)
+    }
+  } else {
+    let startPage = currentPage - halfMaxPages
+    let endPage = currentPage + halfMaxPages
 
-export function Column<T extends DataType>(_: ColumnProps<T>) {
-  return null
-}
+    if (startPage < 1) {
+      endPage += Math.abs(startPage) + 1
+      startPage = 1
+    }
 
-function _ColumnField<T>({ isLast, hasNoLink, href, className, ...props }: ColumnProps<T> & { href?: string; isLast?: boolean }) {
-  const sharedClassName = merge(
-    "flex h-12 flex-1 items-center overflow-x-auto text-sm",
-    isLast ? "justify-end" : "justify-start",
-    className,
-  )
-  return !hasNoLink && !!href ? (
-    <RLink className={merge(sharedClassName, "hover:no-underline")} to={href}>
-      {typeof props.children === "string" || typeof props.children === "number" ? (
-        <p className="truncate">{props.children}</p>
-      ) : (
-        props.children
-      )}
-    </RLink>
-  ) : (
-    <div className={sharedClassName}>
-      {typeof props.children === "string" || typeof props.children === "number" ? (
-        <p className="truncate">{props.children}</p>
-      ) : (
-        props.children
-      )}
-    </div>
-  )
-}
+    if (endPage > noOfPages) {
+      startPage -= endPage - noOfPages
+      endPage = noOfPages
+    }
 
-const ColumnField = React.memo(_ColumnField)
-
-export interface PaginationProps {
-  count?: number
-  take?: number
-}
-
-export function Pagination(props: PaginationProps) {
-  const numberOfPages = props.count ? Math.ceil(props.count / (props.take || 5)) : 0
-  const [params, setParams] = useSearchParams()
-  const currentPage = parseInt(params.get("page") || "1") as number
-  const handleSetPage = (page: number) => {
-    const existingParams = queryString.parse(params.toString())
-    setParams(queryString.stringify({ ...existingParams, page: page.toString() }))
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i)
+    }
   }
 
-  const pageArray = [...Array(numberOfPages)].map((_, i) => i)
   return (
-    <div className="hstack space-x-1">
-      <Button
-        size="xs"
-        variant="ghost"
-        disabled={currentPage <= 1 || props.count === 0}
-        onClick={() => handleSetPage(currentPage - 1)}
-      >
-        Prev
-      </Button>
-      {pageArray
-        // .slice(currentPage > 3 ? currentPage - 3 : 0, currentPage > 3 ? currentPage + 2 : props.take || 5)
-        .map((page) => (
-          <Button
+    <div className="flex items-center justify-between px-2">
+      <p>{count} items</p>
+      <div className="flex items-center gap-1">
+        <Form className="flex items-center gap-1">
+          <span className="flex items-center gap-1 text-sm">
+            <div>Page</div>
+            <strong>{currentPage}</strong>
+            of
+            <strong>{noOfPages}</strong>
+          </span>
+          <ExistingSearchParams exclude={["page"]} />
+          <IconButton
             size="xs"
-            key={page}
-            variant={currentPage === page + 1 ? "primary" : "ghost"}
-            onClick={() => handleSetPage(page + 1)}
+            name="page"
+            value="1"
+            type="submit"
+            aria-label="first page"
+            icon={<ChevronsLeft size={16} />}
+            variant="outline"
+            disabled={currentPage === 1}
+          />
+          <IconButton
+            size="xs"
+            name="page"
+            value={currentPage - 1}
+            type="submit"
+            aria-label="previous page"
+            icon={<ChevronLeft size={16} />}
+            variant="outline"
+            disabled={currentPage === 1}
+          />
+          {pageNumbers.map((pageNumber) => {
+            const isCurrentPage = pageNumber === currentPage
+            const isValidPage = pageNumber >= 0 && pageNumber <= count
+            return (
+              <IconButton
+                variant={isCurrentPage ? "secondary" : "outline"}
+                size="xs"
+                name="page"
+                value={pageNumber}
+                type="submit"
+                key={`${pageNumber}-active`}
+                aria-label={`Page ${pageNumber}`}
+                disabled={!isValidPage}
+                icon={<div>{pageNumber}</div>}
+              />
+            )
+          })}
+          <IconButton
+            size="xs"
+            aria-label="next page"
+            name="page"
+            value={currentPage + 1}
+            type="submit"
+            icon={<ChevronRight size={16} />}
+            variant="outline"
+            disabled={currentPage === noOfPages}
+          />
+          <IconButton
+            size="xs"
+            icon={<ChevronsRight size={16} />}
+            aria-label="last page"
+            variant="outline"
+            name="page"
+            value={noOfPages}
+            type="submit"
+            disabled={currentPage === noOfPages}
+          />
+        </Form>
+
+        <Form>
+          <ExistingSearchParams exclude={["take"]} />
+          <Select
+            size="xs"
+            name="take"
+            value={take}
+            onChange={(e) => e.currentTarget.form?.dispatchEvent(new Event("submit", { bubbles: true }))}
           >
-            {page + 1}
-          </Button>
-        ))}
-      <Button
-        size="xs"
-        variant="ghost"
-        disabled={props.count === 0 || (!!props.count && props.count <= currentPage * (props.take || 5))}
-        onClick={() => handleSetPage(currentPage + 1)}
-      >
-        Next
-      </Button>
+            <option value="15">15 per page</option>
+            <option value="30">30 per page</option>
+            <option value="50">50 per page</option>
+          </Select>
+        </Form>
+      </div>
     </div>
   )
 }

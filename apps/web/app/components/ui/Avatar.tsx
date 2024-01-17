@@ -1,42 +1,31 @@
+"use client"
+
+import { User2 } from "lucide-react"
+
 import { merge } from "@element/shared"
-import * as RAvatar from "@radix-ui/react-avatar"
-import { cva, type VariantProps } from "class-variance-authority"
 
-export const avatarStyles = cva("center rounded-full capitalize", {
-  variants: {
-    size: {
-      xs: "sq-5 text-xs",
-      sm: "sq-8 text-sm",
-      md: "sq-10 text-md",
-      lg: "sq-12 text-lg",
-    },
-  },
-  defaultVariants: {
-    size: "md",
-  },
-})
+import type { OptimizedImageProps } from "../OptimisedImage"
+import { OptimizedImage } from "../OptimisedImage"
 
-export type AvatarProps = VariantProps<typeof avatarStyles>
-
-interface Props extends AvatarProps, RAvatar.AvatarProps {
-  name: string
-  src?: string | null | undefined
+interface Props extends Omit<OptimizedImageProps, "height" | "width" | "alt"> {
+  size?: number
 }
 
-export function Avatar({ size, src, name, ...props }: Props) {
-  const initials = name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
+export function Avatar({ size = 100, src, ...props }: Props) {
+  if (!src)
+    return (
+      <div className={merge("center rounded-full bg-gray-50 dark:bg-gray-700", props.className)}>
+        <User2 size={16} />
+      </div>
+    )
   return (
-    <RAvatar.Root className={merge(avatarStyles({ size }), props.className)}>
-      <RAvatar.Image className="h-full w-full rounded-[inherit] object-cover" src={src || undefined} alt="avatar" />
-      <RAvatar.Fallback
-        className="center bg-primary-700 h-full w-full rounded-[inherit] object-cover text-xs font-semibold text-white"
-        delayMs={600}
-      >
-        {initials}
-      </RAvatar.Fallback>
-    </RAvatar.Root>
+    <OptimizedImage
+      src={src}
+      width={size}
+      height={size}
+      alt="avatar"
+      {...props}
+      className={merge("rounded-full", props.className)}
+    />
   )
 }

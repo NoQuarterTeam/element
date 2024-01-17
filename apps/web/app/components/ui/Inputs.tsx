@@ -1,20 +1,21 @@
 import * as React from "react"
-import { merge } from "@element/shared"
 import { cva, type VariantProps } from "class-variance-authority"
 
+import { merge } from "@element/shared"
+
 export const inputStyles = cva(
-  "focus:border-primary-500 rounded-xs focus:ring-primary-500 block w-full border text-base text-black placeholder-gray-500 ring-0 transition-colors focus:bg-transparent focus:ring-2 focus:ring-transparent dark:text-white",
+  "focus:border-primary-500 dark:focus:border-primary-500 focus:ring-primary-500 rounded-xs block w-full border text-base text-black placeholder-gray-500 ring-0 transition-colors placeholder:font-thin focus:bg-transparent focus:ring-2 focus:ring-transparent read-only:focus:ring-transparent dark:text-white",
   {
     variants: {
       variant: {
         solid: "border-transparent bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10",
-        outline: "border-black/10 bg-transparent hover:border-black/40 dark:border-white/10 dark:hover:border-white/20",
+        outline: "border-black/10 bg-transparent hover:border-black/90 dark:border-white/10 dark:hover:border-white/20",
         ghost: "border-transparent bg-transparent hover:border-black/10 dark:hover:border-white/10",
       },
       size: {
         xs: "px-2 py-1 text-xs",
-        sm: "px-3 py-1.5 text-sm",
-        md: "text-md px-4 py-2",
+        sm: "px-3 py-1 text-sm",
+        md: "px-4 py-1 text-base",
         lg: "px-5 py-3 text-lg",
       },
     },
@@ -29,9 +30,9 @@ export const inputSizeStyles = cva("", {
   variants: {
     size: {
       xs: "h-7",
-      sm: "h-9",
-      md: "h-11",
-      lg: "h-12",
+      sm: "h-8",
+      md: "h-9",
+      lg: "h-11",
     },
   },
   defaultVariants: {
@@ -48,16 +49,39 @@ export interface InputProps
     InputStyleProps,
     InputSizeStyleProps {
   name?: string
+  leftElement?: React.ReactNode
+  rightElement?: React.ReactNode
+  ref?: React.Ref<HTMLInputElement>
 }
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(function _Input({ size, variant, ...props }, ref) {
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(function _Input(
+  { size, variant, leftElement, rightElement, ...props },
+  ref,
+) {
   return (
-    <input
-      type="text"
-      ref={ref}
-      id={props.name}
-      {...props}
-      className={merge(inputStyles({ variant, size }), inputSizeStyles({ size }), props.className)}
-    />
+    <div className="flex flex-row">
+      {leftElement && (
+        <div className={merge(inputSizeStyles({ size }), "center rounded-l-xs border bg-gray-50 px-2 dark:bg-gray-900")}>
+          {leftElement}
+        </div>
+      )}
+      <input
+        type="text"
+        ref={ref}
+        id={props.name}
+        {...props}
+        className={merge(
+          inputStyles({ variant, size, className: props.className }),
+          inputSizeStyles({ size }),
+          leftElement && "rounded-l-none",
+          rightElement && "rounded-r-none",
+        )}
+      />
+      {rightElement && (
+        <div className={merge(inputSizeStyles({ size }), "center rounded-r-xs border bg-gray-50 px-2 dark:bg-gray-900")}>
+          {rightElement}
+        </div>
+      )}
+    </div>
   )
 })
 
@@ -66,48 +90,9 @@ export interface TextareaProps
     InputStyleProps {
   name?: string
 }
-const paddingMap = {
-  xs: 4,
-  sm: 6,
-  md: 8,
-  lg: 12,
-} as const
 
-const lineHeightMap = {
-  xs: 16,
-  sm: 20,
-  md: 24,
-  lg: 28,
-}
 export function Textarea({ variant, size, ...props }: TextareaProps) {
-  const ref = React.useRef<HTMLTextAreaElement>(null)
-  // Dealing with Textarea Height
-  const calcHeight = React.useCallback(
-    (value: string) => {
-      if (!ref.current) return
-      const numberOfLineBreaks = (value.match(/\n/g) || []).length
-      const lineHeight = lineHeightMap[size || "sm"]
-      // min-height + lines x line-height + padding + border
-      const newHeight = lineHeight + numberOfLineBreaks * lineHeight + paddingMap[size || "sm"] * 2 + 2
-      ref.current.style.height = `${newHeight}px`
-    },
-    [size],
-  )
-
-  React.useEffect(() => {
-    if (!ref.current) return
-    calcHeight(ref.current.value)
-  }, [calcHeight])
-
-  return (
-    <textarea
-      ref={ref}
-      id={props.name}
-      {...props}
-      onChange={(e) => calcHeight(e.currentTarget.value)}
-      className={merge(inputStyles({ variant, size }), "resize-none", props.className)}
-    />
-  )
+  return <textarea id={props.name} {...props} className={merge(inputStyles({ variant, size }), "resize-none", props.className)} />
 }
 
 export interface SelectProps
@@ -121,7 +106,7 @@ export function Select({ variant, size, ...props }: SelectProps) {
     <select
       id={props.name}
       {...props}
-      className={merge(inputStyles({ variant, size }), inputSizeStyles({ size }), props.className)}
+      className={merge(inputStyles({ variant, size }), inputSizeStyles({ size }), "w-auto pr-8", props.className)}
     >
       {props.children}
     </select>
@@ -131,30 +116,40 @@ export function Select({ variant, size, ...props }: SelectProps) {
 export const checkboxSizeStyles = cva("", {
   variants: {
     size: {
-      sm: "sq-5",
-      md: "sq-7",
-      lg: "sq-9",
+      sm: "sq-4",
+      md: "sq-5",
+      lg: "sq-7",
     },
   },
   defaultVariants: {
-    size: "sm",
+    size: "md",
   },
 })
 export type CheckboxSizeStyleProps = VariantProps<typeof checkboxSizeStyles>
 
 export function Checkbox({
-  size = "sm",
+  size = "md",
+  isInderterminate,
   ...props
 }: Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "size"> &
-  CheckboxSizeStyleProps) {
+  CheckboxSizeStyleProps & { isInderterminate?: boolean }) {
+  const ref = React.useRef<HTMLInputElement>(null)
+  React.useEffect(() => {
+    if (!ref.current) return
+    if (isInderterminate) {
+      ref.current.indeterminate = !props.checked && isInderterminate
+    }
+  }, [isInderterminate, props.checked])
+
   return (
     <input
+      ref={ref}
       type="checkbox"
       {...props}
       className={merge(
-        inputStyles({ variant: "outline", size: "xs" }),
+        inputStyles({ variant: "outline" }),
         checkboxSizeStyles({ size }),
-        "text-primary-500 checked:bg-primary-500 hover:text-primary-600 focus:ring-primary-300 dark:checked:bg-primary-500 dark:hover:checked:bg-primary-600  dark:focus:ring-primary-300  cursor-pointer transition-all ",
+        "text-primary-500 checked:bg-primary-500 hover:text-primary-600 focus:ring-primary-300 dark:checked:bg-primary-500 dark:hover:checked:bg-primary-600 dark:focus:ring-primary-300 flex-shrink-0 cursor-pointer p-0 transition-all",
         props.className,
       )}
     />

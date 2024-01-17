@@ -3,7 +3,6 @@ import { createImageUrl, join } from "@element/shared"
 import { NavLink, Outlet, useNavigate, useNavigation } from "@remix-run/react"
 import { CreditCard, Map, Settings } from "lucide-react"
 
-import { transformImageSrc } from "~/components/OptimisedImage"
 import { Avatar } from "~/components/ui/Avatar"
 import { Modal } from "~/components/ui/Modal"
 import { Spinner } from "~/components/ui/Spinner"
@@ -23,16 +22,7 @@ export default function Profile() {
             <p className="hidden truncate text-xs opacity-80 md:block">{me.email}</p>
           </div>
           <div className="space-y-1">
-            <TabLink
-              to="."
-              icon={
-                <Avatar
-                  src={transformImageSrc(createImageUrl(me.avatar), { width: 30, height: 30, fit: "cover" })}
-                  name={me.firstName + " " + me.lastName}
-                  size="xs"
-                />
-              }
-            >
+            <TabLink to="." icon={<Avatar src={createImageUrl(me.avatar)} className="sq-4" size={20} />}>
               Account
             </TabLink>
             <TabLink

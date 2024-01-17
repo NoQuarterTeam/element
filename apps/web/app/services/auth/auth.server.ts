@@ -48,3 +48,10 @@ export async function getMaybeUser<T extends Prisma.UserSelect>(request: Request
   return user as unknown as Prisma.UserGetPayload<{ select: T }>
 }
 export type MaybeUser = Await<typeof getMaybeUser>
+
+export async function getCurrentAdmin(request: Request) {
+  const userId = await requireUser(request)
+  const user = await db.user.findUnique({ where: { id: userId, role: "ADMIN" } })
+  if (!user) throw redirect(`/`)
+  return user
+}

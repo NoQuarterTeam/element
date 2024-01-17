@@ -1,4 +1,4 @@
-import type * as React from "react"
+import * as React from "react"
 import { ENV, FULL_WEB_URL } from "@element/server-env"
 import { join } from "@element/shared"
 import * as Tooltip from "@radix-ui/react-tooltip"
@@ -14,8 +14,10 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useLocation,
   useRouteError,
 } from "@remix-run/react"
+import posthog from "posthog-js"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Frown } from "lucide-react"
 import { promiseHash } from "remix-utils/promise"
@@ -35,6 +37,7 @@ import { type Theme } from "./lib/theme"
 import { getMaybeUser } from "./services/auth/auth.server"
 import { getFlashSession } from "./services/session/flash.server"
 import { getThemeSession } from "./services/session/theme.server"
+import { getGdprSession } from "./services/session/gdpr.server"
 
 export const meta: MetaFunction = () => {
   return [{ title: "Element" }]
@@ -44,13 +47,14 @@ export const links: LinksFunction = () => {
   return cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []
 }
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { flashSession, themeSession, user } = await promiseHash({
+  const { flashSession, gdprSession, themeSession, user } = await promiseHash({
     flashSession: getFlashSession(request),
     themeSession: getThemeSession(request),
+    gdprSession: getGdprSession(request),
     user: getMaybeUser(request),
   })
   return json(
-    { user, flash: flashSession.message, theme: themeSession.theme, config: { FULL_WEB_URL, ENV } },
+    { user, gdpr: gdprSession.gdpr, flash: flashSession.message, theme: themeSession.theme, config: { FULL_WEB_URL, ENV } },
     {
       headers: [
         ["set-cookie", await flashSession.commit()],
@@ -64,7 +68,27 @@ export type RootLoader = SerializeFrom<typeof loader>
 const queryClient = new QueryClient()
 
 export default function App() {
-  const { flash, theme } = useLoaderData<typeof loader>()
+  const { flash, gdpr, user, config, theme } = useLoaderData<typeof loader>()
+  const location = useLocation()
+  const [isHogLoaded, setIsHogLoaded] = React.useState(false)
+
+  React.useEffect(() => {
+    if ((gdpr && !gdpr.isAnalyticsEnabled) || config.ENV !== "production") return
+    if (!isHogLoaded) {
+      posthog.init("phc_2W9bqjQCsJjOLxyO5wcxb4m5aQrNRjUWmKA9mvu9lcF", {
+        api_host: "https://eu.posthog.com",
+        loaded: () => setIsHogLoaded(true),
+      })
+    }
+    if (user) {
+      posthog.identify(user.id, { email: user.email, firstName: user.firstName, lastName: user.lastName })
+    }
+  }, [gdpr, user, config, isHogLoaded])
+
+  React.useEffect(() => {
+    if (!isHogLoaded || !location.pathname) return
+    posthog.capture("$pageview")
+  }, [location.pathname, isHogLoaded])
 
   return (
     <Document theme={theme}>
