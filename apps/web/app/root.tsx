@@ -38,6 +38,7 @@ import { getMaybeUser } from "./services/auth/auth.server"
 import { getFlashSession } from "./services/session/flash.server"
 import { getThemeSession } from "./services/session/theme.server"
 import { getGdprSession } from "./services/session/gdpr.server"
+import { GDPR } from "./pages/api+/gdpr"
 
 export const meta: MetaFunction = () => {
   return [{ title: "Element" }]
@@ -92,10 +93,11 @@ export default function App() {
 
   return (
     <Document theme={theme}>
-      <Toaster flash={flash} />
       <QueryClientProvider client={queryClient}>
         <Tooltip.Provider>
           <Outlet />
+          <Toaster flash={flash} />
+          <GDPR />
         </Tooltip.Provider>
       </QueryClientProvider>
     </Document>
