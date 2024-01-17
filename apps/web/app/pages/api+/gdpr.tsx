@@ -32,12 +32,12 @@ export function GDPR() {
           Customize
         </Button>
 
-        <acceptFetcher.Form action="/api/gdpr">
+        <acceptFetcher.Form method="post" action="/api/gdpr">
           <acceptFetcher.FormButton value={Actions.save} variant="ghost">
             Reject all
           </acceptFetcher.FormButton>
         </acceptFetcher.Form>
-        <rejectFetcher.Form action="/api/gdpr">
+        <rejectFetcher.Form method="post" action="/api/gdpr">
           <input type="hidden" name="isAnalyticsEnabled" value="on" />
           <rejectFetcher.FormButton value={Actions.save}>Accept all</rejectFetcher.FormButton>
         </rejectFetcher.Form>
@@ -48,7 +48,7 @@ export function GDPR() {
         title="Cookie preferences"
         description="Manage your cookie settings. You can enable or disable different types of cookies below"
       >
-        <modalFetcher.Form className="space-y-4" action="/api/gdpr">
+        <modalFetcher.Form method="post" className="space-y-4" action="/api/gdpr">
           <div className="flex items-center justify-between space-x-4">
             <div>
               <h3>Essential</h3>
