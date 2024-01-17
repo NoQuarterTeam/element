@@ -9,7 +9,7 @@ import { Text } from "../../../../components/Text"
 import { Toast } from "../../../../components/Toast"
 import { useMe } from "../../../../lib/hooks/useMe"
 import { useTemporaryData } from "../../../../lib/hooks/useTemporaryTasks"
-import { useTimelineDays } from "../../../../lib/hooks/useTimelineDays"
+import { useTimelineDays } from "../../../../lib/hooks/useTimeline"
 import { api, type RouterInputs, type RouterOutputs } from "../../../../lib/utils/api"
 
 type Task = NonNullable<RouterOutputs["task"]["byId"]>

@@ -3,8 +3,8 @@
   "compilerOptions": {
     "target": "ESNext",
     "jsx": "react-native",
-    "types": ["nativewind/types"]
+    "types": ["nativewind/types"],
   },
   "include": ["expo-plugins", "src", "app.config.ts", "index.js"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

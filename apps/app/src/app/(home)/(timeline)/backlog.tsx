@@ -10,7 +10,7 @@ import colors from "@element/tailwind-config/src/colors"
 
 import { ModalView } from "../../../components/ModalView"
 import { Text } from "../../../components/Text"
-import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
+import { useTimelineDays } from "../../../lib/hooks/useTimeline"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
 
 export default function Backlog() {

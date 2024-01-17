@@ -1,13 +1,13 @@
 import * as React from "react"
-import { useColorScheme as useNWColorScheme } from "nativewind"
 import { useColorScheme, View } from "react-native"
-
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold, Poppins_900Black, useFonts } from "@expo-google-fonts/poppins"
+import dayjs from "dayjs"
 import { SplashScreen, Stack } from "expo-router"
 import { StatusBar } from "expo-status-bar"
+import { useColorScheme as useNWColorScheme } from "nativewind"
 
 import { Toast } from "../components/Toast"
 import { useCheckExpoUpdates } from "../lib/hooks/useCheckExpoUpdates"
@@ -16,7 +16,6 @@ import { useMe } from "../lib/hooks/useMe"
 import { useNotificationObserver } from "../lib/hooks/useNotificationObserver"
 import { useBackgroundColor } from "../lib/tailwind"
 import { api, TRPCProvider } from "../lib/utils/api"
-import dayjs from "dayjs"
 
 SplashScreen.preventAutoHideAsync()
 

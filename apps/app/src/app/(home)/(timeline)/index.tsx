@@ -30,27 +30,12 @@ import { Text } from "../../../components/Text"
 import { useMe } from "../../../lib/hooks/useMe"
 import { useOnboarding } from "../../../lib/hooks/useOnboarding"
 import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
-import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
+import { DAY_WIDTH, days, daysBack, daysForward, months } from "../../../lib/hooks/useTimeline"
 import { api, type RouterOutputs } from "../../../lib/utils/api"
 import { height } from "../../../lib/utils/device"
 
 dayjs.extend(advancedFormat)
 
-export const getMonths = (startDate: string, daysBack: number, daysForward: number) => {
-  // Include year to cater for scrolling further than 12
-  const monthsByDay = Array.from({ length: daysBack + daysForward }).map(
-    (_, i) => dayjs(startDate).add(i, "day").month() + "/" + dayjs(startDate).add(i, "day").year(),
-  )
-  const uniqueMonths = monthsByDay.filter((value, index, array) => array.indexOf(value) === index)
-  return uniqueMonths.map((month) => ({
-    month: Number(month.split("/", 2)[0]),
-    year: Number(month.split("/", 2)[1]),
-  }))
-}
-
-export const getDays = (startDate: string, daysBack: number, daysForward: number) => {
-  return Array.from({ length: daysBack + daysForward }).map((_, i) => dayjs(startDate).add(i, "day").format("YYYY-MM-DD"))
-}
 const MONTH_NAMES = ["jan.", "feb.", "mar.", "apr.", "may.", "jun.", "jul.", "aug.", "sept.", "oct.", "nov.", "dec."]
 
 export default function Timeline() {
@@ -82,32 +67,6 @@ export default function Timeline() {
   //   },
   // )
 
-  const { daysBack, daysForward } = useTimelineDays()
-
-  const days = React.useMemo(
-    () => getDays(dayjs().subtract(daysBack, "days").format("YYYY-MM-DD"), daysBack, daysForward),
-    [daysBack, daysForward],
-  )
-  const months = React.useMemo(
-    () =>
-      getMonths(dayjs().subtract(daysBack, "days").format("YYYY-MM-DD"), daysBack, daysForward).map(({ month, year }, index) => {
-        let dayCount
-        if (index === 0) {
-          const startDate = dayjs().subtract(daysBack, "days")
-          dayCount = startDate.endOf("month").diff(startDate, "days") + 1
-        } else {
-          dayCount = dayjs().month(month).year(year).daysInMonth()
-        }
-
-        return {
-          month,
-          year,
-          width: dayCount * DAY_WIDTH,
-        }
-      }),
-    [daysBack, daysForward],
-  )
-
   const onScroll = useAnimatedScrollHandler((e) => {
     headerTranslateX.value = -e.contentOffset.x
     // TODO: scroll when reached start or end of scroll view
@@ -119,13 +78,6 @@ export default function Timeline() {
     // }
   })
 
-  const { data, isLoading, refetch } = api.task.timeline.useQuery(
-    { daysBack, daysForward },
-    { staleTime: Infinity, enabled: !!me },
-  )
-
-  const { tasks: tempTasks } = useTemporaryData()
-
   // TODO dynamic day height?
   // const maxTaskCountPerDay = React.useMemo(() => {
   //   if (!data) return 0
@@ -133,34 +85,28 @@ export default function Timeline() {
   //   return Math.max(...taskCountPerDay)
   // }, [data, days])
 
+  const utils = api.useUtils()
   return (
     <SafeAreaView edges={["top"]} className="flex-1 pt-2">
       <Animated.View className="flex flex-row" style={{ transform: [{ translateX: headerTranslateX }] }}>
-        {months.map(({ month, year, width }, i) => {
-          // left start is the sum of all previous months' widths
-          const leftStart = months.slice(0, i).reduce((acc, { width }) => acc + width, 0)
-          return (
-            <View key={`${month}-${year}-${i}`} style={{ width }}>
-              <Month month={month} width={width} leftStart={leftStart} headerTranslateX={headerTranslateX} />
-            </View>
-          )
-        })}
+        <TimelineMonths headerTranslateX={headerTranslateX} />
       </Animated.View>
       <Animated.View className="flex flex-row" style={{ transform: [{ translateX: headerTranslateX }] }}>
-        {days.map((day) => (
-          <View key={day} style={{ width: DAY_WIDTH }} className="border-gray-75 border-b px-1 pb-2 dark:border-gray-700">
-            <Text className="text-center">{dayjs(day).startOf("day").format("ddd Do")}</Text>
-          </View>
-        ))}
+        <TimelineDays />
       </Animated.View>
 
-      <Animated.ScrollView ref={outerTimelineRef} refreshControl={<RefreshControl refreshing={false} onRefresh={refetch} />}>
+      <Animated.ScrollView
+        ref={outerTimelineRef}
+        refreshControl={
+          <RefreshControl refreshing={false} onRefresh={() => utils.task.timeline.refetch({ daysBack, daysForward })} />
+        }
+      >
         <Animated.ScrollView
           onLayout={() => {
             timelineRef.current?.scrollTo({ x: DAY_WIDTH * daysBack, animated: false })
-            setTimeout(() => {
-              setIsLoaded(true)
-            }, 500)
+            // setTimeout(() => {
+            // }, 500)
+            setIsLoaded(true)
           }}
           // contentOffset={{ x: 7 * DAY_WIDTH, y: 0 }}
           onScroll={onScroll}
@@ -168,23 +114,8 @@ export default function Timeline() {
           ref={timelineRef}
           horizontal
         >
-          {days.map((day) => (
-            <TouchableOpacity
-              key={day}
-              activeOpacity={0.9}
-              onPress={() => router.push({ pathname: "new", params: { date: day } })}
-              style={{ height, width: DAY_WIDTH }}
-              className={join(
-                `border-r border-gray-100 dark:border-gray-700`,
-                dayjs(day).isSame(dayjs(), "date")
-                  ? "bg-primary-100 dark:bg-primary-900/90"
-                  : dayjs(day).day() === 6 || dayjs(day).day() === 0
-                    ? "bg-gray-50 dark:bg-gray-900"
-                    : "bg-white dark:bg-gray-800",
-              )}
-            />
-          ))}
-          {me ? !isLoading && data && <TasksGrid days={days} tasks={data} /> : <TasksGrid days={days} tasks={tempTasks} />}
+          <TimelineDayColumns />
+          <TasksGridWrapper />
         </Animated.ScrollView>
       </Animated.ScrollView>
 
@@ -194,7 +125,7 @@ export default function Timeline() {
           outerTimelineRef.current?.scrollTo({ y: 0, animated: true })
         }}
       />
-      {(!isLoaded || (me && isLoading && !data)) && (
+      {!isLoaded && (
         <View
           style={{ height }}
           className="absolute left-0 right-0 top-0 flex items-center justify-center bg-white dark:bg-black"
@@ -205,6 +136,57 @@ export default function Timeline() {
     </SafeAreaView>
   )
 }
+
+const TimelineMonths = React.memo(function _TimelineMonths({ headerTranslateX }: { headerTranslateX: SharedValue<number> }) {
+  return (
+    <>
+      {months.map(({ month, year, width }, i) => {
+        // left start is the sum of all previous months' widths
+        const leftStart = months.slice(0, i).reduce((acc, { width }) => acc + width, 0)
+        return (
+          <View key={`${month}-${year}-${i}`} style={{ width }}>
+            <Month month={month} width={width} leftStart={leftStart} headerTranslateX={headerTranslateX} />
+          </View>
+        )
+      })}
+    </>
+  )
+})
+
+const TimelineDays = React.memo(function _TimelineDays() {
+  return (
+    <>
+      {days.map((day) => (
+        <View key={day} style={{ width: DAY_WIDTH }} className="border-gray-75 border-b px-1 pb-2 dark:border-gray-700">
+          <Text className="text-center">{dayjs(day).startOf("day").format("ddd Do")}</Text>
+        </View>
+      ))}
+    </>
+  )
+})
+
+const TimelineDayColumns = React.memo(function _TimelineDayColumns() {
+  return (
+    <>
+      {days.map((day) => (
+        <TouchableOpacity
+          key={day}
+          activeOpacity={0.9}
+          onPress={() => router.push({ pathname: "new", params: { date: day } })}
+          style={{ height, width: DAY_WIDTH }}
+          className={join(
+            `border-r border-gray-100 dark:border-gray-700`,
+            dayjs(day).isSame(dayjs(), "date")
+              ? "bg-primary-100 dark:bg-primary-900/90"
+              : dayjs(day).day() === 6 || dayjs(day).day() === 0
+                ? "bg-gray-50 dark:bg-gray-900"
+                : "bg-white dark:bg-gray-800",
+          )}
+        />
+      ))}
+    </>
+  )
+})
 
 function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
   const { me } = useMe()
@@ -283,7 +265,7 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
   )
 }
 
-function Month({
+const Month = React.memo(function _Month({
   month,
   width,
   leftStart,
@@ -313,7 +295,20 @@ function Month({
       <Heading className="text-center text-3xl">{MONTH_NAMES[month]}</Heading>
     </Animated.View>
   )
-}
+})
+
+const TasksGridWrapper = React.memo(function _TasksGridWrapper() {
+  const { me, isLoading: userLoading } = useMe()
+
+  const { data, isLoading } = api.task.timeline.useQuery({ daysBack, daysForward }, { enabled: !!me })
+
+  const { tasks: tempTasks } = useTemporaryData()
+
+  if (userLoading) return null
+  if (me && (isLoading || !data)) return null
+  const tasks = me ? data! : tempTasks
+  return <TasksGrid tasks={tasks} />
+})
 
 type Tasks = NonNullable<RouterOutputs["task"]["timeline"]>
 
@@ -321,9 +316,7 @@ type Task = Tasks[number]
 
 type DropTask = Pick<Task, "id" | "isComplete" | "order" | "date">
 
-const DAY_WIDTH = 90
-
-function TasksGrid({ days, tasks }: { days: string[]; tasks: Task[] }) {
+const TasksGrid = React.memo(function _TasksGrid({ tasks }: { tasks: Task[] }) {
   const taskPositions = useSharedValue(
     tasks.reduce<{ [key: string]: DropTask }>((acc, task) => {
       acc[task.id] = {
@@ -352,7 +345,7 @@ function TasksGrid({ days, tasks }: { days: string[]; tasks: Task[] }) {
   const updateTempTaskOrder = useTemporaryData((s) => s.updateOrder)
   const utils = api.useUtils()
   const { mutate } = api.task.updateOrder.useMutation()
-  const { daysBack, daysForward } = useTimelineDays()
+
   const handleDrop = (taskId: string) => {
     const newTask = taskPositions.value[taskId]!
     const oldTask = tasks.find((t) => t.id === taskId)!
@@ -390,21 +383,19 @@ function TasksGrid({ days, tasks }: { days: string[]; tasks: Task[] }) {
   return (
     <>
       {tasks.map((task) => (
-        <TaskItem key={task.id} task={task} taskPositions={taskPositions} days={days} onDrop={() => handleDrop(task.id)} />
+        <TaskItem key={task.id} task={task} taskPositions={taskPositions} onDrop={() => handleDrop(task.id)} />
       ))}
     </>
   )
-}
+})
 
 const TASK_HEIGHT = 80
 
-function TaskItem({
+const TaskItem = React.memo(function _TaskItem({
   taskPositions,
   task,
-  days,
   onDrop,
 }: {
-  days: string[]
   task: Task
   taskPositions: SharedValue<{ [key: string]: DropTask }>
   onDrop: () => void
@@ -635,4 +626,4 @@ function TaskItem({
       </GestureDetector>
     </Animated.View>
   )
-}
+})

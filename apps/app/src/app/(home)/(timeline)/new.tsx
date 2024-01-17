@@ -6,7 +6,7 @@ import { TaskForm } from "../../../components/TaskForm"
 import { Toast } from "../../../components/Toast"
 import { useMe } from "../../../lib/hooks/useMe"
 import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
-import { useTimelineDays } from "../../../lib/hooks/useTimelineDays"
+import { useTimelineDays } from "../../../lib/hooks/useTimeline"
 import { api, type RouterInputs } from "../../../lib/utils/api"
 
 export default function NewTask() {
