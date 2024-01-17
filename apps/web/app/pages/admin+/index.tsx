@@ -9,9 +9,9 @@ import { Tile, TileHeader, TileBody } from "~/components/ui/Tile"
 export const loader = async () => {
   return defer(
     {
-      userCount: db.user.count().then((r) => r),
-      freeUserCount: db.user.count({ where: { stripeSubscriptionId: null } }).then((r) => r),
-      subscribedUserCount: db.user.count({ where: { stripeSubscriptionId: { not: null } } }).then((r) => r),
+      userCount: db.user.count({ where: { role: "USER" } }).then((r) => r),
+      freeUserCount: db.user.count({ where: { role: "USER", stripeSubscriptionId: null } }).then((r) => r),
+      subscribedUserCount: db.user.count({ where: { role: "USER", stripeSubscriptionId: { not: null } } }).then((r) => r),
       taskCount: db.task.count().then((r) => r),
     },
     {

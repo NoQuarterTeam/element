@@ -1,4 +1,4 @@
-import { Link, json, useLoaderData } from "@remix-run/react"
+import { Form, Link, json, useLoaderData, useSearchParams } from "@remix-run/react"
 import { createColumnHelper } from "@tanstack/react-table"
 import dayjs from "dayjs"
 import { promiseHash } from "remix-utils/promise"
@@ -14,11 +14,17 @@ import { db } from "~/lib/db.server"
 import { getTableParams } from "~/lib/table"
 import { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { Badge } from "~/components/ui/Badge"
+import { ExistingSearchParams } from "remix-utils/existing-search-params"
+import { Select } from "~/components/ui/Inputs"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { orderBy, search, skip, take } = getTableParams(request)
+  const searchParams = new URL(request.url).searchParams
+  const type = (searchParams.get("type") as "PRO" | "FREE" | "") || undefined
+
   const where = {
     role: "USER",
+    stripeSubscriptionId: type === "PRO" ? { not: null } : type === "FREE" ? null : undefined,
     OR: search
       ? [{ email: { contains: search } }, { firstName: { contains: search } }, { lastName: { contains: search } }]
       : undefined,
@@ -108,13 +114,27 @@ const columns = [
 ]
 export default function Users() {
   const { users, count } = useLoaderData<typeof loader>()
+  const [searchParams] = useSearchParams()
   return (
     <div className="space-y-2">
       <h1 className="text-4xl">Users</h1>
-      <div className="flex gap-2">
+      <div className="flex items-end gap-2">
         <div>
           <Search className="max-w-[400px]" />
         </div>
+        <Form>
+          <ExistingSearchParams exclude={["type"]} />
+          <p className="text-sm font-medium">Type</p>
+          <Select
+            defaultValue={searchParams.get("type") || ""}
+            onChange={(e) => e.currentTarget.form?.dispatchEvent(new Event("submit", { bubbles: true }))}
+            name="type"
+          >
+            <option value="">All</option>
+            <option value="FREE">Free</option>
+            <option value="PRO">Pro</option>
+          </Select>
+        </Form>
       </div>
       <Table data={users} count={count} columns={columns} />
     </div>
