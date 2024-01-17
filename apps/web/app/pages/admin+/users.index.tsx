@@ -32,7 +32,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const data = await promiseHash({
     users: db.user.findMany({
-      orderBy,
+      orderBy: orderBy.taskCount
+        ? { tasks: { _count: orderBy.taskCount } }
+        : orderBy.elementCount
+          ? { elements: { _count: orderBy.elementCount } }
+          : orderBy.habitCount
+            ? { habits: { _count: orderBy.habitCount } }
+            : orderBy,
       skip,
       take,
       where,
