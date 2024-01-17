@@ -98,7 +98,7 @@
     "eslint-plugin-simple-import-sort": "10.0.0",
     "eslint-plugin-tailwindcss": "3.14.0",
     "postcss": "8.4.33",
-    "prettier": "3.2.3",
+    "prettier": "3.2.4",
     "remix-flat-routes": "0.6.4",
     "tailwindcss": "3.3.2",
     "typescript": "5.3.3"
