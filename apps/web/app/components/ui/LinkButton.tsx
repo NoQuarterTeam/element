@@ -27,7 +27,7 @@ export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(f
       )}
     >
       {isLoading ? (
-        <div className="center absolute inset-0">
+        <div className="absolute inset-0 flex items-center justify-center">
           <Spinner size="sm" color={variant === "primary" || variant === "destructive" ? "white" : "black"} />
         </div>
       ) : (

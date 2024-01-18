@@ -105,8 +105,8 @@ export default function HomeLayout() {
       </div>
       <Limiter className="pb-20 pt-16">
         <div className="space-y-20">
-          <div className="center flex-col">
-            <div className="vstack max-w-lg space-y-6 pb-12 text-center">
+          <div className="flex flex-col items-center justify-center">
+            <div className="flex max-w-lg flex-col items-center space-y-6 pb-12 text-center">
               <Badge size="lg" colorScheme="green">
                 Early Beta
               </Badge>
@@ -122,8 +122,8 @@ export default function HomeLayout() {
             </div>
           </div>
 
-          <div className="vstack space-y-6 pt-20" id="why">
-            <div className="vstack">
+          <div className="flex flex-col items-center space-y-8 pt-20" id="why">
+            <div className="flex flex-col items-center space-y-2">
               <h3 className="text-5xl">Why</h3>
               <p className="text-lg italic">Just another task planner?</p>
             </div>
@@ -136,7 +136,7 @@ export default function HomeLayout() {
             </p>
           </div>
           <div className="space-y-6 pt-20 md:px-20" id="pricing">
-            <div className="vstack">
+            <div className="flex flex-col items-center space-y-2">
               <h3 className="text-5xl">Pricing</h3>
               <p className="text-lg">Start for free, or as low as €4 a month.</p>
             </div>

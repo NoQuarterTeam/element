@@ -186,7 +186,7 @@ export default function Billing() {
       <p className="w-full text-sm font-semibold">Invoices</p>
       <div className="space-y-2">
         {invoices.length === 0 ? (
-          <div className="center h-24">
+          <div className="flex h-24 items-center justify-center">
             <p className="text-center">No invoices yet</p>
           </div>
         ) : (

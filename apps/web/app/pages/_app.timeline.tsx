@@ -169,7 +169,7 @@ function _Timeline() {
         </div>
         <Nav />
         <div className="absolute bottom-4 left-4 md:bottom-8 md:left-8">
-          <div className="vstack">
+          <div className="flex flex-col items-center space-y-2">
             <Tooltip label="Create task">
               <IconButton
                 size="lg"
@@ -180,6 +180,7 @@ function _Timeline() {
                 icon={<PlusCircle size={18} />}
               />
             </Tooltip>
+
             <Tooltip label="Jump to today">
               <IconButton
                 variant="secondary"

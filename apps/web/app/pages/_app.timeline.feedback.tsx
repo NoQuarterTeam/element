@@ -97,22 +97,22 @@ export default function Feedback() {
           </div>
         </Form>
       ) : (
-        <div className="center px-4 py-8">
+        <div className="flex items-center justify-center px-4 py-8">
           <ButtonGroup>
             <Button variant="secondary" className="sq-24" onClick={() => setType("ISSUE")}>
-              <div className="vstack">
+              <div className="flex flex-col items-center space-y-2">
                 <Bug className="sq-4" />
                 <p>Issue</p>
               </div>
             </Button>
             <Button variant="secondary" className="sq-24" onClick={() => setType("IDEA")}>
-              <div className="vstack">
+              <div className="flex flex-col items-center space-y-2">
                 <Lightbulb className="sq-4" />
                 <p>Idea</p>
               </div>
             </Button>
             <Button variant="secondary" className="sq-24" onClick={() => setType("OTHER")}>
-              <div className="vstack">
+              <div className="flex flex-col items-center space-y-2">
                 <MessageCircle className="sq-4" />
 
                 <p>Other</p>

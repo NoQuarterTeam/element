@@ -14,7 +14,7 @@ export function Search({ placeholder, name = "search", ...props }: InputProps) {
     <div className="relative">
       <Form>
         <ExistingSearchParams exclude={[`${name}`, "page"]} />
-        <div className="center absolute left-1 top-0 h-full">
+        <div className="absolute left-1 top-0 flex h-full items-center justify-center">
           <IconButton size="xs" type="submit" aria-label="search" variant="ghost" icon={<SearchIcon className="sq-4" />} />
         </div>
         <Input
@@ -26,7 +26,7 @@ export function Search({ placeholder, name = "search", ...props }: InputProps) {
           className={merge("min-w-[100px] pl-9", !!params.get(name) && "pr-9", props.className)}
         />
       </Form>
-      <Form className="center absolute right-1 top-0 h-full">
+      <Form className="absolute right-1 top-0 flex h-full items-center justify-center">
         <ExistingSearchParams exclude={[`${name}`]} />
         {!!params.get(name) && (
           <IconButton size="xs" type="submit" aria-label="clear search" variant="ghost" icon={<X className="sq-4" />} />

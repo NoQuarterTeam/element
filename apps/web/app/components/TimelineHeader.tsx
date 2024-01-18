@@ -113,7 +113,7 @@ function _HeaderDay(props: {
   return (
     <InView>
       {({ ref, inView }) => (
-        <div ref={ref} className="vstack w-day space-y-1 px-2">
+        <div ref={ref} className="w-day flex flex-col items-center space-y-1 px-2">
           {inView && (
             <>
               <div className="h-9 overflow-hidden">

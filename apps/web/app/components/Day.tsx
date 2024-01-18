@@ -109,10 +109,10 @@ function _Day(props: Props) {
                       ))}
                     {provided.placeholder}
 
-                    <div className="center w-full flex-1 py-3">
+                    <div className="flex w-full flex-1 items-center justify-center py-3">
                       <p className="text-sm">{getTotalTaskDuration(props.tasks)}</p>
                     </div>
-                    <div className="center w-full flex-1 pt-0">
+                    <div className="flex w-full flex-1 items-center justify-center pt-0">
                       <Link
                         className="outline-none"
                         to={`new?day=${dayjs(props.day).format("YYYY-MM-DD")}`}

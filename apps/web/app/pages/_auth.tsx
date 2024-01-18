@@ -24,7 +24,7 @@ export default function AuthLayout() {
   const theme = useTheme()
   const isDark = theme === "dark"
   return (
-    <div className="center flex-col pt-10 md:pt-12">
+    <div className="flex flex-col items-center justify-center pt-10 md:pt-12">
       <div
         style={{
           backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 65 65' width='60' height='60' fill='none' stroke='${
@@ -33,8 +33,8 @@ export default function AuthLayout() {
         }}
         className="absolute inset-0 z-[-10] h-screen"
       />
-      <div className="vstack w-full">
-        <div className="vstack w-full max-w-sm space-y-8 bg-white p-4 dark:bg-gray-800">
+      <div className="flex w-full flex-col items-center space-y-2">
+        <div className="flex w-full max-w-sm flex-col items-center space-y-8 bg-white p-4 dark:bg-gray-800">
           <Link to="/">
             <img src="/logo.png" alt="logo" className="sq-20" />
           </Link>

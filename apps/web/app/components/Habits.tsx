@@ -36,7 +36,7 @@ function _Habits({ habits, day, habitEntries }: Props) {
 
   return (
     <Popover.Root>
-      <Popover.Trigger className="center w-full rounded-full px-2 py-1.5 hover:bg-black/10 dark:hover:bg-gray-700">
+      <Popover.Trigger className="flex w-full items-center justify-center rounded-full px-2 py-1.5 hover:bg-black/10 dark:hover:bg-gray-700">
         <div className="flex items-center space-x-0.5">
           {dayHabits.length === 0 ? (
             <PlusCircle className="sq-3" />

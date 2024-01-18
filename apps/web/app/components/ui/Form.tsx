@@ -231,7 +231,7 @@ export function ImageField(props: ImageFieldProps) {
           {image ? (
             <img src={createImageUrl(image)} className="h-full w-full object-contain" alt="preview" />
           ) : (
-            <div className="center h-full w-full">
+            <div className="flex h-full w-full items-center justify-center">
               <p className="text-center text-gray-500">{props.placeholder || "Upload an image"}</p>
             </div>
           )}

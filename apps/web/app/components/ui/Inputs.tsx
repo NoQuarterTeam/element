@@ -60,7 +60,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function _In
   return (
     <div className="flex flex-row">
       {leftElement && (
-        <div className={merge(inputSizeStyles({ size }), "center rounded-l-xs border bg-gray-50 px-2 dark:bg-gray-900")}>
+        <div
+          className={merge(
+            inputSizeStyles({ size }),
+            "rounded-l-xs flex items-center justify-center border bg-gray-50 px-2 dark:bg-gray-900",
+          )}
+        >
           {leftElement}
         </div>
       )}
@@ -77,7 +82,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function _In
         )}
       />
       {rightElement && (
-        <div className={merge(inputSizeStyles({ size }), "center rounded-r-xs border bg-gray-50 px-2 dark:bg-gray-900")}>
+        <div
+          className={merge(
+            inputSizeStyles({ size }),
+            "rounded-r-xs flex items-center justify-center border bg-gray-50 px-2 dark:bg-gray-900",
+          )}
+        >
           {rightElement}
         </div>
       )}
