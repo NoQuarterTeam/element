@@ -1,5 +1,5 @@
 import { registerSchema } from "@element/server-schemas"
-import { createTemplates, hashPassword, sendAccountVerificationEmail, stripe } from "@element/server-services"
+import { createTemplates, hashPassword, sendAccountVerificationEmail, sendSlackMessage, stripe } from "@element/server-services"
 import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 
@@ -54,7 +54,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const { setUser } = await getUserSession(request)
         const token = await createToken({ id: user.id })
         await sendAccountVerificationEmail(user, token)
-
+        void sendSlackMessage(`🔥 ${user.email} signed up to the web!`)
         const headers = new Headers([["Set-Cookie", await setUser(user.id)]])
         return redirect("/timeline", request, {
           flash: {

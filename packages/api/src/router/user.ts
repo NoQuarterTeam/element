@@ -1,7 +1,16 @@
 import { TRPCError } from "@trpc/server"
 
 import { loginSchema, registerSchema, updateUserSchema } from "@element/server-schemas"
-import { comparePasswords, createAuthToken, createTemplates, hashPassword, stripe } from "@element/server-services"
+import {
+  comparePasswords,
+  createAuthToken,
+  createTemplates,
+  // createToken,
+  hashPassword,
+  // sendAccountVerificationEmail,
+  sendSlackMessage,
+  stripe,
+} from "@element/server-services"
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc"
 
@@ -24,11 +33,14 @@ export const userRouter = createTRPCRouter({
       name: input.firstName + " " + input.lastName,
     })
     const user = await ctx.prisma.user.create({ data: { ...input, password, stripeCustomerId: stripeCustomer.id } })
+    // const token = await createToken({ id: user.id })
+    // await sendAccountVerificationEmail(user, token)
     const elements = createTemplates(user.id)
 
     for await (const element of elements) {
       await ctx.prisma.element.create({ data: element })
     }
+    void sendSlackMessage(`🔥 ${user.email} signed up to the app!`)
     return { user, token: createAuthToken({ id: user.id }) }
   }),
   update: protectedProcedure.input(updateUserSchema).mutation(async ({ ctx, input }) => {
