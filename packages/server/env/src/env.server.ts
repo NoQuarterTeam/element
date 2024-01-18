@@ -8,7 +8,7 @@ const envSchema = z.object({
   VERCEL_ENV: z.enum(["development", "production", "preview"]).optional(),
   VERCEL_GIT_COMMIT_REF: z.string().optional(),
   VERCEL_URL: z.string().optional(),
-  // SLACK_TOKEN: z.string(),
+  SLACK_TOKEN: z.string(),
   // GOOGLE_API_KEY: z.string(),
   QSTASH_TOKEN: z.string(),
   QSTASH_CURRENT_SIGNING_KEY: z.string(),
