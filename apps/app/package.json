@@ -7,7 +7,7 @@
     "build:all": "pnpm run build:production && pnpm run build:development && pnpm run build:preview",
     "build:production": "eas build --profile production --platform all --auto-submit",
     "build:preview": "eas build --profile preview --platform all",
-    "build:development": "eas build --profile development --platform all",
+    "build:development": "eas build --profile development --platform ios",
     "lint:fix": "eslint --config .eslintrc.commit.js --fix --cache --ext .ts,.tsx .",
     "lint": "eslint --config .eslintrc.js --ext .ts,.tsx .",
     "prettier": "prettier --check .",

@@ -1,17 +1,19 @@
 import * as React from "react"
-import { ActivityIndicator, KeyboardAvoidingView, ScrollView, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, KeyboardAvoidingView, Modal, ScrollView, TouchableOpacity, View } from "react-native"
 import * as ImagePicker from "expo-image-picker"
 import { useRouter } from "expo-router"
 import { Edit2, User2 } from "lucide-react-native"
 
-import { createImageUrl } from "@element/shared"
+import { createImageUrl, useDisclosure } from "@element/shared"
 
 import { Button } from "../../../components/Button"
 import { FormError } from "../../../components/FormError"
 import { FormInput } from "../../../components/FormInput"
 import { Icon } from "../../../components/Icon"
+import { ModalView } from "../../../components/ModalView"
 import { OptimizedImage } from "../../../components/OptimisedImage"
 import { ScreenView } from "../../../components/ScreenView"
+import { Text } from "../../../components/Text"
 import { toast } from "../../../components/Toast"
 import { useMe } from "../../../lib/hooks/useMe"
 import { useS3Upload } from "../../../lib/hooks/useS3"
@@ -61,10 +63,23 @@ export default function Account() {
       toast({ title: "Error selecting image", message, type: "error" })
     }
   }
+  const modalProps = useDisclosure()
+  const { mutate: deleteAccount, isLoading } = api.user.deleteAccount.useMutation({
+    onSuccess: async () => {
+      modalProps.onClose()
+      router.back()
+      utils.user.me.setData(undefined, null)
+      toast({ title: "Account deleted." })
+    },
+  })
   return (
     <ScreenView title="Account">
       <KeyboardAvoidingView>
-        <ScrollView className="h-full space-y-2 pt-4">
+        <ScrollView
+          className="space-y-2 pt-4"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 400 }}
+        >
           <View className="flex w-full items-center justify-center pt-2">
             <TouchableOpacity onPress={onPickImage}>
               {isUploadLoading || isAvatarSavingLoading ? (
@@ -115,15 +130,34 @@ export default function Account() {
           </View>
           <View className="space-y-1">
             <View>
-              <Button size="sm" onPress={handleUpdate}>
-                Update
-              </Button>
+              <Button onPress={handleUpdate}>Update</Button>
             </View>
             {updateMe.error?.data?.formError && (
               <View>
                 <FormError error={updateMe.error.data.formError} />
               </View>
             )}
+          </View>
+          <View className="pt-10">
+            <Button variant="ghost" onPress={modalProps.onOpen}>
+              Delete account
+            </Button>
+            <Modal
+              animationType="slide"
+              presentationStyle="formSheet"
+              visible={modalProps.isOpen}
+              onRequestClose={modalProps.onClose}
+              onDismiss={modalProps.onClose}
+            >
+              <ModalView title="Are you sure?" onBack={modalProps.onClose}>
+                <View className="space-y-2 pt-4">
+                  <Text>This can't be undone!</Text>
+                  <Button isLoading={isLoading} onPress={() => deleteAccount()} variant="destructive">
+                    Confirm
+                  </Button>
+                </View>
+              </ModalView>
+            </Modal>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
