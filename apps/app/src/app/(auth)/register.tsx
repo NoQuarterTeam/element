@@ -76,7 +76,6 @@ export default function Register() {
           </View>
           <View>
             <FormInput
-              secureTextEntry
               label="Last name"
               value={form.lastName}
               onChangeText={(v) => setForm((f) => ({ ...f, lastName: v }))}
