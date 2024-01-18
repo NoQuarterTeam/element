@@ -1,7 +1,7 @@
 import { ConfigContext, ExpoConfig } from "expo/config"
 
-const VERSION = "1.0.9"
-const BUILD = 28
+const VERSION = "1.0.10"
+const BUILD = 29
 
 const IS_DEV = process.env.APP_VARIANT === "development"
 
@@ -66,16 +66,21 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
     },
   },
   plugins: [
+    "sentry-expo",
     "./expo-plugins/with-modify-gradle.js",
-    [
-      "expo-build-properties",
+    ["expo-build-properties", { android: { kotlinVersion: "1.7.22" } }],
+  ],
+  hooks: {
+    postPublish: [
       {
-        android: {
-          kotlinVersion: "1.7.22", // <-- add a version here for resolution, version can be newer depending on the Expo SDK version used in the project
+        file: "sentry-expo/upload-sourcemaps",
+        config: {
+          organization: "noquarter",
+          project: "element-app",
         },
       },
     ],
-  ],
+  },
 })
 
 export default defineConfig

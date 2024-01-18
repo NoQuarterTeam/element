@@ -35,6 +35,8 @@
     "expo-application",
     "expo-constants",
     "expo-dev-client",
+    "@sentry/react-native",
+    "sentry-expo",
     "expo-device",
     "expo-blur",
     "expo-haptics",

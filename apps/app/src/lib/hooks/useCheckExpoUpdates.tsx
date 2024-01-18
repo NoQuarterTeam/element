@@ -1,8 +1,8 @@
 import * as React from "react"
 import { AppState, type AppStateStatus } from "react-native"
 import * as Updates from "expo-updates"
+import * as Sentry from "sentry-expo"
 
-// import * as Sentry from "sentry-expo"
 import { IS_DEV } from "../config"
 
 export function useCheckExpoUpdates() {
@@ -22,7 +22,7 @@ export function useCheckExpoUpdates() {
       }
     } catch (error) {
       console.log("expo update timeout reached")
-      // Sentry.Native.captureException(error)
+      Sentry.Native.captureException(error)
     } finally {
       return setIsDoneChecking(true)
     }
