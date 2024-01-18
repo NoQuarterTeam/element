@@ -1,31 +1,58 @@
-import { Switch, View } from "react-native"
-
-import colors from "@element/tailwind-config/src/colors"
-
+import { useDisclosure } from "@element/shared"
+import { useRouter } from "expo-router"
+import { AlertCircle } from "lucide-react-native"
+import { ScrollView, View, Modal } from "react-native"
+import { Icon } from "../../../components/Icon"
+import { ModalView } from "../../../components/ModalView"
 import { ScreenView } from "../../../components/ScreenView"
-import { Text } from "../../../components/Text"
-import { useFeatures } from "../../../lib/hooks/useFeatures"
+import { toast } from "../../../components/Toast"
+import { useMe } from "../../../lib/hooks/useMe"
 import { api } from "../../../lib/utils/api"
+import { Button } from "../../../components/Button"
+import { Text } from "../../../components/Text"
 
-export default function Settings() {
-  const { features, toggle } = useFeatures()
+export function SettingsScreen() {
+  const modalProps = useDisclosure()
+  const deleteAccountModalProps = useDisclosure()
+  const router = useRouter()
   const utils = api.useUtils()
+
+  const { me } = useMe()
+  const { mutate: deleteAccount, isLoading } = api.user.deleteAccount.useMutation({
+    onSuccess: async () => {
+      modalProps.onClose()
+      router.back()
+      utils.user.me.setData(undefined, null)
+      toast({ title: "Account deleted." })
+    },
+  })
+
+  if (!me) return null
   return (
     <ScreenView title="Settings">
-      <View>
-        <View className="flex flex-row items-center justify-between p-4">
-          <Text className="text-xl">Habits</Text>
-          <Switch
-            trackColor={{ true: colors.primary[600] }}
-            value={features.includes("habits")}
-            onValueChange={() => {
-              toggle("habits")
-              utils.habit.progressToday.refetch()
-              utils.habit.allByDate.refetch()
-            }}
-          />
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+        <View className="pb-8">
+          <Button leftIcon={<Icon icon={AlertCircle} size={16} />} variant="ghost" onPress={deleteAccountModalProps.onOpen}>
+            Delete account
+          </Button>
+          <Modal
+            animationType="slide"
+            presentationStyle="formSheet"
+            visible={deleteAccountModalProps.isOpen}
+            onRequestClose={deleteAccountModalProps.onClose}
+            onDismiss={deleteAccountModalProps.onClose}
+          >
+            <ModalView title="are you sure?" onBack={deleteAccountModalProps.onClose}>
+              <View className="space-y-2 pt-4">
+                <Text>This can't be undone!</Text>
+                <Button isLoading={isLoading} onPress={() => deleteAccount()} variant="destructive">
+                  Confirm
+                </Button>
+              </View>
+            </ModalView>
+          </Modal>
         </View>
-      </View>
+      </ScrollView>
     </ScreenView>
   )
 }
