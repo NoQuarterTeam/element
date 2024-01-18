@@ -79,7 +79,7 @@ export function Nav() {
           navProps.isOpen ? "w-16" : "w-0",
         )}
       >
-        <div className="vstack space-y-1">
+        <div className="flex flex-col items-center space-y-1">
           <IconButton
             rounded
             icon={<ChevronsRight className="sq-4" />}

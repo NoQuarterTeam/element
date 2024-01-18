@@ -62,9 +62,9 @@ export default function Focus() {
         <ModalOverlay />
         <ModalPrimitive.Content className="animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0 bg-background rounded-xs fixed z-50 grid h-screen w-screen overflow-y-scroll p-4">
           <div className="my-4">
-            <div className="vstack space-y-6 py-20">
+            <div className="flex flex-col items-center space-y-2 py-20">
               {tasks.length === 0 ? (
-                <div className="vstack">
+                <div className="flex flex-col items-center space-y-2">
                   <img src="/logo.png" className="sq-24" alt="logo" />
                   <p className="text-center text-3xl">Looks like you're done for the day!</p>
                 </div>

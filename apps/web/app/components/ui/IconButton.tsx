@@ -43,7 +43,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(f
         props.className,
       )}
     >
-      <div className="center h-full w-full">{isLoading ? <Spinner size="xs" /> : icon}</div>
+      <div className="flex h-full w-full items-center justify-center">{isLoading ? <Spinner size="xs" /> : icon}</div>
     </button>
   )
 })

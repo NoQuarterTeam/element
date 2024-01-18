@@ -14,8 +14,11 @@ export function ColorInput(props: Props) {
         <HexColorPicker color={props.value} onChange={props.setValue} />
       </div>
 
-      <div className="center justify-start md:justify-center">
-        <div className="center h-full w-full max-w-xs rounded-lg p-4 px-6" style={{ background: props.value }}>
+      <div className="flex items-center justify-start md:justify-center">
+        <div
+          className="flex h-full w-full max-w-xs items-center justify-center rounded-lg p-4 px-6"
+          style={{ background: props.value }}
+        >
           <input
             name={props.name}
             required

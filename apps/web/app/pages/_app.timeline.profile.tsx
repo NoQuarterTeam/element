@@ -68,7 +68,7 @@ function TabLink({ children, icon, to }: { to: string; children: string; icon: R
             isActive ? "bg-gray-75 dark:bg-gray-700" : "hover:bg-gray-75 dark:hover:bg-gray-700",
           )}
         >
-          <div className={join("center w-5 md:flex", isLoading && "hidden")}>{icon}</div>
+          <div className={join("flex w-5 items-center justify-center md:flex", isLoading && "hidden")}>{icon}</div>
           <span className="ml-2 hidden text-sm md:block">{children}</span>
           {isLoading && <Spinner className="ml-0 md:ml-2" size="xs" />}
         </span>

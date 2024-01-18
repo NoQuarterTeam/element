@@ -14,7 +14,7 @@ interface Props extends Omit<OptimizedImageProps, "height" | "width" | "alt"> {
 export function Avatar({ size = 100, src, ...props }: Props) {
   if (!src)
     return (
-      <div className={merge("center rounded-full bg-gray-50 dark:bg-gray-700", props.className)}>
+      <div className={merge("flex items-center justify-center rounded-full bg-gray-50 dark:bg-gray-700", props.className)}>
         <User2 size={16} />
       </div>
     )
