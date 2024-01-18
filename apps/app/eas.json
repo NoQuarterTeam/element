@@ -21,7 +21,10 @@
     "production": {
       "channel": "production",
       "distribution": "store",
-      "pnpm": "8.12.0"
+      "pnpm": "8.12.0",
+      "env": {
+        "SENTRY_AUTH_TOKEN": "private"
+      }
     }
   },
   "submit": {
