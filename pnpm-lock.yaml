@@ -329,8 +329,8 @@ importers:
         specifier: 2.2.3
         version: 2.2.3
       dotenv:
-        specifier: 16.3.1
-        version: 16.3.1
+        specifier: 16.3.2
+        version: 16.3.2
       expo-server-sdk:
         specifier: ^3.7.0
         version: 3.7.0
@@ -5572,7 +5572,7 @@ packages:
       chalk: 4.1.2
       chokidar: 3.5.3
       cross-spawn: 7.0.3
-      dotenv: 16.3.1
+      dotenv: 16.3.2
       es-module-lexer: 1.4.1
       esbuild: 0.17.6
       esbuild-plugins-node-modules-polyfill: 1.6.1(esbuild@0.17.6)
@@ -8875,7 +8875,7 @@ packages:
     hasBin: true
     dependencies:
       cross-spawn: 7.0.3
-      dotenv: 16.3.1
+      dotenv: 16.3.2
       dotenv-expand: 10.0.0
       minimist: 1.2.8
     dev: true
@@ -8889,8 +8889,8 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
-  /dotenv@16.3.1:
-    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
+  /dotenv@16.3.2:
+    resolution: {integrity: sha512-HTlk5nmhkm8F6JcdXvHIzaorzCoziNQT9mGxLPVXW8wJF1TiGSL60ZGB4gHWabHOaMmWmhvk2/lPHfnBiT78AQ==}
     engines: {node: '>=12'}
 
   /duplexify@3.7.1:
