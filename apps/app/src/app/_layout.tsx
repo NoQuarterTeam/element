@@ -9,7 +9,7 @@ import { SplashScreen, Stack } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 import { useColorScheme as useNWColorScheme } from "nativewind"
 import { PostHogProvider, usePostHog } from "posthog-react-native"
-import * as Sentry from "sentry-expo"
+import * as Sentry from "@sentry/react-native"
 
 import { Toast } from "../components/Toast"
 import { IS_PRODUCTION } from "../lib/config"
@@ -22,7 +22,6 @@ import { api, TRPCProvider } from "../lib/utils/api"
 
 Sentry.init({
   dsn: "https://2e39a63a183c7a7fab0f691b638da957@o204549.ingest.sentry.io/4506592060309504",
-  enableInExpoDevelopment: false,
   debug: true,
 })
 
@@ -110,7 +109,7 @@ function IdentifyUser() {
   React.useEffect(() => {
     if (isLoading || !me) return
     if (posthog) posthog.identify(me.id, { email: me.email, name: me.firstName + " " + me.lastName })
-    Sentry.React.setUser({ id: me.id, email: me.email })
+    Sentry.setUser({ id: me.id, email: me.email })
   }, [me, isLoading, posthog])
   return null
 }

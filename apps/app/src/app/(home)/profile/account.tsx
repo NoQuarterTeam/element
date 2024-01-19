@@ -6,7 +6,7 @@ import { Edit2, User2 } from "lucide-react-native"
 
 import { createImageUrl, useDisclosure } from "@element/shared"
 
-import { Button } from "../../../components/Button"
+import { Button } from "~/components/Button"
 import { FormError } from "../../../components/FormError"
 import { FormInput } from "../../../components/FormInput"
 import { Icon } from "../../../components/Icon"

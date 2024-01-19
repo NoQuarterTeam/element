@@ -1,7 +1,7 @@
 import { ConfigContext, ExpoConfig } from "expo/config"
 
-const VERSION = "1.0.10"
-const BUILD = 31
+const VERSION = "1.1.0"
+const BUILD = 32
 
 const IS_DEV = process.env.APP_VARIANT === "development"
 
@@ -66,7 +66,16 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
     },
   },
   plugins: [
-    "sentry-expo",
+    [
+      "@sentry/react-native/expo",
+      {
+        url: "https://sentry.io/",
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        project: "element-app",
+        organization: "noquarter",
+      },
+    ],
+    "expo-font",
     "./expo-plugins/with-modify-gradle.js",
     ["expo-build-properties", { android: { kotlinVersion: "1.7.22" } }],
   ],

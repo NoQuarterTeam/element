@@ -4,6 +4,10 @@
     "target": "ESNext",
     "jsx": "react-native",
     "types": ["nativewind/types"],
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"],
+    },
   },
   "include": ["expo-plugins", "src", "app.config.ts", "index.js"],
   "exclude": ["node_modules"],
