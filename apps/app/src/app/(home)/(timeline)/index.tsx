@@ -104,9 +104,9 @@ export default function Timeline() {
         <Animated.ScrollView
           onLayout={() => {
             timelineRef.current?.scrollTo({ x: DAY_WIDTH * daysBack, animated: false })
-            // setTimeout(() => {
-            // }, 500)
-            setIsLoaded(true)
+            setTimeout(() => {
+              setIsLoaded(true)
+            }, 300)
           }}
           // contentOffset={{ x: 7 * DAY_WIDTH, y: 0 }}
           onScroll={onScroll}
