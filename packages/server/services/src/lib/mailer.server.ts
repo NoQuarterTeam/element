@@ -11,7 +11,7 @@ type Props = Omit<CreateEmailOptions, "from"> & { react: React.ReactElement<unkn
 class Mailer {
   async send(args: Props) {
     try {
-      const from = args.from || "hello@element.guide"
+      const from = args.from || "hello@myelement.app"
       if (IS_PRODUCTION) {
         await resend.emails.send({ ...args, from, text: args.text || "" })
       } else {
