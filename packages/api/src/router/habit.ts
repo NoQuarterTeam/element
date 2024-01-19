@@ -134,7 +134,7 @@ export const habitRouter = createTRPCRouter({
     return ctx.prisma.habit.delete({ where: { id: habit.id } })
   }),
   stats: protectedProcedure.input(z.object({ startDate: z.date() })).query(async ({ ctx, input }) => {
-    return ctx.prisma.habit.findMany({
+    const habits = await ctx.prisma.habit.findMany({
       where: { creatorId: ctx.user.id, archivedAt: { equals: null } },
       orderBy: { order: "asc" },
       select: {
@@ -145,6 +145,17 @@ export const habitRouter = createTRPCRouter({
         _count: { select: { entries: { where: { createdAt: { gte: input.startDate, lte: dayjs().endOf("day").toDate() } } } } },
       },
     })
+    const habitEntries = await ctx.prisma.habitEntry.findMany({
+      where: { creatorId: ctx.user.id, createdAt: { gte: input.startDate, lte: dayjs().endOf("day").toDate() } },
+      select: { id: true, habitId: true, createdAt: true },
+    })
+    const daysOfWeekStats = habitEntries.reduce<{ [key: number]: number }>((acc, entry) => {
+      const dayOfWeek = dayjs(entry.createdAt).day()
+      if (!acc[dayOfWeek]) acc[dayOfWeek] = 1
+      acc[dayOfWeek]++
+      return acc
+    }, {})
+    return { habits, daysOfWeekStats }
   }),
   updateOrder: protectedProcedure
     .input(z.array(z.object({ id: z.string(), order: z.number() })))
