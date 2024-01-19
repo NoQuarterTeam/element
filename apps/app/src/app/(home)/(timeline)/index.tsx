@@ -24,15 +24,15 @@ import { Book, Calendar, Clock, MoreVertical, Plus, X } from "lucide-react-nativ
 import { formatDuration, join, safeReadableColor } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
-import { Heading } from "../../../components/Heading"
-import { Icon } from "../../../components/Icon"
-import { Text } from "../../../components/Text"
-import { useMe } from "../../../lib/hooks/useMe"
-import { useOnboarding } from "../../../lib/hooks/useOnboarding"
-import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
-import { DAY_WIDTH, days, daysBack, daysForward, months } from "../../../lib/hooks/useTimeline"
-import { api, type RouterOutputs } from "../../../lib/utils/api"
-import { height } from "../../../lib/utils/device"
+import { Heading } from "~/components/Heading"
+import { Icon } from "~/components/Icon"
+import { Text } from "~/components/Text"
+import { useMe } from "~/lib/hooks/useMe"
+import { useOnboarding } from "~/lib/hooks/useOnboarding"
+import { useTemporaryData } from "~/lib/hooks/useTemporaryTasks"
+import { DAY_WIDTH, days, daysBack, daysForward, months } from "~/lib/hooks/useTimeline"
+import { api, type RouterOutputs } from "~/lib/utils/api"
+import { height } from "~/lib/utils/device"
 
 dayjs.extend(advancedFormat)
 
@@ -46,7 +46,7 @@ export default function Timeline() {
     if (!me) return
     const timeout = setTimeout(() => {
       if (!hasSeenOnboarding) {
-        router.push("/onboarding")
+        router.push("/onboarding/")
       }
     }, 1000)
     return () => clearTimeout(timeout)
@@ -172,7 +172,7 @@ const TimelineDayColumns = React.memo(function _TimelineDayColumns() {
         <TouchableOpacity
           key={day}
           activeOpacity={0.9}
-          onPress={() => router.push({ pathname: "new", params: { date: day } })}
+          onPress={() => router.push({ pathname: "/new", params: { date: day } })}
           style={{ height, width: DAY_WIDTH }}
           className={join(
             `border-r border-gray-100 dark:border-gray-700`,
@@ -234,7 +234,7 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
           </Animated.View>
 
           <Animated.View style={{ opacity: elementsOpacity, transform: [{ translateY: elementsTranslateY }] }}>
-            <Link href={`/elements`} asChild>
+            <Link href={`/elements/`} asChild>
               <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
                 <Icon icon={Book} size={24} />
               </TouchableOpacity>
@@ -256,7 +256,7 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
       >
         <Icon icon={Calendar} size={24} />
       </TouchableOpacity>
-      <Link href={`/new?date=${dayjs().format("YYYY-MM-DD")}`} asChild>
+      <Link href={{ pathname: "/new", params: { date: dayjs().format("YYYY-MM-DD") } }} asChild>
         <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
           <Icon icon={Plus} size={24} color="black" />
         </TouchableOpacity>
@@ -513,7 +513,7 @@ const TaskItem = React.memo(function _TaskItem({
       })
     })
 
-  const handleNavigate = () => router.push({ pathname: "index", params: { id: task.id } })
+  const handleNavigate = () => router.push({ pathname: "/(home)/(timeline)/[id]/", params: { id: task.id } })
 
   const animatedStyles = useAnimatedStyle(() => {
     return {

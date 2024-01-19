@@ -4,11 +4,11 @@ import * as Haptics from "expo-haptics"
 import { Link, useRouter } from "expo-router"
 import { Plus } from "lucide-react-native"
 
-import { Icon } from "../../../../components/Icon"
-import { ModalView } from "../../../../components/ModalView"
-import { Text } from "../../../../components/Text"
-import { useTimelineDays } from "../../../../lib/hooks/useTimeline"
-import { api, type RouterOutputs } from "../../../../lib/utils/api"
+import { Icon } from "~/components/Icon"
+import { ModalView } from "~/components/ModalView"
+import { Text } from "~/components/Text"
+import { useTimelineDays } from "~/lib/hooks/useTimeline"
+import { api, type RouterOutputs } from "~/lib/utils/api"
 
 export default function Elements() {
   const { data, isLoading } = api.element.grouped.useQuery()
@@ -77,7 +77,7 @@ function ElementItem({ element }: { element: RouterOutputs["element"]["grouped"]
           break
         case 1:
           // Edit
-          router.push(`/elements/${element.id}`)
+          router.push({ pathname: `/(home)/(timeline)/elements/[elementId]/`, params: { elementId: element.id } })
           break
         case 2:
           // Move
@@ -93,7 +93,7 @@ function ElementItem({ element }: { element: RouterOutputs["element"]["grouped"]
   return (
     <View>
       <TouchableOpacity
-        onPress={() => router.push(`/elements/${element.id}`)}
+        onPress={() => router.push({ pathname: `/(home)/(timeline)/elements/[elementId]/`, params: { elementId: element.id } })}
         onLongPress={handleOpenMenu}
         activeOpacity={0.7}
         className="flex flex-row items-center space-x-2 py-1"

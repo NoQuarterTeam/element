@@ -9,6 +9,6 @@
       "~/*": ["src/*"],
     },
   },
-  "include": ["expo-plugins", "src", "app.config.ts", "index.js"],
+  "include": ["expo-plugins", "src", "app.config.ts", "index.js", ".expo/types/**/*.ts", "expo-env.d.ts"],
   "exclude": ["node_modules"],
 }

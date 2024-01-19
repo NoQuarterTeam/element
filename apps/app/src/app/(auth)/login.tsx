@@ -3,16 +3,16 @@ import { ScrollView, View } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Link, useRouter } from "expo-router"
 
-import { Button } from "../../components/Button"
-import { FormError } from "../../components/FormError"
-import { FormInput } from "../../components/FormInput"
-import { ModalView } from "../../components/ModalView"
-import { Text } from "../../components/Text"
-import { registerPushToken } from "../../lib/registerPushToken"
-import { api, AUTH_TOKEN } from "../../lib/utils/api"
+import { Button } from "~/components/Button"
+import { FormError } from "~/components/FormError"
+import { FormInput } from "~/components/FormInput"
+import { ModalView } from "~/components/ModalView"
+import { Text } from "~/components/Text"
+import { registerPushToken } from "~/lib/registerPushToken"
+import { api, AUTH_TOKEN } from "~/lib/utils/api"
 
 export default function Login() {
-  const queryClient = api.useUtils()
+  const utils = api.useUtils()
   const router = useRouter()
   const [form, setForm] = React.useState({
     firstName: "",
@@ -24,14 +24,10 @@ export default function Login() {
   const login = api.user.login.useMutation({
     onSuccess: async (data) => {
       await AsyncStorage.setItem(AUTH_TOKEN, data.token)
-      queryClient.user.me.setData(undefined, data.user)
-
-      router.push("/")
-      // router.back()
-
+      utils.user.me.refetch()
       const token = await registerPushToken()
-      if (!token) return
-      pushToken.mutate({ token })
+      if (token) pushToken.mutate({ token })
+      router.replace("/(home)/(timeline)")
     },
   })
   const handleLogin = async () => {

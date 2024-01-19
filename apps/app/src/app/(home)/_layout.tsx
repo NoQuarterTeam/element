@@ -6,12 +6,12 @@ import { Home, UserCircle } from "lucide-react-native"
 import { createImageUrl, join } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
-import { Icon } from "../../components/Icon"
-import { OptimizedImage } from "../../components/OptimisedImage"
-import { useFeatures } from "../../lib/hooks/useFeatures"
-import { useMe } from "../../lib/hooks/useMe"
-import { useBackgroundColor } from "../../lib/tailwind"
-import { api } from "../../lib/utils/api"
+import { Icon } from "~/components/Icon"
+import { OptimizedImage } from "~/components/OptimisedImage"
+import { useFeatures } from "~/lib/hooks/useFeatures"
+import { useMe } from "~/lib/hooks/useMe"
+import { useBackgroundColor } from "~/lib/tailwind"
+import { api } from "~/lib/utils/api"
 
 export default function HomeLayout() {
   const colorScheme = useColorScheme()

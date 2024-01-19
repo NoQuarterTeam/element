@@ -2,12 +2,12 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
 import { useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
-import { TaskForm } from "../../../components/TaskForm"
-import { Toast } from "../../../components/Toast"
-import { useMe } from "../../../lib/hooks/useMe"
-import { useTemporaryData } from "../../../lib/hooks/useTemporaryTasks"
-import { useTimelineDays } from "../../../lib/hooks/useTimeline"
-import { api, type RouterInputs } from "../../../lib/utils/api"
+import { TaskForm } from "~/components/TaskForm"
+import { Toast } from "~/components/Toast"
+import { useMe } from "~/lib/hooks/useMe"
+import { useTemporaryData } from "~/lib/hooks/useTemporaryTasks"
+import { useTimelineDays } from "~/lib/hooks/useTimeline"
+import { api, type RouterInputs } from "~/lib/utils/api"
 
 export default function NewTask() {
   const router = useRouter()

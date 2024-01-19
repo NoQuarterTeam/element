@@ -2,10 +2,10 @@ import { Switch, View } from "react-native"
 
 import colors from "@element/tailwind-config/src/colors"
 
-import { ScreenView } from "../../../components/ScreenView"
-import { Text } from "../../../components/Text"
-import { useFeatures } from "../../../lib/hooks/useFeatures"
-import { api } from "../../../lib/utils/api"
+import { ScreenView } from "~/components/ScreenView"
+import { Text } from "~/components/Text"
+import { useFeatures } from "~/lib/hooks/useFeatures"
+import { api } from "~/lib/utils/api"
 
 export default function Features() {
   const { features, toggle } = useFeatures()

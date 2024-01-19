@@ -149,7 +149,7 @@ export function TaskForm(props: Props) {
                   if (!form.element) {
                     router.push({
                       pathname: "/elements/select",
-                      params: { date: form.date, repeat, redirect: "/new" },
+                      params: { date: form.date || "", repeat: repeat || "", redirect: "/new" },
                     })
                   }
                 }}
@@ -185,7 +185,11 @@ export function TaskForm(props: Props) {
                   onPress={() => {
                     router.push({
                       pathname: "/elements/select",
-                      params: { date: form.date, repeat, redirect: props.task ? `/${props.task.id}` : "/new" },
+                      params: {
+                        date: form.date || "",
+                        repeat: repeat || "",
+                        redirect: props.task ? `/${props.task.id}` : "/new",
+                      },
                     })
                   }}
                 >
@@ -208,7 +212,7 @@ export function TaskForm(props: Props) {
                     onPress={() => {
                       router.push({
                         pathname: "/elements/create",
-                        params: { date: form.date, redirect: props.task ? `/${props.task.id}` : "/new" },
+                        params: { date: form.date || "", redirect: props.task ? `/${props.task.id}` : "/new" },
                       })
                     }}
                     className="rounded-sm border border-gray-100 p-2.5 dark:border-gray-600"
@@ -298,7 +302,10 @@ export function TaskForm(props: Props) {
                     className={inputClassName}
                     onPress={() => {
                       nameInputRef.current?.blur()
-                      router.push({ pathname: "/repeat-select", params: { date: form.date, repeat, redirect: "/new" } })
+                      router.push({
+                        pathname: "/repeat-select",
+                        params: { date: form.date || "", repeat: repeat || "", redirect: "/new" },
+                      })
                     }}
                   >
                     <Text className={join("text-sm", !repeat && "opacity-60")}>

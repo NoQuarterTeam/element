@@ -4,14 +4,14 @@ import { AlertCircle } from "lucide-react-native"
 
 import { useDisclosure } from "@element/shared"
 
-import { Button } from "../../../components/Button"
-import { Icon } from "../../../components/Icon"
-import { ModalView } from "../../../components/ModalView"
-import { ScreenView } from "../../../components/ScreenView"
-import { Text } from "../../../components/Text"
-import { toast } from "../../../components/Toast"
-import { useMe } from "../../../lib/hooks/useMe"
-import { api } from "../../../lib/utils/api"
+import { Button } from "~/components/Button"
+import { Icon } from "~/components/Icon"
+import { ModalView } from "~/components/ModalView"
+import { ScreenView } from "~/components/ScreenView"
+import { Text } from "~/components/Text"
+import { toast } from "~/components/Toast"
+import { useMe } from "~/lib/hooks/useMe"
+import { api } from "~/lib/utils/api"
 
 export function SettingsScreen() {
   const modalProps = useDisclosure()

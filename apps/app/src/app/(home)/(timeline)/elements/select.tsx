@@ -6,12 +6,12 @@ import { matchSorter } from "match-sorter"
 
 import { join } from "@element/shared"
 
-import { Input } from "../../../../components/Input"
-import { ModalView } from "../../../../components/ModalView"
-import { Text } from "../../../../components/Text"
-import { useMe } from "../../../../lib/hooks/useMe"
-import { useTemporaryData } from "../../../../lib/hooks/useTemporaryTasks"
-import { api } from "../../../../lib/utils/api"
+import { Input } from "~/components/Input"
+import { ModalView } from "~/components/ModalView"
+import { Text } from "~/components/Text"
+import { useMe } from "~/lib/hooks/useMe"
+import { useTemporaryData } from "~/lib/hooks/useTemporaryTasks"
+import { api } from "~/lib/utils/api"
 
 export default function SelectElement() {
   const tempElements = useTemporaryData((s) => s.elements)

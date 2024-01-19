@@ -3,9 +3,9 @@ import dayjs from "dayjs"
 
 import { join, MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "@element/shared"
 
-import { ScreenView } from "../../../components/ScreenView"
-import { Text } from "../../../components/Text"
-import { api } from "../../../lib/utils/api"
+import { ScreenView } from "~/components/ScreenView"
+import { Text } from "~/components/Text"
+import { api } from "~/lib/utils/api"
 
 export default function Plan() {
   const { data, isLoading } = api.user.myPlan.useQuery()

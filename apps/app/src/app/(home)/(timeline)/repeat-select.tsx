@@ -4,9 +4,9 @@ import { useGlobalSearchParams, useRouter } from "expo-router"
 import { type TaskRepeat } from "@element/database/types"
 import { join } from "@element/shared"
 
-import { ModalView } from "../../../components/ModalView"
-import { Text } from "../../../components/Text"
-import { TaskRepeatOptions } from "../../../lib/taskRepeat"
+import { ModalView } from "~/components/ModalView"
+import { Text } from "~/components/Text"
+import { TaskRepeatOptions } from "~/lib/taskRepeat"
 
 export default function RepeatSelect() {
   const { repeat, redirect, ...params } = useGlobalSearchParams()

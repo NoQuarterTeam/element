@@ -22,11 +22,11 @@ import { create } from "zustand"
 import { join } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
-import { Heading } from "../../../components/Heading"
-import { Icon } from "../../../components/Icon"
-import { Text } from "../../../components/Text"
-import { api, type RouterOutputs } from "../../../lib/utils/api"
-import { width } from "../../../lib/utils/device"
+import { Heading } from "~/components/Heading"
+import { Icon } from "~/components/Icon"
+import { Text } from "~/components/Text"
+import { api, type RouterOutputs } from "~/lib/utils/api"
+import { width } from "~/lib/utils/device"
 
 dayjs.extend(advancedFormat)
 dayjs.extend(updateLocale)

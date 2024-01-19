@@ -1,11 +1,11 @@
 import { ScrollView } from "react-native"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 
-import { Button } from "../../../../components/Button"
-import { ModalView } from "../../../../components/ModalView"
-import { Text } from "../../../../components/Text"
-import { useTimelineDays } from "../../../../lib/hooks/useTimeline"
-import { api } from "../../../../lib/utils/api"
+import { Button } from "~/components/Button"
+import { ModalView } from "~/components/ModalView"
+import { Text } from "~/components/Text"
+import { useTimelineDays } from "~/lib/hooks/useTimeline"
+import { api } from "~/lib/utils/api"
 
 export default function DeleteTask() {
   const router = useRouter()

@@ -2,20 +2,20 @@ import { ScrollView, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useQueryClient } from "@tanstack/react-query"
-import { Link } from "expo-router"
+import { Link, Href, AllRoutes } from "expo-router"
 import { ChevronRight } from "lucide-react-native"
 
 import { createImageUrl, join } from "@element/shared"
 
-import { Button } from "../../../components/Button"
-import { Heading } from "../../../components/Heading"
-import { Icon } from "../../../components/Icon"
-import { LoginPlaceholder } from "../../../components/LoginPlaceholder"
-import { OptimizedImage } from "../../../components/OptimisedImage"
-import { Text } from "../../../components/Text"
-import { UPDATE_ID, VERSION } from "../../../lib/config"
-import { useMe } from "../../../lib/hooks/useMe"
-import { api, AUTH_TOKEN } from "../../../lib/utils/api"
+import { Button } from "~/components/Button"
+import { Heading } from "~/components/Heading"
+import { Icon } from "~/components/Icon"
+import { LoginPlaceholder } from "~/components/LoginPlaceholder"
+import { OptimizedImage } from "~/components/OptimisedImage"
+import { Text } from "~/components/Text"
+import { UPDATE_ID, VERSION } from "~/lib/config"
+import { useMe } from "~/lib/hooks/useMe"
+import { api, AUTH_TOKEN } from "~/lib/utils/api"
 
 export default function Profile() {
   const { me } = useMe()
@@ -78,14 +78,14 @@ export default function Profile() {
           </View>
         </View>
         <View>
-          <ProfileLink isFirst href="profile/account">
+          <ProfileLink isFirst href="/profile/account">
             Account
           </ProfileLink>
-          <ProfileLink isLast={!me.stripeSubscriptionId} href="profile/plan">
+          <ProfileLink isLast={!me.stripeSubscriptionId} href="/profile/plan">
             Plan
           </ProfileLink>
           {me.stripeSubscriptionId && (
-            <ProfileLink isLast href="profile/features">
+            <ProfileLink isLast href="/profile/features">
               Features
             </ProfileLink>
           )}
@@ -104,7 +104,7 @@ export default function Profile() {
   )
 }
 
-function ProfileLink(props: { isFirst?: boolean; isLast?: boolean; href: string; children: React.ReactNode }) {
+function ProfileLink(props: { isFirst?: boolean; isLast?: boolean; href: Href<AllRoutes>; children: React.ReactNode }) {
   return (
     <Link href={props.href} asChild>
       <TouchableOpacity

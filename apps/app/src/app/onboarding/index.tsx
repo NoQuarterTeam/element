@@ -1,10 +1,10 @@
 import { View } from "react-native"
 import { Link, useFocusEffect } from "expo-router"
 
-import { Button } from "../../components/Button"
-import { ModalView } from "../../components/ModalView"
-import { Text } from "../../components/Text"
-import { useOnboarding } from "../../lib/hooks/useOnboarding"
+import { Button } from "~/components/Button"
+import { ModalView } from "~/components/ModalView"
+import { Text } from "~/components/Text"
+import { useOnboarding } from "~/lib/hooks/useOnboarding"
 
 export default function Onboarding() {
   const setHasSeenOnboarding = useOnboarding((s) => s.setHasSeenOnboarding)

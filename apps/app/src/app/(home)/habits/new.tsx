@@ -1,8 +1,8 @@
 import { useRouter } from "expo-router"
 
-import { HabitForm } from "../../../components/HabitForm"
-import { ModalView } from "../../../components/ModalView"
-import { api } from "../../../lib/utils/api"
+import { HabitForm } from "~/components/HabitForm"
+import { ModalView } from "~/components/ModalView"
+import { api } from "~/lib/utils/api"
 
 export default function NewHabit() {
   const utils = api.useUtils()

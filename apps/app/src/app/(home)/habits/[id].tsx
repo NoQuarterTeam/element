@@ -4,9 +4,9 @@ import dayjs from "dayjs"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 
-import { HabitForm } from "../../../components/HabitForm"
-import { ModalView } from "../../../components/ModalView"
-import { api, type RouterOutputs } from "../../../lib/utils/api"
+import { HabitForm } from "~/components/HabitForm"
+import { ModalView } from "~/components/ModalView"
+import { api, type RouterOutputs } from "~/lib/utils/api"
 
 type Habit = NonNullable<RouterOutputs["habit"]["byId"]>
 export default function HabitDetail() {

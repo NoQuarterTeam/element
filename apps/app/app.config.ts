@@ -28,6 +28,9 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   icon: "./assets/icon.png",
   userInterfaceStyle: "automatic",
   splash,
+  experiments: {
+    typedRoutes: true,
+  },
   updates: {
     fallbackToCacheTimeout: 0,
     checkAutomatically: "ON_LOAD",
@@ -79,17 +82,6 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
     "./expo-plugins/with-modify-gradle.js",
     ["expo-build-properties", { android: { kotlinVersion: "1.7.22" } }],
   ],
-  hooks: {
-    postPublish: [
-      {
-        file: "sentry-expo/upload-sourcemaps",
-        config: {
-          organization: "noquarter",
-          project: "element-app",
-        },
-      },
-    ],
-  },
 })
 
 export default defineConfig

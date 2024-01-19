@@ -1,6 +1,6 @@
 import { Stack } from "expo-router"
 
-import { useBackgroundColor } from "../../../../lib/tailwind"
+import { useBackgroundColor } from "~/lib/tailwind"
 
 export default function ElementsLayout() {
   const backgroundColor = useBackgroundColor()

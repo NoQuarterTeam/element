@@ -7,10 +7,10 @@ import dayjs from "dayjs"
 import { merge, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
-import { inputClassName } from "../../../components/Input"
-import { ScreenView } from "../../../components/ScreenView"
-import { Text } from "../../../components/Text"
-import { api } from "../../../lib/utils/api"
+import { inputClassName } from "~/components/Input"
+import { ScreenView } from "~/components/ScreenView"
+import { Text } from "~/components/Text"
+import { api } from "~/lib/utils/api"
 
 export default function HabitStat() {
   const [startDate, setStartDate] = React.useState(dayjs().subtract(1, "months").toDate())
