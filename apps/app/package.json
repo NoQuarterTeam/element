@@ -71,7 +71,7 @@
     "sentry-expo": "~7.1.0",
     "superjson": "1.13.3",
     "uuid": "3.4.0",
-    "zustand": "4.4.7"
+    "zustand": "4.5.0"
   },
   "devDependencies": {
     "@babel/core": "7.23.7",
