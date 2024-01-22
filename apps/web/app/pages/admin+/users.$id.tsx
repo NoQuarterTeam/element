@@ -33,7 +33,7 @@ export default function UserDetailLayout() {
     <div className="space-y-4">
       <div className="flex items-start justify-between">
         <div className="space-y-2">
-          <LinkButton size="sm" variant="outline" leftIcon={<ArrowLeft size={16} />} to="..">
+          <LinkButton size="sm" variant="outline" leftIcon={<ArrowLeft size={16} />} to="/admin/users">
             Back
           </LinkButton>
 

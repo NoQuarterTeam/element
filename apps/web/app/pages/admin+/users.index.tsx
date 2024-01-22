@@ -96,7 +96,6 @@ const columns = [
       </Badge>
     ),
   }),
-
   columnHelper.accessor((row) => row._count.tasks, {
     id: "taskCount",
     header: () => "Tasks",
