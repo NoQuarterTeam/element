@@ -68,7 +68,7 @@
     "react-native-svg": "14.1.0",
     "react-native-toast-message": "2.2.0",
     "reanimated-color-picker": "2.4.2",
-    "superjson": "1.13.3",
+    "superjson": "2.2.1",
     "uuid": "3.4.0",
     "zustand": "4.5.0"
   },
