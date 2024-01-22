@@ -36,6 +36,7 @@
     "expo-dev-client",
     "@sentry/react-native",
     "expo-device",
+    "expo-router",
     "expo-blur",
     "expo-haptics",
     "expo-notifications",

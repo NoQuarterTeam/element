@@ -69,6 +69,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
     },
   },
   plugins: [
+    "expo-router",
     [
       "@sentry/react-native/expo",
       {
