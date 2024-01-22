@@ -74,10 +74,12 @@ function EditTaskForm({ task }: { task: Task }) {
     if (me) {
       update.mutate({
         ...data,
-        date: dayjs(data.date as string)
-          .startOf("day")
-          .add(12, "hours")
-          .toISOString(),
+        date: data.date
+          ? dayjs(data.date as string)
+              .startOf("day")
+              .add(12, "hours")
+              .toISOString()
+          : undefined,
         durationHours: Number(data.durationHours),
         durationMinutes: Number(data.durationMinutes),
       })
