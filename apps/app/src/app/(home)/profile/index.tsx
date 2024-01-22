@@ -84,11 +84,9 @@ export default function Profile() {
           <ProfileLink isLast={!me.stripeSubscriptionId} href="/profile/plan">
             Plan
           </ProfileLink>
-          {me.stripeSubscriptionId && (
-            <ProfileLink isLast href="/profile/features">
-              Features
-            </ProfileLink>
-          )}
+          <ProfileLink isLast href="/profile/features">
+            Features
+          </ProfileLink>
         </View>
         <View>
           <Button size="sm" variant="link" onPress={handleLogout}>

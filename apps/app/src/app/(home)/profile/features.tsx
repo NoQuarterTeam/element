@@ -6,16 +6,19 @@ import { ScreenView } from "~/components/ScreenView"
 import { Text } from "~/components/Text"
 import { useFeatures } from "~/lib/hooks/useFeatures"
 import { api } from "~/lib/utils/api"
+import { useMe } from "~/lib/hooks/useMe"
 
 export default function Features() {
   const { features, toggle } = useFeatures()
   const utils = api.useUtils()
+  const { me } = useMe()
   return (
     <ScreenView title="Features">
       <View>
         <View className="flex flex-row items-center justify-between p-4">
           <Text className="text-xl">Habits</Text>
           <Switch
+            disabled={!!!me?.stripeSubscriptionId}
             trackColor={{ true: colors.primary[600] }}
             value={features.includes("habits")}
             onValueChange={() => {
@@ -25,6 +28,7 @@ export default function Features() {
             }}
           />
         </View>
+        {!!!me?.stripeSubscriptionId && <Text className="text-sm opacity-70">You must be subscribed to access this feature</Text>}
       </View>
     </ScreenView>
   )
