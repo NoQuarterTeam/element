@@ -2,7 +2,7 @@ import { ScrollView, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useQueryClient } from "@tanstack/react-query"
-import { Link, Href, AllRoutes } from "expo-router"
+import { type AllRoutes, type Href, Link } from "expo-router"
 import { ChevronRight } from "lucide-react-native"
 
 import { createImageUrl, join } from "@element/shared"

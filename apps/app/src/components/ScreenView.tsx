@@ -18,11 +18,7 @@ export function ScreenView(props: Props) {
   return (
     <SafeAreaView className="flex-1 px-4 pt-2">
       <View className="flex flex-row items-center">
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={canGoBack ? () => router.push("../") : () => router.replace("/")}
-          className="p-2"
-        >
+        <TouchableOpacity activeOpacity={0.7} onPress={canGoBack ? router.back : () => router.navigate("/")} className="p-2">
           <Icon icon={ChevronLeft} size={24} />
         </TouchableOpacity>
 

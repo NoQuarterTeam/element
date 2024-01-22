@@ -18,7 +18,7 @@ export default function ElementsDetailMove() {
     onSuccess: () => {
       void utils.element.grouped.refetch()
       if (router.canGoBack()) return router.back()
-      void router.replace("/elements")
+      void router.navigate("/elements")
     },
   })
   return (

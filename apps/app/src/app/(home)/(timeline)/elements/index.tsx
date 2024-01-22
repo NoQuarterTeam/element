@@ -55,11 +55,6 @@ function ElementItem({ element }: { element: RouterOutputs["element"]["grouped"]
       void utils.element.all.refetch()
       void utils.element.grouped.refetch()
       void utils.task.timeline.refetch({ daysBack, daysForward })
-      if (router.canGoBack()) {
-        router.back()
-      } else {
-        router.replace("/")
-      }
     },
   })
   const { showActionSheetWithOptions } = useActionSheet()
@@ -77,7 +72,7 @@ function ElementItem({ element }: { element: RouterOutputs["element"]["grouped"]
           break
         case 1:
           // Edit
-          router.push({ pathname: `/(home)/(timeline)/elements/[elementId]/`, params: { elementId: element.id } })
+          router.push(`/elements/${element.id}/`)
           break
         case 2:
           // Move
@@ -93,7 +88,7 @@ function ElementItem({ element }: { element: RouterOutputs["element"]["grouped"]
   return (
     <View>
       <TouchableOpacity
-        onPress={() => router.push({ pathname: `/(home)/(timeline)/elements/[elementId]/`, params: { elementId: element.id } })}
+        onPress={() => router.push(`/elements/${element.id}/`)}
         onLongPress={handleOpenMenu}
         activeOpacity={0.7}
         className="flex flex-row items-center space-x-2 py-1"

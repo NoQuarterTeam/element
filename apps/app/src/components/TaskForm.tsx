@@ -5,7 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker"
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 import dayjs from "dayjs"
 import { useGlobalSearchParams, useRouter } from "expo-router"
-import { AlertTriangle, Check, Clock, Copy, Plus, Square, Trash, X } from "lucide-react-native"
+import { AlertTriangle, CalendarPlus, Check, Clock, Copy, Plus, Square, Trash, X } from "lucide-react-native"
 
 import { type TaskRepeat } from "@element/database/types"
 import { getRepeatingDatesBetween, join, merge, useDisclosure } from "@element/shared"
@@ -44,7 +44,7 @@ type Props = {
 export function TaskForm(props: Props) {
   const router = useRouter()
   const canGoBack = router.canGoBack()
-  const { date, repeat, elementId } = useGlobalSearchParams()
+  const { date, repeat: initialRepeat, elementId } = useGlobalSearchParams()
 
   const [form, setForm] = React.useState({
     name: props.task?.name || "",
@@ -80,10 +80,11 @@ export function TaskForm(props: Props) {
     setForm((f) => ({ ...f, element: element! }))
   }, [elementId, data, me, isLoading, tempElements])
 
+  const [repeat, setRepeat] = React.useState(initialRepeat)
   React.useEffect(() => {
-    if (!repeat || !me) return
-    setForm((f) => ({ ...f, repeat: repeat as TaskRepeat }))
-  }, [repeat, me])
+    if (!initialRepeat || !me) return
+    setRepeat(initialRepeat)
+  }, [initialRepeat, me])
 
   const timeProps = useDisclosure()
 
@@ -170,7 +171,7 @@ export function TaskForm(props: Props) {
               >
                 <Icon icon={AlertTriangle} size={20} color={form.isImportant ? "white" : undefined} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={canGoBack ? router.back : () => router.replace("/")} className="p-2">
+              <TouchableOpacity onPress={canGoBack ? router.back : () => router.navigate("/")} className="p-2">
                 <Icon icon={X} size={24} />
               </TouchableOpacity>
             </View>
@@ -223,23 +224,25 @@ export function TaskForm(props: Props) {
               }
             />
           </View>
-          <View>
-            <FormInput
-              label="Date"
-              error={props.error?.zodError?.fieldErrors?.date}
-              input={
-                <TouchableOpacity onPress={dateProps.onOpen} className={inputClassName}>
-                  <Text className="text-sm">{dayjs(form.date).format("DD/MM/YYYY")}</Text>
-                </TouchableOpacity>
-              }
-            />
-            <DateTimePickerModal
-              isVisible={dateProps.isOpen}
-              date={dayjs(form.date).toDate()}
-              onConfirm={handlePickDate}
-              onCancel={dateProps.onClose}
-            />
-          </View>
+          {form.date && (
+            <View>
+              <FormInput
+                label="Date"
+                error={props.error?.zodError?.fieldErrors?.date}
+                input={
+                  <TouchableOpacity onPress={dateProps.onOpen} className={inputClassName}>
+                    <Text className="text-sm">{form.date ? dayjs(form.date).format("DD/MM/YYYY") : "-"}</Text>
+                  </TouchableOpacity>
+                }
+              />
+              <DateTimePickerModal
+                isVisible={dateProps.isOpen}
+                date={dayjs(form.date || undefined).toDate()}
+                onConfirm={handlePickDate}
+                onCancel={dateProps.onClose}
+              />
+            </View>
+          )}
           <View className="space-y-1">
             <FormInputLabel label="Duration" />
             <View className="flex flex-row items-center space-x-3">
@@ -459,7 +462,7 @@ export function TaskForm(props: Props) {
                 } else {
                   return props.onCreate({
                     ...payload,
-                    repeat: repeat as TaskRepeat | null,
+                    repeat: (repeat as TaskRepeat | null) || null,
                     repeatEndDate: repeat ? dayjs(repeatEndDate).toDate() : null,
                     elementId: form.element.id,
                   })
@@ -483,7 +486,11 @@ function TaskActions({ task }: { task: Task }) {
   const { me } = useMe()
   const deleteTask = api.task.delete.useMutation({
     onSuccess: () => {
-      void utils.task.timeline.refetch({ daysBack, daysForward })
+      if (task.date) {
+        void utils.task.timeline.refetch({ daysBack, daysForward })
+      } else {
+        void utils.task.backlog.refetch()
+      }
       router.back()
     },
   })
@@ -510,10 +517,27 @@ function TaskActions({ task }: { task: Task }) {
     addToBacklog.mutate({ id: task.id, date: null, isComplete: false })
   }
 
+  const addToTimeline = api.task.update.useMutation({
+    onSuccess: async (updatedTask) => {
+      void utils.task.timeline.refetch({ daysBack, daysForward })
+      void utils.task.backlog.refetch()
+      utils.task.byId.setData({ id: task.id }, updatedTask)
+      router.back()
+    },
+  })
+  const handleAddToTimeline = () => {
+    if (!me) return Alert.alert("You must have an account to add a task to the timeline")
+    addToTimeline.mutate({ id: task.id, date: new Date() })
+  }
+
   const duplicate = api.task.duplicate.useMutation({
     onSuccess: () => {
       // have to refetch to get the new order, or would have to calculate here
-      void utils.task.timeline.refetch({ daysBack, daysForward })
+      if (task.date) {
+        void utils.task.timeline.refetch({ daysBack, daysForward })
+      } else {
+        void utils.task.backlog.refetch()
+      }
       router.back()
     },
     onError: (error) => {
@@ -536,12 +560,21 @@ function TaskActions({ task }: { task: Task }) {
       >
         {deleteTask.isLoading ? <ActivityIndicator /> : <Icon icon={Trash} size={20} color="red" />}
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={handleAddToBacklog}
-        className="sq-12 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-600"
-      >
-        {addToBacklog.isLoading ? <ActivityIndicator /> : <Icon icon={Clock} size={20} />}
-      </TouchableOpacity>
+      {task.date ? (
+        <TouchableOpacity
+          onPress={handleAddToBacklog}
+          className="sq-12 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-600"
+        >
+          {addToBacklog.isLoading ? <ActivityIndicator /> : <Icon icon={Clock} size={20} />}
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          onPress={handleAddToTimeline}
+          className="sq-12 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-600"
+        >
+          {addToTimeline.isLoading ? <ActivityIndicator /> : <Icon icon={CalendarPlus} size={20} />}
+        </TouchableOpacity>
+      )}
       <TouchableOpacity
         onPress={handleDuplicate}
         className="sq-12 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-600"

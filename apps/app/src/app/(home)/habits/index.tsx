@@ -288,6 +288,7 @@ function HabitItem({ habit, isComplete, positions }: { positions: SharedValue<Po
 
   const handleUpdateOrder = () => {
     if (!positions.value) return
+    if (positions.value[habit.id]?.order === habit.order) return
     const data = Object.values(positions.value).map((habit) => ({ id: habit.id, order: habit.order }))
     mutate(data)
   }
@@ -367,7 +368,7 @@ function HabitItem({ habit, isComplete, positions }: { positions: SharedValue<Po
   return (
     <Animated.View style={styles}>
       <GestureDetector gesture={gesture}>
-        <View style={{ height: HABIT_HEIGHT }} className="w-full px-4 py-1">
+        <TouchableOpacity activeOpacity={0.7} style={{ height: HABIT_HEIGHT }} className="w-full px-4 py-1">
           <View className="flex h-full w-full flex-row items-center justify-between rounded border border-gray-100 bg-white p-3 px-4 dark:border-gray-700 dark:bg-black">
             <Text className="text-lg">{habit.name}</Text>
 
@@ -394,7 +395,7 @@ function HabitItem({ habit, isComplete, positions }: { positions: SharedValue<Po
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </GestureDetector>
     </Animated.View>
   )

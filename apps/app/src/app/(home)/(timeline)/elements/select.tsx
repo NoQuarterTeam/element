@@ -1,7 +1,7 @@
 import * as React from "react"
 import { ActivityIndicator, Pressable, ScrollView, View } from "react-native"
 import dayjs from "dayjs"
-import { useGlobalSearchParams, useRouter } from "expo-router"
+import { type AllRoutes, useGlobalSearchParams, useRouter } from "expo-router"
 import { matchSorter } from "match-sorter"
 
 import { join } from "@element/shared"
@@ -29,7 +29,7 @@ export default function SelectElement() {
   const router = useRouter()
   const onSelect = (element: { id: string; color: string; name: string }) => {
     if (!redirect) return router.back()
-    router.push({ pathname: redirect as string, params: { ...params, elementId: element.id } })
+    router.navigate({ pathname: redirect as AllRoutes, params: { ...params, elementId: element.id } })
   }
   return (
     <ModalView title="Select element">

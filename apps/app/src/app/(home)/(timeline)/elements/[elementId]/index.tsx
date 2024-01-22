@@ -25,7 +25,7 @@ export default function ElementDetail() {
       if (router.canGoBack()) {
         router.back()
       } else {
-        router.replace("/")
+        router.navigate("/")
       }
     },
   })

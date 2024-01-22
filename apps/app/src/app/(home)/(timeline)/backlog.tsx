@@ -100,7 +100,7 @@ function TaskItem({ task }: { task: RouterOutputs["task"]["backlog"][number] }) 
       <View className="flex flex-1 flex-row space-x-2 p-3">
         <TouchableOpacity
           onLongPress={handleOpenMenu}
-          onPress={() => router.push({ pathname: "index", params: { id: task.id } })}
+          onPress={() => router.navigate({ pathname: "/[id]", params: { id: task.id } })}
           className="flex-1 flex-row justify-between"
         >
           <Text

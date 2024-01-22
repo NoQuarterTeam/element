@@ -8,7 +8,7 @@ import { Text } from "~/components/Text"
 import { api } from "~/lib/utils/api"
 
 export default function Plan() {
-  const { data, isLoading } = api.user.myPlan.useQuery()
+  const { data, isLoading } = api.user.myPlan.useQuery(undefined, { cacheTime: 30000 })
   const discountedPlanAmount = data?.subscription?.discountPercent ? 4 - (4 * 100) / data.subscription.discountPercent : null
   return (
     <ScreenView title="Plan">

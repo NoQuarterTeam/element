@@ -1,7 +1,7 @@
 import * as React from "react"
 import { AppState, type AppStateStatus } from "react-native"
-import * as Updates from "expo-updates"
 import * as Sentry from "@sentry/react-native"
+import * as Updates from "expo-updates"
 
 import { IS_DEV } from "../config"
 

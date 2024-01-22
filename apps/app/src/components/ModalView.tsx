@@ -29,7 +29,7 @@ export function ModalView(props: Props) {
           {props.title ? <Heading className="text-2xl">{props.title}</Heading> : <Text />}
 
           <TouchableOpacity
-            onPress={props.onBack ? props.onBack : canGoBack ? router.back : () => router.replace("/")}
+            onPress={props.onBack ? props.onBack : canGoBack ? router.back : () => router.navigate("/")}
             className="p-2"
           >
             <Icon icon={X} size={24} />

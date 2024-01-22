@@ -57,14 +57,14 @@ function EditTaskForm({ task }: { task: Task }) {
 
   const update = api.task.update.useMutation({
     onSuccess: (updatedTask) => {
-      utils.task.timeline.setData({ daysBack, daysForward }, (old) => {
-        if (!old) return old
-        return old.map((t) =>
-          t.id === task.id
-            ? { ...t, ...updatedTask, date: dayjs(updatedTask.date!).startOf("day").add(12, "hours").format("YYYY-MM-DD") }
-            : t,
-        )
-      })
+      const date = updatedTask.date
+      if (date) {
+        utils.task.timeline.setData({ daysBack, daysForward }, (old) => {
+          if (!old) return old
+          // gota keep the old order as thats never manually updated
+          return old.map((t) => (t.id === task.id ? { ...t, ...updatedTask, order: t.order, date } : t))
+        })
+      }
       utils.task.byId.setData({ id: task.id }, updatedTask)
       router.back()
     },
