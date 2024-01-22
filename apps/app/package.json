@@ -45,7 +45,7 @@
     "expo-image-picker": "~14.7.1",
     "expo-linking": "~6.2.2",
     "expo-notifications": "~0.27.3",
-    "expo-router": "3.4.3",
+    "expo-router": "3.4.4",
     "expo-splash-screen": "~0.26.3",
     "expo-status-bar": "~1.11.1",
     "expo-system-ui": "2.9.3",
