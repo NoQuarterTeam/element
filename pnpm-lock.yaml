@@ -761,8 +761,8 @@ importers:
         specifier: 0.32.6
         version: 0.32.6
       stripe:
-        specifier: 14.13.0
-        version: 14.13.0
+        specifier: 14.14.0
+        version: 14.14.0
       zod:
         specifier: 3.22.4
         version: 3.22.4
@@ -16298,8 +16298,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /stripe@14.13.0:
-    resolution: {integrity: sha512-uLOfWtBUL1amJCTpKCXWrHntFOSaO2PWb/2hsxV/OlXLr0bz5MyU8IW1pFlmZqpw6hBqAW5Fad7Ty7xRxDYrzA==}
+  /stripe@14.14.0:
+    resolution: {integrity: sha512-P6lvKHxgDzZXto9VMstG1ucv4Ls0U9nOoQhVZABXJ33kRD7zMwkBy5Y4c3BO59O230uSTkOFPLh87YxVzkp0Mg==}
     engines: {node: '>=12.*'}
     dependencies:
       '@types/node': 18.19.9
