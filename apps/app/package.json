@@ -73,9 +73,9 @@
     "zustand": "4.5.0"
   },
   "devDependencies": {
-    "@babel/core": "7.23.7",
-    "@babel/preset-env": "7.23.8",
-    "@babel/runtime": "7.23.8",
+    "@babel/core": "7.23.9",
+    "@babel/preset-env": "7.23.9",
+    "@babel/runtime": "7.23.9",
     "@element/eslint-config": "*",
     "@element/tailwind-config": "*",
     "@expo/config-plugins": "7.8.4",
