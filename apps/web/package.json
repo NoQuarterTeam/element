@@ -57,7 +57,7 @@
     "js-cookie": "3.0.5",
     "jsonwebtoken": "9.0.2",
     "limax": "4.1.0",
-    "lucide-react": "0.314.0",
+    "lucide-react": "0.315.0",
     "match-sorter": "6.3.3",
     "polished": "4.2.2",
     "posthog-js": "^1.100.0",
