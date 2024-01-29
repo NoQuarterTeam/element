@@ -19,6 +19,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       select: {
         id: true,
         name: true,
+        date: true,
         createdAt: true,
         updatedAt: true,
         element: true,
@@ -38,6 +39,13 @@ const columns = [
     header: () => "Name",
     cell: (info) => info.getValue(),
   }),
+  columnHelper.accessor("date", {
+    id: "date",
+    maxSize: 100,
+    enableSorting: false,
+    header: () => "Date",
+    cell: (info) => dayjs(info.getValue()).format("DD/MM/YYYY"),
+  }),
   columnHelper.accessor((row) => row.element.name, {
     id: "element",
     enableSorting: false,
@@ -49,7 +57,6 @@ const columns = [
       </div>
     ),
   }),
-
   columnHelper.accessor("createdAt", {
     id: "createdAt",
     maxSize: 100,
