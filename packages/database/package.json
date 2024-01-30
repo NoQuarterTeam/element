@@ -10,9 +10,9 @@
   "dependencies": {
     "@element/server-env": "workspace:*",
     "@planetscale/database": "^1.13.0",
-    "@prisma/adapter-planetscale": "5.8.1",
-    "@prisma/client": "5.8.1",
-    "prisma": "5.8.1"
+    "@prisma/adapter-planetscale": "5.9.0",
+    "@prisma/client": "5.9.0",
+    "prisma": "5.9.0"
   },
   "devDependencies": {
     "@types/node": "^18.15.3",
