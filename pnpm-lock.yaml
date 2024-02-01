@@ -749,8 +749,8 @@ importers:
         specifier: 9.0.2
         version: 9.0.2
       loops:
-        specifier: ^0.1.3
-        version: 0.1.3
+        specifier: ^0.2.0
+        version: 0.2.0
       nodemailer:
         specifier: 6.9.8
         version: 6.9.8
@@ -12366,8 +12366,8 @@ packages:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
     dev: true
 
-  /loops@0.1.3:
-    resolution: {integrity: sha512-IJh1Se/wExb1bwkZ4oYEffnGP7l/PV7K/dC5htX6/Vs6Q8XO5XsqNTedbiPVvJjjkS374mtw7cjYTcqWeC+31g==}
+  /loops@0.2.0:
+    resolution: {integrity: sha512-yIvZx4Z44wW5nXEySR7rEjErFsRIl9OG8AR8e+LB6GYWgaZEIiJ2d10SEhp7wYT4Bp8iHC/RGc4dOY7p8kVgdw==}
     dev: false
 
   /loose-envify@1.4.0:
