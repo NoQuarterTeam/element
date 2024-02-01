@@ -11,7 +11,7 @@
     "@element/database": "*"
   },
   "peerDependencies": {
-    "polished": "4.2.2",
+    "polished": "4.3.0",
     "tailwind-merge": "2.2.1"
   },
   "devDependencies": {
