@@ -133,8 +133,8 @@ importers:
         specifier: 2.0.11
         version: 2.0.11(react@18.2.0)(tailwindcss@3.3.2)
       polished:
-        specifier: 4.3.0
-        version: 4.3.0
+        specifier: 4.3.1
+        version: 4.3.1
       posthog-react-native:
         specifier: ^2.10.1
         version: 2.10.1(@react-native-async-storage/async-storage@1.21.0)(@react-navigation/native@6.1.9)(expo-application@5.8.3)(expo-device@5.9.3)
@@ -359,8 +359,8 @@ importers:
         specifier: 6.3.3
         version: 6.3.3
       polished:
-        specifier: 4.3.0
-        version: 4.3.0
+        specifier: 4.3.1
+        version: 4.3.1
       posthog-js:
         specifier: ^1.100.0
         version: 1.100.0
@@ -804,8 +804,8 @@ importers:
         specifier: '*'
         version: link:../database
       polished:
-        specifier: 4.3.0
-        version: 4.3.0
+        specifier: 4.3.1
+        version: 4.3.1
       tailwind-merge:
         specifier: 2.2.1
         version: 2.2.1
@@ -14062,9 +14062,9 @@ packages:
     engines: {node: '>=4.0.0'}
     dev: false
 
-  /polished@4.3.0:
-    resolution: {integrity: sha512-ggU2H9FdSRwmcfGEPFaUNoX+P6cVbmIhobEpVBCiclCm6Ku+vlzh7wmhBRplYUqsECt8ZHwM8CaVjLBzLMJB1g==}
-    engines: {node: '>=20'}
+  /polished@4.3.1:
+    resolution: {integrity: sha512-OBatVyC/N7SCW/FaDHrSd+vn0o5cS855TOmYi4OkdWUMSJCET/xip//ch8xGUvtr3i44X9LVyWwQlRMTN3pwSA==}
+    engines: {node: '>=10'}
     dependencies:
       '@babel/runtime': 7.23.9
     dev: false
