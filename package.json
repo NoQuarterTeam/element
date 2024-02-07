@@ -2,7 +2,7 @@
   "name": "@elemment/root",
   "private": true,
   "dependencies": {
-    "turbo": "1.12.2"
+    "turbo": "1.12.3"
   },
   "devDependencies": {
     "prettier": "3.2.5",
