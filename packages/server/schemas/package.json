@@ -20,7 +20,7 @@
   "devDependencies": {
     "@element/eslint-config": "workspace:*",
     "@element/tailwind-config": "workspace:*",
-    "@types/node": "18.19.14",
+    "@types/node": "18.19.15",
     "eslint": "8.56.0",
     "prettier": "3.2.5",
     "typescript": "5.3.3"
