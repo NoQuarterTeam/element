@@ -31,7 +31,7 @@
     "nodemailer": "6.9.9",
     "resend": "3.1.0",
     "sharp": "0.32.6",
-    "stripe": "14.15.0",
+    "stripe": "14.16.0",
     "zod": "3.22.4"
   },
   "devDependencies": {
