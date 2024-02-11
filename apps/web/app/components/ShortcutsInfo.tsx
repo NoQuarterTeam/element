@@ -62,7 +62,7 @@ export function ShortcutsInfo() {
           <p>
             <Kbd>shift</Kbd> + <Kbd>cmd</Kbd> + <Kbd>click</Kbd>
           </p>
-          <p className="text-md">Toggle task for bulk deletion</p>
+          <p className="text-md">Toggle task for bulk action</p>
         </div>
       </div>
     </div>

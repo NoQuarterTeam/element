@@ -24,7 +24,7 @@ import { TASK_CACHE_KEY } from "~/lib/hooks/useTimelineTasks"
 import { useMe } from "~/lib/hooks/useUser"
 
 import type { TimelineTask } from "./api+/tasks"
-import { DeleteManyTasks } from "./api+/tasks.delete-many"
+import { BulkActions } from "./api+/tasks.bulk-actions"
 
 dayjs.extend(advancedFormat)
 
@@ -193,7 +193,7 @@ function _Timeline() {
             </Tooltip>
           </div>
         </div>
-        <DeleteManyTasks />
+        <BulkActions />
       </div>
       {!isFinishedLoading && <LoadingScreen />}
       <Outlet />

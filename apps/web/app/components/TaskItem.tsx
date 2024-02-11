@@ -111,7 +111,7 @@ function _TaskItem({ task }: Props) {
               !task.isComplete &&
               "border-primary-400 shadow-primary-400 dark:border-primary-400 shadow-[0_0_0_1px_black]",
             isNavigatingToItem && "animate-pulse-fast",
-            taskIds.includes(task.id) && "border-red-400 shadow-[0_0_0_1px_black] shadow-red-400 dark:border-red-400",
+            taskIds.includes(task.id) && "border-blue-400 shadow-[0_0_0_1px_black] shadow-blue-400 dark:border-blue-400",
           )}
         >
           <div

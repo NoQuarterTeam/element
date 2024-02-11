@@ -213,7 +213,7 @@ export function Nav() {
           </Tooltip>
         </div>
 
-        <Modal title="Shortcuts" {...shortcutModalProps}>
+        <Modal size="xl" title="Shortcuts" {...shortcutModalProps}>
           <ShortcutsInfo />
         </Modal>
       </div>
