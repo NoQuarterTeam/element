@@ -728,8 +728,8 @@ importers:
         specifier: workspace:*
         version: link:../../shared
       '@slack/web-api':
-        specifier: 7.0.1
-        version: 7.0.1
+        specifier: 7.0.2
+        version: 7.0.2
       '@upstash/qstash':
         specifier: ^2.3.0
         version: 2.3.0
@@ -6272,8 +6272,8 @@ packages:
     engines: {node: '>= 12.13.0', npm: '>= 6.12.0'}
     dev: false
 
-  /@slack/web-api@7.0.1:
-    resolution: {integrity: sha512-xXm3Eq7fDT5FQQlQH8tP4WzoyZXFMnbCSydFF5VZwi+LwIYIJ8yV5ujqvh5zE9XW15SPcPYb6cGEOOg1vAC65w==}
+  /@slack/web-api@7.0.2:
+    resolution: {integrity: sha512-nY1KO+7i4iURihThS1kMOElzesx4jqRJtkxLS9FOT8Debh7vQAzzbzxpMB4QauSs15030eyJ16HCf1IfCT4BKQ==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
     dependencies:
       '@slack/logger': 4.0.0
