@@ -119,6 +119,7 @@ model Element {
   @@index([name])
   @@index([parentId])
   @@index([creatorId])
+  @@index([createdAt])
   @@index([creatorId, archivedAt])
 }
 
