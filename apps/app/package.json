@@ -52,7 +52,7 @@
     "expo-updates": "~0.24.8",
     "lucide-react-native": "0.303.0",
     "match-sorter": "6.3.4",
-    "nativewind": "2.0.11",
+    "nativewind": "4.0.34",
     "polished": "4.3.1",
     "posthog-react-native": "^2.10.1",
     "react": "18.2.0",
