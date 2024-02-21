@@ -471,8 +471,8 @@ importers:
         specifier: 12.0.0
         version: 12.0.0(eslint@8.56.0)
       eslint-plugin-tailwindcss:
-        specifier: 3.14.2
-        version: 3.14.2(tailwindcss@3.3.2)
+        specifier: 3.14.3
+        version: 3.14.3(tailwindcss@3.3.2)
       postcss:
         specifier: 8.4.35
         version: 8.4.35
@@ -562,8 +562,8 @@ importers:
         specifier: 12.0.0
         version: 12.0.0(eslint@8.56.0)
       eslint-plugin-tailwindcss:
-        specifier: 3.14.2
-        version: 3.14.2(tailwindcss@3.3.2)
+        specifier: 3.14.3
+        version: 3.14.3(tailwindcss@3.3.2)
       tailwindcss:
         specifier: 3.3.2
         version: 3.3.2
@@ -683,7 +683,7 @@ importers:
         version: 3.22.4
       zodix:
         specifier: 0.4.4
-        version: 0.4.4(@remix-run/server-runtime@2.7.0)(zod@3.22.4)
+        version: 0.4.4(@remix-run/server-runtime@2.7.1)(zod@3.22.4)
     devDependencies:
       '@element/eslint-config':
         specifier: workspace:*
@@ -5926,24 +5926,6 @@ packages:
       source-map: 0.7.4
     dev: false
 
-  /@remix-run/server-runtime@2.7.0(typescript@5.3.3):
-    resolution: {integrity: sha512-e4p6b8/2JYIUj1ITrPif66bZ+Jn6fFTOlU+HIHkUSy2Kuf+zs5DlzZ1kKIy6MUE1sF8bTxYxfuoBFU7Ntci7YA==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      typescript: ^5.1.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@remix-run/router': 1.15.1
-      '@types/cookie': 0.6.0
-      '@web3-storage/multipart-parser': 1.0.0
-      cookie: 0.6.0
-      set-cookie-parser: 2.6.0
-      source-map: 0.7.4
-      typescript: 5.3.3
-    dev: false
-
   /@remix-run/server-runtime@2.7.1(typescript@5.3.3):
     resolution: {integrity: sha512-idmg8Tf9w5fZ+Dgq2aRjZDKlLaZt+rB0yAw+Ht5yzI6MLeKI4SKHsdnGlEY/EeFcbbrXhArrrSjf+mKLJfJ8qw==}
     engines: {node: '>=18.0.0'}
@@ -9829,8 +9811,8 @@ packages:
       eslint: 8.56.0
     dev: true
 
-  /eslint-plugin-tailwindcss@3.14.2(tailwindcss@3.3.2):
-    resolution: {integrity: sha512-fNzdf4poZP2yQC0xC2prQxMuArMSb5mnellLQvwb9HC3NcLzxs+0IVKWIg1BqUqyui0c+bbjMmhWcKUWK67SLQ==}
+  /eslint-plugin-tailwindcss@3.14.3(tailwindcss@3.3.2):
+    resolution: {integrity: sha512-1MKT8CrVuqVJleHxb7ICHsF2QwO0G+VJ28athTtlcOkccp0qmwK7nCUa1C9paCZ+VVgQU4fonsjLz/wUxoMHJQ==}
     engines: {node: '>=12.13.0'}
     peerDependencies:
       tailwindcss: ^3.4.0
@@ -17596,13 +17578,13 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  /zodix@0.4.4(@remix-run/server-runtime@2.7.0)(zod@3.22.4):
+  /zodix@0.4.4(@remix-run/server-runtime@2.7.1)(zod@3.22.4):
     resolution: {integrity: sha512-msoW2RM8t0ktSKmQYT7/AjsGTqzWHeEwY+U/6w7Jzd29yoeh/QceseQG8PBb5lpY4KUUowMsYRWm926vGrwrdQ==}
     peerDependencies:
       '@remix-run/server-runtime': 1.x || 2.x
       zod: 3.x
     dependencies:
-      '@remix-run/server-runtime': 2.7.0(typescript@5.3.3)
+      '@remix-run/server-runtime': 2.7.1(typescript@5.3.3)
       zod: 3.22.4
     dev: false
 
