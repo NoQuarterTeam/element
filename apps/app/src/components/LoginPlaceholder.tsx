@@ -13,7 +13,12 @@ interface Props {
 export function LoginPlaceholder(props: Props) {
   const router = useRouter()
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="interactive"
+    >
       <View className="space-y-4">
         <View className="space-y-6">
           <Text className="text-lg">{props.text}</Text>

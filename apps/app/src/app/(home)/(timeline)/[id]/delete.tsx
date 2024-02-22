@@ -28,7 +28,12 @@ export default function DeleteTask() {
 
   return (
     <ModalView title="Delete task">
-      <ScrollView className="flex-1 space-y-2">
+      <ScrollView
+        className="flex-1 space-y-2"
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+      >
         <Text>Do you want to only delete this task or all future tasks as well?</Text>
         <Button
           isLoading={deleteTask.isLoading}

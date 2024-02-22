@@ -78,6 +78,8 @@ export default function Account() {
         <ScrollView
           className="space-y-2 pt-4"
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="interactive"
           contentContainerStyle={{ paddingBottom: 400 }}
         >
           <View className="flex w-full items-center justify-center pt-2">

@@ -43,9 +43,10 @@ function EditHabitForm({ habit }: { habit: Habit }) {
   return (
     <KeyboardAvoidingView behavior="padding" enabled keyboardVerticalOffset={100}>
       <ScrollView
-        keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
       >
         <HabitForm
           error={updateHabit.error?.data}

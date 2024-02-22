@@ -41,9 +41,10 @@ export default function HabitStat() {
         />
       </View>
       <ScrollView
-        keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 200 }}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
       >
         {isLoading && !data ? (
           <View className="flex items-center justify-center pt-4">

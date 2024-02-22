@@ -43,9 +43,10 @@ export default function ElementDetail() {
       ) : (
         <ScrollView
           className="space-y-4"
-          keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ minHeight: "100%", paddingBottom: 400 }}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="interactive"
         >
           <ElementForm error={error?.data} element={data} onUpdate={mutate} isLoading={updateLoading} />
         </ScrollView>

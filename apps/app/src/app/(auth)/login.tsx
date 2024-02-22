@@ -39,6 +39,7 @@ export default function Login() {
     <ModalView title="Login">
       <ScrollView
         keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
         contentContainerStyle={{ paddingBottom: 400 }}
         showsHorizontalScrollIndicator={false}
       >
