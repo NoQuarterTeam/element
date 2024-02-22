@@ -383,8 +383,8 @@ importers:
         specifier: 14.2.3
         version: 14.2.3(react@18.2.0)
       react-intersection-observer:
-        specifier: 9.8.0
-        version: 9.8.0(react-dom@18.2.0)(react@18.2.0)
+        specifier: 9.8.1
+        version: 9.8.1(react-dom@18.2.0)(react@18.2.0)
       react-select:
         specifier: 5.8.0
         version: 5.8.0(@types/react@18.2.57)(react-dom@18.2.0)(react@18.2.0)
@@ -14946,8 +14946,8 @@ packages:
       shallowequal: 1.1.0
     dev: false
 
-  /react-intersection-observer@9.8.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-wXHvMQUsTagh3X0Z6jDtGkIXc3VVCd2tjDRYR9kII3GKrZr0XF0xtpfdamo2n8BSF+zzfeeBVOTjxZWpBp9X0g==}
+  /react-intersection-observer@9.8.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-QzOFdROX8D8MH3wE3OVKH0f3mLjKTtEN1VX/rkNuECCff+aKky0pIjulDhr3Ewqj5el/L+MhBkM3ef0Tbt+qUQ==}
     peerDependencies:
       react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
       react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
