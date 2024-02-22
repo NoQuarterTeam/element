@@ -52,7 +52,12 @@ export default function Profile() {
 
   return (
     <SafeAreaView className="flex-1 px-4 pt-2">
-      <ScrollView className="flex-1 space-y-6">
+      <ScrollView
+        className="flex-1 space-y-6"
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+      >
         <View className="flex flex-row items-center space-x-4 p-2">
           {me?.avatar ? (
             <OptimizedImage

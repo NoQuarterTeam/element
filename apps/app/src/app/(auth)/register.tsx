@@ -41,6 +41,7 @@ export default function Register() {
     <ModalView title="Register">
       <ScrollView
         keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
         contentContainerStyle={{ paddingBottom: 400 }}
         showsHorizontalScrollIndicator={false}
       >

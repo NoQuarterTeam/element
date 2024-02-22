@@ -19,7 +19,12 @@ export default function RepeatSelect() {
 
   return (
     <ModalView title="What period?">
-      <ScrollView className="flex-1 pt-2">
+      <ScrollView
+        className="flex-1 pt-2"
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+      >
         {Object.entries(TaskRepeatOptions).map(([key, value]) => (
           <TouchableOpacity
             key={key}

@@ -24,6 +24,7 @@ export default function Backlog() {
     <ModalView title="Backlog">
       <ScrollView
         keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 200 }}
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={false} onRefresh={refetch} />}

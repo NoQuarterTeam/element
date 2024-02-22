@@ -32,7 +32,12 @@ export function SettingsScreen() {
   if (!me) return null
   return (
     <ScreenView title="Settings">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+      >
         <View className="pb-8">
           <Button leftIcon={<Icon icon={AlertCircle} size={16} />} variant="ghost" onPress={deleteAccountModalProps.onOpen}>
             Delete account

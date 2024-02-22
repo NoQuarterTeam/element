@@ -45,9 +45,10 @@ export default function SelectElement() {
         onChangeText={setSearch}
       />
       <ScrollView
-        keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
       >
         <View className="space-y-1 pt-2">
           {me && isLoading ? (

@@ -135,6 +135,7 @@ export function TaskForm(props: Props) {
         contentContainerStyle={{ paddingBottom: 80 }}
         className="px-4"
         contentInsetAdjustmentBehavior="always"
+        keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >

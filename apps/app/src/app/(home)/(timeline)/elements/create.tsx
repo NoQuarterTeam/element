@@ -23,9 +23,10 @@ export default function CreateElement() {
   return (
     <ModalView title="Create element">
       <ScrollView
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+        contentContainerStyle={{ paddingBottom: 100 }}
       >
         <ElementForm error={error?.data} isLoading={isLoading} onCreate={mutate} />
       </ScrollView>

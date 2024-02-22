@@ -12,7 +12,12 @@ export default function Plan() {
   const discountedPlanAmount = data?.subscription?.discountPercent ? 4 - (4 * 100) / data.subscription.discountPercent : null
   return (
     <ScreenView title="Plan">
-      <ScrollView contentContainerStyle={{ paddingBottom: 200 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+        contentContainerStyle={{ paddingBottom: 200 }}
+      >
         {isLoading ? (
           <View className="flex w-full items-center justify-center pt-4">
             <ActivityIndicator />
