@@ -353,8 +353,8 @@ importers:
         specifier: 4.1.0
         version: 4.1.0
       lucide-react:
-        specifier: 0.335.0
-        version: 0.335.0(react@18.2.0)
+        specifier: 0.336.0
+        version: 0.336.0(react@18.2.0)
       match-sorter:
         specifier: 6.3.4
         version: 6.3.4
@@ -683,7 +683,7 @@ importers:
         version: 3.22.4
       zodix:
         specifier: 0.4.4
-        version: 0.4.4(@remix-run/server-runtime@2.7.1)(zod@3.22.4)
+        version: 0.4.4(@remix-run/server-runtime@2.7.2)(zod@3.22.4)
     devDependencies:
       '@element/eslint-config':
         specifier: workspace:*
@@ -5924,24 +5924,6 @@ packages:
       cookie: 0.4.2
       set-cookie-parser: 2.6.0
       source-map: 0.7.4
-    dev: false
-
-  /@remix-run/server-runtime@2.7.1(typescript@5.3.3):
-    resolution: {integrity: sha512-idmg8Tf9w5fZ+Dgq2aRjZDKlLaZt+rB0yAw+Ht5yzI6MLeKI4SKHsdnGlEY/EeFcbbrXhArrrSjf+mKLJfJ8qw==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      typescript: ^5.1.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@remix-run/router': 1.15.1
-      '@types/cookie': 0.6.0
-      '@web3-storage/multipart-parser': 1.0.0
-      cookie: 0.6.0
-      set-cookie-parser: 2.6.0
-      source-map: 0.7.4
-      typescript: 5.3.3
     dev: false
 
   /@remix-run/server-runtime@2.7.2(typescript@5.3.3):
@@ -12400,8 +12382,8 @@ packages:
       react-native-svg: 14.1.0(react-native@0.73.2)(react@18.2.0)
     dev: false
 
-  /lucide-react@0.335.0(react@18.2.0):
-    resolution: {integrity: sha512-FNmIG4JLdvpK86ZFJjrT0SnFEa95KhsiNokVicA5mWEf1oe+ujP2C/bTr0PVQzr/wzvZpzgxaOySq0O79q2oMA==}
+  /lucide-react@0.336.0(react@18.2.0):
+    resolution: {integrity: sha512-e06J4Qrdrk3BP/hf3MnkW3LnymdthfyEtVbdEg0xPQ/olTEKfOfTv03DYmdRm1+XpaNQdCpiHT7Vi6regbxDCQ==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
@@ -17596,13 +17578,13 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  /zodix@0.4.4(@remix-run/server-runtime@2.7.1)(zod@3.22.4):
+  /zodix@0.4.4(@remix-run/server-runtime@2.7.2)(zod@3.22.4):
     resolution: {integrity: sha512-msoW2RM8t0ktSKmQYT7/AjsGTqzWHeEwY+U/6w7Jzd29yoeh/QceseQG8PBb5lpY4KUUowMsYRWm926vGrwrdQ==}
     peerDependencies:
       '@remix-run/server-runtime': 1.x || 2.x
       zod: 3.x
     dependencies:
-      '@remix-run/server-runtime': 2.7.1(typescript@5.3.3)
+      '@remix-run/server-runtime': 2.7.2(typescript@5.3.3)
       zod: 3.22.4
     dev: false
 
