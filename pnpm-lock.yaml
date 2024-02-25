@@ -584,10 +584,10 @@ importers:
         version: link:../server/env
       '@planetscale/database':
         specifier: ^1.13.0
-        version: 1.13.0
+        version: 1.16.0
       '@prisma/adapter-planetscale':
         specifier: 5.10.2
-        version: 5.10.2(@planetscale/database@1.13.0)
+        version: 5.10.2(@planetscale/database@1.16.0)
       '@prisma/client':
         specifier: 5.10.2
         version: 5.10.2(prisma@5.10.2)
@@ -4238,17 +4238,17 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@planetscale/database@1.13.0:
-    resolution: {integrity: sha512-sb9tUoF+Po55o+3PRHZVeH8XzUIABKBKcnq6oBUa+p/2uau/E2EXhnUPXmkC/x7oB6ILBqmqTL6dPP5Dn6d6iA==}
+  /@planetscale/database@1.16.0:
+    resolution: {integrity: sha512-HNUrTqrd8aTRZYMDcsoZ62s36sIWkMMmKZBOehoCWR2WrfNPKq+Q1yQef5okl3pSVlldFnu2h/dbHjOsDTHXug==}
     engines: {node: '>=16'}
     dev: false
 
-  /@prisma/adapter-planetscale@5.10.2(@planetscale/database@1.13.0):
+  /@prisma/adapter-planetscale@5.10.2(@planetscale/database@1.16.0):
     resolution: {integrity: sha512-sxNoNr8Ig9WWy94dvNxvvHG7T49RA3HCTGZEiW7s90Tw4yzc05/mnUTnyFflhNryNXVjILzeFL6DqOkXpZCLeQ==}
     peerDependencies:
       '@planetscale/database': ^1.15.0
     dependencies:
-      '@planetscale/database': 1.13.0
+      '@planetscale/database': 1.16.0
       '@prisma/driver-adapter-utils': 5.10.2
     dev: false
 
