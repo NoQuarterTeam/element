@@ -363,7 +363,7 @@ importers:
         version: 4.3.1
       posthog-js:
         specifier: ^1.100.0
-        version: 1.100.0
+        version: 1.108.3
       pretty-cache-header:
         specifier: 1.0.0
         version: 1.0.0
@@ -14752,10 +14752,11 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
-  /posthog-js@1.100.0:
-    resolution: {integrity: sha512-r2XZEiHQ9mBK7D1G9k57I8uYZ2kZTAJ0OCX6K/OOdCWN8jKPhw3h5F9No5weilP6eVAn+hrsy7NvPV7SCX7gMg==}
+  /posthog-js@1.108.3:
+    resolution: {integrity: sha512-Vi9lX/MhovsKIEdj2aJ5ioku9U/eMGY8/DzKf4EpyrElxPPdabAdCDRUa81eAqxC6npkOpkHskawUPLg20le4Q==}
     dependencies:
       fflate: 0.4.8
+      preact: 10.19.6
     dev: false
 
   /posthog-react-native@2.10.1(@react-native-async-storage/async-storage@1.21.0)(@react-navigation/native@6.1.9)(expo-application@5.8.3)(expo-device@5.9.3):
@@ -14791,6 +14792,10 @@ packages:
       '@react-navigation/native': 6.1.9(react-native@0.73.2)(react@18.2.0)
       expo-application: 5.8.3(expo@50.0.7)
       expo-device: 5.9.3(expo@50.0.7)
+    dev: false
+
+  /preact@10.19.6:
+    resolution: {integrity: sha512-gympg+T2Z1fG1unB8NH29yHJwnEaCH37Z32diPDku316OTnRPeMbiRV9kTrfZpocXjdfnWuFUl/Mj4BHaf6gnw==}
     dev: false
 
   /prebuild-install@7.1.1:
