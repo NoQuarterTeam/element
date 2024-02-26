@@ -363,7 +363,7 @@ importers:
         version: 4.3.1
       posthog-js:
         specifier: ^1.100.0
-        version: 1.108.3
+        version: 1.108.4
       pretty-cache-header:
         specifier: 1.0.0
         version: 1.0.0
@@ -14752,8 +14752,8 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
-  /posthog-js@1.108.3:
-    resolution: {integrity: sha512-Vi9lX/MhovsKIEdj2aJ5ioku9U/eMGY8/DzKf4EpyrElxPPdabAdCDRUa81eAqxC6npkOpkHskawUPLg20le4Q==}
+  /posthog-js@1.108.4:
+    resolution: {integrity: sha512-dlpx9VXBVv6zT5p1T33JNOqklE3A/5umqTkPH5L1eZkCIhVu4GU6QGKXGaUS7T0teOZxFJX/jqq2kImb2mLWZQ==}
     dependencies:
       fflate: 0.4.8
       preact: 10.19.6
