@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@element/eslint-config": "workspace:*",
-    "@types/jsonwebtoken": "9.0.5",
+    "@types/jsonwebtoken": "9.0.6",
     "@types/node": "^18.15.3"
   }
 }
