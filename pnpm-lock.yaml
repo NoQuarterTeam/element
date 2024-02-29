@@ -533,7 +533,7 @@ importers:
         version: 9.0.6
       '@types/node':
         specifier: ^18.15.3
-        version: 18.19.20
+        version: 18.19.21
 
   packages/config/eslint:
     devDependencies:
@@ -600,7 +600,7 @@ importers:
         version: 8.4.1
       '@types/node':
         specifier: ^18.15.3
-        version: 18.19.20
+        version: 18.19.21
 
   packages/emails:
     dependencies:
@@ -649,8 +649,8 @@ importers:
         specifier: workspace:*
         version: link:../../config/eslint
       '@types/node':
-        specifier: 18.19.20
-        version: 18.19.20
+        specifier: 18.19.21
+        version: 18.19.21
       '@typescript-eslint/eslint-plugin':
         specifier: 7.1.0
         version: 7.1.0(@typescript-eslint/parser@7.1.0)(eslint@8.57.0)(typescript@5.3.3)
@@ -683,7 +683,7 @@ importers:
         version: 3.22.4
       zodix:
         specifier: 0.4.4
-        version: 0.4.4(@remix-run/server-runtime@2.7.2)(zod@3.22.4)
+        version: 0.4.4(@remix-run/server-runtime@2.8.0)(zod@3.22.4)
     devDependencies:
       '@element/eslint-config':
         specifier: workspace:*
@@ -692,8 +692,8 @@ importers:
         specifier: workspace:*
         version: link:../../config/tailwind
       '@types/node':
-        specifier: 18.19.20
-        version: 18.19.20
+        specifier: 18.19.21
+        version: 18.19.21
       eslint:
         specifier: 8.57.0
         version: 8.57.0
@@ -777,8 +777,8 @@ importers:
         specifier: 9.0.6
         version: 9.0.6
       '@types/node':
-        specifier: 18.19.20
-        version: 18.19.20
+        specifier: 18.19.21
+        version: 18.19.21
       '@types/nodemailer':
         specifier: 6.4.14
         version: 6.4.14
@@ -812,7 +812,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: ^18.15.3
-        version: 18.19.20
+        version: 18.19.21
 
 packages:
 
@@ -4062,7 +4062,7 @@ packages:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.11.22
+      '@types/node': 20.11.23
       jest-mock: 29.7.0
     dev: false
 
@@ -4072,7 +4072,7 @@ packages:
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 20.11.22
+      '@types/node': 20.11.23
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -4091,7 +4091,7 @@ packages:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 20.11.22
+      '@types/node': 20.11.23
       '@types/yargs': 15.0.19
       chalk: 4.1.2
     dev: false
@@ -4103,7 +4103,7 @@ packages:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 20.11.22
+      '@types/node': 20.11.23
       '@types/yargs': 17.0.32
       chalk: 4.1.2
     dev: false
@@ -6065,11 +6065,6 @@ packages:
       typescript: 5.3.3
     dev: false
 
-  /@remix-run/router@1.15.1:
-    resolution: {integrity: sha512-zcU0gM3z+3iqj8UX45AmWY810l3oUmXM7uH4dt5xtzvMhRtYVhKGOmgOd1877dOPPepfCjUv57w+syamWIYe7w==}
-    engines: {node: '>=14.0.0'}
-    dev: false
-
   /@remix-run/router@1.15.2:
     resolution: {integrity: sha512-+Rnav+CaoTE5QJc4Jcwh5toUpnVLKYbpU6Ys0zqbakqbaLQHeglLVHPfxOiQqdNmUy5C2lXz5dwC6tQNX2JW2Q==}
     engines: {node: '>=14.0.0'}
@@ -6106,24 +6101,6 @@ packages:
       cookie: 0.4.2
       set-cookie-parser: 2.6.0
       source-map: 0.7.4
-    dev: false
-
-  /@remix-run/server-runtime@2.7.2(typescript@5.3.3):
-    resolution: {integrity: sha512-PGD1SPJttlYI3Nwe8ABk53gHCueWfZ2NOsKx7utD/lKRPFW2BqADpokzQXSzy4WTpk4drAmlagobGVIVH66Tmg==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      typescript: ^5.1.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@remix-run/router': 1.15.1
-      '@types/cookie': 0.6.0
-      '@web3-storage/multipart-parser': 1.0.0
-      cookie: 0.6.0
-      set-cookie-parser: 2.6.0
-      source-map: 0.7.4
-      typescript: 5.3.3
     dev: false
 
   /@remix-run/server-runtime@2.8.0(typescript@5.3.3):
@@ -6437,7 +6414,7 @@ packages:
     resolution: {integrity: sha512-Wz7QYfPAlG/DR+DfABddUZeNgoeY7d1J39OCR2jR+v7VBsB8ezulDK5szTnDDPDwLH5IWhLvXIHlCFZV7MSKgA==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
     dependencies:
-      '@types/node': 18.19.20
+      '@types/node': 18.19.21
     dev: false
 
   /@slack/types@2.11.0:
@@ -6451,7 +6428,7 @@ packages:
     dependencies:
       '@slack/logger': 4.0.0
       '@slack/types': 2.11.0
-      '@types/node': 18.19.20
+      '@types/node': 18.19.21
       axios: 1.6.7
       eventemitter3: 5.0.1
       form-data: 4.0.0
@@ -7175,21 +7152,20 @@ packages:
       undici-types: 5.26.5
     dev: true
 
-  /@types/node@18.19.20:
-    resolution: {integrity: sha512-SKXZvI375jkpvAj8o+5U2518XQv76mAsixqfXiVyWyXZbVWQK25RurFovYpVIxVzul0rZoH58V/3SkEnm7s3qA==}
+  /@types/node@18.19.21:
+    resolution: {integrity: sha512-2Q2NeB6BmiTFQi4DHBzncSoq/cJMLDdhPaAoJFnFCyD9a8VPZRf7a1GAwp1Edb7ROaZc5Jz/tnZyL6EsWMRaqw==}
     dependencies:
       undici-types: 5.26.5
 
-  /@types/node@20.11.22:
-    resolution: {integrity: sha512-/G+IxWxma6V3E+pqK1tSl2Fo1kl41pK1yeCyDsgkF9WlVAme4j5ISYM2zR11bgLFJGLN5sVK40T4RJNuiZbEjA==}
+  /@types/node@20.11.23:
+    resolution: {integrity: sha512-ZUarKKfQuRILSNYt32FuPL20HS7XwNT7/uRwSV8tiHWfyyVwDLYZNF6DZKc2bove++pgfsXn9sUwII/OsQ82cQ==}
     dependencies:
       undici-types: 5.26.5
-    dev: false
 
   /@types/nodemailer@6.4.14:
     resolution: {integrity: sha512-fUWthHO9k9DSdPCSPRqcu6TWhYyxTBg382vlNIttSe9M7XfsT06y0f24KHXtbnijPGGRIcVvdKHTNikOI6qiHA==}
     dependencies:
-      '@types/node': 18.19.20
+      '@types/node': 18.19.21
     dev: true
 
   /@types/parse-json@4.0.2:
@@ -8485,7 +8461,7 @@ packages:
     engines: {node: '>=12.13.0'}
     hasBin: true
     dependencies:
-      '@types/node': 20.11.22
+      '@types/node': 20.11.23
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -8496,7 +8472,7 @@ packages:
   /chromium-edge-launcher@1.0.0:
     resolution: {integrity: sha512-pgtgjNKZ7i5U++1g1PWv75umkHvhVTDOQIZ+sjeUX9483S7Y6MUvO0lrd7ShGlQlFHMN4SwKTCq/X8hWrbv2KA==}
     dependencies:
-      '@types/node': 20.11.22
+      '@types/node': 20.11.23
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -10199,7 +10175,7 @@ packages:
     resolution: {integrity: sha512-EzV94NYKoO09GLXGjXj9JIlXijVck4ONSr5wiCWDvhsvj5jxSrzTmRU/9C1DyB6uToszLs8aifA6NQ7lEQdvFw==}
     engines: {node: '>= 0.8'}
     dependencies:
-      '@types/node': 18.19.20
+      '@types/node': 20.11.23
       require-like: 0.1.2
     dev: true
 
@@ -11922,7 +11898,7 @@ packages:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.11.22
+      '@types/node': 20.11.23
       jest-mock: 29.7.0
       jest-util: 29.7.0
     dev: false
@@ -11952,7 +11928,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.11.22
+      '@types/node': 20.11.23
       jest-util: 29.7.0
     dev: false
 
@@ -11961,7 +11937,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.11.22
+      '@types/node': 20.11.23
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -11984,7 +11960,7 @@ packages:
     resolution: {integrity: sha512-eIz2msL/EzL9UFTFFx7jBTkeZfku0yUAyZZZmJ93H2TYEiroIx2PQjEXcwYtYl8zXCxb+PAmA2hLIt/6ZEkPHw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@types/node': 20.11.22
+      '@types/node': 20.11.23
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
@@ -16508,7 +16484,7 @@ packages:
     resolution: {integrity: sha512-yLqKPqYgGJbMxrQiE4+i2i00ZVA2NRIZbZ1rejzj5XR3F3Uc+1iy9QE133knZudhVGMw367b8vTpB8D9pYMETw==}
     engines: {node: '>=12.*'}
     dependencies:
-      '@types/node': 18.19.20
+      '@types/node': 18.19.21
       qs: 6.11.2
     dev: false
 
@@ -17784,13 +17760,13 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  /zodix@0.4.4(@remix-run/server-runtime@2.7.2)(zod@3.22.4):
+  /zodix@0.4.4(@remix-run/server-runtime@2.8.0)(zod@3.22.4):
     resolution: {integrity: sha512-msoW2RM8t0ktSKmQYT7/AjsGTqzWHeEwY+U/6w7Jzd29yoeh/QceseQG8PBb5lpY4KUUowMsYRWm926vGrwrdQ==}
     peerDependencies:
       '@remix-run/server-runtime': 1.x || 2.x
       zod: 3.x
     dependencies:
-      '@remix-run/server-runtime': 2.7.2(typescript@5.3.3)
+      '@remix-run/server-runtime': 2.8.0(typescript@5.3.3)
       zod: 3.22.4
     dev: false
 
