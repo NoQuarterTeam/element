@@ -710,8 +710,8 @@ importers:
         specifier: 3.525.0
         version: 3.525.0
       '@aws-sdk/lib-storage':
-        specifier: 3.525.0
-        version: 3.525.0(@aws-sdk/client-s3@3.525.0)
+        specifier: 3.525.1
+        version: 3.525.1(@aws-sdk/client-s3@3.525.0)
       '@aws-sdk/s3-request-presigner':
         specifier: 3.525.0
         version: 3.525.0
@@ -1162,7 +1162,7 @@ packages:
       '@aws-sdk/types': 3.523.0
       '@smithy/credential-provider-imds': 2.2.3
       '@smithy/property-provider': 2.1.3
-      '@smithy/shared-ini-file-loader': 2.3.3
+      '@smithy/shared-ini-file-loader': 2.3.4
       '@smithy/types': 2.10.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -1183,7 +1183,7 @@ packages:
       '@aws-sdk/types': 3.523.0
       '@smithy/credential-provider-imds': 2.2.3
       '@smithy/property-provider': 2.1.3
-      '@smithy/shared-ini-file-loader': 2.3.3
+      '@smithy/shared-ini-file-loader': 2.3.4
       '@smithy/types': 2.10.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -1196,7 +1196,7 @@ packages:
     dependencies:
       '@aws-sdk/types': 3.523.0
       '@smithy/property-provider': 2.1.3
-      '@smithy/shared-ini-file-loader': 2.3.3
+      '@smithy/shared-ini-file-loader': 2.3.4
       '@smithy/types': 2.10.1
       tslib: 2.6.2
     dev: false
@@ -1209,7 +1209,7 @@ packages:
       '@aws-sdk/token-providers': 3.525.0(@aws-sdk/credential-provider-node@3.525.0)
       '@aws-sdk/types': 3.523.0
       '@smithy/property-provider': 2.1.3
-      '@smithy/shared-ini-file-loader': 2.3.3
+      '@smithy/shared-ini-file-loader': 2.3.4
       '@smithy/types': 2.10.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -1231,8 +1231,8 @@ packages:
       - aws-crt
     dev: false
 
-  /@aws-sdk/lib-storage@3.525.0(@aws-sdk/client-s3@3.525.0):
-    resolution: {integrity: sha512-EpvJy6fjR0QBV+moCi8JVQHDUjThxACoXN/0MQ0NQi6bicbKtN7Z85ahgnOd09UXyDxVAgFmDGR6/tR/UXHRXg==}
+  /@aws-sdk/lib-storage@3.525.1(@aws-sdk/client-s3@3.525.0):
+    resolution: {integrity: sha512-q0y4+bc5GsE10F1HyA1D24maRyy2H3Ph3o+1eK7/kzKrk0nBbISLGbZ8XNqtWwi+9KdsqWNKMoN9+zsDaE6d/w==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@aws-sdk/client-s3': ^3.0.0
@@ -1415,7 +1415,7 @@ packages:
       '@aws-sdk/client-sso-oidc': 3.525.0(@aws-sdk/credential-provider-node@3.525.0)
       '@aws-sdk/types': 3.523.0
       '@smithy/property-provider': 2.1.3
-      '@smithy/shared-ini-file-loader': 2.3.3
+      '@smithy/shared-ini-file-loader': 2.3.4
       '@smithy/types': 2.10.1
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -6704,14 +6704,6 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@smithy/types': 2.10.1
-    dev: false
-
-  /@smithy/shared-ini-file-loader@2.3.3:
-    resolution: {integrity: sha512-umdj358yVatYHG1vxtytCpvXxq3oMQEMYN61RAIfDVD8B26WRsqhucnUUdPl1MWEpLYB+7uDCltrgHZuHJ2kTQ==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@smithy/types': 2.10.1
-      tslib: 2.6.2
     dev: false
 
   /@smithy/shared-ini-file-loader@2.3.4:
