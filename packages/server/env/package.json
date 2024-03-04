@@ -19,8 +19,8 @@
   "devDependencies": {
     "@element/eslint-config": "workspace:*",
     "@types/node": "18.19.21",
-    "@typescript-eslint/eslint-plugin": "7.1.0",
-    "@typescript-eslint/parser": "7.1.0",
+    "@typescript-eslint/eslint-plugin": "7.1.1",
+    "@typescript-eslint/parser": "7.1.1",
     "dotenv-cli": "7.3.0",
     "eslint": "8.57.0",
     "prettier": "3.2.5",
