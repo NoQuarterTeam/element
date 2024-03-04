@@ -62,7 +62,10 @@ function _TaskItem({ task }: Props) {
     } else if (event.metaKey) {
       event.preventDefault()
       // Duplicate
-      dupeFetcher.submit({ [FORM_ACTION]: TaskActionMethods.DuplicateTask }, { action: `/timeline/${task.id}`, method: "POST" })
+      dupeFetcher.submit(
+        { [FORM_ACTION]: TaskActionMethods.DuplicateTask },
+        { action: `/timeline/${task.id}`, method: "POST", navigate: false },
+      )
     } else if (event.shiftKey) {
       event.preventDefault()
       // Delete
@@ -79,7 +82,7 @@ function _TaskItem({ task }: Props) {
       updateTask({ ...task, isComplete: !task.isComplete })
       toggleCompleteFetcher.submit(
         { [FORM_ACTION]: TaskActionMethods.UpdateTask, isComplete: String(!task.isComplete) },
-        { action: `/timeline/${task.id}`, method: "POST" },
+        { action: `/timeline/${task.id}`, method: "POST", navigate: false },
       )
     }
   }
@@ -89,7 +92,7 @@ function _TaskItem({ task }: Props) {
   const handleDelete = async (shouldDeleteFuture: boolean) => {
     deleteFetcher.submit(
       { [FORM_ACTION]: TaskActionMethods.DeleteTask, shouldDeleteFuture: shouldDeleteFuture ? "true" : "false" },
-      { action: `/timeline/${task.id}`, method: "POST" },
+      { action: `/timeline/${task.id}`, method: "POST", navigate: false },
     )
     await new Promise((res) => setTimeout(res, 500))
     if (shouldDeleteFuture) {
