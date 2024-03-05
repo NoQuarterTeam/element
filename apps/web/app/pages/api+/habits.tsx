@@ -27,7 +27,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const [habits, habitEntries] = await Promise.all([
     db.habit.findMany({
-      orderBy: { createdAt: "desc" },
+      orderBy: { order: "asc" },
       select: habitSelectFields,
       where: { creatorId: { equals: user.id } },
     }),
