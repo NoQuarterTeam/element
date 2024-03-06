@@ -22,7 +22,7 @@ const authSchema = z.object({
   id: z.string(),
 })
 
-export function decodeAuthToken(token: string): { id: string } {
+export function decodeAuthToken(token: string): { id: string } | null {
   if (!SESSION_SECRET) throw new Error("SESSION_SECRET is not defined")
   try {
     jwt.verify(token, SESSION_SECRET)
@@ -30,8 +30,8 @@ export function decodeAuthToken(token: string): { id: string } {
     const result = authSchema.parse(payload)
     return result
   } catch (error) {
-    // Oops
-    throw error
+    console.log(error)
+    return null
   }
 }
 
@@ -46,19 +46,18 @@ export const createToken = async (payload: Payload) => {
     })
     return token
   } catch (error) {
-    // Oops
-    throw error
+    console.log(error)
   }
 }
 
-export function decryptToken<T>(token: string, schema: z.Schema<T>): T {
+export function decryptToken<T>(token: string, schema: z.Schema<T>): T | null {
   try {
     jwt.verify(token, SESSION_SECRET)
     const payload = jwt.decode(token)
     const result = schema.parse(payload)
     return result
   } catch (error) {
-    // Oops
-    throw error
+    console.log(error)
+    return null
   }
 }
