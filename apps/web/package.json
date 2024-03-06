@@ -92,7 +92,7 @@
     "@types/react-dom": "18.2.20",
     "@typescript-eslint/eslint-plugin": "7.1.1",
     "@typescript-eslint/parser": "7.1.1",
-    "cssnano": "6.0.5",
+    "cssnano": "6.1.0",
     "dotenv-cli": "7.3.0",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
