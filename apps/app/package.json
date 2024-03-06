@@ -79,7 +79,7 @@
     "@element/eslint-config": "*",
     "@element/tailwind-config": "*",
     "@expo/config-plugins": "7.8.4",
-    "@types/react": "18.2.63",
+    "@types/react": "18.2.64",
     "@types/uuid": "3.4.13",
     "@typescript-eslint/eslint-plugin": "7.1.1",
     "@typescript-eslint/parser": "7.1.1",
