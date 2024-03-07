@@ -456,8 +456,8 @@ importers:
         specifier: 6.1.0
         version: 6.1.0(postcss@8.4.35)
       dotenv-cli:
-        specifier: 7.3.0
-        version: 7.3.0
+        specifier: 7.4.0
+        version: 7.4.0
       eslint:
         specifier: 8.57.0
         version: 8.57.0
@@ -658,8 +658,8 @@ importers:
         specifier: 7.1.1
         version: 7.1.1(eslint@8.57.0)(typescript@5.4.2)
       dotenv-cli:
-        specifier: 7.3.0
-        version: 7.3.0
+        specifier: 7.4.0
+        version: 7.4.0
       eslint:
         specifier: 8.57.0
         version: 8.57.0
@@ -683,7 +683,7 @@ importers:
         version: 3.22.4
       zodix:
         specifier: 0.4.4
-        version: 0.4.4(@remix-run/server-runtime@2.8.0)(zod@3.22.4)
+        version: 0.4.4(@remix-run/server-runtime@2.8.1)(zod@3.22.4)
     devDependencies:
       '@element/eslint-config':
         specifier: workspace:*
@@ -6033,11 +6033,6 @@ packages:
       typescript: 5.4.2
     dev: false
 
-  /@remix-run/router@1.15.2:
-    resolution: {integrity: sha512-+Rnav+CaoTE5QJc4Jcwh5toUpnVLKYbpU6Ys0zqbakqbaLQHeglLVHPfxOiQqdNmUy5C2lXz5dwC6tQNX2JW2Q==}
-    engines: {node: '>=14.0.0'}
-    dev: false
-
   /@remix-run/router@1.15.3:
     resolution: {integrity: sha512-Oy8rmScVrVxWZVOpEF57ovlnhpZ8CCPlnIIumVcV9nFdiSIrus99+Lw78ekXyGvVDlIsFJbSfmSovJUhCWYV3w==}
     engines: {node: '>=14.0.0'}
@@ -6079,24 +6074,6 @@ packages:
       cookie: 0.4.2
       set-cookie-parser: 2.6.0
       source-map: 0.7.4
-    dev: false
-
-  /@remix-run/server-runtime@2.8.0(typescript@5.4.2):
-    resolution: {integrity: sha512-bb6rRefxEqA1fHGUo2i2s1uMztYqQlxupVCVsAs+sUkzTXtORJW+b0oFIKf5yWyaarBJ4zeLyoPsAMBqVX8P3w==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      typescript: ^5.1.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@remix-run/router': 1.15.2
-      '@types/cookie': 0.6.0
-      '@web3-storage/multipart-parser': 1.0.0
-      cookie: 0.6.0
-      set-cookie-parser: 2.6.0
-      source-map: 0.7.4
-      typescript: 5.4.2
     dev: false
 
   /@remix-run/server-runtime@2.8.1(typescript@5.4.2):
@@ -9359,8 +9336,8 @@ packages:
       domelementtype: 2.3.0
       domhandler: 5.0.3
 
-  /dotenv-cli@7.3.0:
-    resolution: {integrity: sha512-314CA4TyK34YEJ6ntBf80eUY+t1XaFLyem1k9P0sX1gn30qThZ5qZr/ZwE318gEnzyYP9yj9HJk6SqwE0upkfw==}
+  /dotenv-cli@7.4.0:
+    resolution: {integrity: sha512-fZGFOGCC5rEz1OJ0Pp+1LN8y78ClMcyXDmBEmjvJwqCqZVsPHcQ85bLCh5hZ4Bqotw4dptXOLvvw0vxm2MD30g==}
     hasBin: true
     dependencies:
       cross-spawn: 7.0.3
@@ -17896,13 +17873,13 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  /zodix@0.4.4(@remix-run/server-runtime@2.8.0)(zod@3.22.4):
+  /zodix@0.4.4(@remix-run/server-runtime@2.8.1)(zod@3.22.4):
     resolution: {integrity: sha512-msoW2RM8t0ktSKmQYT7/AjsGTqzWHeEwY+U/6w7Jzd29yoeh/QceseQG8PBb5lpY4KUUowMsYRWm926vGrwrdQ==}
     peerDependencies:
       '@remix-run/server-runtime': 1.x || 2.x
       zod: 3.x
     dependencies:
-      '@remix-run/server-runtime': 2.8.0(typescript@5.4.2)
+      '@remix-run/server-runtime': 2.8.1(typescript@5.4.2)
       zod: 3.22.4
     dev: false
 
