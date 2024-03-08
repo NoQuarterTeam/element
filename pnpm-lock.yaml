@@ -752,8 +752,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0
       nodemailer:
-        specifier: 6.9.11
-        version: 6.9.11
+        specifier: 6.9.12
+        version: 6.9.12
       resend:
         specifier: 3.2.0
         version: 3.2.0
@@ -13702,8 +13702,8 @@ packages:
     engines: {node: '>=0.12.0'}
     dev: false
 
-  /nodemailer@6.9.11:
-    resolution: {integrity: sha512-UiAkgiERuG94kl/3bKfE8o10epvDnl0vokNEtZDPTq9BWzIl6EFT9336SbIT4oaTBD8NmmUTLsQyXHV82eXSWg==}
+  /nodemailer@6.9.12:
+    resolution: {integrity: sha512-pnLo7g37Br3jXbF0bl5DekBJihm2q+3bB3l2o/B060sWmb5l+VqeScAQCBqaQ+5ezRZFzW5SciZNGdRDEbq89w==}
     engines: {node: '>=6.0.0'}
     dev: false
 
