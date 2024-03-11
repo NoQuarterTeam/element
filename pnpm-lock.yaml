@@ -533,7 +533,7 @@ importers:
         version: 9.0.6
       '@types/node':
         specifier: ^18.15.3
-        version: 18.19.22
+        version: 18.19.23
 
   packages/config/eslint:
     devDependencies:
@@ -600,7 +600,7 @@ importers:
         version: 8.4.1
       '@types/node':
         specifier: ^18.15.3
-        version: 18.19.22
+        version: 18.19.23
 
   packages/emails:
     dependencies:
@@ -649,8 +649,8 @@ importers:
         specifier: workspace:*
         version: link:../../config/eslint
       '@types/node':
-        specifier: 18.19.22
-        version: 18.19.22
+        specifier: 18.19.23
+        version: 18.19.23
       '@typescript-eslint/eslint-plugin':
         specifier: 7.2.0
         version: 7.2.0(@typescript-eslint/parser@7.2.0)(eslint@8.57.0)(typescript@5.4.2)
@@ -692,8 +692,8 @@ importers:
         specifier: workspace:*
         version: link:../../config/tailwind
       '@types/node':
-        specifier: 18.19.22
-        version: 18.19.22
+        specifier: 18.19.23
+        version: 18.19.23
       eslint:
         specifier: 8.57.0
         version: 8.57.0
@@ -777,8 +777,8 @@ importers:
         specifier: 9.0.6
         version: 9.0.6
       '@types/node':
-        specifier: 18.19.22
-        version: 18.19.22
+        specifier: 18.19.23
+        version: 18.19.23
       '@types/nodemailer':
         specifier: 6.4.14
         version: 6.4.14
@@ -812,7 +812,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: ^18.15.3
-        version: 18.19.22
+        version: 18.19.23
 
 packages:
 
@@ -4029,7 +4029,7 @@ packages:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 18.19.22
+      '@types/node': 20.11.26
       jest-mock: 29.7.0
     dev: false
 
@@ -4039,7 +4039,7 @@ packages:
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 18.19.22
+      '@types/node': 20.11.26
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -4058,7 +4058,7 @@ packages:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 18.19.22
+      '@types/node': 20.11.26
       '@types/yargs': 15.0.19
       chalk: 4.1.2
     dev: false
@@ -4070,7 +4070,7 @@ packages:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 18.19.22
+      '@types/node': 20.11.26
       '@types/yargs': 17.0.32
       chalk: 4.1.2
     dev: false
@@ -6386,7 +6386,7 @@ packages:
     resolution: {integrity: sha512-Wz7QYfPAlG/DR+DfABddUZeNgoeY7d1J39OCR2jR+v7VBsB8ezulDK5szTnDDPDwLH5IWhLvXIHlCFZV7MSKgA==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
     dependencies:
-      '@types/node': 18.19.22
+      '@types/node': 18.19.23
     dev: false
 
   /@slack/types@2.11.0:
@@ -6400,7 +6400,7 @@ packages:
     dependencies:
       '@slack/logger': 4.0.0
       '@slack/types': 2.11.0
-      '@types/node': 18.19.22
+      '@types/node': 18.19.23
       axios: 1.6.7
       eventemitter3: 5.0.1
       form-data: 4.0.0
@@ -7124,15 +7124,20 @@ packages:
       undici-types: 5.26.5
     dev: true
 
-  /@types/node@18.19.22:
-    resolution: {integrity: sha512-p3pDIfuMg/aXBmhkyanPshdfJuX5c5+bQjYLIikPLXAUycEogij/c50n/C+8XOA5L93cU4ZRXtn+dNQGi0IZqQ==}
+  /@types/node@18.19.23:
+    resolution: {integrity: sha512-wtE3d0OUfNKtZYAqZb8HAWGxxXsImJcPUAgZNw+dWFxO6s5tIwIjyKnY76tsTatsNCLJPkVYwUpq15D38ng9Aw==}
+    dependencies:
+      undici-types: 5.26.5
+
+  /@types/node@20.11.26:
+    resolution: {integrity: sha512-YwOMmyhNnAWijOBQweOJnQPl068Oqd4K3OFbTc6AHJwzweUwwWG3GIFY74OKks2PJUDkQPeddOQES9mLn1CTEQ==}
     dependencies:
       undici-types: 5.26.5
 
   /@types/nodemailer@6.4.14:
     resolution: {integrity: sha512-fUWthHO9k9DSdPCSPRqcu6TWhYyxTBg382vlNIttSe9M7XfsT06y0f24KHXtbnijPGGRIcVvdKHTNikOI6qiHA==}
     dependencies:
-      '@types/node': 18.19.22
+      '@types/node': 18.19.23
     dev: true
 
   /@types/parse-json@4.0.2:
@@ -8470,7 +8475,7 @@ packages:
     engines: {node: '>=12.13.0'}
     hasBin: true
     dependencies:
-      '@types/node': 18.19.22
+      '@types/node': 20.11.26
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -8481,7 +8486,7 @@ packages:
   /chromium-edge-launcher@1.0.0:
     resolution: {integrity: sha512-pgtgjNKZ7i5U++1g1PWv75umkHvhVTDOQIZ+sjeUX9483S7Y6MUvO0lrd7ShGlQlFHMN4SwKTCq/X8hWrbv2KA==}
     dependencies:
-      '@types/node': 18.19.22
+      '@types/node': 20.11.26
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -10201,7 +10206,7 @@ packages:
     resolution: {integrity: sha512-EzV94NYKoO09GLXGjXj9JIlXijVck4ONSr5wiCWDvhsvj5jxSrzTmRU/9C1DyB6uToszLs8aifA6NQ7lEQdvFw==}
     engines: {node: '>= 0.8'}
     dependencies:
-      '@types/node': 18.19.22
+      '@types/node': 20.11.26
       require-like: 0.1.2
     dev: true
 
@@ -11956,7 +11961,7 @@ packages:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 18.19.22
+      '@types/node': 20.11.26
       jest-mock: 29.7.0
       jest-util: 29.7.0
     dev: false
@@ -11986,7 +11991,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 18.19.22
+      '@types/node': 20.11.26
       jest-util: 29.7.0
     dev: false
 
@@ -11995,7 +12000,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 18.19.22
+      '@types/node': 20.11.26
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -12018,7 +12023,7 @@ packages:
     resolution: {integrity: sha512-eIz2msL/EzL9UFTFFx7jBTkeZfku0yUAyZZZmJ93H2TYEiroIx2PQjEXcwYtYl8zXCxb+PAmA2hLIt/6ZEkPHw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@types/node': 18.19.22
+      '@types/node': 20.11.26
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
@@ -16558,7 +16563,7 @@ packages:
     resolution: {integrity: sha512-+3EP8GSWnKVHNATChhDzwAKk3nqSJKQOf2Q+dMGdgEk2sQXWYoA8GXY0A1TjL0m6895FVNavgvno6+0+6lC+kw==}
     engines: {node: '>=12.*'}
     dependencies:
-      '@types/node': 18.19.22
+      '@types/node': 18.19.23
       qs: 6.11.2
     dev: false
 
