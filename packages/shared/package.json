@@ -12,7 +12,7 @@
   },
   "peerDependencies": {
     "polished": "4.3.1",
-    "tailwind-merge": "2.2.1"
+    "tailwind-merge": "2.2.2"
   },
   "devDependencies": {
     "@types/node": "^18.15.3"
