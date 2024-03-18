@@ -71,7 +71,7 @@ importers:
         version: 1.11.10
       expo:
         specifier: ~50.0.2
-        version: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+        version: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       expo-application:
         specifier: ~5.8.3
         version: 5.8.3(expo@50.0.13)
@@ -363,7 +363,7 @@ importers:
         version: 4.3.1
       posthog-js:
         specifier: ^1.100.0
-        version: 1.116.0
+        version: 1.116.1
       pretty-cache-header:
         specifier: 1.0.0
         version: 1.0.0
@@ -1875,6 +1875,18 @@ packages:
       '@babel/core': 7.24.0
       '@babel/helper-plugin-utils': 7.24.0
       '@babel/plugin-syntax-export-default-from': 7.23.3(@babel/core@7.24.0)
+
+  /@babel/plugin-proposal-logical-assignment-operators@7.20.7(@babel/core@7.24.0):
+    resolution: {integrity: sha512-y7C7cZgpMIjWlKE5T7eJwp+tnRYM89HmRvWM5EQuB5BoHEONjmQ8lSNmBUwOyy/GFRsohJED51YBF79hE1djug==}
+    engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-logical-assignment-operators instead.
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.24.0
+      '@babel/helper-plugin-utils': 7.24.0
+      '@babel/plugin-syntax-logical-assignment-operators': 7.10.4(@babel/core@7.24.0)
+    dev: false
 
   /@babel/plugin-proposal-nullish-coalescing-operator@7.18.6(@babel/core@7.24.0):
     resolution: {integrity: sha512-wQxQzxYeJqHcfppzBDnm1yAY0jSRkUXR2z8RePZYrKwMKgMlE8+Z6LUno+bd6LvbGh8Gltvy74+9pIYkr+XkKA==}
@@ -3521,7 +3533,7 @@ packages:
       safe-json-stringify: 1.2.0
     dev: false
 
-  /@expo/cli@0.17.8(@react-native/babel-preset@0.73.21)(expo-modules-autolinking@1.10.3):
+  /@expo/cli@0.17.8(@react-native/babel-preset@0.75.0-main)(expo-modules-autolinking@1.10.3):
     resolution: {integrity: sha512-yfkoghCltbGPDbRI71Qu3puInjXx4wO82+uhW82qbWLvosfIN7ep5Gr0Lq54liJpvlUG6M0IXM1GiGqcCyP12w==}
     hasBin: true
     dependencies:
@@ -3533,7 +3545,7 @@ packages:
       '@expo/env': 0.2.2
       '@expo/image-utils': 0.4.1
       '@expo/json-file': 8.3.0
-      '@expo/metro-config': 0.17.6(@react-native/babel-preset@0.73.21)
+      '@expo/metro-config': 0.17.6(@react-native/babel-preset@0.75.0-main)
       '@expo/osascript': 2.1.0
       '@expo/package-manager': 1.4.2
       '@expo/plist': 0.1.0
@@ -3732,7 +3744,7 @@ packages:
       json5: 2.2.3
       write-file-atomic: 2.4.3
 
-  /@expo/metro-config@0.17.6(@react-native/babel-preset@0.73.21):
+  /@expo/metro-config@0.17.6(@react-native/babel-preset@0.75.0-main):
     resolution: {integrity: sha512-WaC1C+sLX/Wa7irwUigLhng3ckmXIEQefZczB8DfYmleV6uhfWWo2kz/HijFBpV7FKs2cW6u8J/aBQpFkxlcqg==}
     peerDependencies:
       '@react-native/babel-preset': '*'
@@ -3745,7 +3757,7 @@ packages:
       '@expo/env': 0.2.2
       '@expo/json-file': 8.3.0
       '@expo/spawn-async': 1.7.2
-      '@react-native/babel-preset': 0.73.21(@babel/core@7.24.0)(@babel/preset-env@7.24.0)
+      '@react-native/babel-preset': 0.75.0-main(@babel/core@7.24.0)(@babel/preset-env@7.24.0)
       babel-preset-fbjs: 3.4.0(@babel/core@7.24.0)
       chalk: 4.1.2
       debug: 4.3.4
@@ -5508,6 +5520,16 @@ packages:
       - supports-color
     dev: false
 
+  /@react-native/babel-plugin-codegen@0.75.0-main(@babel/preset-env@7.24.0):
+    resolution: {integrity: sha512-gEl+bl+orntqNA3yGETGeHLNzDnZuQfO074BreX/l80WnZbx00/BJ57IkZ372j6I+gjki+3dYeRQOp82m/sUWQ==}
+    engines: {node: '>=18'}
+    dependencies:
+      '@react-native/codegen': 0.75.0-main(@babel/preset-env@7.24.0)
+    transitivePeerDependencies:
+      - '@babel/preset-env'
+      - supports-color
+    dev: false
+
   /@react-native/babel-preset@0.73.19(@babel/core@7.24.0)(@babel/preset-env@7.24.0):
     resolution: {integrity: sha512-ujon01uMOREZecIltQxPDmJ6xlVqAUFGI/JCSpeVYdxyXBoBH5dBb0ihj7h6LKH1q1jsnO9z4MxfddtypKkIbg==}
     engines: {node: '>=18'}
@@ -5614,6 +5636,60 @@ packages:
       - supports-color
     dev: false
 
+  /@react-native/babel-preset@0.75.0-main(@babel/core@7.24.0)(@babel/preset-env@7.24.0):
+    resolution: {integrity: sha512-yTyft0jSbTEfTfDUUfllJqKWLl3rNMiVMFjuWzMigikKAlSwKKUC/DxTEUfMwekFU05TjDyEOtigOTrm2yuoRQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@babel/core': '*'
+    dependencies:
+      '@babel/core': 7.24.0
+      '@babel/plugin-proposal-async-generator-functions': 7.20.7(@babel/core@7.24.0)
+      '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.24.0)
+      '@babel/plugin-proposal-export-default-from': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-proposal-logical-assignment-operators': 7.20.7(@babel/core@7.24.0)
+      '@babel/plugin-proposal-nullish-coalescing-operator': 7.18.6(@babel/core@7.24.0)
+      '@babel/plugin-proposal-numeric-separator': 7.18.6(@babel/core@7.24.0)
+      '@babel/plugin-proposal-object-rest-spread': 7.20.7(@babel/core@7.24.0)
+      '@babel/plugin-proposal-optional-catch-binding': 7.18.6(@babel/core@7.24.0)
+      '@babel/plugin-proposal-optional-chaining': 7.21.0(@babel/core@7.24.0)
+      '@babel/plugin-syntax-dynamic-import': 7.8.3(@babel/core@7.24.0)
+      '@babel/plugin-syntax-export-default-from': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-syntax-flow': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-syntax-nullish-coalescing-operator': 7.8.3(@babel/core@7.24.0)
+      '@babel/plugin-syntax-optional-chaining': 7.8.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-arrow-functions': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-async-to-generator': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-block-scoping': 7.23.4(@babel/core@7.24.0)
+      '@babel/plugin-transform-classes': 7.23.8(@babel/core@7.24.0)
+      '@babel/plugin-transform-computed-properties': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-destructuring': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-flow-strip-types': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-function-name': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-literals': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-modules-commonjs': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-named-capturing-groups-regex': 7.22.5(@babel/core@7.24.0)
+      '@babel/plugin-transform-parameters': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-private-methods': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-private-property-in-object': 7.23.4(@babel/core@7.24.0)
+      '@babel/plugin-transform-react-display-name': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-react-jsx': 7.23.4(@babel/core@7.24.0)
+      '@babel/plugin-transform-react-jsx-self': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-runtime': 7.24.0(@babel/core@7.24.0)
+      '@babel/plugin-transform-shorthand-properties': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-spread': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-sticky-regex': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-typescript': 7.23.6(@babel/core@7.24.0)
+      '@babel/plugin-transform-unicode-regex': 7.23.3(@babel/core@7.24.0)
+      '@babel/template': 7.24.0
+      '@react-native/babel-plugin-codegen': 0.75.0-main(@babel/preset-env@7.24.0)
+      babel-plugin-transform-flow-enums: 0.0.2(@babel/core@7.24.0)
+      react-refresh: 0.14.0
+    transitivePeerDependencies:
+      - '@babel/preset-env'
+      - supports-color
+    dev: false
+
   /@react-native/codegen@0.73.2(@babel/preset-env@7.24.0):
     resolution: {integrity: sha512-lfy8S7umhE3QLQG5ViC4wg5N1Z+E6RnaeIw8w1voroQsXXGPB72IBozh8dAHR3+ceTxIU0KX3A8OpJI8e1+HpQ==}
     engines: {node: '>=18'}
@@ -5642,6 +5718,24 @@ packages:
       '@babel/preset-env': 7.24.0(@babel/core@7.24.0)
       flow-parser: 0.206.0
       glob: 7.2.3
+      invariant: 2.2.4
+      jscodeshift: 0.14.0(@babel/preset-env@7.24.0)
+      mkdirp: 0.5.6
+      nullthrows: 1.1.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@react-native/codegen@0.75.0-main(@babel/preset-env@7.24.0):
+    resolution: {integrity: sha512-vcIu7x7o/3xn9UQdOPqA6B/jtxDHB+xTIDlVe7nym+0ua/OIOwYoVscTb0NtHuEjGKO1G5CTWNhl34BFhIs0+g==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@babel/preset-env': ^7.1.6
+    dependencies:
+      '@babel/parser': 7.24.0
+      '@babel/preset-env': 7.24.0(@babel/core@7.24.0)
+      glob: 7.2.3
+      hermes-parser: 0.20.1
       invariant: 2.2.4
       jscodeshift: 0.14.0(@babel/preset-env@7.24.0)
       mkdirp: 0.5.6
@@ -6323,7 +6417,7 @@ packages:
       '@sentry/react': 7.81.1(react@18.2.0)
       '@sentry/types': 7.81.1
       '@sentry/utils': 7.81.1
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       react: 18.2.0
       react-native: 0.73.2(@babel/core@7.24.0)(@babel/preset-env@7.24.0)(react@18.2.0)
     transitivePeerDependencies:
@@ -10322,7 +10416,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
     dev: false
 
   /expo-asset@9.0.2(expo@50.0.13):
@@ -10344,7 +10438,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
     dev: false
 
   /expo-build-properties@0.11.0(expo@50.0.13):
@@ -10353,7 +10447,7 @@ packages:
       expo: '*'
     dependencies:
       ajv: 8.12.0
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       semver: 7.5.4
     dev: false
 
@@ -10363,7 +10457,7 @@ packages:
       expo: '*'
     dependencies:
       '@expo/config': 8.5.4
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -10373,7 +10467,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       expo-dev-launcher: 3.6.3(expo@50.0.13)
       expo-dev-menu: 4.5.4(expo@50.0.13)
       expo-dev-menu-interface: 1.7.2(expo@50.0.13)
@@ -10389,7 +10483,7 @@ packages:
       expo: '*'
     dependencies:
       ajv: 8.11.0
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       expo-dev-menu: 4.5.4(expo@50.0.13)
       expo-manifests: 0.13.2(expo@50.0.13)
       resolve-from: 5.0.0
@@ -10403,7 +10497,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
     dev: false
 
   /expo-dev-menu@4.5.4(expo@50.0.13):
@@ -10411,7 +10505,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       expo-dev-menu-interface: 1.7.2(expo@50.0.13)
       semver: 7.6.0
     dev: false
@@ -10421,7 +10515,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       ua-parser-js: 0.7.37
     dev: false
 
@@ -10434,7 +10528,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
     dev: false
 
   /expo-font@11.10.2(expo@50.0.13):
@@ -10442,7 +10536,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       fontfaceobserver: 2.3.0
     dev: false
 
@@ -10451,7 +10545,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       fontfaceobserver: 2.3.0
     dev: false
 
@@ -10460,7 +10554,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
     dev: false
 
   /expo-image-loader@4.6.0(expo@50.0.13):
@@ -10468,7 +10562,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
     dev: false
 
   /expo-image-picker@14.7.1(expo@50.0.13):
@@ -10476,7 +10570,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       expo-image-loader: 4.6.0(expo@50.0.13)
     dev: false
 
@@ -10486,7 +10580,7 @@ packages:
       expo: '*'
     dependencies:
       '@react-native/assets-registry': 0.73.1
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
     dev: false
 
   /expo-json-utils@0.12.3:
@@ -10498,7 +10592,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
     dev: false
 
   /expo-linking@6.2.2(expo@50.0.13):
@@ -10517,7 +10611,7 @@ packages:
       expo: '*'
     dependencies:
       '@expo/config': 8.5.4
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       expo-json-utils: 0.12.3
     transitivePeerDependencies:
       - supports-color
@@ -10553,7 +10647,7 @@ packages:
       abort-controller: 3.0.0
       assert: 2.1.0
       badgin: 1.2.3
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       expo-application: 5.8.3(expo@50.0.13)
       expo-constants: 15.4.5(expo@50.0.13)
       fs-extra: 9.1.0
@@ -10588,7 +10682,7 @@ packages:
       '@react-navigation/bottom-tabs': 6.5.11(@react-navigation/native@6.1.9)(react-native-safe-area-context@4.8.2)(react-native-screens@3.29.0)(react-native@0.73.2)(react@18.2.0)
       '@react-navigation/native': 6.1.9(react-native@0.73.2)(react@18.2.0)
       '@react-navigation/native-stack': 6.9.17(@react-navigation/native@6.1.9)(react-native-safe-area-context@4.8.2)(react-native-screens@3.29.0)(react-native@0.73.2)(react@18.2.0)
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       expo-constants: 15.4.5(expo@50.0.13)
       expo-linking: 6.2.2(expo@50.0.13)
       expo-splash-screen: 0.26.3(expo-modules-autolinking@1.10.3)(expo@50.0.13)
@@ -10623,7 +10717,7 @@ packages:
       expo: '*'
     dependencies:
       '@expo/prebuild-config': 6.7.3(expo-modules-autolinking@1.10.3)
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
     transitivePeerDependencies:
       - encoding
       - expo-modules-autolinking
@@ -10645,7 +10739,7 @@ packages:
     dependencies:
       '@react-native/normalize-color': 2.1.0
       debug: 4.3.4
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -10655,7 +10749,7 @@ packages:
     peerDependencies:
       expo: '*'
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
     dev: false
 
   /expo-updates@0.24.8(expo@50.0.13):
@@ -10669,7 +10763,7 @@ packages:
       '@expo/config-plugins': 7.8.4
       arg: 4.1.0
       chalk: 4.1.2
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       expo-eas-client: 0.11.2
       expo-manifests: 0.13.2(expo@50.0.13)
       expo-structured-headers: 3.7.2
@@ -10681,15 +10775,15 @@ packages:
       - supports-color
     dev: false
 
-  /expo@50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21):
+  /expo@50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main):
     resolution: {integrity: sha512-p0FYrhUJZe92YOwOXx6GZ/WaxF6YtsLXtWkql9pFIIocYBN6iQ3OMGsbQCRSu0ao8rlxsk7HgQDEWK4D+y9tAg==}
     hasBin: true
     dependencies:
       '@babel/runtime': 7.24.0
-      '@expo/cli': 0.17.8(@react-native/babel-preset@0.73.21)(expo-modules-autolinking@1.10.3)
+      '@expo/cli': 0.17.8(@react-native/babel-preset@0.75.0-main)(expo-modules-autolinking@1.10.3)
       '@expo/config': 8.5.4
       '@expo/config-plugins': 7.8.4
-      '@expo/metro-config': 0.17.6(@react-native/babel-preset@0.73.21)
+      '@expo/metro-config': 0.17.6(@react-native/babel-preset@0.75.0-main)
       '@expo/vector-icons': 14.0.0
       babel-preset-expo: 10.0.1(@babel/core@7.24.0)
       expo-asset: 9.0.2(expo@50.0.13)
@@ -11421,6 +11515,10 @@ packages:
     resolution: {integrity: sha512-KoLsoWXJ5o81nit1wSyEZnWUGy9cBna9iYMZBR7skKh7okYAYKqQ9/OczwpMHn/cH0hKDyblulGsJ7FknlfVxQ==}
     dev: false
 
+  /hermes-estree@0.20.1:
+    resolution: {integrity: sha512-SQpZK4BzR48kuOg0v4pb3EAGNclzIlqMj3Opu/mu7bbAoFw6oig6cEt/RAi0zTFW/iW6Iz9X9ggGuZTAZ/yZHg==}
+    dev: false
+
   /hermes-parser@0.15.0:
     resolution: {integrity: sha512-Q1uks5rjZlE9RjMMjSUCkGrEIPI5pKJILeCtK1VmTj7U4pf3wVPoo+cxfu+s4cBAPy2JzikIIdCZgBoR6x7U1Q==}
     dependencies:
@@ -11431,6 +11529,12 @@ packages:
     resolution: {integrity: sha512-1eQfvib+VPpgBZ2zYKQhpuOjw1tH+Emuib6QmjkJWJMhyjM8xnXMvA+76o9LhF0zOAJDZgPfQhg43cyXEyl5Ew==}
     dependencies:
       hermes-estree: 0.18.2
+    dev: false
+
+  /hermes-parser@0.20.1:
+    resolution: {integrity: sha512-BL5P83cwCogI8D7rrDCgsFY0tdYUtmFP9XaXtl2IQjC+2Xo+4okjfXintlTxcIwl4qeGddEl28Z11kbVIw0aNA==}
+    dependencies:
+      hermes-estree: 0.20.1
     dev: false
 
   /hermes-profile-transformer@0.0.6:
@@ -14782,8 +14886,8 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.1.0
 
-  /posthog-js@1.116.0:
-    resolution: {integrity: sha512-mSXEnB8W/hgiT8HE8Y0bWlLIM9JSI1e4TlosJL9H4/H/ekDJqL+Yi8JQNWhIefTgUBCU/ZuXmHzs2mO0rbVxhQ==}
+  /posthog-js@1.116.1:
+    resolution: {integrity: sha512-tYKw6K23S3koa2sfX0sylno7jQQ6ET7u1Lw4KqowhciNhS0R5OWTo3HWEJPt64e9IzeWQGcgb9utJIWwrp5D0Q==}
     dependencies:
       fflate: 0.4.8
       preact: 10.19.6
@@ -15654,7 +15758,7 @@ packages:
       expo:
         optional: true
     dependencies:
-      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.73.21)
+      expo: 50.0.13(@babel/core@7.24.0)(@react-native/babel-preset@0.75.0-main)
       react: 18.2.0
       react-native: 0.73.2(@babel/core@7.24.0)(@babel/preset-env@7.24.0)(react@18.2.0)
       react-native-gesture-handler: 2.14.1(react-native@0.73.2)(react@18.2.0)
