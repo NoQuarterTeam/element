@@ -40,8 +40,8 @@
     "@types/jsonwebtoken": "9.0.6",
     "@types/node": "18.19.25",
     "@types/nodemailer": "6.4.14",
-    "@typescript-eslint/eslint-plugin": "7.3.0",
-    "@typescript-eslint/parser": "7.3.0",
+    "@typescript-eslint/eslint-plugin": "7.3.1",
+    "@typescript-eslint/parser": "7.3.1",
     "eslint": "8.57.0",
     "prettier": "3.2.5",
     "typescript": "5.4.2"
