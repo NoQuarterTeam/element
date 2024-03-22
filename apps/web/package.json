@@ -74,7 +74,7 @@
     "sharp": "0.32.6",
     "sonner": "1.4.41",
     "tailwind-scrollbar-hide": "^1.1.7",
-    "tailwindcss-radix": "2.8.0",
+    "tailwindcss-radix": "2.9.0",
     "zod": "3.22.4",
     "zustand": "4.5.2"
   },
