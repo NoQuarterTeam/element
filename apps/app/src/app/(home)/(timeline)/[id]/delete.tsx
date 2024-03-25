@@ -17,6 +17,7 @@ export default function DeleteTask() {
   const onSuccess = () => {
     void utils.task.timeline.refetch({ daysBack, daysForward })
     router.back()
+    router.back()
   }
   const deleteTask = api.task.delete.useMutation({ onSuccess })
   const deleteFutureTasks = api.task.delete.useMutation({ onSuccess })
