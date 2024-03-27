@@ -28,6 +28,6 @@
   "devDependencies": {
     "@element/eslint-config": "workspace:*",
     "@types/jsonwebtoken": "9.0.6",
-    "@types/node": "^18.15.3"
+    "@types/node": "^20.0.0"
   }
 }
