@@ -750,7 +750,7 @@ importers:
         version: 9.0.2
       loops:
         specifier: ^0.4.0
-        version: 0.4.0
+        version: 0.4.1
       nodemailer:
         specifier: 6.9.13
         version: 6.9.13
@@ -13058,8 +13058,8 @@ packages:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
     dev: true
 
-  /loops@0.4.0:
-    resolution: {integrity: sha512-mymmNU2XbZz7cRFrRYEBqvyN3+0+CX4SysGbMHwYEs8yenj70OHFggUUHKsgSU+90r2zagdDlRF/ZxxPCZsi8Q==}
+  /loops@0.4.1:
+    resolution: {integrity: sha512-ppv4YT+YpZvoYupRSQ+TVSQf8N1vmkiFtS7JJtqkQZGgu1vhU4Ls9jXQaIZQleph4YcCMBwHfHnoQopCZdzLQw==}
     engines: {node: '>=18'}
     dev: false
 
