@@ -1,7 +1,7 @@
-import { ActivityIndicator, ScrollView, View } from "react-native"
 import dayjs from "dayjs"
+import { ActivityIndicator, ScrollView, View } from "react-native"
 
-import { join, MAX_FREE_ELEMENTS, MAX_FREE_TASKS } from "@element/shared"
+import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS, join } from "@element/shared"
 
 import { ScreenView } from "~/components/ScreenView"
 import { Text } from "~/components/Text"

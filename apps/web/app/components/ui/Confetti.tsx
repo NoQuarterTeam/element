@@ -1,5 +1,5 @@
-import * as React from "react"
 import JSConfetti from "js-confetti"
+import * as React from "react"
 
 export function Confetti() {
   React.useEffect(() => {

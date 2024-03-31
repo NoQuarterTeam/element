@@ -2,7 +2,7 @@ import type { Task } from "@element/database/types"
 
 export function formatTotalDuration(duration: number) {
   const hours = (duration / 60) | 0
-  const minutes = duration % 60 | 0
+  const minutes = (duration % 60) | 0
   const hoursDisplay = hours ? `${hours}h` : ""
   const minutesDisplay = minutes ? `${minutes}m` : ""
   return hoursDisplay + minutesDisplay

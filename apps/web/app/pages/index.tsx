@@ -79,7 +79,7 @@ export default function HomeLayout() {
                   size="md"
                   rounded
                   className="inline-block md:hidden"
-                  aria-label={`Toggle open menu`}
+                  aria-label={"Toggle open menu"}
                   icon={<Menu className="sq-5" />}
                   variant="ghost"
                 />
@@ -188,7 +188,7 @@ export default function HomeLayout() {
                 </div>
                 <div className="flex">
                   <div className="flex flex-[3] p-1 opacity-70 md:p-2">Habit tracking</div>
-                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2"></div>
+                  <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
                   <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
                 </div>
               </div>

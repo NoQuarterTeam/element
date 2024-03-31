@@ -1,7 +1,7 @@
 import { createTypedSessionStorage } from "remix-utils/typed-session"
 import { z } from "zod"
 
-import { env, IS_PRODUCTION } from "@element/server-env"
+import { IS_PRODUCTION, env } from "@element/server-env"
 import { createCookieSessionStorage } from "@remix-run/node"
 
 const COOKIE_KEY = IS_PRODUCTION ? "ramble_session_gdpr" : "ramble_session_dev_gdpr"

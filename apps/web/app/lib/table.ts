@@ -31,8 +31,8 @@ export function getOrderByParams(request: Request, defaultOrder: DefaultOrder) {
 
 export function getPaginationParams(request: Request, defaultTake: number) {
   const url = new URL(request.url)
-  const page = parseInt(url.searchParams.get("page") || "1")
-  const take = parseInt(url.searchParams.get("take") || "0") || defaultTake
+  const page = Number.parseInt(url.searchParams.get("page") || "1")
+  const take = Number.parseInt(url.searchParams.get("take") || "0") || defaultTake
   const skip = (page - 1) * take
   return { skip, take }
 }

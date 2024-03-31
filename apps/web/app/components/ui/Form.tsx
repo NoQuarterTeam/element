@@ -1,18 +1,18 @@
-import * as React from "react"
 import { createImageUrl, merge } from "@element/shared"
-import { type SerializeFrom } from "@remix-run/node"
+import type { SerializeFrom } from "@remix-run/node"
 import {
   type Fetcher,
   type FetcherWithComponents,
   type FormProps as RemixFormProps,
-  useFetcher as useRemixFetcher,
   useFetchers,
+  useFetcher as useRemixFetcher,
 } from "@remix-run/react"
 import { Form as RemixForm, useActionData, useNavigation } from "@remix-run/react"
-import { type z } from "zod"
+import * as React from "react"
+import type { z } from "zod"
 
 import { FORM_ACTION, useFormErrors } from "~/lib/form"
-import { type ActionDataErrorResponse } from "~/lib/form.server"
+import type { ActionDataErrorResponse } from "~/lib/form.server"
 
 import { Button, type ButtonProps } from "./Button"
 import { ImageUploader } from "./ImageUploader"
@@ -132,7 +132,7 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(func
 
   const sharedProps = {
     "aria-invalid": !!fieldErrors && fieldErrors?.length > 0,
-    "aria-errormessage": props.name + "-error",
+    "aria-errormessage": `${props.name}-error`,
     id: props.name,
     ...props,
     ref,
@@ -153,7 +153,11 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(func
       {typeof fieldErrors === "string" ? (
         <FormFieldError>{fieldErrors}</FormFieldError>
       ) : fieldErrors && fieldErrors.length > 0 ? (
-        <ul id={props.name + "-error"}>{fieldErrors?.map((error, i) => <FormFieldError key={i}>{error}</FormFieldError>)}</ul>
+        <ul id={`${props.name}-error`}>
+          {fieldErrors?.map((error, i) => (
+            <FormFieldError key={i}>{error}</FormFieldError>
+          ))}
+        </ul>
       ) : null}
     </div>
   )
@@ -169,7 +173,7 @@ export const InlineFormField = React.forwardRef<HTMLInputElement, FormFieldProps
   const sharedProps = shouldPassProps
     ? {
         "aria-invalid": !!fieldErrors && fieldErrors.length > 0,
-        "aria-errormessage": props.name + "-error",
+        "aria-errormessage": `${props.name}-error`,
         id: props.name,
         ref,
         defaultValue: form?.data?.[props.name],
@@ -195,7 +199,11 @@ export const InlineFormField = React.forwardRef<HTMLInputElement, FormFieldProps
         <FormFieldError>{fieldErrors}</FormFieldError>
       ) : (
         fieldErrors?.length && (
-          <ul id={props.name + "-error"}>{fieldErrors?.map((error, i) => <FormFieldError key={i}>{error}</FormFieldError>)}</ul>
+          <ul id={`${props.name}-error`}>
+            {fieldErrors?.map((error, i) => (
+              <FormFieldError key={i}>{error}</FormFieldError>
+            ))}
+          </ul>
         )
       )}
     </div>
@@ -242,7 +250,11 @@ export function ImageField(props: ImageFieldProps) {
         <FormFieldError>{fieldErrors}</FormFieldError>
       ) : (
         fieldErrors?.length && (
-          <ul id={props.name + "-error"}>{fieldErrors?.map((error, i) => <FormFieldError key={i}>{error}</FormFieldError>)}</ul>
+          <ul id={`${props.name}-error`}>
+            {fieldErrors?.map((error, i) => (
+              <FormFieldError key={i}>{error}</FormFieldError>
+            ))}
+          </ul>
         )
       )}
     </div>

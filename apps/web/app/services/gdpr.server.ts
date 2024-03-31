@@ -3,12 +3,12 @@ import { CheckboxAsString } from "zodix"
 
 import { createAction, createActions } from "~/lib/form.server"
 
-import { type Actions } from "~/pages/api+/gdpr"
+import type { Actions } from "~/pages/api+/gdpr"
 
 import { getGdprSession } from "./session/gdpr.server"
 
+import type { ActionFunctionArgs } from "@remix-run/node"
 import { json } from "~/lib/remix"
-import { ActionFunctionArgs } from "@remix-run/node"
 
 export const gdprActions = ({ request }: ActionFunctionArgs) =>
   createActions<Actions>(request, {

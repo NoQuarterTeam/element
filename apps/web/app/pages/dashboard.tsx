@@ -1,10 +1,10 @@
-import * as React from "react"
 import { getMinutesFromTasks, getTotalTaskDuration, merge } from "@element/shared"
 import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import dayjs from "dayjs"
 import { ArrowLeft } from "lucide-react"
+import * as React from "react"
 
 import { LinkButton } from "~/components/ui/LinkButton"
 import { db } from "~/lib/db.server"
@@ -207,7 +207,9 @@ function ElementStat({ element, depth }: Props) {
       </div>
       {element.children && element.children.length > 0 && (
         <div className={merge("space-y-2", `pl-${4 * depth}`)}>
-          {element.children?.map((child) => <ElementStat key={child.id} element={child as Element} depth={depth + 1} />)}
+          {element.children?.map((child) => (
+            <ElementStat key={child.id} element={child as Element} depth={depth + 1} />
+          ))}
         </div>
       )}
     </div>

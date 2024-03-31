@@ -28,7 +28,7 @@ export const useTimelineDays = () => {
 export const getMonths = (startDate: string, daysBack: number, daysForward: number) => {
   // Include year to cater for scrolling further than 12
   const monthsByDay = Array.from({ length: daysBack + daysForward }).map(
-    (_, i) => dayjs(startDate).add(i, "day").month() + "/" + dayjs(startDate).add(i, "day").year(),
+    (_, i) => `${dayjs(startDate).add(i, "day").month()}/${dayjs(startDate).add(i, "day").year()}`,
   )
   const uniqueMonths = monthsByDay.filter((value, index, array) => array.indexOf(value) === index)
   return uniqueMonths.map((month) => ({
@@ -45,7 +45,7 @@ export const days = getDays(dayjs().subtract(daysBack, "days").format("YYYY-MM-D
 
 export const months = getMonths(dayjs().subtract(daysBack, "days").format("YYYY-MM-DD"), daysBack, daysForward).map(
   ({ month, year }, index) => {
-    let dayCount
+    let dayCount = 0
     if (index === 0) {
       const startDate = dayjs().subtract(daysBack, "days")
       dayCount = startDate.endOf("month").diff(startDate, "days") + 1

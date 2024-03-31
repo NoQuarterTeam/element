@@ -1,6 +1,6 @@
-import * as React from "react"
 import * as Notifications from "expo-notifications"
 import { router } from "expo-router"
+import * as React from "react"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => {

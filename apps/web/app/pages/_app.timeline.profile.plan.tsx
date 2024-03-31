@@ -1,6 +1,6 @@
-import { env, FULL_WEB_URL } from "@element/server-env"
+import { FULL_WEB_URL, env } from "@element/server-env"
 import { stripe } from "@element/server-services"
-import { join, MAX_FREE_ELEMENTS, MAX_FREE_TASKS, useDisclosure } from "@element/shared"
+import { MAX_FREE_ELEMENTS, MAX_FREE_TASKS, join, useDisclosure } from "@element/shared"
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { Outlet, useFetcher, useLoaderData } from "@remix-run/react"
@@ -73,8 +73,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           customer_update: { address: "auto", name: "auto" },
           billing_address_collection: "required",
           tax_id_collection: { enabled: true },
-          success_url: FULL_WEB_URL + "/timeline/subscribed",
-          cancel_url: FULL_WEB_URL + "/timeline/profile/plan",
+          success_url: `${FULL_WEB_URL}/timeline/subscribed`,
+          cancel_url: `${FULL_WEB_URL}/timeline/profile/plan`,
           automatic_tax: { enabled: true },
           discounts: promoCode ? [{ promotion_code: promoCodeId }] : undefined,
           line_items: [{ price: env.STRIPE_PRICE_ID, quantity: 1 }],
@@ -85,9 +85,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
     case ProfilePlanMethods.CancelPlan:
       try {
@@ -97,9 +96,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
     case ProfilePlanMethods.ReactivatePlan:
       try {
@@ -109,9 +107,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
 
     default:
@@ -300,7 +297,7 @@ export default function Plan() {
           </div>
           <div className="flex">
             <div className="flex flex-[3] p-1 opacity-70 md:p-2">Habit tracking</div>
-            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2"></div>
+            <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2" />
             <div className="flex flex-[2] border-l border-gray-100 p-1 dark:border-gray-600 md:p-2">✓</div>
           </div>
         </div>

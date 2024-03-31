@@ -1,5 +1,5 @@
-import { View } from "react-native"
 import { Link, useFocusEffect } from "expo-router"
+import { View } from "react-native"
 
 import { Button } from "~/components/Button"
 import { ModalView } from "~/components/ModalView"

@@ -1,6 +1,6 @@
+import { styled } from "nativewind"
 import * as React from "react"
 import { TextInput, type TextInputProps, useColorScheme } from "react-native"
-import { styled } from "nativewind"
 
 import { merge } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"

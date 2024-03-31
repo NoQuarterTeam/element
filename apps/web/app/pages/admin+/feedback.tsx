@@ -6,7 +6,7 @@ import { ExistingSearchParams } from "remix-utils/existing-search-params"
 import { promiseHash } from "remix-utils/promise"
 import { z } from "zod"
 
-import { type FeedbackType, type Prisma } from "@element/database/types"
+import type { FeedbackType, Prisma } from "@element/database/types"
 import { createImageUrl } from "@element/shared"
 
 import { Table } from "~/components/ui/Table"
@@ -17,14 +17,14 @@ import { formError, getFormAction, validateFormData } from "~/lib/form.server"
 
 import { getTableParams } from "~/lib/table"
 
-import { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom, json } from "@remix-run/node"
-import { Search } from "~/components/ui/Search"
-import { getCurrentAdmin } from "~/services/auth/auth.server"
-import { badRequest } from "~/lib/remix"
-import { FEEDBACKS, FeedbackIcon } from "~/lib/models/feedback"
+import { type ActionFunctionArgs, type LoaderFunctionArgs, type SerializeFrom, json } from "@remix-run/node"
 import { Avatar } from "~/components/ui/Avatar"
-import { Select } from "~/components/ui/Inputs"
 import { IconButton } from "~/components/ui/IconButton"
+import { Select } from "~/components/ui/Inputs"
+import { Search } from "~/components/ui/Search"
+import { FEEDBACKS, FeedbackIcon } from "~/lib/models/feedback"
+import { badRequest } from "~/lib/remix"
+import { getCurrentAdmin } from "~/services/auth/auth.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { orderBy, search, skip, take } = getTableParams(request)

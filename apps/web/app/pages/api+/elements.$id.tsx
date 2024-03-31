@@ -32,9 +32,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
     case ElementActionMethods.ArchiveElement:
       try {
@@ -43,9 +42,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
     case ElementActionMethods.UnarchiveElement:
       try {
@@ -54,9 +52,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
     default:
       return badRequest("Invalid action")

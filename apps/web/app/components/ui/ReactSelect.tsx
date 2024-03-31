@@ -1,6 +1,6 @@
+import { join } from "@element/shared"
 import Select, { type ClassNamesConfig, type GroupBase, type MultiValueGenericProps } from "react-select"
 import Creatable from "react-select/creatable"
-import { join } from "@element/shared"
 
 import { ClientOnly } from "./ClientOnly"
 import { inputSizeStyles, inputStyles } from "./Inputs"

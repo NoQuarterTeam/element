@@ -20,7 +20,9 @@ export function FormInput({ label, error, rightElement, input, ...props }: Props
         {input || <Input {...props} className={merge(rightElement && "flex-1")} />}
         <View>{rightElement}</View>
       </View>
-      {error?.map((error) => <FormInputError key={error} error={error} />)}
+      {error?.map((error) => (
+        <FormInputError key={error} error={error} />
+      ))}
     </View>
   )
 }

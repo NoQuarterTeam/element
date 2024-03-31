@@ -1,5 +1,5 @@
-import type * as React from "react"
 import { Heading as RHeading } from "@react-email/components"
+import type * as React from "react"
 
 import { merge } from "@element/shared"
 

@@ -1,5 +1,11 @@
+import dayjs from "dayjs"
+import advancedFormat from "dayjs/plugin/advancedFormat"
+import { BlurView } from "expo-blur"
+import * as Haptics from "expo-haptics"
+import { Link, router } from "expo-router"
+import { Book, Calendar, Clock, MoreVertical, Plus, X } from "lucide-react-native"
 import * as React from "react"
-import { ActivityIndicator, RefreshControl, TouchableOpacity, useColorScheme, View } from "react-native"
+import { ActivityIndicator, RefreshControl, TouchableOpacity, View, useColorScheme } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import * as Progress from "react-native-progress"
 import Animated, {
@@ -14,12 +20,6 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated"
 import { SafeAreaView } from "react-native-safe-area-context"
-import dayjs from "dayjs"
-import advancedFormat from "dayjs/plugin/advancedFormat"
-import { BlurView } from "expo-blur"
-import * as Haptics from "expo-haptics"
-import { Link, router } from "expo-router"
-import { Book, Calendar, Clock, MoreVertical, Plus, X } from "lucide-react-native"
 
 import { formatDuration, join, safeReadableColor } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
@@ -31,7 +31,7 @@ import { useMe } from "~/lib/hooks/useMe"
 import { useOnboarding } from "~/lib/hooks/useOnboarding"
 import { useTemporaryData } from "~/lib/hooks/useTemporaryTasks"
 import { DAY_WIDTH, days, daysBack, daysForward, months } from "~/lib/hooks/useTimeline"
-import { api, type RouterOutputs } from "~/lib/utils/api"
+import { type RouterOutputs, api } from "~/lib/utils/api"
 import { height } from "~/lib/utils/device"
 
 dayjs.extend(advancedFormat)
@@ -144,7 +144,7 @@ const TimelineMonths = React.memo(function _TimelineMonths({ headerTranslateX }:
         // left start is the sum of all previous months' widths
         const leftStart = months.slice(0, i).reduce((acc, { width }) => acc + width, 0)
         return (
-          <View key={`${month}-${year}-${i}`} style={{ width }}>
+          <View key={`${month}-${year}`} style={{ width }}>
             <Month month={month} width={width} leftStart={leftStart} headerTranslateX={headerTranslateX} />
           </View>
         )
@@ -175,7 +175,7 @@ const TimelineDayColumns = React.memo(function _TimelineDayColumns() {
           onPress={() => router.push({ pathname: "/new", params: { date: day } })}
           style={{ height, width: DAY_WIDTH }}
           className={join(
-            `border-r border-gray-100 dark:border-gray-700`,
+            "border-r border-gray-100 dark:border-gray-700",
             dayjs(day).isSame(dayjs(), "date")
               ? "bg-primary-100 dark:bg-primary-900/90"
               : dayjs(day).day() === 6 || dayjs(day).day() === 0
@@ -217,7 +217,7 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
 
   const menuButtonStyles = useAnimatedStyle(() => {
     return {
-      transform: [{ rotate: menuButtonRotate.value + "deg" }],
+      transform: [{ rotate: `${menuButtonRotate.value}deg` }],
     }
   })
 
@@ -226,7 +226,7 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
       {me && (
         <View pointerEvents="box-none" className="space-y-1">
           <Animated.View style={{ opacity: backlogOpacity, transform: [{ translateY: backlogTranslateY }] }}>
-            <Link href={`/backlog`} asChild>
+            <Link href={"/backlog"} asChild>
               <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
                 <Icon icon={Clock} size={24} />
               </TouchableOpacity>
@@ -234,7 +234,7 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
           </Animated.View>
 
           <Animated.View style={{ opacity: elementsOpacity, transform: [{ translateY: elementsTranslateY }] }}>
-            <Link href={`/elements/`} asChild>
+            <Link href={"/elements/"} asChild>
               <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
                 <Icon icon={Book} size={24} />
               </TouchableOpacity>
@@ -328,6 +328,7 @@ const TasksGrid = React.memo(function _TasksGrid({ tasks }: { tasks: Task[] }) {
       return acc
     }, {}),
   )
+  // biome-ignore lint/correctness/useExhaustiveDependencies: allow
   React.useEffect(() => {
     taskPositions.value = tasks.reduce<{ [key: string]: DropTask }>((acc, task) => {
       acc[task.id] = {

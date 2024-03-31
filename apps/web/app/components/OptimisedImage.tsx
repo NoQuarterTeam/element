@@ -1,6 +1,6 @@
-import * as React from "react"
 import { decode } from "blurhash"
 import queryString from "query-string"
+import * as React from "react"
 
 import { defaultBlurHash, merge, srcWhitelist } from "@element/shared"
 
@@ -38,7 +38,7 @@ export function transformImageSrc(
 
   if (!srcWhitelist.some((s) => src.startsWith(s))) return src
   const searchParams = queryString.stringify({ src, ...options })
-  return "/api/image?" + searchParams
+  return `/api/image?${searchParams}`
 }
 
 interface BlurCanvasProps {

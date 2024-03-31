@@ -44,7 +44,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const password = hashPassword(data.password)
         const stripeCustomer = await stripe.customers.create({
           email,
-          name: data.firstName + " " + data.lastName,
+          name: `${data.firstName} ${data.lastName}`,
         })
         const user = await db.user.create({ data: { ...data, email, password, stripeCustomerId: stripeCustomer.id } })
         const elements = createTemplates(user.id)
@@ -58,7 +58,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const headers = new Headers([["Set-Cookie", await setUser(user.id)]])
         return redirect("/timeline", request, {
           flash: {
-            title: "Welcome to Element, " + data.firstName,
+            title: `Welcome to Element, ${data.firstName}`,
             description: "Check your emails to verify your account.",
           },
           headers,
@@ -66,9 +66,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
 
     default:

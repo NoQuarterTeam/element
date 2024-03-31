@@ -1,5 +1,5 @@
 import { sendAccountVerificationEmail } from "@element/server-services"
-import { type ActionFunctionArgs } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@remix-run/node"
 
 import { createToken } from "~/lib/jwt.server"
 import { redirect } from "~/lib/remix"

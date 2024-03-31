@@ -1,13 +1,13 @@
-import * as React from "react"
 import { type Element, TaskRepeat } from "@element/database/types"
 import { getRepeatingDatesBetween, join, randomHexColor, useDisclosure } from "@element/shared"
 import { useSearchParams } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import { AlertTriangle, Clock, Copy, Plus, Trash } from "lucide-react"
+import * as React from "react"
 
 import { FORM_ACTION } from "~/lib/form"
-import { type ActionDataErrorResponse, type ActionDataSuccessResponse } from "~/lib/form.server"
+import type { ActionDataErrorResponse, ActionDataSuccessResponse } from "~/lib/form.server"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { TaskActionMethods, type TaskDetail } from "~/pages/_app.timeline.$id"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
@@ -105,7 +105,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
   const { data: elements } = useQuery(
     ["task-elements"],
     async () => {
-      const response = await fetch(`/api/elements`)
+      const response = await fetch("/api/elements")
       if (!response.ok) throw new Error("Network response was not ok")
       return response.json() as Promise<TaskElement[]>
     },
@@ -148,7 +148,6 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             name="name"
             placeholder="Name"
             defaultValue={task?.name}
-            autoFocus
           />
           <div className="flex justify-end space-x-1 p-3 md:p-5">
             <Button

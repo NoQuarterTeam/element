@@ -1,8 +1,8 @@
-import * as React from "react"
-import { ActivityIndicator, Pressable, ScrollView, View } from "react-native"
 import dayjs from "dayjs"
 import { type AllRoutes, useGlobalSearchParams, useRouter } from "expo-router"
 import { matchSorter } from "match-sorter"
+import * as React from "react"
+import { ActivityIndicator, Pressable, ScrollView, View } from "react-native"
 
 import { join } from "@element/shared"
 

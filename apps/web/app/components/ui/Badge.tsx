@@ -1,6 +1,6 @@
-import type * as React from "react"
 import { merge } from "@element/shared"
-import { cva, type VariantProps } from "class-variance-authority"
+import { type VariantProps, cva } from "class-variance-authority"
+import type * as React from "react"
 
 export const badgeProps = cva("rounded-xs inline-block whitespace-nowrap border font-medium uppercase", {
   variants: {

@@ -41,7 +41,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const data = result.data
         // Dont need to update email address if the same as the current one
         const updateData: Partial<typeof data> = { ...data }
-        if (data.email === user.email) delete updateData.email
+        if (data.email === user.email) updateData.email = undefined
         if (data.avatar === "") updateData.avatar = null
         if (updateData.email) {
           const existing = await db.user.findFirst({ where: { email: { equals: updateData.email } } })
@@ -53,15 +53,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         return redirect("/timeline/profile", request, {
           flash: {
             title: "Profile updated",
-            description: updateData.email ? "Verification email sent to " + updateData.email : undefined,
+            description: updateData.email ? `Verification email sent to ${updateData.email}` : undefined,
           },
         })
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
     case ProfileActionMethods.DeleteAcccount:
       try {
@@ -73,9 +72,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
     default:
       return badRequest("Invalid action")

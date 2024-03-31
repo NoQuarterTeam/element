@@ -1,7 +1,7 @@
-import type * as React from "react"
 import { createImageUrl, join } from "@element/shared"
 import { NavLink, Outlet, useNavigate, useNavigation } from "@remix-run/react"
 import { CreditCard, Map, Settings } from "lucide-react"
+import type * as React from "react"
 
 import { Avatar } from "~/components/ui/Avatar"
 import { Modal } from "~/components/ui/Modal"

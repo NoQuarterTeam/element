@@ -1,5 +1,5 @@
-import type * as React from "react"
 import { Container, Tailwind } from "@react-email/components"
+import type * as React from "react"
 
 import { theme } from "../tailwind"
 

@@ -1,5 +1,5 @@
 import { sendResetPasswordEmail } from "@element/server-services"
-import { type ActionFunctionArgs } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 import { z } from "zod"
 

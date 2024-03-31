@@ -1,5 +1,5 @@
 import { merge } from "@element/shared"
-import { NavLink as RNavLink, type NavLinkProps } from "@remix-run/react"
+import { type NavLinkProps, NavLink as RNavLink } from "@remix-run/react"
 
 export function NavLink(props: NavLinkProps) {
   return (

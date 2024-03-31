@@ -1,18 +1,18 @@
-import React from "react"
 import { isValidHex, join, useDisclosure } from "@element/shared"
 import {} from "@remix-run/react"
 import { useQuery } from "@tanstack/react-query"
 import { ChevronDown, ChevronRight, CornerUpRight, Edit2, Eye, MoreVertical, Plus, Trash } from "lucide-react"
 import { matchSorter } from "match-sorter"
+import React from "react"
 import { toast } from "sonner"
 
-import { type ActionDataErrorResponse, type ActionDataSuccessResponse } from "~/lib/form.server"
+import type { ActionDataErrorResponse, ActionDataSuccessResponse } from "~/lib/form.server"
 import { useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useStoredDisclosure } from "~/lib/hooks/useStoredDisclosure"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import type { SidebarElement } from "~/pages/_app.timeline.elements"
 import { ElementsActionMethods } from "~/pages/_app.timeline.elements"
-import { type TaskElement } from "~/pages/api+/elements"
+import type { TaskElement } from "~/pages/api+/elements"
 import { ElementActionMethods } from "~/pages/api+/elements.$id"
 
 import { ColorInput } from "./ColorInput"
@@ -35,7 +35,7 @@ interface Props {
 }
 
 export function ElementItem({ element, search, isArchivedShown, ...props }: Props) {
-  const expandProps = useStoredDisclosure("element.sidebar.itemExpand." + element.id)
+  const expandProps = useStoredDisclosure(`element.sidebar.itemExpand.${element.id}`)
   const { refetch } = useTimelineTasks()
 
   const [newColor, setNewColor] = React.useState(element.color)
@@ -321,7 +321,7 @@ function MoveFormElementInput({ elementId, error }: { elementId: string; error: 
   const { data: elements, isLoading } = useQuery(
     ["task-elements"],
     async () => {
-      const response = await fetch(`/api/elements`)
+      const response = await fetch("/api/elements")
       if (!response.ok) throw new Error("Network response was not ok")
       return response.json() as Promise<TaskElement[]>
     },

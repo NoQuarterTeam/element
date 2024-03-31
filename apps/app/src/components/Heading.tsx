@@ -1,4 +1,4 @@
-import { type TextProps } from "react-native"
+import type { TextProps } from "react-native"
 
 import { merge } from "@element/shared"
 

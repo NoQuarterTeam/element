@@ -5,11 +5,7 @@
   "main": "./src/index.ts",
   "sideEffects": false,
   "scripts": {
-    "lint:fix": "eslint --config .eslintrc.commit.js --fix --cache --ext .ts,.tsx src",
-    "lint": "eslint --config .eslintrc.js --ext .ts,.tsx src",
-    "prettier": "prettier --check src",
-    "prettier:fix": "prettier --write src",
-    "format": "pnpm run lint:fix && pnpm run prettier:fix",
+    "format": "pnpm dlx @biomejs/biome check --apply-unsafe ./src",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -19,11 +15,6 @@
     "@react-email/components": "0.0.12"
   },
   "devDependencies": {
-    "@element/eslint-config": "workspace:*",
-    "@typescript-eslint/eslint-plugin": "7.4.0",
-    "@typescript-eslint/parser": "7.4.0",
-    "eslint": "8.57.0",
-    "prettier": "3.2.5",
     "tailwindcss": "3.3.2",
     "typescript": "5.4.3"
   }

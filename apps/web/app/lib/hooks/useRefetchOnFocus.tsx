@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react"
 import { useRevalidator } from "@remix-run/react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 export function useRefetchOnFocus() {
   const shouldRefetch = useRef(false)

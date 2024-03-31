@@ -1,7 +1,7 @@
+import { merge, useDisclosure } from "@element/shared"
 import * as React from "react"
 import type { DropzoneOptions, FileRejection } from "react-dropzone"
 import { useDropzone } from "react-dropzone"
-import { merge, useDisclosure } from "@element/shared"
 import { toast } from "sonner"
 
 import { useS3Upload } from "~/lib/hooks/useS3"

@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node"
+import { type LoaderFunctionArgs, json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { promiseHash } from "remix-utils/promise"
 import { db } from "~/lib/db.server"

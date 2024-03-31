@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node"
+import { type LoaderFunctionArgs, json } from "@remix-run/node"
 import { Outlet, useLoaderData } from "@remix-run/react"
 import { ArrowLeft } from "lucide-react"
 import { promiseHash } from "remix-utils/promise"

@@ -1,4 +1,4 @@
-import { type TaskRepeat } from "@element/database/types"
+import type { TaskRepeat } from "@element/database/types"
 import dayjs from "dayjs"
 
 export const getRepeatingDatesBetween = (startDate: Date, endDate: Date, repeat: TaskRepeat) => {

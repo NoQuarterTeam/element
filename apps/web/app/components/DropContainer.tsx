@@ -1,7 +1,7 @@
-import * as React from "react"
 import type { DropResult } from "@hello-pangea/dnd"
 import { DragDropContext } from "@hello-pangea/dnd"
 import { useFetcher } from "@remix-run/react"
+import * as React from "react"
 
 import type { ReorderTask } from "~/lib/helpers/timeline"
 import { getDayTasksAndOrder, moveTasks, reorderTasks } from "~/lib/helpers/timeline"

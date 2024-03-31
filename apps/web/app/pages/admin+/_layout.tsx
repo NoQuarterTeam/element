@@ -1,15 +1,15 @@
 import type { NavLinkProps } from "@remix-run/react"
 import { Link, NavLink, Outlet } from "@remix-run/react"
-import { GaugeCircle, LucideIcon, MessageCircle, Moon, Sun, User } from "lucide-react"
+import { GaugeCircle, type LucideIcon, MessageCircle, Moon, Sun, User } from "lucide-react"
 
 import { merge } from "@element/shared"
 
 import { buttonSizeStyles, buttonStyles } from "~/components/ui/Button"
 import { useTheme } from "~/lib/theme"
 
-import { getCurrentUser } from "~/services/auth/auth.server"
+import { type LoaderFunctionArgs, json, redirect } from "@remix-run/node"
 import { useFetcher } from "~/components/ui/Form"
-import { LoaderFunctionArgs, json, redirect } from "@remix-run/node"
+import { getCurrentUser } from "~/services/auth/auth.server"
 
 export const shouldRevalidate = () => false
 

@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, SerializeFrom, json } from "@remix-run/node"
+import { type LoaderFunctionArgs, type SerializeFrom, json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { createColumnHelper } from "@tanstack/react-table"
 import dayjs from "dayjs"

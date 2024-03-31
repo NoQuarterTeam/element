@@ -1,8 +1,8 @@
 "use client"
 import * as React from "react"
-import { toast, Toaster as SToaster } from "sonner"
+import { Toaster as SToaster, toast } from "sonner"
 
-import { type RootLoader } from "~/root"
+import type { RootLoader } from "~/root"
 
 interface Props {
   flash: RootLoader["flash"]

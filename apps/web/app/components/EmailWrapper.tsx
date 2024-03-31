@@ -1,9 +1,9 @@
-import type * as React from "react"
 import colors from "@element/tailwind-config/src/colors"
 import { Container } from "@react-email/container"
 import { Head } from "@react-email/head"
 import { Html } from "@react-email/html"
 import { Tailwind } from "@react-email/tailwind"
+import type * as React from "react"
 
 const theme = {
   extend: {
@@ -26,7 +26,7 @@ const theme = {
 export function EmailWrapper({ children }: { children: React.ReactNode }) {
   return (
     <Html>
-      <Head></Head>
+      <Head />
       <Tailwind config={{ theme }}>
         <Container>{children}</Container>
       </Tailwind>

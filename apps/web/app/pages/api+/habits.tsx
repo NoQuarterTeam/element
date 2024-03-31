@@ -1,4 +1,4 @@
-import { type Prisma } from "@element/database/types"
+import type { Prisma } from "@element/database/types"
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import dayjs from "dayjs"
@@ -79,9 +79,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
 
     default:

@@ -3,7 +3,7 @@ import dayjs from "dayjs"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
 
-import { type RouterInputs, type RouterOutputs } from "../utils/api"
+import type { RouterInputs, RouterOutputs } from "../utils/api"
 
 export const initialElement: RouterOutputs["element"]["all"] = [
   {

@@ -1,6 +1,6 @@
 import { type Task, TaskRepeat } from "@element/database/types"
 import { NullableFormNumber, NullableFormString } from "@element/server-schemas"
-import { getRepeatingDatesBetween, MAX_FREE_TASKS } from "@element/shared"
+import { MAX_FREE_TASKS, getRepeatingDatesBetween } from "@element/shared"
 import type { ActionFunctionArgs, LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import dayjs from "dayjs"
@@ -176,9 +176,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
     case TasksActionMethods.UpdateOrder:
       try {
@@ -200,9 +199,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
     default:
       return redirect("/")

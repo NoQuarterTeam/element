@@ -1,5 +1,3 @@
-import * as React from "react"
-import { InView, useInView } from "react-intersection-observer"
 import { getTotalTaskDuration, join } from "@element/shared"
 import { Draggable, Droppable } from "@hello-pangea/dnd"
 import { Link } from "@remix-run/react"
@@ -7,6 +5,8 @@ import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import deepEqual from "deep-equal"
 import { PlusCircle } from "lucide-react"
+import * as React from "react"
+import { InView, useInView } from "react-intersection-observer"
 
 import { selectedUrlElements, useSelectedElements } from "~/lib/hooks/useSelectedElements"
 import { useTimelineTaskDates } from "~/lib/hooks/useTimelineTaskDates"
@@ -33,7 +33,8 @@ function _Day(props: Props) {
     onChange: async (inView) => {
       if (dayjs(props.day).isBefore(dayjs(dateForward)) && dayjs(props.day).isAfter(dayjs(dateBack))) return
       if (inView) {
-        let back: string, forward: string
+        let back: string
+        let forward: string
         // if scrolling back
         const isScrollingBack = dayjs(props.day).isSame(dayjs(dateBack)) || dayjs(props.day).isBefore(dayjs(dateBack))
         if (isScrollingBack) {

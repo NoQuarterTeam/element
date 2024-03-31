@@ -2,11 +2,11 @@ import * as React from "react"
 import { View } from "react-native"
 import ColorPicker, { HueSlider, Panel1 } from "reanimated-color-picker"
 
-import { type Element } from "@element/database/types"
+import type { Element } from "@element/database/types"
 import { randomHexColor } from "@element/shared"
 
-import { type FormResponseError } from "../lib/form"
-import { type RouterInputs } from "../lib/utils/api"
+import type { FormResponseError } from "../lib/form"
+import type { RouterInputs } from "../lib/utils/api"
 import { Button } from "./Button"
 import { FormError } from "./FormError"
 import { FormInput, FormInputError } from "./FormInput"
@@ -30,7 +30,7 @@ export function ElementForm(props: Props) {
   return (
     <View className="space-y-2">
       <FormInput
-        autoFocus={!!!form.name}
+        autoFocus={!form.name}
         label="Name"
         error={props.error?.zodError?.fieldErrors?.name}
         value={form.name}
@@ -40,7 +40,9 @@ export function ElementForm(props: Props) {
         <Panel1 style={{ height: 150 }} />
         <HueSlider />
       </ColorPicker>
-      {props.error?.zodError?.fieldErrors?.color?.map((error) => <FormInputError key={error} error={error} />)}
+      {props.error?.zodError?.fieldErrors?.color?.map((error) => (
+        <FormInputError key={error} error={error} />
+      ))}
       <Button
         isLoading={props.isLoading}
         onPress={() => (props.element ? props.onUpdate({ ...form, id: props.element.id }) : props.onCreate(form))}

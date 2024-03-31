@@ -2,11 +2,11 @@ import { useRouteLoaderData } from "@remix-run/react"
 
 import { useDisclosure } from "@element/shared"
 
-import { RootLoader } from "~/root"
-import { useFetcher } from "~/components/ui/Form"
 import { Button } from "~/components/ui/Button"
+import { useFetcher } from "~/components/ui/Form"
 import { Modal } from "~/components/ui/Modal"
 import { Switch } from "~/components/ui/Switch"
+import type { RootLoader } from "~/root"
 import { gdprActions } from "~/services/gdpr.server"
 
 export const action = gdprActions
@@ -20,7 +20,7 @@ export function GDPR() {
   const rejectFetcher = useFetcher()
   const modalFetcher = useFetcher()
   const modalProps = useDisclosure()
-  if (!!gdpr) return null
+  if (gdpr) return null
   return (
     <div className="bg-background z-100 fixed bottom-0 left-0 right-0 flex flex-col items-center justify-between gap-2 border-t px-10 py-6 md:flex-row">
       <p className="max-w-4xl text-sm font-light opacity-70">

@@ -1,11 +1,11 @@
-import * as React from "react"
 import { merge, useDisclosure } from "@element/shared"
 import { useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import { Folder, PlusCircle, Trash } from "lucide-react"
+import * as React from "react"
 
 import * as Popover from "~/components/ui/Popover"
-import { type ActionDataErrorResponse, type ActionDataSuccessResponse } from "~/lib/form.server"
+import type { ActionDataErrorResponse, ActionDataSuccessResponse } from "~/lib/form.server"
 import type { CreateHabitFormData, TimelineHabit, TimelineHabitEntry, TimelineHabitResponse } from "~/pages/api+/habits"
 import { HabitsActionMethods } from "~/pages/api+/habits"
 import { HabitActionMethods } from "~/pages/api+/habits.$id"

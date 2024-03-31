@@ -3,19 +3,19 @@ import { createColumnHelper } from "@tanstack/react-table"
 import dayjs from "dayjs"
 import { promiseHash } from "remix-utils/promise"
 
-import { type Prisma } from "@element/database/types"
+import type { Prisma } from "@element/database/types"
 import { createImageUrl } from "@element/shared"
 
+import { Avatar } from "~/components/ui/Avatar"
 import { Search } from "~/components/ui/Search"
 import { Table } from "~/components/ui/Table"
-import { Avatar } from "~/components/ui/Avatar"
 import { db } from "~/lib/db.server"
 
-import { getTableParams } from "~/lib/table"
-import { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
-import { Badge } from "~/components/ui/Badge"
+import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { ExistingSearchParams } from "remix-utils/existing-search-params"
+import { Badge } from "~/components/ui/Badge"
 import { Select } from "~/components/ui/Inputs"
+import { getTableParams } from "~/lib/table"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { orderBy, search, skip, take } = getTableParams(request)

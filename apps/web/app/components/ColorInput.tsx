@@ -1,5 +1,5 @@
-import { HexColorPicker } from "react-colorful"
 import { isValidHex, merge, safeReadableColor } from "@element/shared"
+import { HexColorPicker } from "react-colorful"
 
 interface Props {
   name: string

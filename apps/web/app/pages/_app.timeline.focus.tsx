@@ -1,4 +1,3 @@
-import * as React from "react"
 import { safeReadableColor, useDisclosure } from "@element/shared"
 import * as ModalPrimitive from "@radix-ui/react-dialog"
 import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
@@ -6,19 +5,20 @@ import { json } from "@remix-run/node"
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import dayjs from "dayjs"
 import { ChevronDown, ChevronRight, X } from "lucide-react"
+import * as React from "react"
 
 import { IconButton } from "~/components/ui/IconButton"
 import { Checkbox } from "~/components/ui/Inputs"
 import { ModalOverlay, ModalPortal, ModalRoot } from "~/components/ui/Modal"
 import { Tooltip } from "~/components/ui/Tooltip"
 import { db } from "~/lib/db.server"
-import { type ActionDataErrorResponse } from "~/lib/form.server"
+import type { ActionDataErrorResponse } from "~/lib/form.server"
 import { useFeaturesSeen } from "~/lib/hooks/useFeatures"
 import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { getCurrentUser } from "~/services/auth/auth.server"
 
 import { TaskActionMethods } from "./_app.timeline.$id"
-import { type TimelineTask } from "./api+/tasks"
+import type { TimelineTask } from "./api+/tasks"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)

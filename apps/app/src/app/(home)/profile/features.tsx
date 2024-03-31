@@ -18,7 +18,7 @@ export default function Features() {
         <View className="flex flex-row items-center justify-between p-4">
           <Text className="text-xl">Habits</Text>
           <Switch
-            disabled={!!!me?.stripeSubscriptionId}
+            disabled={!me?.stripeSubscriptionId}
             trackColor={{ true: colors.primary[600] }}
             value={features.includes("habits")}
             onValueChange={() => {
@@ -28,7 +28,7 @@ export default function Features() {
             }}
           />
         </View>
-        {!!!me?.stripeSubscriptionId && <Text className="text-sm opacity-70">You must be subscribed to access this feature</Text>}
+        {!me?.stripeSubscriptionId && <Text className="text-sm opacity-70">You must be subscribed to access this feature</Text>}
       </View>
     </ScreenView>
   )

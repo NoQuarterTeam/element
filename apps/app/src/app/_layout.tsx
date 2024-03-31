@@ -1,9 +1,5 @@
-import * as React from "react"
-import { useColorScheme, View } from "react-native"
-import { GestureHandlerRootView } from "react-native-gesture-handler"
-import { SafeAreaProvider } from "react-native-safe-area-context"
-import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import { Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold, Poppins_900Black, useFonts } from "@expo-google-fonts/poppins"
+import { ActionSheetProvider } from "@expo/react-native-action-sheet"
 import * as Sentry from "@sentry/react-native"
 import dayjs from "dayjs"
 import { Stack } from "expo-router"
@@ -11,6 +7,10 @@ import * as SplashScreen from "expo-splash-screen"
 import { StatusBar } from "expo-status-bar"
 import { useColorScheme as useNWColorScheme } from "nativewind"
 import { PostHogProvider, usePostHog } from "posthog-react-native"
+import * as React from "react"
+import { View, useColorScheme } from "react-native"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { SafeAreaProvider } from "react-native-safe-area-context"
 
 import { Toast } from "../components/Toast"
 import { IS_PRODUCTION } from "../lib/config"
@@ -19,7 +19,7 @@ import { useFeatures } from "../lib/hooks/useFeatures"
 import { useMe } from "../lib/hooks/useMe"
 import { useNotificationObserver } from "../lib/hooks/useNotificationObserver"
 import { useBackgroundColor } from "../lib/tailwind"
-import { api, TRPCProvider } from "../lib/utils/api"
+import { TRPCProvider, api } from "../lib/utils/api"
 
 Sentry.init({
   dsn: "https://2e39a63a183c7a7fab0f691b638da957@o204549.ingest.sentry.io/4506592060309504",
@@ -42,9 +42,10 @@ export default function RootLayout() {
 
   const colorScheme = useColorScheme()
   const { setColorScheme } = useNWColorScheme()
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: allow
   React.useEffect(() => {
     setColorScheme(colorScheme as "light" | "dark")
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [colorScheme])
 
   const onLayoutRootView = React.useCallback(() => SplashScreen.hideAsync(), [])
@@ -109,7 +110,7 @@ function IdentifyUser() {
   const posthog = usePostHog()
   React.useEffect(() => {
     if (isLoading || !me) return
-    if (posthog) posthog.identify(me.id, { email: me.email, name: me.firstName + " " + me.lastName })
+    if (posthog) posthog.identify(me.id, { email: me.email, name: `${me.firstName} ${me.lastName}` })
     Sentry.setUser({ id: me.id, email: me.email })
   }, [me, isLoading, posthog])
   return null

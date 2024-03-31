@@ -5,7 +5,7 @@ import { ExistingSearchParams } from "remix-utils/existing-search-params"
 import { merge } from "@element/shared"
 
 import { IconButton } from "./IconButton"
-import { Input, InputProps } from "./Inputs"
+import { Input, type InputProps } from "./Inputs"
 
 export function Search({ placeholder, name = "search", ...props }: InputProps) {
   const [params] = useSearchParams()

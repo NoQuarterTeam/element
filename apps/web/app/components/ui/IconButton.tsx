@@ -1,7 +1,7 @@
 "use client"
-import * as React from "react"
 import { merge } from "@element/shared"
-import { cva, type VariantProps } from "class-variance-authority"
+import { type VariantProps, cva } from "class-variance-authority"
+import * as React from "react"
 
 import { type ButtonProps, buttonStyles } from "./Button"
 import { Spinner } from "./Spinner"

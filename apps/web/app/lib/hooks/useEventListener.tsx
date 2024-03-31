@@ -14,7 +14,7 @@ export const useEventListener = (
   }, [handler])
 
   React.useEffect(() => {
-    const isSupported = element && element.addEventListener
+    const isSupported = element?.addEventListener
     if (!isSupported) {
       return
     }

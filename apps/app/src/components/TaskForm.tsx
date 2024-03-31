@@ -1,22 +1,22 @@
-import * as React from "react"
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, useColorScheme, View } from "react-native"
-import { useSoftInputHeightChanged } from "react-native-avoid-softinput"
-import DateTimePickerModal from "react-native-modal-datetime-picker"
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 import dayjs from "dayjs"
 import { useGlobalSearchParams, useRouter } from "expo-router"
 import { AlertTriangle, CalendarPlus, Check, Clock, Copy, Plus, Square, Trash, X } from "lucide-react-native"
+import * as React from "react"
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, View, useColorScheme } from "react-native"
+import { useSoftInputHeightChanged } from "react-native-avoid-softinput"
+import DateTimePickerModal from "react-native-modal-datetime-picker"
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 
-import { type TaskRepeat } from "@element/database/types"
+import type { TaskRepeat } from "@element/database/types"
 import { getRepeatingDatesBetween, join, merge, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
-import { type FormResponseError } from "../lib/form"
+import type { FormResponseError } from "../lib/form"
 import { useMe } from "../lib/hooks/useMe"
 import { useTemporaryData } from "../lib/hooks/useTemporaryTasks"
 import { useTimelineDays } from "../lib/hooks/useTimeline"
 import { TaskRepeatOptions } from "../lib/taskRepeat"
-import { api, type RouterInputs, type RouterOutputs } from "../lib/utils/api"
+import { type RouterInputs, type RouterOutputs, api } from "../lib/utils/api"
 import { Button, buttonStyles } from "./Button"
 import { FormError } from "./FormError"
 import { FormInput, FormInputError, FormInputLabel } from "./FormInput"
@@ -155,12 +155,14 @@ export function TaskForm(props: Props) {
                     })
                   }
                 }}
-                autoFocus={!!!form.name}
+                autoFocus={!form.name}
                 placeholderTextColor={isDark ? colors.gray[500] : colors.gray[300]}
                 placeholder="Name"
                 onChangeText={(name) => setForm((f) => ({ ...f, name }))}
               />
-              {props.error?.zodError?.fieldErrors?.name?.map((error) => <FormInputError key={error} error={error} />)}
+              {props.error?.zodError?.fieldErrors?.name?.map((error) => (
+                <FormInputError key={error} error={error} />
+              ))}
             </View>
             <View className="flex flex-row items-center space-x-2 pt-1">
               <TouchableOpacity
@@ -266,8 +268,12 @@ export function TaskForm(props: Props) {
                 <Text className="text-sm opacity-70">Minutes</Text>
               </View>
             </View>
-            {props.error?.zodError?.fieldErrors?.durationHours?.map((error) => <FormInputError key={error} error={error} />)}
-            {props.error?.zodError?.fieldErrors?.durationMinutes?.map((error) => <FormInputError key={error} error={error} />)}
+            {props.error?.zodError?.fieldErrors?.durationHours?.map((error) => (
+              <FormInputError key={error} error={error} />
+            ))}
+            {props.error?.zodError?.fieldErrors?.durationMinutes?.map((error) => (
+              <FormInputError key={error} error={error} />
+            ))}
           </View>
           <View>
             <FormInput
@@ -460,14 +466,13 @@ export function TaskForm(props: Props) {
                 }
                 if (props.task) {
                   return props.onUpdate({ id: props.task.id, ...payload, elementId: form.element.id })
-                } else {
-                  return props.onCreate({
-                    ...payload,
-                    repeat: (repeat as TaskRepeat | null) || null,
-                    repeatEndDate: repeat ? dayjs(repeatEndDate).toDate() : null,
-                    elementId: form.element.id,
-                  })
                 }
+                return props.onCreate({
+                  ...payload,
+                  repeat: (repeat as TaskRepeat | null) || null,
+                  repeatEndDate: repeat ? dayjs(repeatEndDate).toDate() : null,
+                  elementId: form.element.id,
+                })
               }}
             >
               {props.task ? "Update" : "Create"}

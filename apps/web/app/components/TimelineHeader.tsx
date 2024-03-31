@@ -1,10 +1,10 @@
-import * as React from "react"
-import { InView } from "react-intersection-observer"
 import { join } from "@element/shared"
 import * as HoverCard from "@radix-ui/react-hover-card"
 import { useQuery } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import { Droplet, MousePointer, Sunrise, Thermometer, Wind } from "lucide-react"
+import * as React from "react"
+import { InView } from "react-intersection-observer"
 
 import { MONTH_NAMES } from "~/lib/helpers/timeline"
 import { useFeatures } from "~/lib/hooks/useFeatures"
@@ -49,7 +49,7 @@ function _TimelineHeader({ days, months, isLoading }: TimelineHeaderProps) {
   const { data: weatherData } = useQuery(
     ["/api/weather"],
     async () => {
-      const response = await fetch(`/api/weather`)
+      const response = await fetch("/api/weather")
       if (!response.ok) throw new Error("Network response was not ok")
       return response.json() as Promise<WeatherData>
     },

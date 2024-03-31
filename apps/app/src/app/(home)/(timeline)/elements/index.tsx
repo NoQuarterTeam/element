@@ -1,14 +1,14 @@
-import { ActivityIndicator, FlatList, TouchableOpacity, View } from "react-native"
 import { useActionSheet } from "@expo/react-native-action-sheet"
 import * as Haptics from "expo-haptics"
 import { Link, useRouter } from "expo-router"
 import { Plus } from "lucide-react-native"
+import { ActivityIndicator, FlatList, TouchableOpacity, View } from "react-native"
 
 import { Icon } from "~/components/Icon"
 import { ModalView } from "~/components/ModalView"
 import { Text } from "~/components/Text"
 import { useTimelineDays } from "~/lib/hooks/useTimeline"
-import { api, type RouterOutputs } from "~/lib/utils/api"
+import { type RouterOutputs, api } from "~/lib/utils/api"
 
 export default function Elements() {
   const { data, isLoading } = api.element.grouped.useQuery()
@@ -34,7 +34,7 @@ export default function Elements() {
           />
         )}
         <View pointerEvents="box-none" className="absolute bottom-4 left-0 right-0 flex items-center justify-center">
-          <Link href={`/elements/create`} asChild>
+          <Link href={"/elements/create"} asChild>
             <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
               <Icon icon={Plus} size={24} color="black" />
             </TouchableOpacity>

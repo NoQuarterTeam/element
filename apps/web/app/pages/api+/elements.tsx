@@ -1,4 +1,4 @@
-import { type Element } from "@element/database/types"
+import type { Element } from "@element/database/types"
 import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node"
 import { json } from "@remix-run/node"
 

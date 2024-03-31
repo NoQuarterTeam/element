@@ -1,9 +1,9 @@
-import { ScrollView, TouchableOpacity, View } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useQueryClient } from "@tanstack/react-query"
 import { type AllRoutes, type Href, Link } from "expo-router"
 import { ChevronRight } from "lucide-react-native"
+import { ScrollView, TouchableOpacity, View } from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 import { createImageUrl, join } from "@element/shared"
 
@@ -15,7 +15,7 @@ import { OptimizedImage } from "~/components/OptimisedImage"
 import { Text } from "~/components/Text"
 import { UPDATE_ID, VERSION } from "~/lib/config"
 import { useMe } from "~/lib/hooks/useMe"
-import { api, AUTH_TOKEN } from "~/lib/utils/api"
+import { AUTH_TOKEN, api } from "~/lib/utils/api"
 
 export default function Profile() {
   const { me } = useMe()

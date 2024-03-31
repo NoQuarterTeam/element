@@ -30,7 +30,7 @@ export const userRouter = createTRPCRouter({
     const password = hashPassword(input.password)
     const stripeCustomer = await stripe.customers.create({
       email: input.email,
-      name: input.firstName + " " + input.lastName,
+      name: `${input.firstName} ${input.lastName}`,
     })
     const user = await ctx.prisma.user.create({ data: { ...input, password, stripeCustomerId: stripeCustomer.id } })
     // const token = await createToken({ id: user.id })

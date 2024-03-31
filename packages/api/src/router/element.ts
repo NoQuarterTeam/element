@@ -1,11 +1,11 @@
 import { TRPCError } from "@trpc/server"
 import { z } from "zod"
 
-import { type Element, type Prisma } from "@element/database/types"
+import type { Element, Prisma } from "@element/database/types"
 import { elementSchema, updateElementSchema } from "@element/server-schemas"
 
-import { createTRPCRouter, protectedProcedure } from "../trpc"
 import { MAX_FREE_ELEMENTS } from "@element/shared"
+import { createTRPCRouter, protectedProcedure } from "../trpc"
 
 export const elementRouter = createTRPCRouter({
   all: protectedProcedure.query(({ ctx }) => {

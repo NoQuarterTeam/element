@@ -1,7 +1,7 @@
-import * as React from "react"
-import { ScrollView, View } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Link, useRouter } from "expo-router"
+import * as React from "react"
+import { ScrollView, View } from "react-native"
 
 import { Button } from "~/components/Button"
 import { FormError } from "~/components/FormError"
@@ -9,7 +9,7 @@ import { FormInput } from "~/components/FormInput"
 import { ModalView } from "~/components/ModalView"
 import { Text } from "~/components/Text"
 import { registerPushToken } from "~/lib/registerPushToken"
-import { api, AUTH_TOKEN } from "~/lib/utils/api"
+import { AUTH_TOKEN, api } from "~/lib/utils/api"
 
 export default function Register() {
   const [form, setForm] = React.useState({
@@ -94,9 +94,9 @@ export default function Register() {
           )}
         </View>
         <View className="flex flex-row items-center justify-center py-3">
-          <View className="mr-3 h-px flex-1 bg-gray-100 dark:bg-gray-600"></View>
+          <View className="mr-3 h-px flex-1 bg-gray-100 dark:bg-gray-600" />
           <Text className="opacity-60">or</Text>
-          <View className="ml-3 h-px flex-1 bg-gray-100 dark:bg-gray-600"></View>
+          <View className="ml-3 h-px flex-1 bg-gray-100 dark:bg-gray-600" />
         </View>
         <View className="space-y-2">
           <Link href="/login" asChild replace>

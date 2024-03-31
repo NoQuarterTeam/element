@@ -1,9 +1,9 @@
-import { ActivityIndicator, RefreshControl, ScrollView, TouchableOpacity, useColorScheme, View } from "react-native"
 import { useActionSheet } from "@expo/react-native-action-sheet"
 import dayjs from "dayjs"
 import * as Haptics from "expo-haptics"
 import { useFocusEffect, useRouter } from "expo-router"
 import { Circle } from "lucide-react-native"
+import { ActivityIndicator, RefreshControl, ScrollView, TouchableOpacity, View, useColorScheme } from "react-native"
 
 import { formatDuration, safeReadableColor } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
@@ -11,7 +11,7 @@ import colors from "@element/tailwind-config/src/colors"
 import { ModalView } from "~/components/ModalView"
 import { Text } from "~/components/Text"
 import { useTimelineDays } from "~/lib/hooks/useTimeline"
-import { api, type RouterOutputs } from "~/lib/utils/api"
+import { type RouterOutputs, api } from "~/lib/utils/api"
 
 export default function Backlog() {
   const { data, isLoading, refetch } = api.task.backlog.useQuery()

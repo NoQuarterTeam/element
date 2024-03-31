@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server"
 import dayjs from "dayjs"
 import { z } from "zod"
 
-import { type Prisma } from "@element/database/types"
+import type { Prisma } from "@element/database/types"
 import { taskSchema, todoSchema } from "@element/server-schemas"
 import { MAX_FREE_TASKS, getRepeatingDatesBetween } from "@element/shared"
 

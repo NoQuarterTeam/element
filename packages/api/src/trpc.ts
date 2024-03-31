@@ -1,11 +1,11 @@
-import { initTRPC, TRPCError } from "@trpc/server"
-import { type inferAsyncReturnType } from "@trpc/server"
+import { TRPCError, initTRPC } from "@trpc/server"
+import type { inferAsyncReturnType } from "@trpc/server"
 import type * as trpcFetch from "@trpc/server/adapters/fetch"
 import superjson from "superjson"
 import { ZodError } from "zod"
 
 import { prisma } from "@element/database"
-import { type User } from "@element/database/types"
+import type { User } from "@element/database/types"
 import { decodeAuthToken } from "@element/server-services"
 
 export async function createContext({ req }: trpcFetch.FetchCreateContextFnOptions) {

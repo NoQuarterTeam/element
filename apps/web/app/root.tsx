@@ -1,26 +1,5 @@
-import * as React from "react"
 import { ENV, FULL_WEB_URL } from "@element/server-env"
 import { join } from "@element/shared"
-import * as Tooltip from "@radix-ui/react-tooltip"
-import { cssBundleHref } from "@remix-run/css-bundle"
-import type { LinksFunction, LoaderFunctionArgs, MetaFunction, SerializeFrom } from "@remix-run/node"
-import { json } from "@remix-run/node"
-import {
-  isRouteErrorResponse,
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useLoaderData,
-  useLocation,
-  useRouteError,
-} from "@remix-run/react"
-import posthog from "posthog-js"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { Frown } from "lucide-react"
-import { promiseHash } from "remix-utils/promise"
 import "@fontsource/poppins/300.css"
 import "@fontsource/poppins/400.css"
 import "@fontsource/poppins/500.css"
@@ -28,17 +7,38 @@ import "@fontsource/poppins/600.css"
 import "@fontsource/poppins/700.css"
 import "@fontsource/poppins/800.css"
 import "@fontsource/poppins/900.css"
+import * as Tooltip from "@radix-ui/react-tooltip"
+import { cssBundleHref } from "@remix-run/css-bundle"
+import type { LinksFunction, LoaderFunctionArgs, MetaFunction, SerializeFrom } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import {
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  isRouteErrorResponse,
+  useLoaderData,
+  useLocation,
+  useRouteError,
+} from "@remix-run/react"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { Frown } from "lucide-react"
+import posthog from "posthog-js"
+import * as React from "react"
+import { promiseHash } from "remix-utils/promise"
 import "~/styles/app.css"
 
 import { LinkButton } from "./components/ui/LinkButton"
 import { Toaster } from "./components/ui/Toast"
 import { useConfig } from "./lib/hooks/useConfig"
-import { type Theme } from "./lib/theme"
+import type { Theme } from "./lib/theme"
+import { GDPR } from "./pages/api+/gdpr"
 import { getMaybeUser } from "./services/auth/auth.server"
 import { getFlashSession } from "./services/session/flash.server"
-import { getThemeSession } from "./services/session/theme.server"
 import { getGdprSession } from "./services/session/gdpr.server"
-import { GDPR } from "./pages/api+/gdpr"
+import { getThemeSession } from "./services/session/theme.server"
 
 export const meta: MetaFunction = () => {
   return [{ title: "Element" }]

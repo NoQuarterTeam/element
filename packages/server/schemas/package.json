@@ -3,11 +3,7 @@
   "version": "1.0.0",
   "main": "./src/index.ts",
   "scripts": {
-    "lint:fix": "eslint --config .eslintrc.commit.js --fix --cache --ext .ts,.tsx src",
-    "lint": "eslint --config .eslintrc.js --ext .ts,.tsx src",
-    "prettier": "prettier --check src",
-    "prettier:fix": "prettier --write src",
-    "format": "pnpm run lint:fix && pnpm run prettier:fix",
+    "format": "pnpm dlx @biomejs/biome check --apply-unsafe ./src",
     "typecheck": "tsc --noEmit"
   },
   "sideEffects": false,
@@ -18,11 +14,8 @@
     "zodix": "0.4.4"
   },
   "devDependencies": {
-    "@element/eslint-config": "workspace:*",
     "@element/tailwind-config": "workspace:*",
     "@types/node": "18.19.28",
-    "eslint": "8.57.0",
-    "prettier": "3.2.5",
     "typescript": "5.4.3"
   }
 }

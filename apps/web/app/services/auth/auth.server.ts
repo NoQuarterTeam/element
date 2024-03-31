@@ -1,4 +1,4 @@
-import { type Prisma } from "@element/database/types"
+import type { Prisma } from "@element/database/types"
 import { redirect } from "@remix-run/node"
 
 import { db } from "~/lib/db.server"
@@ -32,7 +32,7 @@ export async function getCurrentUser<T extends Prisma.UserSelect>(request: Reque
     where: { id: userId },
     select: select ?? userSelectFields,
   })
-  if (!user) throw redirect(`/login`)
+  if (!user) throw redirect("/login")
   return user as unknown as Prisma.UserGetPayload<{ select: T }>
 }
 export type CurrentUser = Await<typeof getCurrentUser>
@@ -52,6 +52,6 @@ export type MaybeUser = Await<typeof getMaybeUser>
 export async function getCurrentAdmin(request: Request) {
   const userId = await requireUser(request)
   const user = await db.user.findUnique({ where: { id: userId, role: "ADMIN" } })
-  if (!user) throw redirect(`/`)
+  if (!user) throw redirect("/")
   return user
 }

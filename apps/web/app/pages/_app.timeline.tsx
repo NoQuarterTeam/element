@@ -1,12 +1,12 @@
-import * as React from "react"
-import { useInView } from "react-intersection-observer"
 import { Outlet, useNavigate } from "@remix-run/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import { Calendar, PlusCircle } from "lucide-react"
+import * as React from "react"
+import { useInView } from "react-intersection-observer"
 
-import { Day, DAY_WIDTH } from "~/components/Day"
+import { DAY_WIDTH, Day } from "~/components/Day"
 import { DropContainer } from "~/components/DropContainer"
 import { Nav } from "~/components/Nav"
 import { HEADER_HABIT_HEIGHT, HEADER_HEIGHT, TimelineHeader } from "~/components/TimelineHeader"
@@ -58,7 +58,7 @@ function _Timeline() {
     },
     {
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
+      staleTime: Number.POSITIVE_INFINITY,
     },
   )
 
@@ -70,7 +70,7 @@ function _Timeline() {
         async () => {
           const response = await fetch(
             `/api/tasks?back=${dateBack}&forward=${dateForward}${
-              elementIds.length > 0 ? `&${selectedUrlElements(elementIds)}` : ``
+              elementIds.length > 0 ? `&${selectedUrlElements(elementIds)}` : ""
             }`,
           )
           if (!response.ok) throw new Error("Failed to load tasks")

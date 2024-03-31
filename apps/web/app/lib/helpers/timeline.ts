@@ -1,4 +1,4 @@
-import { type DraggableLocation } from "@hello-pangea/dnd"
+import type { DraggableLocation } from "@hello-pangea/dnd"
 import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
 
@@ -13,7 +13,7 @@ export const getDays = (startDate: Dayjs, daysCount: number) => {
 export const getMonths = (startDate: Dayjs, daysCount: number) => {
   // Include year to cater for scrolling further than 12
   const monthsByDay = Array.from({ length: daysCount }).map(
-    (_, i) => startDate.add(i, "day").month() + "/" + startDate.add(i, "day").year(),
+    (_, i) => `${startDate.add(i, "day").month()}/${startDate.add(i, "day").year()}`,
   )
   const uniqueMonths = monthsByDay.filter((value, index, array) => array.indexOf(value) === index)
   return uniqueMonths.map((month) => ({

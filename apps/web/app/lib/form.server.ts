@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node"
-import { type z } from "zod"
+import type { z } from "zod"
 
 // import { csrf } from "~/services/session/csrf.server"
 import { FORM_ACTION } from "./form"

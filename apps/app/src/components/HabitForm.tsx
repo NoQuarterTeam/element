@@ -1,14 +1,14 @@
+import dayjs from "dayjs"
+import { Clock, Plus, X } from "lucide-react-native"
 import * as React from "react"
 import { TouchableOpacity, View } from "react-native"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
-import dayjs from "dayjs"
-import { Clock, Plus, X } from "lucide-react-native"
 import { v4 } from "uuid"
 
 import { join, merge, useDisclosure } from "@element/shared"
 
-import { type FormResponseError } from "../lib/form"
-import { type RouterInputs, type RouterOutputs } from "../lib/utils/api"
+import type { FormResponseError } from "../lib/form"
+import type { RouterInputs, RouterOutputs } from "../lib/utils/api"
 import { Button, buttonStyles } from "./Button"
 import { FormError } from "./FormError"
 import { FormInput, FormInputLabel } from "./FormInput"
@@ -39,7 +39,7 @@ export function HabitForm(props: Props) {
   return (
     <View className="space-y-2">
       <FormInput
-        autoFocus={!!!props.habit}
+        autoFocus={!props.habit}
         label="Name"
         value={name}
         error={props.error?.zodError?.fieldErrors?.name}
@@ -76,9 +76,8 @@ export function HabitForm(props: Props) {
               const payload = { name, reminders }
               if (props.habit) {
                 return props.onUpdate({ id: props.habit.id, ...payload })
-              } else {
-                return props.onCreate(payload)
               }
+              return props.onCreate(payload)
             }}
           >
             {props.habit ? "Update" : "Create"}

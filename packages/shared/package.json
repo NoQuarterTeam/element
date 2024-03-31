@@ -2,10 +2,11 @@
   "name": "@element/shared",
   "version": "1.0.0",
   "main": "./index.ts",
-  "files": [
-    "./index.ts",
-    "./types.ts"
-  ],
+  "scripts": {
+    "format": "pnpm dlx @biomejs/biome check --apply-unsafe ./src",
+    "typecheck": "tsc --noEmit"
+  },
+  "files": ["./index.ts", "./types.ts"],
   "sideEffects": false,
   "dependencies": {
     "@element/database": "*"

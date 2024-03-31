@@ -1,5 +1,12 @@
+import { useActionSheet } from "@expo/react-native-action-sheet"
+import dayjs from "dayjs"
+import advancedFormat from "dayjs/plugin/advancedFormat"
+import updateLocale from "dayjs/plugin/updateLocale"
+import * as Haptics from "expo-haptics"
+import { Link, useRouter } from "expo-router"
+import { Calendar, Check, Circle, Clock, Plus, TrendingUp } from "lucide-react-native"
 import * as React from "react"
-import { ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from "react-native"
+import { ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View, useColorScheme } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   runOnJS,
@@ -10,13 +17,6 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated"
 import { SafeAreaView } from "react-native-safe-area-context"
-import { useActionSheet } from "@expo/react-native-action-sheet"
-import dayjs from "dayjs"
-import advancedFormat from "dayjs/plugin/advancedFormat"
-import updateLocale from "dayjs/plugin/updateLocale"
-import * as Haptics from "expo-haptics"
-import { Link, useRouter } from "expo-router"
-import { Calendar, Check, Circle, Clock, Plus, TrendingUp } from "lucide-react-native"
 import { create } from "zustand"
 
 import { join } from "@element/shared"
@@ -25,7 +25,7 @@ import colors from "@element/tailwind-config/src/colors"
 import { Heading } from "~/components/Heading"
 import { Icon } from "~/components/Icon"
 import { Text } from "~/components/Text"
-import { api, type RouterOutputs } from "~/lib/utils/api"
+import { type RouterOutputs, api } from "~/lib/utils/api"
 import { width } from "~/lib/utils/device"
 
 dayjs.extend(advancedFormat)
@@ -99,7 +99,7 @@ export default function Habits() {
         >
           <Icon icon={Calendar} size={24} />
         </TouchableOpacity>
-        <Link href={`/habits/new`} asChild>
+        <Link href={"/habits/new"} asChild>
           <TouchableOpacity className="bg-primary-500/90 rounded-full p-4">
             <Icon icon={Plus} size={24} color="black" />
           </TouchableOpacity>
@@ -113,7 +113,11 @@ const Week = React.memo(function _Week(props: { week: dayjs.Dayjs }) {
   return (
     <View style={{ width, flexDirection: "row" }}>
       {Array.from({ length: 7 }).map((_, dayIndex) => (
-        <HabitDay key={dayIndex} day={props.week.add(dayIndex, "day")} />
+        <HabitDay
+          // biome-ignore lint/suspicious/noArrayIndexKey: staic
+          key={dayIndex}
+          day={props.week.add(dayIndex, "day")}
+        />
       ))}
     </View>
   )
@@ -186,12 +190,12 @@ function HabitsList({ data }: { data: NonNullable<RouterOutputs["habit"]["allByD
     }, {}),
   )
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: allow
   React.useEffect(() => {
     posistions.value = habits.reduce<Positions>((acc, habit) => {
       acc[habit.id] = habit
       return acc
     }, {})
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [habits])
 
   return (

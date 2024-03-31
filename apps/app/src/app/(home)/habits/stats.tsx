@@ -1,8 +1,8 @@
+import dayjs from "dayjs"
 import * as React from "react"
-import { ActivityIndicator, ScrollView, TouchableOpacity, useColorScheme, View } from "react-native"
+import { ActivityIndicator, ScrollView, TouchableOpacity, View, useColorScheme } from "react-native"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import * as Progress from "react-native-progress"
-import dayjs from "dayjs"
 
 import { merge, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
@@ -94,7 +94,11 @@ export default function HabitStat() {
                   Array.from({ length: 7 }).map((_, i) => {
                     const progress = (data.daysOfWeekStats[`${i}`] || 0) / (dayWithMostEntriesAndCount[1] || 1)
                     return (
-                      <View key={i} className="flex flex-row items-center space-x-3">
+                      <View
+                        // biome-ignore lint/suspicious/noArrayIndexKey: static
+                        key={i}
+                        className="flex flex-row items-center space-x-3"
+                      >
                         <View className="w-[40px]">
                           <Text className="flex-shrink-0">{dayjs().day(i).format("ddd")}</Text>
                         </View>

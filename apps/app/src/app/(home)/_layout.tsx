@@ -1,7 +1,7 @@
-import { useColorScheme, View } from "react-native"
-import * as Progress from "react-native-progress"
 import { Tabs } from "expo-router"
 import { Home, UserCircle } from "lucide-react-native"
+import { View, useColorScheme } from "react-native"
+import * as Progress from "react-native-progress"
 
 import { createImageUrl, join } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"

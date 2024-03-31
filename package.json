@@ -5,20 +5,14 @@
     "turbo": "1.13.0"
   },
   "devDependencies": {
-    "prettier": "3.2.5",
-    "prettier-plugin-tailwindcss": "0.5.13",
+    "@biomejs/biome": "1.6.3",
     "typescript": "5.4.3"
   },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "ci": "turbo run typecheck lint prettier",
-    "lint": "turbo run lint",
-    "fix": "turbo run lint:fix prettier:fix",
-    "prettier": "turbo run prettier",
-    "prettier:fix": "turbo run prettier:fix",
-    "lint:fix": "turbo run lint:fix",
-    "format": "turbo run lint:fix && turbo run prettier:fix",
+    "ci": "turbo run typecheck format",
+    "format": "turbo run format",
     "typecheck": "turbo run typecheck",
     "db:generate": "turbo run db:generate"
   },

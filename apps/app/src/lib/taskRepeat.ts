@@ -1,4 +1,4 @@
-import { type TaskRepeat } from "@element/database/types"
+import type { TaskRepeat } from "@element/database/types"
 
 export const TaskRepeatOptions: { [key in TaskRepeat]: string } = {
   DAILY: "Daily",

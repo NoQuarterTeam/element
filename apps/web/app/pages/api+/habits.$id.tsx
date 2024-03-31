@@ -36,9 +36,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
     case HabitActionMethods.ToggleComplete:
       try {
@@ -70,9 +69,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
     case HabitActionMethods.Archive:
       try {
@@ -89,9 +87,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
     case HabitActionMethods.Delete:
       try {
@@ -104,9 +101,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       } catch (e: unknown) {
         if (e instanceof Error) {
           return badRequest(e.message)
-        } else {
-          return badRequest("Something went wrong")
         }
+        return badRequest("Something went wrong")
       }
     default:
       return redirect("/")

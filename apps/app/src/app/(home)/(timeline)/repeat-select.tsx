@@ -1,7 +1,7 @@
-import { ScrollView, TouchableOpacity } from "react-native"
 import { type AllRoutes, useGlobalSearchParams, useRouter } from "expo-router"
+import { ScrollView, TouchableOpacity } from "react-native"
 
-import { type TaskRepeat } from "@element/database/types"
+import type { TaskRepeat } from "@element/database/types"
 import { join } from "@element/shared"
 
 import { ModalView } from "~/components/ModalView"

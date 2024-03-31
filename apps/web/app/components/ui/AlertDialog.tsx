@@ -1,8 +1,8 @@
 "use client"
 
-import * as React from "react"
 import { merge } from "@element/shared"
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
+import * as React from "react"
 
 import { Button } from "./Button"
 
