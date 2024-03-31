@@ -70,15 +70,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-router",
-    [
-      "@sentry/react-native/expo",
-      {
-        url: "https://sentry.io/",
-        authToken: process.env.SENTRY_AUTH_TOKEN,
-        project: "element-app",
-        organization: "noquarter",
-      },
-    ],
+    ["@sentry/react-native/expo", { project: "element-app", organization: "noquarter" }],
     "expo-font",
     "./expo-plugins/with-modify-gradle.js",
     ["expo-build-properties", { android: { kotlinVersion: "1.7.22" } }],
