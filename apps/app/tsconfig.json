@@ -6,9 +6,9 @@
     "types": ["nativewind/types"],
     "baseUrl": ".",
     "paths": {
-      "~/*": ["src/*"],
-    },
+      "~/*": ["src/*"]
+    }
   },
   "include": ["expo-plugins", "src", "app.config.ts", "index.js", ".expo/types/**/*.ts", "expo-env.d.ts"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
 }
