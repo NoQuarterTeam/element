@@ -62,6 +62,7 @@ function _Timeline() {
     },
   )
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: allow
   React.useEffect(() => {
     async function UpdateAfterSelectElements() {
       // when changing
@@ -77,7 +78,7 @@ function _Timeline() {
           return response.json() as Promise<TimelineTask[]>
         },
       )
-      client.setQueryData([TASK_CACHE_KEY], [...res])
+      client.setQueryData([TASK_CACHE_KEY], res)
     }
     UpdateAfterSelectElements()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,6 +94,7 @@ function _Timeline() {
     }, 100)
   }, [])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: need it
   React.useEffect(
     function UpdateScrollAfterBack() {
       const scrollTo = SCROLL_DAYS_BACK * DAY_WIDTH
