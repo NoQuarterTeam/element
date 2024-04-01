@@ -2,7 +2,7 @@
   "name": "@elemment/root",
   "private": true,
   "dependencies": {
-    "turbo": "1.13.0"
+    "turbo": "1.13.1"
   },
   "devDependencies": {
     "@biomejs/biome": "1.6.3",
