@@ -82,7 +82,7 @@
     "@types/deep-equal": "1.0.4",
     "@types/js-cookie": "3.0.6",
     "@types/jsonwebtoken": "9.0.6",
-    "@types/react": "18.2.73",
+    "@types/react": "18.2.74",
     "@types/react-dom": "18.2.23",
     "cssnano": "6.1.2",
     "dotenv-cli": "7.4.1",
