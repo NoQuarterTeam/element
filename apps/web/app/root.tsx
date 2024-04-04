@@ -71,8 +71,6 @@ const queryClient = new QueryClient()
 
 export default function App() {
   const { flash, gdpr, user, config } = useLoaderData<typeof loader>()
-  console.log({ config })
-
   const location = useLocation()
   const [isHogLoaded, setIsHogLoaded] = React.useState(false)
 
@@ -95,7 +93,7 @@ export default function App() {
   }, [location.pathname, isHogLoaded])
 
   return (
-    <>
+    <Document>
       <QueryClientProvider client={queryClient}>
         <Tooltip.Provider>
           <Outlet />
@@ -103,7 +101,7 @@ export default function App() {
           <GDPR />
         </Tooltip.Provider>
       </QueryClientProvider>
-    </>
+    </Document>
   )
 }
 
@@ -113,7 +111,7 @@ export function ErrorBoundary() {
   const config = useConfig()
 
   return (
-    <>
+    <Document>
       <h1 className="p-6 text-3xl">Element</h1>
       <div className="flex flex-col overflow-scroll px-32 pt-40">
         {isCatchError ? (
@@ -155,7 +153,7 @@ export function ErrorBoundary() {
           </div>
         )}
       </div>
-    </>
+    </Document>
   )
 }
 
@@ -163,7 +161,7 @@ interface DocumentProps {
   children: React.ReactNode
 }
 
-export function Layout({ children }: DocumentProps) {
+function Document({ children }: DocumentProps) {
   const data = useRouteLoaderData("root") as RootLoader
   return (
     <html lang="en" className={join(data.theme)}>
