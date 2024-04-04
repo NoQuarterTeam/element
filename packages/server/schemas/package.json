@@ -16,6 +16,6 @@
   "devDependencies": {
     "@element/tailwind-config": "workspace:*",
     "@types/node": "18.19.29",
-    "typescript": "5.4.3"
+    "typescript": "5.4.4"
   }
 }
