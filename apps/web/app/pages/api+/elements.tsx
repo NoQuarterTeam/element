@@ -30,7 +30,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       WHERE
         "Element"."creatorId" = ${user.id} AND "Element"."archivedAt" IS NULL
       ORDER BY
-	      task."latestTaskDate" DESC,
+	      task."latestTaskDate" DESC NULLS LAST,
 	      "Element"."createdAt" DESC;
     `
   return json(elements)
