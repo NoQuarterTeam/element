@@ -25,7 +25,7 @@ export const elementRouter = createTRPCRouter({
         FROM
           Task
         WHERE
-          creatorId = ${ctx.user.id} AND createdAt >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+          creatorId = ${ctx.user.id} AND createdAt >= NOW() - INTERVAL '1 MONTH'
         GROUP BY
           elementId
       ) AS task ON Element.id = task.elementId

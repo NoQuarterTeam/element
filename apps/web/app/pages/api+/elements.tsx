@@ -23,7 +23,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         FROM
           Task
         WHERE
-          creatorId = ${user.id} AND createdAt >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+          creatorId = ${user.id} AND createdAt >= NOW() - INTERVAL '1 MONTH'
         GROUP BY
           elementId
       ) AS task ON Element.id = task.elementId
