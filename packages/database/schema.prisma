@@ -34,9 +34,6 @@ model User {
   habitEntries         HabitEntry[]
   feedbacks            Feedback[]
   pushTokens           PushToken[]
-
-  @@index([email])
-  @@index([stripeCustomerId])
 }
 
 model PushToken {
@@ -48,7 +45,6 @@ model PushToken {
   updatedAt DateTime @default(now()) @updatedAt
 
   @@unique([userId, token])
-  @@index([userId])
 }
 
 enum TaskRepeat {
@@ -118,7 +114,6 @@ model Element {
 
   @@index([name])
   @@index([parentId])
-  @@index([creatorId])
   @@index([createdAt])
   @@index([creatorId, archivedAt])
 }
