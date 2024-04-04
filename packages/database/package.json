@@ -27,6 +27,7 @@
     "dev": "pnpm with-env prisma studio",
     "db:push": "pnpm with-env prisma db push && pnpm generate",
     "generate": "pnpm with-env prisma generate",
-    "with-env": "dotenv -e ../../.env --"
+    "with-env": "dotenv -e ../../.env --",
+    "postinstall": "pnpm generate"
   }
 }
