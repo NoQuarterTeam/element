@@ -4,9 +4,8 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
-  relationMode = "prisma"
-  url          = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -61,7 +60,7 @@ enum TaskRepeat {
 model Task {
   id              String      @id @default(uuid())
   name            String
-  description     String?     @db.LongText
+  description     String?
   date            DateTime?
   isComplete      Boolean     @default(false)
   isTemplate      Boolean     @default(false)
@@ -75,7 +74,7 @@ model Task {
   todos          Todo[]
   repeatChildren Task[]   @relation(name: "RepeatChildren")
   repeatParentId String?
-  repeatParent   Task?    @relation(name: "RepeatChildren", fields: [repeatParentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  repeatParent   Task?    @relation(name: "RepeatChildren", fields: [repeatParentId], references: [id], onDelete: SetNull)
   creatorId      String
   creator        User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   elementId      String

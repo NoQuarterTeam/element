@@ -22,6 +22,7 @@ import {
   useLoaderData,
   useLocation,
   useRouteError,
+  useRouteLoaderData,
 } from "@remix-run/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Frown } from "lucide-react"
@@ -33,7 +34,7 @@ import "~/styles/app.css"
 import { LinkButton } from "./components/ui/LinkButton"
 import { Toaster } from "./components/ui/Toast"
 import { useConfig } from "./lib/hooks/useConfig"
-import type { Theme } from "./lib/theme"
+
 import { GDPR } from "./pages/api+/gdpr"
 import { getMaybeUser } from "./services/auth/auth.server"
 import { getFlashSession } from "./services/session/flash.server"
@@ -69,7 +70,9 @@ export type RootLoader = SerializeFrom<typeof loader>
 const queryClient = new QueryClient()
 
 export default function App() {
-  const { flash, gdpr, user, config, theme } = useLoaderData<typeof loader>()
+  const { flash, gdpr, user, config } = useLoaderData<typeof loader>()
+  console.log({ config })
+
   const location = useLocation()
   const [isHogLoaded, setIsHogLoaded] = React.useState(false)
 
@@ -92,7 +95,7 @@ export default function App() {
   }, [location.pathname, isHogLoaded])
 
   return (
-    <Document theme={theme}>
+    <>
       <QueryClientProvider client={queryClient}>
         <Tooltip.Provider>
           <Outlet />
@@ -100,7 +103,7 @@ export default function App() {
           <GDPR />
         </Tooltip.Provider>
       </QueryClientProvider>
-    </Document>
+    </>
   )
 }
 
@@ -110,7 +113,7 @@ export function ErrorBoundary() {
   const config = useConfig()
 
   return (
-    <Document theme="dark">
+    <>
       <h1 className="p-6 text-3xl">Element</h1>
       <div className="flex flex-col overflow-scroll px-32 pt-40">
         {isCatchError ? (
@@ -152,18 +155,18 @@ export function ErrorBoundary() {
           </div>
         )}
       </div>
-    </Document>
+    </>
   )
 }
 
 interface DocumentProps {
   children: React.ReactNode
-  theme: Theme
 }
 
-function Document({ theme, children }: DocumentProps) {
+export function Layout({ children }: DocumentProps) {
+  const data = useRouteLoaderData("root") as RootLoader
   return (
-    <html lang="en" className={join(theme)}>
+    <html lang="en" className={join(data.theme)}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="user-scalable=no, initial-scale=1, width=device-width" />
@@ -183,9 +186,9 @@ function Document({ theme, children }: DocumentProps) {
         <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="msapplication-TileColor" content={theme === "dark" ? "#000" : "#fff"} />
+        <meta name="msapplication-TileColor" content={data.theme === "dark" ? "#000" : "#fff"} />
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
-        <meta name="theme-color" content={theme === "dark" ? "#000" : "#fff"} />
+        <meta name="theme-color" content={data.theme === "dark" ? "#000" : "#fff"} />
         <Meta />
         <Links />
       </head>

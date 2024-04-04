@@ -2,21 +2,23 @@
   "name": "@element/database",
   "version": "1.0.0",
   "main": "./index.ts",
-  "files": [
-    "./index.ts",
-    "./types.ts"
-  ],
+  "files": ["./index.ts", "./types.ts"],
   "sideEffects": false,
   "dependencies": {
     "@element/server-env": "workspace:*",
+    "@neondatabase/serverless": "^0.9.0",
     "@planetscale/database": "^1.13.0",
+    "@prisma/adapter-neon": "^5.12.1",
     "@prisma/adapter-planetscale": "5.12.1",
     "@prisma/client": "5.12.1",
-    "prisma": "5.12.1"
+    "prisma": "5.12.1",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "8.4.1",
     "@types/node": "^18.15.3",
-    "@faker-js/faker": "8.4.1"
+    "@types/ws": "^8.5.10",
+    "ts-node": "^10.9.2"
   },
   "prisma": {
     "schema": "./schema.prisma"
@@ -25,7 +27,6 @@
     "dev": "pnpm with-env prisma studio",
     "db:push": "pnpm with-env prisma db push && pnpm generate",
     "generate": "pnpm with-env prisma generate",
-    "with-env": "dotenv -e ../../.env --",
-    "postinstall": "pnpm generate"
+    "with-env": "dotenv -e ../../.env --"
   }
 }
