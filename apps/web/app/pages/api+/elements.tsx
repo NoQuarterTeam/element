@@ -10,28 +10,28 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const elements = await db.$queryRaw<Array<Pick<Element, "id" | "name" | "color"> & { latestTaskDate: string }>>`
       SELECT
-        Element.id,
-        Element.name,
-        Element.color,
-        task.latestTaskDate
+        "Element"."id",
+        "Element"."name",
+        "Element"."color",
+        task."latestTaskDate"
       FROM
-        Element
+        "Element"
       LEFT JOIN (
         SELECT
-          elementId,
-          MAX(createdAt) AS latestTaskDate
+          "elementId",
+          MAX("createdAt") AS "latestTaskDate"
         FROM
-          Task
+          "Task"
         WHERE
-          creatorId = ${user.id} AND createdAt >= NOW() - INTERVAL '1 MONTH'
+          "creatorId" = ${user.id} AND "createdAt" >= NOW() - INTERVAL '1 MONTH'
         GROUP BY
-          elementId
-      ) AS task ON Element.id = task.elementId
+          "elementId"
+      ) AS task ON "Element".id = task."elementId"
       WHERE
-        Element.creatorId = ${user.id} AND Element.archivedAt IS NULL
+        "Element"."creatorId" = ${user.id} AND "Element"."archivedAt" IS NULL
       ORDER BY
-	      task.latestTaskDate DESC,
-	      Element.createdAt DESC;
+	      task."latestTaskDate" DESC,
+	      "Element"."createdAt" DESC;
     `
   return json(elements)
 }

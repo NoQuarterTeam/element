@@ -5,9 +5,9 @@ import { useLoaderData, useSearchParams } from "@remix-run/react"
 import dayjs from "dayjs"
 import { ArrowDown, ArrowLeft, ArrowUp } from "lucide-react"
 
-// import { Line, LineChart, Tooltip, XAxis, YAxis } from "recharts"
+import { Line, LineChart, Tooltip, XAxis, YAxis } from "recharts"
 import { Badge } from "~/components/ui/Badge"
-// import { ClientOnly } from "~/components/ui/ClientOnly"
+import { ClientOnly } from "~/components/ui/ClientOnly"
 import { Select } from "~/components/ui/Inputs"
 import { Limiter } from "~/components/ui/Limiter"
 import { LinkButton } from "~/components/ui/LinkButton"
@@ -18,97 +18,99 @@ type ActivePeriod = "all" | "year" | "month" | "week"
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getCurrentUser(request)
   if (user.role !== Role.ADMIN) throw redirect("/")
-  // const url = new URL(request.url)
-  // const activePeriod = (url.searchParams.get("activePeriod") || "all") as ActivePeriod
+  const url = new URL(request.url)
+  const activePeriod = (url.searchParams.get("activePeriod") || "all") as ActivePeriod
 
-  // const firstUser = await db.user.findFirst({ orderBy: { createdAt: "asc" }, select: { createdAt: true } })
-  // const period = activePeriod === "all" ? "month" : activePeriod === "year" ? "month" : "day"
-  // const interval = activePeriod === "all" ? "1 month" : activePeriod === "year" ? "1 month" : "1 day"
+  const firstUser = await db.user.findFirst({ orderBy: { createdAt: "asc" }, select: { createdAt: true } })
+  const period = activePeriod === "all" ? "month" : activePeriod === "year" ? "month" : "day"
+  const interval = activePeriod === "all" ? "1 month" : activePeriod === "year" ? "1 month" : "1 day"
 
-  // const startDate =
-  //   activePeriod === "all"
-  //     ? firstUser
-  //       ? dayjs(firstUser.createdAt).subtract(1, "month").format("YYYY-MM-DD")
-  //       : dayjs().subtract(1, "year")
-  //     : activePeriod === "year"
-  //       ? dayjs().subtract(1, "year")
-  //       : activePeriod === "month"
-  //         ? dayjs().subtract(1, "month")
-  //         : dayjs().subtract(1, "week")
+  const startDate =
+    activePeriod === "all"
+      ? firstUser
+        ? dayjs(firstUser.createdAt).subtract(1, "month").format("YYYY-MM-DD")
+        : dayjs().subtract(1, "year")
+      : activePeriod === "year"
+        ? dayjs().subtract(1, "year")
+        : activePeriod === "month"
+          ? dayjs().subtract(1, "month")
+          : dayjs().subtract(1, "week")
 
-  const [users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback] = await Promise.all([
-    db.user.findMany({
-      where: { archivedAt: { equals: null } },
-      orderBy: { createdAt: "desc" },
-      take: 10,
-      select: {
-        id: true,
-        firstName: true,
-        email: true,
-        createdAt: true,
-        stripeSubscriptionId: true,
-        _count: { select: { tasks: { where: { isTemplate: false } }, elements: true } },
-      },
-    }),
-    db.user.count({ where: { archivedAt: { equals: null } } }),
-    db.task.count(),
-    db.task.count({
-      where: {
-        createdAt: {
-          gte: dayjs().subtract(1, "month").startOf("month").toDate(),
-          lt: dayjs().subtract(1, "month").toDate(),
+  const [users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg, activeUsersAgg] =
+    await Promise.all([
+      db.user.findMany({
+        where: { archivedAt: { equals: null } },
+        orderBy: { createdAt: "desc" },
+        take: 10,
+        select: {
+          id: true,
+          firstName: true,
+          email: true,
+          createdAt: true,
+          stripeSubscriptionId: true,
+          _count: { select: { tasks: { where: { isTemplate: false } }, elements: true } },
         },
-      },
-    }),
-    db.task.count({ where: { createdAt: { gte: dayjs().startOf("month").toDate() } } }),
-    db.feedback.findMany({
-      select: {
-        id: true,
-        content: true,
-        type: true,
-        creator: { select: { email: true, avatar: true, firstName: true, lastName: true } },
-      },
-      take: 20,
-      orderBy: { createdAt: "desc" },
-    }),
-    //   db.$queryRaw<{ date: string; count: number }[]>`
-    //     WITH series AS (
-    //       SELECT generate_series(
-    //         date_trunc(${period}, DATE(${startDate})),
-    //         date_trunc(${period}, DATE(${dayjs().format("YYYY-MM-DD")})),
-    //         CAST(${interval} as INTERVAL)
-    //       ) AS date
-    //     )
-    //     SELECT series.date, COUNT("User".id)
-    //     FROM series
-    //     LEFT JOIN "User" ON date_trunc(${period}, DATE("User"."createdAt") <= series.date
-    //       AND "User"."archivedAt" IS NULL
-    //     GROUP BY series.date
-    //     ORDER BY series.date ASC
-    // `,
-    //   db.$queryRaw<{ date: string; count: number }[]>`
-    //     WITH series AS (
-    //       SELECT generate_series(
-    //         date_trunc(${period}, DATE(${startDate})),
-    //         date_trunc(${period}, DATE(${dayjs().format("YYYY-MM-DD")})),
-    //         CAST(${interval} as INTERVAL)
-    //       ) AS date
-    //     )
-    //     SELECT series.date as date, COUNT(distinct "creatorId") as count
-    //     FROM series
-    //     LEFT JOIN "Task" ON date_trunc(${period}, "createdAt") = series.date
-    //       AND "Task"."isTemplate" = false
-    //     LEFT JOIN "User" ON "Task"."creatorId" = "User".id
-    //       AND "User"."archivedAt" IS NULL
-    //     GROUP BY series.date
-    //     ORDER BY series.date ASC
-    // `,
-  ])
-  return json({ users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback })
+      }),
+      db.user.count({ where: { archivedAt: { equals: null } } }),
+      db.task.count(),
+      db.task.count({
+        where: {
+          createdAt: {
+            gte: dayjs().subtract(1, "month").startOf("month").toDate(),
+            lt: dayjs().subtract(1, "month").toDate(),
+          },
+        },
+      }),
+      db.task.count({ where: { createdAt: { gte: dayjs().startOf("month").toDate() } } }),
+      db.feedback.findMany({
+        select: {
+          id: true,
+          content: true,
+          type: true,
+          creator: { select: { email: true, avatar: true, firstName: true, lastName: true } },
+        },
+        take: 20,
+        orderBy: { createdAt: "desc" },
+      }),
+      db.$queryRaw<{ date: string; count: number }[]>`
+        WITH series AS (
+          SELECT generate_series(
+            date_trunc(${period}, DATE(${startDate})),
+            date_trunc(${period}, DATE(${dayjs().format("YYYY-MM-DD")})),
+            CAST(${interval} as INTERVAL)
+          ) AS date
+        )
+        SELECT series.date, COUNT("User".id)
+        FROM series
+        LEFT JOIN "User" ON date_trunc(${period}, DATE("User"."createdAt") <= series.date
+          AND "User"."archivedAt" IS NULL
+        GROUP BY series.date
+        ORDER BY series.date ASC
+    `,
+      db.$queryRaw<{ date: string; count: number }[]>`
+        WITH series AS (
+          SELECT generate_series(
+            date_trunc(${period}, DATE(${startDate})),
+            date_trunc(${period}, DATE(${dayjs().format("YYYY-MM-DD")})),
+            CAST(${interval} as INTERVAL)
+          ) AS date
+        )
+        SELECT series.date as date, COUNT(distinct "creatorId") as count
+        FROM series
+        LEFT JOIN "Task" ON date_trunc(${period}, "createdAt") = series.date
+          AND "Task"."isTemplate" = false
+        LEFT JOIN "User" ON "Task"."creatorId" = "User".id
+          AND "User"."archivedAt" IS NULL
+        GROUP BY series.date
+        ORDER BY series.date ASC
+    `,
+    ])
+  return json({ users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback, usersAgg, activeUsersAgg })
 }
 
 export default function Admin() {
-  const { users, userCount, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback } = useLoaderData<typeof loader>()
+  const { users, userCount, usersAgg, activeUsersAgg, taskCountTotal, tastCountLastMonth, taskCountThisMonth, feedback } =
+    useLoaderData<typeof loader>()
   const percentageChange = Math.round((taskCountThisMonth / (tastCountLastMonth || 1) - 1) * 100)
 
   const [params, setParams] = useSearchParams()
@@ -192,7 +194,7 @@ export default function Admin() {
               </Select>
             </div>
           </div>
-          {/* <div className="center">
+          <div className="center">
             <ClientOnly fallback={<div className="h-[450px]" />}>
               {() => (
                 <LineChart width={1000} height={450}>
@@ -221,7 +223,7 @@ export default function Admin() {
                 </LineChart>
               )}
             </ClientOnly>
-          </div> */}
+          </div>
         </div>
 
         <div className="space-y-2">
