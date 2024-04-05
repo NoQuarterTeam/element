@@ -18,7 +18,7 @@ export const buttonStyles = cva("rounded-xs flex flex-row items-center justify-c
       primary: "border-transparent bg-gray-900 dark:bg-white",
       secondary: "border-transparent bg-gray-100 dark:bg-gray-800",
       destructive: "border-transparent bg-red-500",
-      outline: "border-gray-200 dark:border-gray-700",
+      outline: "border-gray-100 dark:border-gray-700",
       ghost: "border-transparent",
       link: "border-transparent",
     },

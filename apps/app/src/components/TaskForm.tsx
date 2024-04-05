@@ -130,55 +130,55 @@ export function TaskForm(props: Props) {
   const isDark = useColorScheme() === "dark"
   return (
     <View className="flex-1">
+      <View className="flex flex-row pl-4 pr-2 pb-2 border-b border-gray-75 dark:border-gray-800 items-start justify-between">
+        <View className="flex-1">
+          <TextInput
+            ref={nameInputRef}
+            className="font-label pr-2 text-2xl dark:text-white"
+            value={form.name}
+            returnKeyType="done"
+            onSubmitEditing={() => {
+              if (!form.element) {
+                router.push({
+                  pathname: "/elements/select",
+                  params: { date: form.date || "", repeat: repeat || "", redirect: "/new" },
+                })
+              }
+            }}
+            autoFocus={!form.name}
+            placeholderTextColor={isDark ? colors.gray[500] : colors.gray[300]}
+            placeholder="Name"
+            onChangeText={(name) => setForm((f) => ({ ...f, name }))}
+          />
+          {props.error?.zodError?.fieldErrors?.name?.map((error) => (
+            <FormInputError key={error} error={error} />
+          ))}
+        </View>
+        <View className="flex flex-row items-center space-x-1">
+          <TouchableOpacity
+            onPress={() => setForm((f) => ({ ...f, isImportant: !f.isImportant }))}
+            className={join(
+              "rounded-sm border border-gray-100 p-1.5 dark:border-gray-700",
+              form.isImportant && "bg-primary-500 border-transparent",
+            )}
+          >
+            <Icon icon={AlertTriangle} size={16} color={form.isImportant ? "white" : undefined} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={canGoBack ? router.back : () => router.navigate("/")} className="p-2">
+            <Icon icon={X} size={20} />
+          </TouchableOpacity>
+        </View>
+      </View>
       <ScrollView
         ref={scrollRef}
         contentContainerStyle={{ paddingBottom: 80 }}
-        className="px-4"
+        className="px-4 pt-2"
         contentInsetAdjustmentBehavior="always"
         keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
         <View className="flex-1 space-y-2">
-          <View className="flex flex-row items-start justify-between">
-            <View className="flex-1">
-              <TextInput
-                ref={nameInputRef}
-                className="font-label pr-2 text-2xl dark:text-white"
-                value={form.name}
-                returnKeyType="done"
-                onSubmitEditing={() => {
-                  if (!form.element) {
-                    router.push({
-                      pathname: "/elements/select",
-                      params: { date: form.date || "", repeat: repeat || "", redirect: "/new" },
-                    })
-                  }
-                }}
-                autoFocus={!form.name}
-                placeholderTextColor={isDark ? colors.gray[500] : colors.gray[300]}
-                placeholder="Name"
-                onChangeText={(name) => setForm((f) => ({ ...f, name }))}
-              />
-              {props.error?.zodError?.fieldErrors?.name?.map((error) => (
-                <FormInputError key={error} error={error} />
-              ))}
-            </View>
-            <View className="flex flex-row items-center space-x-2 pt-1">
-              <TouchableOpacity
-                onPress={() => setForm((f) => ({ ...f, isImportant: !f.isImportant }))}
-                className={join(
-                  "rounded-sm border border-gray-100 p-2 dark:border-gray-700",
-                  form.isImportant && "bg-primary-500 border-transparent",
-                )}
-              >
-                <Icon icon={AlertTriangle} size={20} color={form.isImportant ? "white" : undefined} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={canGoBack ? router.back : () => router.navigate("/")} className="p-2">
-                <Icon icon={X} size={24} />
-              </TouchableOpacity>
-            </View>
-          </View>
           <View>
             <FormInput
               label="Element"
@@ -302,7 +302,7 @@ export function TaskForm(props: Props) {
               onCancel={timeProps.onClose}
             />
           </View>
-          {!props.task && me && me.stripeSubscriptionId && (
+          {!props.task && me?.stripeSubscriptionId && (
             <View className="space-y-2">
               <FormInput
                 label="Repeat"
@@ -438,9 +438,9 @@ export function TaskForm(props: Props) {
                 setForm((f) => ({ ...f, todos: [...f.todos, { id: Date.now().toString(), name: "", isComplete: false }] }))
                 scrollRef.current?.scrollToEnd({ animated: true })
               }}
-              className={merge(buttonStyles({ size: "sm", variant: "outline" }))}
+              className={merge(buttonStyles({ size: "md", variant: "outline" }))}
             >
-              <Icon icon={Plus} size={18} className="mt-1" />
+              <Icon icon={Plus} size={18} />
             </TouchableOpacity>
           </View>
         </View>
