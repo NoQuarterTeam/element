@@ -5,9 +5,7 @@ import {
   comparePasswords,
   createAuthToken,
   createTemplates,
-  // createToken,
   hashPassword,
-  // sendAccountVerificationEmail,
   sendSlackMessage,
   stripe,
 } from "@element/server-services"
@@ -22,6 +20,7 @@ export const userRouter = createTRPCRouter({
     const isSamePassword = comparePasswords(input.password, user.password)
     if (!isSamePassword) throw new TRPCError({ code: "BAD_REQUEST", message: "Incorrect email or password" })
     const token = createAuthToken({ id: user.id })
+
     return { user, token }
   }),
   register: publicProcedure.input(registerSchema).mutation(async ({ ctx, input }) => {

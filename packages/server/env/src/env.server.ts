@@ -37,4 +37,4 @@ export const FULL_WEB_URL = IS_DEV
   ? "http://localhost:3000"
   : IS_PREVIEW
     ? `https://${env.VERCEL_GIT_COMMIT_REF === "develop" ? "dev.myelement.app" : env.VERCEL_URL}`
-    : `https://myelement.app`
+    : "https://myelement.app"

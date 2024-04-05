@@ -15,7 +15,8 @@ export const createToken = async (payload: Payload) => {
       .sign(secret)
     return token
   } catch (error) {
-    // Oops
+    console.log(error)
+
     throw error
   }
 }
@@ -25,7 +26,8 @@ export async function decryptToken<T>(token: string) {
     const { payload } = await jwtVerify<T>(token, secret, { algorithms: [alg] })
     return payload
   } catch (error) {
-    // Oops
+    console.log(error)
+
     throw error
   }
 }

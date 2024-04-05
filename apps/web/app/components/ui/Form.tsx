@@ -58,12 +58,12 @@ export function useFetcher<T>(
     )
   })
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: allow
   React.useEffect(() => {
     if (!props?.onFinish) return
     if (fetcher.state !== "idle" && fetcher.data) {
       props.onFinish(fetcher.data as T)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher.state, fetcher.data])
 
   return { ...fetcher, FormButton }
@@ -97,15 +97,6 @@ export function FormFieldError(
       {props.children}
     </p>
   )
-}
-
-interface FormFieldProps extends InputProps {
-  name: string
-  label?: string
-  input?: React.ReactElement
-  defaultValue?: any
-  errors?: string | string[] | null | false
-  shouldPassProps?: boolean
 }
 
 interface FormFieldProps extends InputProps {
@@ -155,7 +146,7 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(func
       ) : fieldErrors && fieldErrors.length > 0 ? (
         <ul id={`${props.name}-error`}>
           {fieldErrors?.map((error, i) => (
-            <FormFieldError key={i}>{error}</FormFieldError>
+            <FormFieldError key={i.toString()}>{error}</FormFieldError>
           ))}
         </ul>
       ) : null}
@@ -167,7 +158,7 @@ export const InlineFormField = React.forwardRef<HTMLInputElement, FormFieldProps
   { label, errors, input, shouldPassProps = true, ...props },
   ref,
 ) {
-  const form = useActionData<ActionDataErrorResponse<any>>()
+  const form = useActionData<ActionDataErrorResponse<z.ZodAny>>()
   const fieldErrors = errors || form?.fieldErrors?.[props.name]
   const className = merge(props.className, fieldErrors && "border-red-500 focus:border-red-500")
   const sharedProps = shouldPassProps
@@ -201,7 +192,7 @@ export const InlineFormField = React.forwardRef<HTMLInputElement, FormFieldProps
         fieldErrors?.length && (
           <ul id={`${props.name}-error`}>
             {fieldErrors?.map((error, i) => (
-              <FormFieldError key={i}>{error}</FormFieldError>
+              <FormFieldError key={i.toString()}>{error}</FormFieldError>
             ))}
           </ul>
         )
@@ -221,7 +212,7 @@ interface ImageFieldProps {
 }
 
 export function ImageField(props: ImageFieldProps) {
-  const form = useActionData<ActionDataErrorResponse<any>>()
+  const form = useActionData<ActionDataErrorResponse<z.ZodAny>>()
   const [image, setImage] = React.useState(props.defaultValue)
   const fieldErrors = props.errors || form?.fieldErrors?.[props.name]
   return (
@@ -252,7 +243,7 @@ export function ImageField(props: ImageFieldProps) {
         fieldErrors?.length && (
           <ul id={`${props.name}-error`}>
             {fieldErrors?.map((error, i) => (
-              <FormFieldError key={i}>{error}</FormFieldError>
+              <FormFieldError key={i.toString()}>{error}</FormFieldError>
             ))}
           </ul>
         )

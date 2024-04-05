@@ -6,12 +6,12 @@ export function useRefetchOnFocus() {
   const isVisible = usePageVisible()
   const revalidator = useRevalidator()
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: allow
   useEffect(() => {
     if (isVisible && shouldRefetch.current) {
       revalidator.revalidate()
     }
     shouldRefetch.current = true
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible])
 }
 

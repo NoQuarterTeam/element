@@ -13,7 +13,7 @@ import { inputStyles } from "./Inputs"
 import { Modal } from "./Modal"
 
 interface Props {
-  onSubmit: (key: string) => Promise<any> | any
+  onSubmit: (key: string) => Promise<unknown> | unknown
   children: React.ReactNode
   dropzoneOptions?: Omit<DropzoneOptions, "multiple" | "onDrop">
   className?: string
@@ -24,6 +24,7 @@ export function ImageUploader({ children, onSubmit, dropzoneOptions, className }
 
   const [image, setImage] = React.useState<{ file: File; preview: string } | null>(null)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: allow
   const onDrop = React.useCallback(
     (files: File[], rejectedFiles: FileRejection[]) => {
       window.URL = window.URL || window.webkitURL
@@ -61,7 +62,7 @@ export function ImageUploader({ children, onSubmit, dropzoneOptions, className }
       const uploadedFile = await upload(image.file)
       await onSubmit(uploadedFile)
       handleClose()
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Error uploading", { description: error instanceof Error ? error.message : undefined })
     }
   }

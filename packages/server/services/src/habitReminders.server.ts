@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 
-import { type HabitReminder } from "@element/database/types"
+import type { HabitReminder } from "@element/database/types"
 import { FULL_WEB_URL, IS_DEV } from "@element/server-env"
 
 import { qstash } from "./lib/qstash.server"
@@ -23,7 +23,7 @@ export async function createHabitReminder(reminder: Pick<HabitReminder, "id" | "
       cron,
       body: JSON.stringify({ id: reminder.id } satisfies HabitReminderBody),
       headers,
-      destination: IS_DEV ? "https://element.requestcatcher.com" : FULL_WEB_URL + "/api/habit-reminders",
+      destination: IS_DEV ? "https://element.requestcatcher.com" : `${FULL_WEB_URL}/api/habit-reminders`,
     })
     return schedule.scheduleId
   } catch (error) {

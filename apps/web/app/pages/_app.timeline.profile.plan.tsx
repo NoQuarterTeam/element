@@ -63,7 +63,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     case ProfilePlanMethods.JoinPlan:
       try {
         const promoCode = formData.get("promoCode") as string | undefined
-        let promoCodeId
+        let promoCodeId = undefined
         if (promoCode) {
           const promo = await stripe.promotionCodes.list({ code: promoCode })
           promoCodeId = promo?.data?.[0]?.id

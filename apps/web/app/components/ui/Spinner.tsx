@@ -33,6 +33,7 @@ export function Spinner({ size, color = "black", ...props }: SpinnerProps) {
       fill="none"
       viewBox="0 0 24 24"
     >
+      <title>loading</title>
       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1" />
       <path
         className="opacity-100"
