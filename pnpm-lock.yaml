@@ -67,7 +67,7 @@ importers:
         specifier: 1.11.10
         version: 1.11.10
       expo:
-        specifier: ~50.0.14
+        specifier: 50.0.14
         version: 50.0.14(@babel/core@7.24.4)(@react-native/babel-preset@0.73.21)
       expo-application:
         specifier: ~5.8.3
@@ -1788,7 +1788,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.24.4
-      '@babel/helper-create-class-features-plugin': 7.24.1(@babel/core@7.24.4)
+      '@babel/helper-create-class-features-plugin': 7.24.4(@babel/core@7.24.4)
       '@babel/helper-plugin-utils': 7.24.0
       '@babel/plugin-syntax-decorators': 7.24.1(@babel/core@7.24.4)
     dev: false
@@ -2192,16 +2192,6 @@ packages:
       '@babel/core': 7.24.4
       '@babel/helper-plugin-utils': 7.24.0
     dev: true
-
-  /@babel/plugin-transform-block-scoping@7.24.1(@babel/core@7.24.4):
-    resolution: {integrity: sha512-h71T2QQvDgM2SmT29UYU6ozjMlAt7s7CSs5Hvy8f8cf/GM/Z4a2zMfN+fjVGaieeCrXR3EdQl6C4gQG+OgmbKw==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.24.4
-      '@babel/helper-plugin-utils': 7.24.0
-    dev: false
 
   /@babel/plugin-transform-block-scoping@7.24.4(@babel/core@7.24.4):
     resolution: {integrity: sha512-nIFUZIpGKDf9O9ttyRXpHFpKC+X3Y5mtshZONuEUYBomAKoM4y029Jr+uB1bHGPhNmK8YXHevDtKDOLmtRrp6g==}
@@ -4020,8 +4010,8 @@ packages:
       '@react-native/babel-preset': '*'
     dependencies:
       '@babel/core': 7.24.4
-      '@babel/generator': 7.24.1
-      '@babel/parser': 7.24.1
+      '@babel/generator': 7.24.4
+      '@babel/parser': 7.24.4
       '@babel/types': 7.24.0
       '@expo/config': 8.5.4
       '@expo/env': 0.2.2
@@ -5776,7 +5766,7 @@ packages:
       '@babel/plugin-syntax-optional-chaining': 7.8.3(@babel/core@7.24.4)
       '@babel/plugin-transform-arrow-functions': 7.24.1(@babel/core@7.24.4)
       '@babel/plugin-transform-async-to-generator': 7.24.1(@babel/core@7.24.4)
-      '@babel/plugin-transform-block-scoping': 7.24.1(@babel/core@7.24.4)
+      '@babel/plugin-transform-block-scoping': 7.24.4(@babel/core@7.24.4)
       '@babel/plugin-transform-classes': 7.24.1(@babel/core@7.24.4)
       '@babel/plugin-transform-computed-properties': 7.24.1(@babel/core@7.24.4)
       '@babel/plugin-transform-destructuring': 7.24.1(@babel/core@7.24.4)
@@ -7867,7 +7857,7 @@ packages:
       '@babel/plugin-syntax-object-rest-spread': 7.8.3(@babel/core@7.24.4)
       '@babel/plugin-transform-arrow-functions': 7.24.1(@babel/core@7.24.4)
       '@babel/plugin-transform-block-scoped-functions': 7.24.1(@babel/core@7.24.4)
-      '@babel/plugin-transform-block-scoping': 7.24.1(@babel/core@7.24.4)
+      '@babel/plugin-transform-block-scoping': 7.24.4(@babel/core@7.24.4)
       '@babel/plugin-transform-classes': 7.24.1(@babel/core@7.24.4)
       '@babel/plugin-transform-computed-properties': 7.24.1(@babel/core@7.24.4)
       '@babel/plugin-transform-destructuring': 7.24.1(@babel/core@7.24.4)
@@ -12070,7 +12060,7 @@ packages:
     engines: {node: '>=18'}
     dependencies:
       '@babel/core': 7.24.4
-      '@babel/generator': 7.24.1
+      '@babel/generator': 7.24.4
       '@babel/template': 7.24.0
       '@babel/traverse': 7.24.1
       nullthrows: 1.1.1
@@ -12083,8 +12073,8 @@ packages:
     engines: {node: '>=18'}
     dependencies:
       '@babel/core': 7.24.4
-      '@babel/generator': 7.24.1
-      '@babel/parser': 7.24.1
+      '@babel/generator': 7.24.4
+      '@babel/parser': 7.24.4
       '@babel/types': 7.24.0
       metro: 0.80.4
       metro-babel-transformer: 0.80.4
