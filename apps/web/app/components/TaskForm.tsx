@@ -291,7 +291,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
               pattern="^([01]\d|2[0-3]):?([0-5]\d)$"
               type="time"
               name="startTime"
-              defaultValue={task?.startTime||}
+              defaultValue={task?.startTime || ""}
               label="Start time"
               errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.startTime}
             />
@@ -359,7 +359,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
           )}
           <InlineFormField
             name="description"
-            defaultValue={task?.description||""}
+            defaultValue={task?.description || ""}
             label="Description"
             input={<Textarea />}
             errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.description}
