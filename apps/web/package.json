@@ -66,7 +66,7 @@
     "react-intersection-observer": "9.8.1",
     "react-select": "5.8.0",
     "recharts": "2.12.4",
-    "remix-utils": "7.5.0",
+    "remix-utils": "7.6.0",
     "sharp": "0.32.6",
     "sonner": "1.4.41",
     "tailwind-scrollbar-hide": "^1.1.7",
