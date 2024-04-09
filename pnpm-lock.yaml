@@ -348,7 +348,7 @@ importers:
         version: 4.3.1
       posthog-js:
         specifier: ^1.100.0
-        version: 1.120.2
+        version: 1.120.3
       pretty-cache-header:
         specifier: 1.0.0
         version: 1.0.0
@@ -13870,11 +13870,11 @@ packages:
       xtend: 4.0.2
     dev: false
 
-  /posthog-js@1.120.2:
-    resolution: {integrity: sha512-19LehjKgcmOzdj5OOicyzCXdxN4SVMX2IC1FvQR9gozxxxxhh6lCwWoe3y955S2KRLRP/8BjQ3zmMezV1ZCSQQ==}
+  /posthog-js@1.120.3:
+    resolution: {integrity: sha512-J5o2aRNIrSCt6/kei+UN9RhTpZDa9bcRkwkauhjrtCz9Ne3yjCP9phfIlP5HJrJBpNGIzK/YlFuy8/57Tw+piQ==}
     dependencies:
       fflate: 0.4.8
-      preact: 10.20.1
+      preact: 10.20.2
     dev: false
 
   /posthog-react-native@2.11.6(@react-native-async-storage/async-storage@1.21.0)(@react-navigation/native@6.1.9)(expo-application@5.8.3)(expo-device@5.9.3):
@@ -13912,8 +13912,8 @@ packages:
       expo-device: 5.9.3(expo@50.0.15)
     dev: false
 
-  /preact@10.20.1:
-    resolution: {integrity: sha512-JIFjgFg9B2qnOoGiYMVBtrcFxHqn+dNXbq76bVmcaHYJFYR4lW67AOcXgAYQQTDYXDOg/kTZrKPNCdRgJ2UJmw==}
+  /preact@10.20.2:
+    resolution: {integrity: sha512-S1d1ernz3KQ+Y2awUxKakpfOg2CEmJmwOP+6igPx6dgr6pgDvenqYviyokWso2rhHvGtTlWWnJDa7RaPbQerTg==}
     dev: false
 
   /prebuild-install@7.1.1:
