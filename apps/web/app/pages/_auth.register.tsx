@@ -1,7 +1,9 @@
 import { registerSchema } from "@element/server-schemas"
 import { createTemplates, hashPassword, sendAccountVerificationEmail, sendSlackMessage, stripe } from "@element/server-services"
 import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { Link, json, useLoaderData } from "@remix-run/react"
+import { HoneypotInputs, HoneypotProvider } from "remix-utils/honeypot/react"
+import { SpamError } from "remix-utils/honeypot/server"
 
 import { Form, FormButton, FormError, FormField } from "~/components/ui/Form"
 import { db } from "~/lib/db.server"
@@ -9,6 +11,7 @@ import { FORM_ACTION } from "~/lib/form"
 import { formError, validateFormData } from "~/lib/form.server"
 import { createToken } from "~/lib/jwt.server"
 import { badRequest, redirect } from "~/lib/remix"
+import { honeypot } from "~/services/honeypot.server"
 import { getUserSession } from "~/services/session/session.server"
 
 export const meta: MetaFunction = () => {
@@ -32,6 +35,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (action) {
     case RegisterActionMethods.Register:
       try {
+        honeypot.check(formData)
         if (formData.get("passwordConfirmation")) return redirect("/")
 
         const result = await validateFormData(request, registerSchema)
@@ -63,9 +67,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           },
           headers,
         })
-      } catch (e: unknown) {
-        if (e instanceof Error) {
-          return badRequest(e.message)
+      } catch (error: unknown) {
+        if (error instanceof SpamError) {
+          return badRequest("Error")
+        }
+        if (error instanceof Error) {
+          return badRequest(error.message)
         }
         return badRequest("Something went wrong")
       }
@@ -75,34 +82,42 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 }
 
-export default function Register() {
-  return (
-    <div>
-      <Form method="post" replace>
-        <div className="space-y-2">
-          <h1 className="text-4xl font-bold">Register</h1>
-          <FormField required label="Email address" name="email" placeholder="jim@gmail.com" />
-          <FormField required label="Password" name="password" type="password" placeholder="********" />
-          <input name="passwordConfirmation" className="hidden" />
-          <FormField required label="First name" name="firstName" placeholder="Jim" />
-          <FormField required label="Last name" name="lastName" placeholder="Bob" />
-          <div>
-            <FormButton name="_action" value={RegisterActionMethods.Register} className="w-full">
-              Register
-            </FormButton>
-            <FormError />
-          </div>
+export const loader = () => {
+  return json({ honeypotInputProps: honeypot.getInputProps() })
+}
 
-          <div className="flex justify-between">
-            <Link to="/login" className="hover:opacity-70">
-              Login
-            </Link>
-            <Link to="/forgot-password" className="hover:opacity-70">
-              Forgot password?
-            </Link>
+export default function Register() {
+  const { honeypotInputProps } = useLoaderData<typeof loader>()
+  return (
+    <HoneypotProvider {...honeypotInputProps}>
+      <div>
+        <Form method="post" replace>
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold">Register</h1>
+            <HoneypotInputs />
+            <FormField required label="Email address" name="email" placeholder="jim@gmail.com" />
+            <FormField required label="Password" name="password" type="password" placeholder="********" />
+            <input name="passwordConfirmation" className="hidden" />
+            <FormField required label="First name" name="firstName" placeholder="Jim" />
+            <FormField required label="Last name" name="lastName" placeholder="Bob" />
+            <div>
+              <FormButton name="_action" value={RegisterActionMethods.Register} className="w-full">
+                Register
+              </FormButton>
+              <FormError />
+            </div>
+
+            <div className="flex justify-between">
+              <Link to="/login" className="hover:opacity-70">
+                Login
+              </Link>
+              <Link to="/forgot-password" className="hover:opacity-70">
+                Forgot password?
+              </Link>
+            </div>
           </div>
-        </div>
-      </Form>
-    </div>
+        </Form>
+      </div>
+    </HoneypotProvider>
   )
 }
