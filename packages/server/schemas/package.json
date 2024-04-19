@@ -10,7 +10,7 @@
   "dependencies": {
     "@element/database": "workspace:*",
     "@element/shared": "workspace:*",
-    "zod": "3.22.4",
+    "zod": "3.22.5",
     "zodix": "0.4.4"
   },
   "devDependencies": {
