@@ -389,8 +389,8 @@ importers:
         specifier: ^1.1.7
         version: 1.1.7
       tailwindcss-radix:
-        specifier: 2.9.0
-        version: 2.9.0
+        specifier: 3.0.3
+        version: 3.0.3
       zod:
         specifier: 3.22.5
         version: 3.22.5
@@ -15572,8 +15572,8 @@ packages:
     resolution: {integrity: sha512-X324n9OtpTmOMqEgDUEA/RgLrNfBF/jwJdctaPZDzB3mppxJk7TLIDmOreEDm1Bq4R9LSPu4Epf8VSdovNU+iA==}
     dev: false
 
-  /tailwindcss-radix@2.9.0:
-    resolution: {integrity: sha512-N49SnciSeRgLC+VK+Fu5VULNJIvJUvN7tUKF1kEHPXrS76WAlwrSVthCbJ9NUw0Cj/ptxs73pdVEdosomAN5Lg==}
+  /tailwindcss-radix@3.0.3:
+    resolution: {integrity: sha512-uueKWJIY98tU4Fip2FTL2eXBqX428e5HBwbu+8rqqJ9H3NuhkcAGS66wNHZjeix56f6nNBhkhMLpQeIrmVxH/w==}
     dev: false
 
   /tailwindcss@3.3.2:
