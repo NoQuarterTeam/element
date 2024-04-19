@@ -71,7 +71,7 @@
     "sonner": "1.4.41",
     "tailwind-scrollbar-hide": "^1.1.7",
     "tailwindcss-radix": "2.9.0",
-    "zod": "3.22.4",
+    "zod": "3.22.5",
     "zustand": "4.5.2"
   },
   "devDependencies": {
