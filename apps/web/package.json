@@ -43,7 +43,7 @@
     "class-variance-authority": "0.7.0",
     "cookie": "0.6.0",
     "currency.js": "2.0.4",
-    "dayjs": "1.11.10",
+    "dayjs": "1.11.11",
     "deep-equal": "2.2.3",
     "dotenv": "16.4.5",
     "expo-server-sdk": "^3.7.0",
