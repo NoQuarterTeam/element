@@ -68,6 +68,9 @@ model Task {
   isImportant     Boolean     @default(false)
   order           Int         @default(50)
 
+  // integrations
+  calComBookingId Int?
+
   todos          Todo[]
   repeatChildren Task[]   @relation(name: "RepeatChildren")
   repeatParentId String?
