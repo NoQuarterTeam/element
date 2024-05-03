@@ -389,8 +389,8 @@ importers:
         specifier: ^1.1.7
         version: 1.1.7
       tailwindcss-radix:
-        specifier: 2.9.0
-        version: 2.9.0
+        specifier: 3.0.3
+        version: 3.0.3
       zod:
         specifier: 3.22.5
         version: 3.22.5
@@ -637,9 +637,6 @@ importers:
       dayjs:
         specifier: 1.11.10
         version: 1.11.10
-      flickr-sdk:
-        specifier: 7.0.0-beta.7
-        version: 7.0.0-beta.7
       jsonwebtoken:
         specifier: 9.0.2
         version: 9.0.2
@@ -656,8 +653,8 @@ importers:
         specifier: 0.32.6
         version: 0.32.6
       stripe:
-        specifier: 14.25.0
-        version: 14.25.0
+        specifier: 15.5.0
+        version: 15.5.0
       zod:
         specifier: 3.22.5
         version: 3.22.5
@@ -6323,11 +6320,6 @@ packages:
     dependencies:
       web-streams-polyfill: 3.2.1
 
-  /@rgrove/parse-xml@4.1.0:
-    resolution: {integrity: sha512-pBiltENdy8SfI0AeR1e5TRpS9/9Gl0eiOEt6ful2jQfzsgvZYWqsKiBWaOCLdocQuk0wS7KOHI37n0C1pnKqTw==}
-    engines: {node: '>=14.0.0'}
-    dev: false
-
   /@segment/loosely-validate-event@2.0.0:
     resolution: {integrity: sha512-ZMCSfztDBqwotkl848ODgVcAmN4OItEWDCkshcKz0/W6gGSQayuuCtWV/MlodFivAZD793d6UgANd6wCXUfrIw==}
     dependencies:
@@ -10109,13 +10101,6 @@ packages:
     resolution: {integrity: sha512-1IMnbjt4KzsQfnhnzNd8wUEgXZ44IzZaZmnLYx7D5FZlaHt2gW20Cri8Q+E/t5tIj4+epTBub+2Zxu/vNILzqQ==}
     dependencies:
       micromatch: 4.0.5
-    dev: false
-
-  /flickr-sdk@7.0.0-beta.7:
-    resolution: {integrity: sha512-ILmQuRSioeFht0vAhQUBfuLaHVxxmI4b9H1/GVuvj7u8kDc7Wkfb3b118Mt8L1joS0fQeAhDRb8irzxNUymtng==}
-    engines: {node: '>= 18'}
-    dependencies:
-      '@rgrove/parse-xml': 4.1.0
     dev: false
 
   /flow-enums-runtime@0.0.6:
@@ -15448,8 +15433,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /stripe@14.25.0:
-    resolution: {integrity: sha512-wQS3GNMofCXwH8TSje8E1SE8zr6ODiGtHQgPtO95p9Mb4FhKC9jvXR2NUTpZ9ZINlckJcFidCmaTFV4P6vsb9g==}
+  /stripe@15.5.0:
+    resolution: {integrity: sha512-c04ToET4ZUzoeSh2rWarXCPNa2+6YzkwNAcWaT4axYRlN/u1XMkz9+inouNsXWjeT6ttBrp1twz10x/sCbWLpQ==}
     engines: {node: '>=12.*'}
     dependencies:
       '@types/node': 18.19.31
@@ -15572,8 +15557,8 @@ packages:
     resolution: {integrity: sha512-X324n9OtpTmOMqEgDUEA/RgLrNfBF/jwJdctaPZDzB3mppxJk7TLIDmOreEDm1Bq4R9LSPu4Epf8VSdovNU+iA==}
     dev: false
 
-  /tailwindcss-radix@2.9.0:
-    resolution: {integrity: sha512-N49SnciSeRgLC+VK+Fu5VULNJIvJUvN7tUKF1kEHPXrS76WAlwrSVthCbJ9NUw0Cj/ptxs73pdVEdosomAN5Lg==}
+  /tailwindcss-radix@3.0.3:
+    resolution: {integrity: sha512-uueKWJIY98tU4Fip2FTL2eXBqX428e5HBwbu+8rqqJ9H3NuhkcAGS66wNHZjeix56f6nNBhkhMLpQeIrmVxH/w==}
     dev: false
 
   /tailwindcss@3.3.2:

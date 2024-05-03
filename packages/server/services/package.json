@@ -21,13 +21,12 @@
     "bcryptjs": "2.4.3",
     "blurhash": "2.0.5",
     "dayjs": "1.11.10",
-    "flickr-sdk": "7.0.0-beta.7",
     "jsonwebtoken": "9.0.2",
     "loops": "^0.4.0",
     "nodemailer": "6.9.13",
     "resend": "3.2.0",
     "sharp": "0.32.6",
-    "stripe": "14.25.0",
+    "stripe": "15.5.0",
     "zod": "3.22.5"
   },
   "devDependencies": {
