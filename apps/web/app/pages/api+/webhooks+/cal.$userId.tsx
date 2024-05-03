@@ -14,12 +14,18 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
     switch (data.triggerEvent) {
       case "BOOKING_CREATED":
         {
+          console.log(data.payload)
           let element = await db.element.findFirst({ where: { creatorId: user.id, name: data.payload.eventTitle } })
           if (!element) {
             element = await db.element.create({
               data: { name: data.payload.eventTitle, creatorId: user.id, color: randomHexColor() },
             })
           }
+          const attendees = data.payload.attendees
+            .map((attendee) => attendee.name)
+            .filter(Boolean)
+            .join(" & ")
+          const name = `Call with ${attendees}`
           const durationHours = Math.floor(data.payload.length / 60) || null
           const durationMinutes = data.payload.length % 60
           const utcDate = dayjs(data.payload.startTime)
@@ -32,7 +38,7 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
             data: {
               isImportant: true,
               calComBookingId: data.payload.bookingId,
-              name: data.payload.title,
+              name,
               description: `${data.payload.additionalNotes ? `Notes: ${data.payload.additionalNotes}` : ""}${
                 data.payload.description ? `\n${data.payload.description}` : ""
               }`,
