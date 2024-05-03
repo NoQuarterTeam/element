@@ -11,8 +11,6 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
     if (!data?.payload) throw new Error("No payload")
     const user = await db.user.findFirst({ where: { id: userId } })
     if (!user) throw new Error("No user")
-    console.log(data.payload)
-
     switch (data.triggerEvent) {
       case "BOOKING_CREATED":
         {
