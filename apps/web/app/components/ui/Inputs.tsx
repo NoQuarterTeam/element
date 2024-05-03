@@ -58,7 +58,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function _In
   ref,
 ) {
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row w-full">
       {leftElement && (
         <div
           className={merge(

@@ -83,10 +83,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         if (!session.url) return badRequest("Error creating subscription")
         return redirect(session.url)
       } catch (e: unknown) {
-        if (e instanceof Error) {
-          return badRequest(e.message)
-        }
-        return badRequest("Something went wrong")
+        console.log(e)
+        return badRequest("Something went wrong", request, {
+          flash: { type: "error", title: "There was an error", description: "We have been notified" },
+        })
       }
     case ProfilePlanMethods.CancelPlan:
       try {
@@ -94,10 +94,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: true })
         return formSuccess()
       } catch (e: unknown) {
-        if (e instanceof Error) {
-          return badRequest(e.message)
-        }
-        return badRequest("Something went wrong")
+        console.log(e)
+        return badRequest("Something went wrong", request, {
+          flash: { type: "error", title: "There was an error", description: "We have been notified" },
+        })
       }
     case ProfilePlanMethods.ReactivatePlan:
       try {
@@ -105,14 +105,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         await stripe.subscriptions.update(user.stripeSubscriptionId, { cancel_at_period_end: false })
         return formSuccess()
       } catch (e: unknown) {
-        if (e instanceof Error) {
-          return badRequest(e.message)
-        }
-        return badRequest("Something went wrong")
+        console.log(e)
+        return badRequest("Something went wrong", request, {
+          flash: { type: "error", title: "There was an error", description: "We have been notified" },
+        })
       }
 
     default:
-      return badRequest("Invalid action")
+      return badRequest("Something went wrong", request, {
+        flash: { type: "error", title: "There was an error", description: "We have been notified" },
+      })
   }
 }
 

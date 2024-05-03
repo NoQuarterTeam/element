@@ -361,7 +361,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             name="description"
             defaultValue={task?.description || ""}
             label="Description"
-            input={<Textarea />}
+            input={<Textarea rows={3} />}
             errors={!createUpdateFetcher.data?.success && createUpdateFetcher.data?.fieldErrors?.description}
           />
           <InlineFormField
@@ -372,14 +372,16 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
               <div className="w-full space-y-1">
                 <input type="hidden" name="hasTodos" value="true" />
                 {todos.map((todo, i) => (
-                  <div key={todo.id} className="flex items-center space-x-2">
+                  <div key={todo.id} className="flex items-center w-full space-x-2">
                     <Checkbox className="peer" name={`todos[${i}].isComplete`} defaultChecked={todos[i]?.isComplete} />
                     <Input
                       id={`todo-${todo.id}`}
                       ref={(el) => (itemsRef.current[i] = el)}
                       name={`todos[${i}].name`}
                       defaultValue={todos[i]?.name}
-                      className={join("peer-checked:text-black/40 peer-checked:line-through dark:peer-checked:text-white/40")}
+                      className={join(
+                        "peer-checked:text-black/40 peer-checked:line-through w-full dark:peer-checked:text-white/40",
+                      )}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && e.metaKey) {
                           e.preventDefault()
