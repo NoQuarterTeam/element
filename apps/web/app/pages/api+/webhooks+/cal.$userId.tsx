@@ -22,11 +22,15 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
           }
           const durationHours = Math.floor(data.payload.length / 60) || null
           const durationMinutes = data.payload.length % 60
-          const hour = dayjs(data.payload.startTime).hour().toString().padStart(2, "0")
-          const minute = dayjs(data.payload.startTime).minute().toString().padStart(2, "0")
+          const utcDate = dayjs(data.payload.startTime)
+            .add(data.payload.organizer.utcOffset || 0, "minutes")
+            .toDate()
+          const hour = dayjs(utcDate).hour().toString().padStart(2, "0")
+          const minute = dayjs(utcDate).minute().toString().padStart(2, "0")
           const startTime = `${hour}:${minute}`
           await db.task.create({
             data: {
+              isImportant: true,
               calComBookingId: data.payload.bookingId,
               name: data.payload.title,
               description: `${data.payload.additionalNotes ? `Notes: ${data.payload.additionalNotes}` : ""}${
@@ -42,7 +46,7 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
               },
               elementId: element.id,
               creatorId: user.id,
-              date: dayjs(data.payload.startTime).startOf("day").add(12, "hours").toDate(),
+              date: dayjs(utcDate).startOf("day").add(12, "hours").toDate(),
               startTime,
               durationHours,
               durationMinutes,
@@ -55,8 +59,11 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
           const task = await db.task.findFirst({ where: { calComBookingId: data.payload.rescheduleId } })
           if (!task) throw new Error("No task")
 
-          const hour = dayjs(data.payload.startTime).hour().toString().padStart(2, "0")
-          const minute = dayjs(data.payload.startTime).minute().toString().padStart(2, "0")
+          const utcDate = dayjs(data.payload.startTime)
+            .add(data.payload.organizer.utcOffset || 0, "minutes")
+            .toDate()
+          const hour = dayjs(utcDate).hour().toString().padStart(2, "0")
+          const minute = dayjs(utcDate).minute().toString().padStart(2, "0")
           const startTime = `${hour}:${minute}`
           const reason = data.payload.responses?.rescheduleReason?.value
           await db.task.update({
@@ -64,7 +71,7 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
             data: {
               description: `${reason ? `Reschedule reason: ${reason}\n` : ""}${task.description}`,
               calComBookingId: data.payload.bookingId,
-              date: dayjs(data.payload.startTime).startOf("day").add(12, "hours").toDate(),
+              date: dayjs(utcDate).startOf("day").add(12, "hours").toDate(),
               startTime,
             },
           })
@@ -106,6 +113,7 @@ type EventOrganizer = {
   language: {
     locale: string
   }
+  utcOffset: number | undefined
 }
 
 type EventResponses = {
