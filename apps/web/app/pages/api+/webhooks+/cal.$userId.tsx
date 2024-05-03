@@ -14,7 +14,6 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
     switch (data.triggerEvent) {
       case "BOOKING_CREATED":
         {
-          console.log(data.payload)
           let element = await db.element.findFirst({ where: { creatorId: user.id, name: data.payload.eventTitle } })
           if (!element) {
             element = await db.element.create({
