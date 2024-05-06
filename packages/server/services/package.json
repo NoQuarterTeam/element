@@ -32,7 +32,7 @@
   "devDependencies": {
     "@types/bcryptjs": "2.4.6",
     "@types/jsonwebtoken": "9.0.6",
-    "@types/node": "18.19.31",
+    "@types/node": "18.19.32",
     "@types/nodemailer": "6.4.15",
     "typescript": "5.4.5"
   }
