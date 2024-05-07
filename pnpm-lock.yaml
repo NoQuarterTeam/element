@@ -348,7 +348,7 @@ importers:
         version: 4.3.1
       posthog-js:
         specifier: ^1.100.0
-        version: 1.130.2
+        version: 1.131.0
       pretty-cache-header:
         specifier: 1.0.0
         version: 1.0.0
@@ -13971,8 +13971,8 @@ packages:
       xtend: 4.0.2
     dev: false
 
-  /posthog-js@1.130.2:
-    resolution: {integrity: sha512-QR/j9Xs/STK3+VJgqiByeXFKT17LGZZvJtrCdgFhwydp8WfisJw7zrSy7rVDjYS0UeKJJ/3cO/qtlXD3dR2+Eg==}
+  /posthog-js@1.131.0:
+    resolution: {integrity: sha512-kws38w7MM9dAV1UowbHoIHNgTywwV6rdt0PSptqbkevpUPBfyNaJoTh9G29rkkJuw0+GhaO+qdUXy6QYk7SqzA==}
     dependencies:
       fflate: 0.4.8
       preact: 10.21.0
