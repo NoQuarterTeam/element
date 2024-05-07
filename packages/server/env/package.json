@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@types/node": "18.19.32",
-    "dotenv-cli": "7.4.1",
+    "dotenv-cli": "7.4.2",
     "typescript": "5.4.5"
   }
 }

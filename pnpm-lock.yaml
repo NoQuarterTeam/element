@@ -429,8 +429,8 @@ importers:
         specifier: 6.1.2
         version: 6.1.2(postcss@8.4.38)
       dotenv-cli:
-        specifier: 7.4.1
-        version: 7.4.1
+        specifier: 7.4.2
+        version: 7.4.2
       postcss:
         specifier: 8.4.38
         version: 8.4.38
@@ -568,8 +568,8 @@ importers:
         specifier: 18.19.32
         version: 18.19.32
       dotenv-cli:
-        specifier: 7.4.1
-        version: 7.4.1
+        specifier: 7.4.2
+        version: 7.4.2
       typescript:
         specifier: 5.4.5
         version: 5.4.5
@@ -9315,8 +9315,8 @@ packages:
       domelementtype: 2.3.0
       domhandler: 5.0.3
 
-  /dotenv-cli@7.4.1:
-    resolution: {integrity: sha512-fE1aywjRrWGxV3miaiUr3d2zC/VAiuzEGghi+QzgIA9fEf/M5hLMaRSXb4IxbUAwGmaLi0IozdZddnVU96acag==}
+  /dotenv-cli@7.4.2:
+    resolution: {integrity: sha512-SbUj8l61zIbzyhIbg0FwPJq6+wjbzdn9oEtozQpZ6kW2ihCcapKVZj49oCT3oPM+mgQm+itgvUQcG5szxVrZTA==}
     hasBin: true
     dependencies:
       cross-spawn: 7.0.3
