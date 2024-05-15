@@ -18,7 +18,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const body = await request.text()
     await qstashReceiver.verify({ signature, body })
 
+    console.log(body)
+
     const data = JSON.parse(body) as Partial<TaskReminderBody>
+    console.log(data)
+
     const taskId = data?.id
     if (!taskId) {
       console.log("no task id")
