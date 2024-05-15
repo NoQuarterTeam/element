@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { TaskRepeat } from "@element/database/types"
+import { TaskReminder, TaskRepeat } from "@element/database/types"
 
 import { NullableFormNumber, NullableFormString } from "./utils/form"
 
@@ -15,6 +15,7 @@ export const taskSchema = z.object({
   startTime: NullableFormString,
   durationHours: NullableFormNumber,
   durationMinutes: NullableFormNumber,
+  reminder: z.nativeEnum(TaskReminder).nullish(),
 })
 export const todoSchema = z.object({
   name: z.string(),

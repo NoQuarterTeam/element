@@ -32,3 +32,10 @@ export async function createHabitReminder(reminder: Pick<HabitReminder, "id" | "
     throw error
   }
 }
+
+export async function deleteHabitReminder(id: string) {
+  return qstash.schedules.delete(id).catch((error) => {
+    console.log("Error deleting schedule")
+    console.log(error)
+  })
+}

@@ -54,19 +54,33 @@ enum TaskRepeat {
   YEARLY
 }
 
+enum TaskReminder {
+  AT_TIME
+  MINUTES_5
+  MINUTES_10
+  MINUTES_15
+  MINUTES_30
+  HOURS_1
+  HOURS_2
+  DAYS_1
+  DAYS_2
+}
+
 model Task {
-  id              String      @id @default(uuid())
-  name            String
-  description     String?
-  date            DateTime?
-  isComplete      Boolean     @default(false)
-  isTemplate      Boolean     @default(false)
-  repeat          TaskRepeat?
-  startTime       String?
-  durationHours   Int?
-  durationMinutes Int?
-  isImportant     Boolean     @default(false)
-  order           Int         @default(50)
+  id               String        @id @default(uuid())
+  name             String
+  description      String?
+  date             DateTime?
+  isComplete       Boolean       @default(false)
+  isTemplate       Boolean       @default(false)
+  repeat           TaskRepeat?
+  startTime        String?
+  durationHours    Int?
+  durationMinutes  Int?
+  isImportant      Boolean       @default(false)
+  order            Int           @default(50)
+  reminder         TaskReminder?
+  upstashMessageId String?
 
   // integrations
   calComBookingId Int?

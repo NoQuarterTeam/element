@@ -1,13 +1,14 @@
 import dayjs from "dayjs"
 import { useGlobalSearchParams, useRouter } from "expo-router"
-import { AlertTriangle, CalendarPlus, Check, Clock, Copy, Plus, Square, Trash, X } from "lucide-react-native"
+import { AlarmClock, AlertTriangle, CalendarPlus, Check, Clock, Copy, Plus, Square, Trash, X } from "lucide-react-native"
 import * as React from "react"
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, View, useColorScheme } from "react-native"
 import { useSoftInputHeightChanged } from "react-native-avoid-softinput"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
+import * as DropdownMenu from "zeego/dropdown-menu"
 
-import type { TaskRepeat } from "@element/database/types"
+import type { TaskReminder, TaskRepeat } from "@element/database/types"
 import { getRepeatingDatesBetween, join, merge, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
@@ -41,6 +42,45 @@ type Props = {
     }
 )
 
+const REMINDER_OPTIONS: { value: TaskReminder; name: string }[] = [
+  {
+    value: "AT_TIME",
+    name: "At time of task",
+  },
+  {
+    value: "MINUTES_5",
+    name: "5 minutes before",
+  },
+  {
+    value: "MINUTES_10",
+    name: "10 minutes before",
+  },
+  {
+    value: "MINUTES_15",
+    name: "15 minutes before",
+  },
+  {
+    value: "MINUTES_30",
+    name: "30 minutes before",
+  },
+  {
+    value: "HOURS_1",
+    name: "1 hour before",
+  },
+  {
+    value: "HOURS_2",
+    name: "2 hour before",
+  },
+  {
+    value: "DAYS_1",
+    name: "1 day before",
+  },
+  {
+    value: "DAYS_2",
+    name: "2 days before",
+  },
+]
+
 export function TaskForm(props: Props) {
   const router = useRouter()
   const canGoBack = router.canGoBack()
@@ -50,6 +90,7 @@ export function TaskForm(props: Props) {
     name: props.task?.name || "",
     description: props.task?.description || null,
     startTime: props.task?.startTime || null,
+    reminder: props.task?.reminder || null,
     durationHours: props.task?.durationHours ? props.task?.durationHours?.toString() : null,
     durationMinutes: props.task?.durationMinutes ? props.task?.durationMinutes?.toString() : null,
     date: props.task?.date
@@ -276,21 +317,65 @@ export function TaskForm(props: Props) {
             ))}
           </View>
           <View>
-            <FormInput
-              label="Start time"
-              error={props.error?.zodError?.fieldErrors?.startTime}
-              input={
-                <TouchableOpacity
-                  onPress={() => {
-                    nameInputRef.current?.blur()
-                    timeProps.onOpen()
-                  }}
-                  className={inputClassName}
-                >
-                  <Text className={join("text-sm", !form.startTime && "opacity-60")}>{form.startTime || "hh:mm"}</Text>
-                </TouchableOpacity>
-              }
-            />
+            <View className="flex flex-row items-center space-x-2">
+              <View className="flex-1">
+                <FormInput
+                  label="Start time"
+                  error={props.error?.zodError?.fieldErrors?.startTime}
+                  input={
+                    <TouchableOpacity
+                      onPress={() => {
+                        nameInputRef.current?.blur()
+                        timeProps.onOpen()
+                      }}
+                      className={inputClassName}
+                    >
+                      <Text className={join("text-sm", !form.startTime && "opacity-60")}>{form.startTime || "hh:mm"}</Text>
+                    </TouchableOpacity>
+                  }
+                />
+              </View>
+              {form.startTime && form.date ? (
+                <FormInput
+                  label="Reminder"
+                  error={props.error?.zodError?.fieldErrors?.reminder}
+                  input={
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger asChild>
+                        <TouchableOpacity className={inputClassName}>
+                          <Text className={join("text-sm")}>{form.reminder || "None"}</Text>
+                        </TouchableOpacity>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Content>
+                        <DropdownMenu.Item
+                          key="none"
+                          onSelect={() => {
+                            setForm({ ...form, reminder: null })
+                          }}
+                        >
+                          None
+                        </DropdownMenu.Item>
+                        {REMINDER_OPTIONS
+                          // .filter(([key]) => (key === "near" ? !!me?.latitude && !!me?.longitude : true))
+                          .map((option) => (
+                            <DropdownMenu.Item
+                              onSelect={() => {
+                                setForm({ ...form, reminder: option.value })
+                              }}
+                              key={option.value}
+                            >
+                              {option.name}
+                            </DropdownMenu.Item>
+                          ))}
+                        <DropdownMenu.Arrow />
+                      </DropdownMenu.Content>
+                    </DropdownMenu.Root>
+                  }
+                />
+              ) : (
+                <View className="flex-1" />
+              )}
+            </View>
             <DateTimePickerModal
               mode="time"
               isVisible={timeProps.isOpen}

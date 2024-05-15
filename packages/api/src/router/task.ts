@@ -6,6 +6,7 @@ import type { Prisma } from "@element/database/types"
 import { taskSchema, todoSchema } from "@element/server-schemas"
 import { MAX_FREE_TASKS, getRepeatingDatesBetween } from "@element/shared"
 
+import { createTaskReminder, deleteTaskReminder } from "@element/server-services"
 import { createTRPCRouter, protectedProcedure } from "../trpc"
 
 const taskItemSelectFields = {
@@ -13,6 +14,7 @@ const taskItemSelectFields = {
   createdAt: true,
   name: true,
   description: true,
+  reminder: true,
   durationHours: true,
   durationMinutes: true,
   date: true,
@@ -170,9 +172,13 @@ export const taskRouter = createTRPCRouter({
             }),
           )
         }
-
         return task
       })
+      if (newTask.reminder) {
+        const upstashMessageId = await createTaskReminder(newTask)
+        await ctx.prisma.task.update({ where: { id: newTask.id }, data: { upstashMessageId } })
+      }
+
       return {
         ...newTask,
         date: dayjs(newTask.date).startOf("day").add(12, "hours").format("YYYY-MM-DD"),
@@ -185,9 +191,12 @@ export const taskRouter = createTRPCRouter({
       const date = data.date ? dayjs(data.date).startOf("day").add(12, "hours").toDate() : data.date
       const task = await ctx.prisma.task.update({
         where: { id },
-        select: taskItemSelectFields,
+        select: { ...taskItemSelectFields, upstashMessageId: true },
         data: { ...data, todos: todos ? { deleteMany: {}, createMany: { data: todos } } : undefined, date },
       })
+      if (!task.reminder && task.upstashMessageId) {
+        await deleteTaskReminder(task.upstashMessageId)
+      }
       return {
         ...task,
         date: task.date ? dayjs(task.date).startOf("day").add(12, "hours").format("YYYY-MM-DD") : null,
