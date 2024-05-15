@@ -12,6 +12,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const signature = request.headers.get("upstash-signature")
     if (!signature) {
+      console.log("no sig")
       return badRequest({ success: false, message: "no signature" })
     }
     const body = await request.text()
@@ -31,7 +32,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         upstashMessageId: true,
       },
     })
-    if (!task) return badRequest({ success: false, message: "no task found" })
+    if (!task) {
+      console.log("no task found")
+      return badRequest({ success: false, message: "no task found" })
+    }
     if (!task.startTime || !task.reminder || !task.date) return json({ success: true })
 
     const pushTokens = await db.pushToken.findMany({ where: { userId: task.creatorId } })
