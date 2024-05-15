@@ -21,6 +21,7 @@ export async function createTaskReminder(task: Pick<Task, "id" | "date" | "start
       .set("minute", minute)
       .subtract(reminderHash[task.reminder].hours, "hours")
       .subtract(reminderHash[task.reminder].minutes, "minutes")
+      .subtract(2, "hours")
 
     const headers = new Headers()
     headers.append("Content-Type", "application/json")
