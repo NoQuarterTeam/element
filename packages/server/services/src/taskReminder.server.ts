@@ -1,10 +1,11 @@
-import dayjs from "dayjs"
-
 import type { Task } from "@element/database/types"
 import { FULL_WEB_URL, IS_DEV } from "@element/server-env"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
 
 import { reminderHash } from "@element/shared"
 import { qstash } from "./lib/qstash.server"
+dayjs.extend(utc)
 
 export type TaskReminderBody = Pick<Task, "id">
 
@@ -21,18 +22,11 @@ export async function createTaskReminder(task: Pick<Task, "id" | "date" | "start
       .subtract(reminderHash[task.reminder].hours, "hours")
       .subtract(reminderHash[task.reminder].minutes, "minutes")
 
-    console.log({ date: task.date })
-    console.log({ hash: reminderHash[task.reminder] })
-
-    console.log({ hour, minute })
-
-    console.log(reminderDateTime.format())
-
     const headers = new Headers()
     headers.append("Content-Type", "application/json")
 
     const job = await qstash.publishJSON({
-      notBefore: reminderDateTime.unix(),
+      notBefore: reminderDateTime.utc().unix(),
       body: JSON.stringify({ id: task.id } satisfies TaskReminderBody),
       headers,
       url: IS_DEV ? "https://element.requestcatcher.com" : `${FULL_WEB_URL}/api/task-reminder`,
