@@ -20,7 +20,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     const data = JSON.parse(body) as Partial<TaskReminderBody>
     const taskId = data?.id
-    if (!taskId) return badRequest({ success: false, message: "no task id provided" })
+    if (!taskId) {
+      console.log("no task id")
+      return badRequest({ success: false, message: "no task id provided" })
+    }
     const task = await db.task.findUnique({
       where: { id: taskId },
       select: {
