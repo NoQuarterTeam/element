@@ -137,7 +137,11 @@ export function TaskForm(props: Props) {
   const dateProps = useDisclosure()
   const handlePickDate = (date: Date) => {
     dateProps.onClose()
-    setForm((f) => ({ ...f, date: dayjs(date).format("YYYY-MM-DD") }))
+    setForm((f) => ({
+      ...f,
+      date: dayjs(date).format("YYYY-MM-DD"),
+      reminder: dayjs(date).isAfter(dayjs().add(1, "year")) ? null : f.reminder,
+    }))
   }
 
   const [repeatEndDate, setRepeatEndDate] = React.useState<string>(
@@ -336,7 +340,7 @@ export function TaskForm(props: Props) {
                 }
               />
 
-              {me?.stripeSubscriptionId && form.startTime && form.date && (
+              {me?.stripeSubscriptionId && form.startTime && form.date && dayjs(form.date).isBefore(dayjs().add(1, "year")) && (
                 <FormInput
                   label="Reminder"
                   error={props.error?.zodError?.fieldErrors?.reminder}
