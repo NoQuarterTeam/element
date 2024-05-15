@@ -16,8 +16,7 @@ export async function createTaskReminder(task: Pick<Task, "id" | "date" | "start
     const hour = Number(task.startTime.split(":")[0])
     const minute = Number(task.startTime.split(":")[1])
     // upstashs servers on utc
-    const reminderDateTime = dayjs
-      .utc(task.date)
+    const reminderDateTime = dayjs(task.date)
       .set("hour", hour)
       .set("minute", minute)
       .subtract(reminderHash[task.reminder].hours, "hours")
