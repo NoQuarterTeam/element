@@ -347,26 +347,14 @@ export function TaskForm(props: Props) {
                         </TouchableOpacity>
                       </DropdownMenu.Trigger>
                       <DropdownMenu.Content>
-                        <DropdownMenu.Item
-                          key="none"
-                          onSelect={() => {
-                            setForm({ ...form, reminder: null })
-                          }}
-                        >
+                        <DropdownMenu.Item key="none" onSelect={() => setForm({ ...form, reminder: null })}>
                           None
                         </DropdownMenu.Item>
-                        {REMINDER_OPTIONS
-                          // .filter(([key]) => (key === "near" ? !!me?.latitude && !!me?.longitude : true))
-                          .map((option) => (
-                            <DropdownMenu.Item
-                              onSelect={() => {
-                                setForm({ ...form, reminder: option.value })
-                              }}
-                              key={option.value}
-                            >
-                              {option.name}
-                            </DropdownMenu.Item>
-                          ))}
+                        {REMINDER_OPTIONS.map((option) => (
+                          <DropdownMenu.Item onSelect={() => setForm({ ...form, reminder: option.value })} key={option.value}>
+                            {option.name}
+                          </DropdownMenu.Item>
+                        ))}
                         <DropdownMenu.Arrow />
                       </DropdownMenu.Content>
                     </DropdownMenu.Root>
