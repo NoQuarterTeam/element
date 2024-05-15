@@ -10,6 +10,7 @@ import { useTimelineTasks } from "~/lib/hooks/useTimelineTasks"
 import { TaskActionMethods } from "~/pages/_app.timeline.$id"
 import type { TimelineTask } from "~/pages/api+/tasks"
 
+import { AlarmClock } from "lucide-react"
 import { Button } from "./ui/Button"
 import { ButtonGroup } from "./ui/ButtonGroup"
 import { useFetcher } from "./ui/Form"
@@ -24,6 +25,7 @@ export const taskItemSelectFields = {
   durationMinutes: true,
   date: true,
   isComplete: true,
+  reminder: true,
   isImportant: true,
   repeat: true,
   repeatParentId: true,
@@ -171,7 +173,14 @@ function _TaskItem({ task }: Props) {
                 ) : (
                   <div />
                 )}
-                {task.startTime ? <p className="text-xxs">{task.startTime}</p> : <div />}
+                {task.startTime ? (
+                  <div className="flex items-center space-x-0.5">
+                    <AlarmClock size={12} />
+                    <p className="text-xxs">{task.startTime}</p>
+                  </div>
+                ) : (
+                  <div />
+                )}
               </div>
             )}
           </div>

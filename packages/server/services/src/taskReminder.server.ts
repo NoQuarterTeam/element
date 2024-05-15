@@ -3,7 +3,7 @@ import { FULL_WEB_URL, IS_DEV } from "@element/server-env"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 
-import { reminderHash } from "@element/shared"
+import { taskReminderHash } from "@element/shared"
 import { qstash } from "./lib/qstash.server"
 dayjs.extend(utc)
 
@@ -19,8 +19,8 @@ export async function createTaskReminder(task: Pick<Task, "id" | "date" | "start
     const reminderDateTime = dayjs(task.date)
       .set("hour", hour)
       .set("minute", minute)
-      .subtract(reminderHash[task.reminder].hours, "hours")
-      .subtract(reminderHash[task.reminder].minutes, "minutes")
+      .subtract(taskReminderHash[task.reminder].hours, "hours")
+      .subtract(taskReminderHash[task.reminder].minutes, "minutes")
       .subtract(2, "hours")
 
     const headers = new Headers()

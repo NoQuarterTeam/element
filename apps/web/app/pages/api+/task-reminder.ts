@@ -1,5 +1,5 @@
 import { type TaskReminderBody, qstashReceiver } from "@element/server-services"
-import { reminderHash } from "@element/shared"
+import { taskReminderHash } from "@element/shared"
 import type { ActionFunctionArgs } from "@remix-run/node"
 import dayjs from "dayjs"
 
@@ -51,8 +51,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       dayjs(task.date)
         .set("hour", Number(task.startTime!.split(":")[0]))
         .set("minute", Number(task.startTime!.split(":")[1]))
-        .subtract(reminderHash[task.reminder].hours, "hours")
-        .subtract(reminderHash[task.reminder].minutes, "minutes")
+        .subtract(taskReminderHash[task.reminder].hours, "hours")
+        .subtract(taskReminderHash[task.reminder].minutes, "minutes")
         .isBefore(dayjs())
     ) {
       console.log("task is in the past")
@@ -60,13 +60,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
 
     const pushTokens = await db.pushToken.findMany({ where: { userId: task.creatorId } })
+    const isToday = dayjs(task.date).isSame(dayjs(), "day")
     const messages = pushTokens
       .filter((t) => Expo.isExpoPushToken(t.token))
       .map(
         (t) =>
           ({
             to: t.token,
-            body: `Here's a reminder about your task ${task.name} at ${task.startTime}!`,
+            body: `Here's a reminder about your task '${task.name}'`,
+            subtitle: `It's at ${task.startTime}${isToday ? "" : " tomorrow!"}`,
             data: { url: "/" },
           }) satisfies ExpoPushMessage,
       )

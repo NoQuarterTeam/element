@@ -9,7 +9,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-na
 import * as DropdownMenu from "zeego/dropdown-menu"
 
 import type { TaskReminder, TaskRepeat } from "@element/database/types"
-import { getRepeatingDatesBetween, join, merge, reminderHash, useDisclosure } from "@element/shared"
+import { TASK_REMINDER_OPTIONS, getRepeatingDatesBetween, join, merge, taskReminderHash, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
 import type { FormResponseError } from "../lib/form"
@@ -41,45 +41,6 @@ type Props = {
       onUpdate: (data: RouterInputs["task"]["update"]) => void
     }
 )
-
-const REMINDER_OPTIONS: { value: TaskReminder; name: string }[] = [
-  {
-    value: "AT_TIME",
-    name: "At time of task",
-  },
-  {
-    value: "MINUTES_5",
-    name: "5 minutes before",
-  },
-  {
-    value: "MINUTES_10",
-    name: "10 minutes before",
-  },
-  {
-    value: "MINUTES_15",
-    name: "15 minutes before",
-  },
-  {
-    value: "MINUTES_30",
-    name: "30 minutes before",
-  },
-  {
-    value: "HOURS_1",
-    name: "1 hour before",
-  },
-  {
-    value: "HOURS_2",
-    name: "2 hour before",
-  },
-  {
-    value: "DAYS_1",
-    name: "1 day before",
-  },
-  {
-    value: "DAYS_2",
-    name: "2 days before",
-  },
-]
 
 export function TaskForm(props: Props) {
   const router = useRouter()
@@ -132,15 +93,13 @@ export function TaskForm(props: Props) {
   const handlePickTime = (startTime: Date) => {
     timeProps.onClose()
 
-    const reminder = form.reminder ? REMINDER_OPTIONS.find((r) => r.value === form.reminder)!.value : null
-
     const isOutOfWindow =
-      reminder && form.date
+      form.reminder && form.date
         ? dayjs(form.date)
             .set("hours", dayjs(startTime).hour())
             .set("minutes", dayjs(startTime).minute())
-            .subtract(reminderHash[reminder].hours, "hours")
-            .subtract(reminderHash[reminder].minutes, "minutes")
+            .subtract(taskReminderHash[form.reminder].hours, "hours")
+            .subtract(taskReminderHash[form.reminder].minutes, "minutes")
             .isBefore(dayjs())
         : null
 
@@ -368,7 +327,7 @@ export function TaskForm(props: Props) {
                           <TouchableOpacity className={merge(inputClassName, "flex flex-row items-center space-x-2")}>
                             <Icon icon={AlarmClock} size={16} />
                             <Text className="text-sm">
-                              {REMINDER_OPTIONS.find((r) => r.value === form.reminder)?.name || "None"}
+                              {TASK_REMINDER_OPTIONS.find((r) => r.value === form.reminder)?.name || "None"}
                             </Text>
                           </TouchableOpacity>
                         </DropdownMenu.Trigger>
@@ -376,14 +335,14 @@ export function TaskForm(props: Props) {
                           <DropdownMenu.Item key="none" onSelect={() => setForm({ ...form, reminder: null })}>
                             None
                           </DropdownMenu.Item>
-                          {REMINDER_OPTIONS.map((option) => (
+                          {TASK_REMINDER_OPTIONS.map((option) => (
                             <DropdownMenu.Item
                               key={option.value}
                               disabled={dayjs(form.date!)
                                 .set("hour", Number(form.startTime!.split(":")[0]))
                                 .set("minute", Number(form.startTime!.split(":")[1]))
-                                .subtract(reminderHash[option.value].hours, "hours")
-                                .subtract(reminderHash[option.value].minutes, "minutes")
+                                .subtract(taskReminderHash[option.value].hours, "hours")
+                                .subtract(taskReminderHash[option.value].minutes, "minutes")
                                 .isBefore(dayjs())}
                               onSelect={() => {
                                 setForm({ ...form, reminder: option.value })
