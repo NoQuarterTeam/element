@@ -1,5 +1,7 @@
 import { type TaskReminderBody, qstashReceiver } from "@element/server-services"
+import { reminderHash } from "@element/shared"
 import type { ActionFunctionArgs } from "@remix-run/node"
+import dayjs from "dayjs"
 
 import { Expo, type ExpoPushMessage } from "expo-server-sdk"
 
@@ -46,7 +48,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       console.log("no task found")
       return badRequest({ success: false, message: "no task found" })
     }
-    if (!task.startTime || !task.reminder || !task.date) return json({ success: true })
+    if (!task.startTime || !task.reminder || !task.date) {
+      console.log("task no longer has reminder")
+
+      return json({ success: true })
+    }
+
+    if (
+      dayjs(task.date)
+        .set("hour", Number(task.startTime!.split(":")[0]))
+        .set("minute", Number(task.startTime!.split(":")[1]))
+        .subtract(reminderHash[task.reminder].hours, "hours")
+        .subtract(reminderHash[task.reminder].minutes, "minutes")
+        .isBefore(dayjs())
+    ) {
+      console.log("task is in the past")
+      return json({ success: true })
+    }
 
     const pushTokens = await db.pushToken.findMany({ where: { userId: task.creatorId } })
     const messages = pushTokens
