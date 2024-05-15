@@ -20,14 +20,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const body = await request.text()
     await qstashReceiver.verify({ signature, body })
 
-    console.log({ body })
     const data = JSON.parse(body) as Partial<TaskReminderBody>
-    console.log({ data })
-
-    console.log({ typeof: typeof data })
-
     const taskId = data?.id
-    console.log({ taskId })
 
     if (!taskId) {
       console.log("no task id")
@@ -50,7 +44,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
     if (!task.startTime || !task.reminder || !task.date) {
       console.log("task no longer has reminder")
-
       return json({ success: true })
     }
 

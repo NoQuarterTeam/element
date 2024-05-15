@@ -28,7 +28,7 @@ export async function createTaskReminder(task: Pick<Task, "id" | "date" | "start
 
     const job = await qstash.publishJSON({
       notBefore: reminderDateTime.utc().unix(),
-      body: JSON.stringify({ id: task.id } satisfies TaskReminderBody),
+      body: { id: task.id } satisfies TaskReminderBody,
       headers,
       url: IS_DEV ? "https://element.requestcatcher.com" : `${FULL_WEB_URL}/api/task-reminder`,
     })
