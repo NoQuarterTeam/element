@@ -1,12 +1,10 @@
 import dayjs from "dayjs"
-import utc from "dayjs/plugin/utc"
 
 import type { Task } from "@element/database/types"
 import { FULL_WEB_URL, IS_DEV } from "@element/server-env"
 
 import { reminderHash } from "@element/shared"
 import { qstash } from "./lib/qstash.server"
-dayjs.extend(utc)
 
 export type TaskReminderBody = Pick<Task, "id">
 
@@ -35,9 +33,8 @@ export async function createTaskReminder(task: Pick<Task, "id" | "date" | "start
 
     return job.messageId
   } catch (error) {
-    console.log("Error creating schedule")
     console.log(error)
-    throw error
+    return null
   }
 }
 

@@ -176,6 +176,7 @@ export const taskRouter = createTRPCRouter({
       })
       if (newTask.reminder) {
         const upstashMessageId = await createTaskReminder(newTask)
+        if (!upstashMessageId) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Error creating reminder" })
         await ctx.prisma.task.update({ where: { id: newTask.id }, data: { upstashMessageId } })
       }
 
