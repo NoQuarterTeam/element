@@ -189,6 +189,8 @@ export const taskRouter = createTRPCRouter({
     .mutation(async ({ ctx, input: { id, todos, ...data } }) => {
       // date can be set to null or be undefined,
       const date = data.date ? dayjs(data.date).startOf("day").add(12, "hours").toDate() : data.date
+      const existingTask = await ctx.prisma.task.findUnique({ where: { id, creatorId: { equals: ctx.user.id } } })
+      if (!existingTask) throw new TRPCError({ code: "NOT_FOUND" })
       const task = await ctx.prisma.task.update({
         where: { id },
         select: { ...taskItemSelectFields, upstashMessageId: true },
@@ -199,7 +201,10 @@ export const taskRouter = createTRPCRouter({
         await deleteTaskReminder(task.upstashMessageId)
         await ctx.prisma.task.update({ where: { id }, data: { upstashMessageId: null } })
       }
-      if ((data.reminder && task.reminder !== data.reminder) || (data.startTime && data.startTime !== task.startTime)) {
+      if (
+        (data.reminder && existingTask.reminder !== data.reminder) ||
+        (data.startTime && data.startTime !== existingTask.startTime)
+      ) {
         if (task.upstashMessageId) await deleteTaskReminder(task.upstashMessageId)
         const upstashMessageId = await createTaskReminder(task)
         await ctx.prisma.task.update({ where: { id }, data: { upstashMessageId } })
