@@ -26,6 +26,10 @@ Sentry.init({
   debug: true,
 })
 
+export const unstable_settings = {
+  initialRouteName: "(home)",
+}
+
 SplashScreen.preventAutoHideAsync()
 
 // This is the main layout of the app

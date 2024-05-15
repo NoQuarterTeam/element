@@ -336,7 +336,7 @@ export function TaskForm(props: Props) {
                 }
               />
 
-              {form.startTime && form.date && (
+              {me?.stripeSubscriptionId && form.startTime && form.date && (
                 <FormInput
                   label="Reminder"
                   error={props.error?.zodError?.fieldErrors?.reminder}
