@@ -9,7 +9,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-na
 import * as DropdownMenu from "zeego/dropdown-menu"
 
 import type { TaskReminder, TaskRepeat } from "@element/database/types"
-import { getRepeatingDatesBetween, join, merge, useDisclosure } from "@element/shared"
+import { getRepeatingDatesBetween, join, merge, reminderHash, useDisclosure } from "@element/shared"
 import colors from "@element/tailwind-config/src/colors"
 
 import type { FormResponseError } from "../lib/form"
@@ -131,16 +131,30 @@ export function TaskForm(props: Props) {
 
   const handlePickTime = (startTime: Date) => {
     timeProps.onClose()
-    setForm((f) => ({ ...f, startTime: dayjs(startTime).format("HH:mm") }))
+
+    const reminder = form.reminder ? REMINDER_OPTIONS.find((r) => r.value === form.reminder)!.value : null
+
+    const isOutOfWindow =
+      reminder && form.date
+        ? dayjs(form.date)
+            .set("hours", dayjs(startTime).hour())
+            .set("minutes", dayjs(startTime).minute())
+            .subtract(reminderHash[reminder].hours, "hours")
+            .subtract(reminderHash[reminder].minutes, "minutes")
+            .isBefore(dayjs())
+        : null
+
+    setForm((f) => ({ ...f, startTime: dayjs(startTime).format("HH:mm"), reminder: isOutOfWindow ? null : f.reminder }))
   }
 
   const dateProps = useDisclosure()
   const handlePickDate = (date: Date) => {
     dateProps.onClose()
+    const isOutOfWindow = dayjs(date).isAfter(dayjs().add(1, "year")) || dayjs(date).isBefore(dayjs())
     setForm((f) => ({
       ...f,
       date: dayjs(date).format("YYYY-MM-DD"),
-      reminder: dayjs(date).isAfter(dayjs().add(1, "year")) ? null : f.reminder,
+      reminder: isOutOfWindow ? null : f.reminder,
     }))
   }
 
@@ -359,7 +373,18 @@ export function TaskForm(props: Props) {
                           None
                         </DropdownMenu.Item>
                         {REMINDER_OPTIONS.map((option) => (
-                          <DropdownMenu.Item onSelect={() => setForm({ ...form, reminder: option.value })} key={option.value}>
+                          <DropdownMenu.Item
+                            key={option.value}
+                            disabled={dayjs(form.date!)
+                              .set("hour", Number(form.startTime!.split(":")[0]))
+                              .set("minute", Number(form.startTime!.split(":")[1]))
+                              .subtract(reminderHash[option.value].hours, "hours")
+                              .subtract(reminderHash[option.value].minutes, "minutes")
+                              .isBefore(dayjs())}
+                            onSelect={() => {
+                              setForm({ ...form, reminder: option.value })
+                            }}
+                          >
                             {option.name}
                           </DropdownMenu.Item>
                         ))}
