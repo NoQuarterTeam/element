@@ -3,7 +3,7 @@ import advancedFormat from "dayjs/plugin/advancedFormat"
 import { BlurView } from "expo-blur"
 import * as Haptics from "expo-haptics"
 import { Link, router } from "expo-router"
-import { Book, Calendar, Clock, MoreVertical, Plus, X } from "lucide-react-native"
+import { AlarmClock, Book, Calendar, Clock, MoreVertical, Plus, X } from "lucide-react-native"
 import * as React from "react"
 import { ActivityIndicator, RefreshControl, TouchableOpacity, View, useColorScheme } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
@@ -600,7 +600,15 @@ const TaskItem = React.memo(function _TaskItem({
                 ) : (
                   <View />
                 )}
-                {task.startTime ? <Text className="text-xxs">{task.startTime}</Text> : <View />}
+                {task.startTime ? (
+                  <View className="flex flex-row items-center space-x-0.5">
+                    {task.reminder && <Icon icon={AlarmClock} size={10} />}
+
+                    <Text className="text-xxs">{task.startTime}</Text>
+                  </View>
+                ) : (
+                  <View />
+                )}
               </View>
             )}
           </View>
