@@ -317,33 +317,37 @@ export function TaskForm(props: Props) {
             ))}
           </View>
           <View>
-            <View className="flex flex-row items-center space-x-2">
-              <View className="flex-1">
-                <FormInput
-                  label="Start time"
-                  error={props.error?.zodError?.fieldErrors?.startTime}
-                  input={
-                    <TouchableOpacity
-                      onPress={() => {
-                        nameInputRef.current?.blur()
-                        timeProps.onOpen()
-                      }}
-                      className={inputClassName}
-                    >
-                      <Text className={join("text-sm", !form.startTime && "opacity-60")}>{form.startTime || "hh:mm"}</Text>
-                    </TouchableOpacity>
-                  }
-                />
-              </View>
-              {form.startTime && form.date ? (
+            <View className="flex flex-row items-center">
+              <FormInput
+                label="Start time"
+                error={props.error?.zodError?.fieldErrors?.startTime}
+                input={
+                  <TouchableOpacity
+                    className={merge(inputClassName, "w-[100px]")}
+                    onPress={() => {
+                      nameInputRef.current?.blur()
+                      timeProps.onOpen()
+                    }}
+                  >
+                    <Text className={join("text-sm text-center", !form.startTime && "opacity-60")}>
+                      {form.startTime || "hh:mm"}
+                    </Text>
+                  </TouchableOpacity>
+                }
+              />
+
+              {form.startTime && form.date && (
                 <FormInput
                   label="Reminder"
                   error={props.error?.zodError?.fieldErrors?.reminder}
                   input={
                     <DropdownMenu.Root>
                       <DropdownMenu.Trigger asChild>
-                        <TouchableOpacity className={inputClassName}>
-                          <Text className={join("text-sm")}>{form.reminder || "None"}</Text>
+                        <TouchableOpacity className={merge(inputClassName, "flex flex-row items-center space-x-2")}>
+                          <Icon icon={AlarmClock} size={16} />
+                          <Text className="text-sm">
+                            {REMINDER_OPTIONS.find((r) => r.value === form.reminder)?.name || "None"}
+                          </Text>
                         </TouchableOpacity>
                       </DropdownMenu.Trigger>
                       <DropdownMenu.Content>
@@ -360,8 +364,6 @@ export function TaskForm(props: Props) {
                     </DropdownMenu.Root>
                   }
                 />
-              ) : (
-                <View className="flex-1" />
               )}
             </View>
             <DateTimePickerModal

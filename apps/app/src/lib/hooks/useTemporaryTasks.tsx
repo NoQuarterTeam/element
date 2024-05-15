@@ -100,6 +100,7 @@ function formatTask(data: Omit<RouterInputs["task"]["update"], "id">) {
     isComplete: data.isComplete as boolean,
     isImportant: data.isImportant as boolean,
     name: data.name as string,
+    reminder: null,
     startTime: data.startTime as string,
     date: (data.date ? dayjs(data.date as string).format("YYYY-MM-DD") : null) as string,
     durationHours: data.durationHours as number,

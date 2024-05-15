@@ -194,8 +194,15 @@ export const taskRouter = createTRPCRouter({
         select: { ...taskItemSelectFields, upstashMessageId: true },
         data: { ...data, todos: todos ? { deleteMany: {}, createMany: { data: todos } } : undefined, date },
       })
+
       if (!task.reminder && task.upstashMessageId) {
         await deleteTaskReminder(task.upstashMessageId)
+        await ctx.prisma.task.update({ where: { id }, data: { upstashMessageId: null } })
+      }
+      if (data.reminder && task.reminder !== data.reminder) {
+        if (task.upstashMessageId) await deleteTaskReminder(task.upstashMessageId)
+        const upstashMessageId = await createTaskReminder(task)
+        await ctx.prisma.task.update({ where: { id }, data: { upstashMessageId } })
       }
       return {
         ...task,
