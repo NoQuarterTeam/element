@@ -72,8 +72,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       )
     const chunks = expo.chunkPushNotifications(messages)
 
-    // todod: need to check if the habit was complete for today, if so, dont send
-
     for await (const chunk of chunks) {
       try {
         await expo.sendPushNotificationsAsync(chunk)
