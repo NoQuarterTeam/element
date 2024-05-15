@@ -354,46 +354,50 @@ export function TaskForm(props: Props) {
                 }
               />
 
-              {me?.stripeSubscriptionId && form.startTime && form.date && dayjs(form.date).isBefore(dayjs().add(1, "year")) && (
-                <FormInput
-                  label="Reminder"
-                  error={props.error?.zodError?.fieldErrors?.reminder}
-                  input={
-                    <DropdownMenu.Root>
-                      <DropdownMenu.Trigger asChild>
-                        <TouchableOpacity className={merge(inputClassName, "flex flex-row items-center space-x-2")}>
-                          <Icon icon={AlarmClock} size={16} />
-                          <Text className="text-sm">
-                            {REMINDER_OPTIONS.find((r) => r.value === form.reminder)?.name || "None"}
-                          </Text>
-                        </TouchableOpacity>
-                      </DropdownMenu.Trigger>
-                      <DropdownMenu.Content>
-                        <DropdownMenu.Item key="none" onSelect={() => setForm({ ...form, reminder: null })}>
-                          None
-                        </DropdownMenu.Item>
-                        {REMINDER_OPTIONS.map((option) => (
-                          <DropdownMenu.Item
-                            key={option.value}
-                            disabled={dayjs(form.date!)
-                              .set("hour", Number(form.startTime!.split(":")[0]))
-                              .set("minute", Number(form.startTime!.split(":")[1]))
-                              .subtract(reminderHash[option.value].hours, "hours")
-                              .subtract(reminderHash[option.value].minutes, "minutes")
-                              .isBefore(dayjs())}
-                            onSelect={() => {
-                              setForm({ ...form, reminder: option.value })
-                            }}
-                          >
-                            {option.name}
+              {me?.stripeSubscriptionId &&
+                form.startTime &&
+                form.date &&
+                dayjs(form.date).isBefore(dayjs().add(1, "year")) &&
+                dayjs(form.date).isAfter(dayjs().startOf("day")) && (
+                  <FormInput
+                    label="Reminder"
+                    error={props.error?.zodError?.fieldErrors?.reminder}
+                    input={
+                      <DropdownMenu.Root>
+                        <DropdownMenu.Trigger asChild>
+                          <TouchableOpacity className={merge(inputClassName, "flex flex-row items-center space-x-2")}>
+                            <Icon icon={AlarmClock} size={16} />
+                            <Text className="text-sm">
+                              {REMINDER_OPTIONS.find((r) => r.value === form.reminder)?.name || "None"}
+                            </Text>
+                          </TouchableOpacity>
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Content>
+                          <DropdownMenu.Item key="none" onSelect={() => setForm({ ...form, reminder: null })}>
+                            None
                           </DropdownMenu.Item>
-                        ))}
-                        <DropdownMenu.Arrow />
-                      </DropdownMenu.Content>
-                    </DropdownMenu.Root>
-                  }
-                />
-              )}
+                          {REMINDER_OPTIONS.map((option) => (
+                            <DropdownMenu.Item
+                              key={option.value}
+                              disabled={dayjs(form.date!)
+                                .set("hour", Number(form.startTime!.split(":")[0]))
+                                .set("minute", Number(form.startTime!.split(":")[1]))
+                                .subtract(reminderHash[option.value].hours, "hours")
+                                .subtract(reminderHash[option.value].minutes, "minutes")
+                                .isBefore(dayjs())}
+                              onSelect={() => {
+                                setForm({ ...form, reminder: option.value })
+                              }}
+                            >
+                              {option.name}
+                            </DropdownMenu.Item>
+                          ))}
+                          <DropdownMenu.Arrow />
+                        </DropdownMenu.Content>
+                      </DropdownMenu.Root>
+                    }
+                  />
+                )}
             </View>
             <DateTimePickerModal
               mode="time"
