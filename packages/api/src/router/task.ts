@@ -79,6 +79,8 @@ export const taskRouter = createTRPCRouter({
   toggleComplete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input: { id } }) => {
     const task = await ctx.prisma.task.findUnique({ where: { id } })
     if (!task) throw new TRPCError({ code: "NOT_FOUND" })
+
+    if (task.reminder && task.upstashMessageId) await deleteTaskReminder(task.upstashMessageId)
     return ctx.prisma.task.update({ where: { id }, data: { isComplete: !task.isComplete } })
   }),
   updateOrder: protectedProcedure
@@ -86,12 +88,23 @@ export const taskRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const tasks = input
       await Promise.all(
-        tasks.map((task) =>
-          ctx.prisma.task.update({
+        tasks.map(async (task) => {
+          const newTask = await ctx.prisma.task.findUnique({
+            where: { id: task.id },
+            select: { id: true, startTime: true, reminder: true, upstashMessageId: true },
+          })
+          if (!newTask) return
+          const date = dayjs(task.date).startOf("day").add(12, "hours").toDate()
+          if (newTask.reminder && newTask.upstashMessageId && newTask.startTime) {
+            await deleteTaskReminder(newTask.upstashMessageId)
+            if (dayjs(date).isAfter(dayjs().startOf("day"))) await createTaskReminder({ date, ...newTask })
+          }
+
+          return ctx.prisma.task.update({
             where: { id: task.id },
             data: { order: task.order, date: dayjs(task.date).startOf("day").add(12, "hours").toDate() },
-          }),
-        ),
+          })
+        }),
       )
       return true
     }),
@@ -198,7 +211,7 @@ export const taskRouter = createTRPCRouter({
         data: { ...data, todos: todos ? { deleteMany: {}, createMany: { data: todos } } : undefined, date },
       })
 
-      if (!task.reminder && task.upstashMessageId) {
+      if (task.upstashMessageId && (!task.reminder || !task.date)) {
         await deleteTaskReminder(task.upstashMessageId)
         await ctx.prisma.task.update({ where: { id }, data: { upstashMessageId: null } })
       }
@@ -229,6 +242,8 @@ export const taskRouter = createTRPCRouter({
       select: taskItemSelectFields,
       data: {
         ...taskToDupe,
+        reminder: null,
+        upstashMessageId: null,
         order: dayTasks + 1,
         repeat: null,
         createdAt: undefined,
@@ -253,6 +268,7 @@ export const taskRouter = createTRPCRouter({
         }
         await transaction.task.delete({ where: { id } })
       })
+      if (task.reminder && task.upstashMessageId) await deleteTaskReminder(task.upstashMessageId)
       return true
     }),
 })
