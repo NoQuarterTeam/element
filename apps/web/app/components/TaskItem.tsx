@@ -175,7 +175,7 @@ function _TaskItem({ task }: Props) {
                 )}
                 {task.startTime ? (
                   <div className="flex items-center space-x-0.5">
-                    {task.reminder && <AlarmClock size={12} />}
+                    {task.reminder && <AlarmClock size={8} />}
                     <p className="text-xxs">{task.startTime}</p>
                   </div>
                 ) : (
