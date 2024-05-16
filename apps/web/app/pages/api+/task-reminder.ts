@@ -67,8 +67,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         (t) =>
           ({
             to: t.token,
-            body: `Here's a reminder about your task '${task.name}'`,
-            subtitle: `It's at ${task.startTime}${isToday ? "" : " tomorrow!"}`,
+            body: `Here's a reminder about your task '${task.name}'. It's at ${task.startTime}${isToday ? "" : " tomorrow!"}`,
             data: { url: "/" },
           }) satisfies ExpoPushMessage,
       )
