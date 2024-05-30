@@ -23,6 +23,9 @@ import { DATE_BACK, DATE_FORWARD, useTimelineTaskDates } from "~/lib/hooks/useTi
 import { TASK_CACHE_KEY } from "~/lib/hooks/useTimelineTasks"
 import { useMe } from "~/lib/hooks/useUser"
 
+import { useDisclosure } from "@element/shared"
+import { TaskForm } from "~/components/TaskForm"
+import { ModalContent, ModalRoot } from "~/components/ui/Modal"
 import type { TimelineTask } from "./api+/tasks"
 import { BulkActions } from "./api+/tasks.bulk-actions"
 
@@ -150,6 +153,7 @@ function _Timeline() {
     },
   })
 
+  const modalProps = useDisclosure()
   return (
     <>
       <div
@@ -177,7 +181,7 @@ function _Timeline() {
                 size="lg"
                 variant="secondary"
                 rounded
-                onClick={() => navigate("new")}
+                onClick={modalProps.onOpen}
                 aria-label="Create task"
                 icon={<PlusCircle size={18} />}
               />
@@ -197,6 +201,11 @@ function _Timeline() {
         </div>
         <BulkActions />
       </div>
+      <ModalRoot modal open={modalProps.isOpen} onOpenChange={modalProps.onClose}>
+        <ModalContent position="top" shouldHideCloseButton className="max-w-xl p-0">
+          <TaskForm onClose={modalProps.onClose} />
+        </ModalContent>
+      </ModalRoot>
       {!isFinishedLoading && <LoadingScreen />}
       <Outlet />
     </>
