@@ -92,7 +92,7 @@ function _Day(props: Props) {
               >
                 {inView && (
                   <>
-                    {props.tasks
+                    {[...props.tasks]
                       .sort((a, b) => a.order - b.order)
                       .map((task, index) => (
                         <Draggable key={task.id} draggableId={task.id} index={index}>
