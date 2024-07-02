@@ -78,7 +78,7 @@
     "@babel/runtime": "7.24.5",
     "@element/tailwind-config": "*",
     "@expo/config-plugins": "7.8.4",
-    "@types/react": "18.2.79",
+    "@types/react": "18.3.3",
     "@types/uuid": "3.4.13",
     "metro-react-native-babel-preset": "^0.77.0",
     "postcss": "8.4.38",
