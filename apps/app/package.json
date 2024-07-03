@@ -18,7 +18,7 @@
     "@element/shared": "workspace:*",
     "@element/tailwind-config": "workspace:*",
     "@expo-google-fonts/poppins": "0.2.3",
-    "@expo/react-native-action-sheet": "4.0.1",
+    "@expo/react-native-action-sheet": "4.1.0",
     "@react-native-async-storage/async-storage": "1.21.0",
     "@react-native-community/datetimepicker": "8.0.0",
     "@react-native-menu/menu": "^1.0.3",
