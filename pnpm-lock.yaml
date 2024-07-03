@@ -37,8 +37,8 @@ importers:
         specifier: 0.2.3
         version: 0.2.3
       '@expo/react-native-action-sheet':
-        specifier: 4.0.1
-        version: 4.0.1(react@18.2.0)
+        specifier: 4.1.0
+        version: 4.1.0(react@18.2.0)
       '@react-native-async-storage/async-storage':
         specifier: 1.21.0
         version: 1.21.0(react-native@0.73.6)
@@ -4593,10 +4593,10 @@ packages:
       - supports-color
     dev: false
 
-  /@expo/react-native-action-sheet@4.0.1(react@18.2.0):
-    resolution: {integrity: sha512-FwCFpjpB6yzrK8CIWssLlh/i6zQFytFBiJfNdz0mJ2ckU4hWk8SrjB37P0Q4kF7w0bnIdYzPgRbdPR9hnfFqPw==}
+  /@expo/react-native-action-sheet@4.1.0(react@18.2.0):
+    resolution: {integrity: sha512-RILoWhREgjMdr1NUSmZa/cHg8onV2YPDAMOy0iIP1c3H7nT9QQZf5dQNHK8ehcLM82sarVxriBJyYSSHAx7j6w==}
     peerDependencies:
-      react: '>=16.3.0'
+      react: '>=18.0.0'
     dependencies:
       '@types/hoist-non-react-statics': 3.3.5
       hoist-non-react-statics: 3.3.2
