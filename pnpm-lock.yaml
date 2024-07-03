@@ -390,7 +390,7 @@ importers:
         version: 2.12.7(react-dom@18.2.0)(react@18.2.0)
       remix-utils:
         specifier: 7.6.0
-        version: 7.6.0(@remix-run/node@2.9.0)(@remix-run/react@2.9.0)(react@18.2.0)(zod@3.23.6)
+        version: 7.6.0(@remix-run/node@2.9.0)(@remix-run/react@2.9.0)(react@18.2.0)(zod@3.23.8)
       sharp:
         specifier: 0.32.6
         version: 0.32.6
@@ -404,8 +404,8 @@ importers:
         specifier: 3.0.3
         version: 3.0.3
       zod:
-        specifier: 3.23.6
-        version: 3.23.6
+        specifier: 3.23.8
+        version: 3.23.8
       zustand:
         specifier: 4.5.2
         version: 4.5.2(@types/react@18.3.3)(react@18.2.0)
@@ -489,8 +489,8 @@ importers:
         specifier: 1.13.3
         version: 1.13.3
       zod:
-        specifier: 3.23.6
-        version: 3.23.6
+        specifier: 3.23.8
+        version: 3.23.8
     devDependencies:
       '@types/jsonwebtoken':
         specifier: 9.0.6
@@ -573,8 +573,8 @@ importers:
   packages/server/env:
     dependencies:
       zod:
-        specifier: 3.23.6
-        version: 3.23.6
+        specifier: 3.23.8
+        version: 3.23.8
     devDependencies:
       '@types/node':
         specifier: 18.19.39
@@ -595,11 +595,11 @@ importers:
         specifier: workspace:*
         version: link:../../shared
       zod:
-        specifier: 3.23.6
-        version: 3.23.6
+        specifier: 3.23.8
+        version: 3.23.8
       zodix:
         specifier: 0.4.4
-        version: 0.4.4(@remix-run/server-runtime@2.10.0)(zod@3.23.6)
+        version: 0.4.4(@remix-run/server-runtime@2.10.0)(zod@3.23.8)
     devDependencies:
       '@element/tailwind-config':
         specifier: workspace:*
@@ -668,8 +668,8 @@ importers:
         specifier: 15.6.0
         version: 15.6.0
       zod:
-        specifier: 3.23.6
-        version: 3.23.6
+        specifier: 3.23.8
+        version: 3.23.8
     devDependencies:
       '@types/bcryptjs':
         specifier: 2.4.6
@@ -15435,7 +15435,7 @@ packages:
       minimatch: 5.1.6
     dev: true
 
-  /remix-utils@7.6.0(@remix-run/node@2.9.0)(@remix-run/react@2.9.0)(react@18.2.0)(zod@3.23.6):
+  /remix-utils@7.6.0(@remix-run/node@2.9.0)(@remix-run/react@2.9.0)(react@18.2.0)(zod@3.23.8):
     resolution: {integrity: sha512-BPhCUEy+nwrhDDDg2v3+LFSszV6tluMbeSkbffj2o4tqZxt5Kn69Y9sNpGxYLAj8gjqeYDuxjv55of+gYnnykA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -15475,7 +15475,7 @@ packages:
       '@remix-run/react': 2.9.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.4.5)
       react: 18.2.0
       type-fest: 4.8.3
-      zod: 3.23.6
+      zod: 3.23.8
     dev: false
 
   /remove-accents@0.5.0:
@@ -17435,18 +17435,18 @@ packages:
       - react-dom
     dev: false
 
-  /zod@3.23.6:
-    resolution: {integrity: sha512-RTHJlZhsRbuA8Hmp/iNL7jnfc4nZishjsanDAfEY1QpDQZCahUp3xDzl+zfweE9BklxMUcgBgS1b7Lvie/ZVwA==}
+  /zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  /zodix@0.4.4(@remix-run/server-runtime@2.10.0)(zod@3.23.6):
+  /zodix@0.4.4(@remix-run/server-runtime@2.10.0)(zod@3.23.8):
     resolution: {integrity: sha512-msoW2RM8t0ktSKmQYT7/AjsGTqzWHeEwY+U/6w7Jzd29yoeh/QceseQG8PBb5lpY4KUUowMsYRWm926vGrwrdQ==}
     peerDependencies:
       '@remix-run/server-runtime': 1.x || 2.x
       zod: 3.x
     dependencies:
       '@remix-run/server-runtime': 2.10.0(typescript@5.4.5)
-      zod: 3.23.6
+      zod: 3.23.8
     dev: false
 
   /zustand@4.5.2(@types/react@18.3.3)(react@18.2.0):

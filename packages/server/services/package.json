@@ -27,7 +27,7 @@
     "resend": "3.2.0",
     "sharp": "0.32.6",
     "stripe": "15.6.0",
-    "zod": "3.23.6"
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@types/bcryptjs": "2.4.6",
