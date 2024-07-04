@@ -533,7 +533,7 @@ importers:
         version: 5.13.0
       ws:
         specifier: ^8.16.0
-        version: 8.17.1
+        version: 8.18.0
     devDependencies:
       '@faker-js/faker':
         specifier: 8.4.1
@@ -599,7 +599,7 @@ importers:
         version: 3.23.8
       zodix:
         specifier: 0.4.4
-        version: 0.4.4(@remix-run/server-runtime@2.10.1)(zod@3.23.8)
+        version: 0.4.4(@remix-run/server-runtime@2.10.2)(zod@3.23.8)
     devDependencies:
       '@element/tailwind-config':
         specifier: workspace:*
@@ -4283,7 +4283,7 @@ packages:
       text-table: 0.2.0
       url-join: 4.0.0
       wrap-ansi: 7.0.0
-      ws: 8.17.1
+      ws: 8.18.0
     transitivePeerDependencies:
       - '@react-native/babel-preset'
       - bluebird
@@ -6825,8 +6825,8 @@ packages:
       source-map: 0.7.4
     dev: false
 
-  /@remix-run/server-runtime@2.10.1(typescript@5.5.3):
-    resolution: {integrity: sha512-jINOmovnwPdllhOm2PU0iTDP9MXwKLit9Ifq3EWjdqs+Bu1zwA3TTRDRX6x9V0OGpM3wiByd80zEmHZ5sZy7hQ==}
+  /@remix-run/server-runtime@2.10.2(typescript@5.5.3):
+    resolution: {integrity: sha512-c6CzKw4WBP4FkPnz63ua7g73/P1v34Uho2C44SZZf8IOVCGzEM9liLq6slDivn0m/UbyQnXThdXmsVjFcobmZg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       typescript: ^5.1.0
@@ -17315,8 +17315,8 @@ packages:
         optional: true
     dev: true
 
-  /ws@8.17.1:
-    resolution: {integrity: sha512-6XQFvXTkbfUOZOKKILFG1PDK2NDQs4azKQl26T0YS5CxqWLgXajbPZ+h4gZekJyRqFU8pvnbAbbs/3TgRPy+GQ==}
+  /ws@8.18.0:
+    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -17459,13 +17459,13 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  /zodix@0.4.4(@remix-run/server-runtime@2.10.1)(zod@3.23.8):
+  /zodix@0.4.4(@remix-run/server-runtime@2.10.2)(zod@3.23.8):
     resolution: {integrity: sha512-msoW2RM8t0ktSKmQYT7/AjsGTqzWHeEwY+U/6w7Jzd29yoeh/QceseQG8PBb5lpY4KUUowMsYRWm926vGrwrdQ==}
     peerDependencies:
       '@remix-run/server-runtime': 1.x || 2.x
       zod: 3.x
     dependencies:
-      '@remix-run/server-runtime': 2.10.1(typescript@5.5.3)
+      '@remix-run/server-runtime': 2.10.2(typescript@5.5.3)
       zod: 3.23.8
     dev: false
 
