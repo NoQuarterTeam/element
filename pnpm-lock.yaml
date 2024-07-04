@@ -308,8 +308,8 @@ importers:
         specifier: 10.45.2
         version: 10.45.2
       axios:
-        specifier: 1.6.8
-        version: 1.6.8
+        specifier: 1.7.2
+        version: 1.7.2
       class-variance-authority:
         specifier: 0.7.0
         version: 0.7.0
@@ -546,7 +546,7 @@ importers:
         version: 8.5.10
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.19.39)(typescript@5.5.3)
+        version: 10.9.2(@types/node@18.19.39)(typescript@5.4.5)
 
   packages/emails:
     dependencies:
@@ -7185,7 +7185,7 @@ packages:
       '@slack/types': 2.11.0
       '@types/node': 18.19.39
       '@types/retry': 0.12.0
-      axios: 1.6.8
+      axios: 1.7.2
       eventemitter3: 5.0.1
       form-data: 4.0.0
       is-electron: 2.2.2
@@ -8368,8 +8368,8 @@ packages:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  /axios@1.6.8:
-    resolution: {integrity: sha512-v/ZHtJDU39mDpyBoFVkETcd/uNdxrWRrg3bKpOKzXFA6Bvqopts6ALSMU3y6ijYxbw2B+wPrIv46egTzJXCLGQ==}
+  /axios@1.7.2:
+    resolution: {integrity: sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==}
     dependencies:
       follow-redirects: 1.15.6
       form-data: 4.0.0
@@ -16503,7 +16503,7 @@ packages:
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
-  /ts-node@10.9.2(@types/node@18.19.39)(typescript@5.5.3):
+  /ts-node@10.9.2(@types/node@18.19.39)(typescript@5.4.5):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -16529,7 +16529,7 @@ packages:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.5.3
+      typescript: 5.4.5
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: true
@@ -16661,12 +16661,6 @@ packages:
     resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
     engines: {node: '>=14.17'}
     hasBin: true
-
-  /typescript@5.5.3:
-    resolution: {integrity: sha512-/hreyEujaB0w76zKo6717l3L0o/qEUtRgdvUBvlkhoWeOVMjMuHNHk0BRBzikzuGDqNmPQbg5ifMEqsHLiIUcQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    dev: true
 
   /ua-parser-js@0.7.37:
     resolution: {integrity: sha512-xV8kqRKM+jhMvcHWUKthV9fNebIzrNy//2O9ZwWcfiBFR5f25XVZPLlEajk/sf3Ra15V92isyQqnIEXRDaZWEA==}
