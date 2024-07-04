@@ -665,8 +665,8 @@ importers:
         specifier: 0.32.6
         version: 0.32.6
       stripe:
-        specifier: 15.6.0
-        version: 15.6.0
+        specifier: 15.12.0
+        version: 15.12.0
       zod:
         specifier: 3.23.8
         version: 3.23.8
@@ -7932,12 +7932,6 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
-  /@types/node@20.14.9:
-    resolution: {integrity: sha512-06OCtnTXtWOZBJlRApleWndH4JsRVs1pDCc8dLSQp+7PpUpX3ePdHyeNSFTeSe7FtKyQkrlPvHwJOW3SLd8Oyg==}
-    dependencies:
-      undici-types: 5.26.5
-    dev: false
-
   /@types/nodemailer@6.4.15:
     resolution: {integrity: sha512-0EBJxawVNjPkng1zm2vopRctuWVCxk34JcIlRuXSf54habUWdz1FB7wHDqOqvDa8Mtpt0Q3LTXQkAs2LNyK5jQ==}
     dependencies:
@@ -11755,7 +11749,7 @@ packages:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.14.9
+      '@types/node': 18.19.39
       jest-mock: 29.7.0
       jest-util: 29.7.0
     dev: false
@@ -16164,8 +16158,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /stripe@15.6.0:
-    resolution: {integrity: sha512-ARG46eQHMmHspnDpj3QTAH8GyEqtE0nesbzpTtQDT/C9nHvOFYri3mIzHEzArzDcKX7HSleTu2VpYoDZIIH7nA==}
+  /stripe@15.12.0:
+    resolution: {integrity: sha512-slTbYS1WhRJXVB8YXU8fgHizkUrM9KJyrw4Dd8pLEwzKHYyQTIE46EePC2MVbSDZdE24o1GdNtzmJV4PrPpmJA==}
     engines: {node: '>=12.*'}
     dependencies:
       '@types/node': 18.19.39
