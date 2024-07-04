@@ -546,7 +546,7 @@ importers:
         version: 8.5.10
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.19.39)(typescript@5.5.3)
+        version: 10.9.2(@types/node@18.19.39)(typescript@5.4.5)
 
   packages/emails:
     dependencies:
@@ -659,8 +659,8 @@ importers:
         specifier: 6.9.14
         version: 6.9.14
       resend:
-        specifier: 3.2.0
-        version: 3.2.0
+        specifier: 3.4.0
+        version: 3.4.0
       sharp:
         specifier: 0.32.6
         version: 0.32.6
@@ -6003,14 +6003,15 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@react-email/render@0.0.12:
-    resolution: {integrity: sha512-S8WRv/PqECEi6x0QJBj0asnAb5GFtJaHlnByxLETLkgJjc76cxMYDH4r9wdbuJ4sjkcbpwP3LPnVzwS+aIjT7g==}
+  /@react-email/render@0.0.15:
+    resolution: {integrity: sha512-/pT5dBu0y1mogrfEpc002rgRcXpbShK6PFtxTVU6LZZ+bccvZPgk67HKc01lxpa1eYGQgZ6I+VQ02GRnMDclTg==}
     engines: {node: '>=18.0.0'}
     dependencies:
       html-to-text: 9.0.5
       js-beautify: 1.14.11
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+      react-promise-suspense: 0.3.4
     dev: false
 
   /@react-email/render@0.0.9:
@@ -10591,6 +10592,10 @@ packages:
   /extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
 
+  /fast-deep-equal@2.0.1:
+    resolution: {integrity: sha512-bCK/2Z4zLidyB4ReuIsvALH6w31YfAQDmXMqMx6FyfHqvBxtjC0eRumeSu4Bs3XtXwpyIywtSTrVT99BxY1f9w==}
+    dev: false
+
   /fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
     dev: false
@@ -15064,6 +15069,12 @@ packages:
       - utf-8-validate
     dev: false
 
+  /react-promise-suspense@0.3.4:
+    resolution: {integrity: sha512-I42jl7L3Ze6kZaq+7zXWSunBa3b1on5yfvUW6Eo/3fFOj6dZ5Bqmcd264nJbTK/gn1HjjILAjSwnZbV4RpSaNQ==}
+    dependencies:
+      fast-deep-equal: 2.0.1
+    dev: false
+
   /react-redux@8.1.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.2.0)(react@18.2.0)(redux@4.2.1):
     resolution: {integrity: sha512-n0ZrutD7DaX/j9VscF+uTALI3oUPa/pO4Z3soOBIjuRn/FzVu6aehhysxZCLi6y7duMf52WNZGMl7CtuK5EnRw==}
     peerDependencies:
@@ -15528,11 +15539,11 @@ packages:
       resolve: 1.7.1
     dev: false
 
-  /resend@3.2.0:
-    resolution: {integrity: sha512-lDHhexiFYPoLXy7zRlJ8D5eKxoXy6Tr9/elN3+Vv7PkUoYuSSD1fpiIfa/JYXEWyiyN2UczkCTLpkT8dDPJ4Pg==}
+  /resend@3.4.0:
+    resolution: {integrity: sha512-F3PVHdTHeLonSnrU5V6k8643LJ9QacLu3uI9M+BAFkmBmB1ELM2x7fdsziYZoSm6DmU6TKwiQCK0jf8dcNomcQ==}
     engines: {node: '>=18'}
     dependencies:
-      '@react-email/render': 0.0.12
+      '@react-email/render': 0.0.15
     dev: false
 
   /resolve-from@3.0.0:
@@ -16500,7 +16511,7 @@ packages:
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
-  /ts-node@10.9.2(@types/node@18.19.39)(typescript@5.5.3):
+  /ts-node@10.9.2(@types/node@18.19.39)(typescript@5.4.5):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -16526,7 +16537,7 @@ packages:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.5.3
+      typescript: 5.4.5
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: true
@@ -16658,12 +16669,6 @@ packages:
     resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
     engines: {node: '>=14.17'}
     hasBin: true
-
-  /typescript@5.5.3:
-    resolution: {integrity: sha512-/hreyEujaB0w76zKo6717l3L0o/qEUtRgdvUBvlkhoWeOVMjMuHNHk0BRBzikzuGDqNmPQbg5ifMEqsHLiIUcQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    dev: true
 
   /ua-parser-js@0.7.37:
     resolution: {integrity: sha512-xV8kqRKM+jhMvcHWUKthV9fNebIzrNy//2O9ZwWcfiBFR5f25XVZPLlEajk/sf3Ra15V92isyQqnIEXRDaZWEA==}
