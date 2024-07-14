@@ -169,7 +169,7 @@ export const TaskForm = React.memo(function _TaskForm({ task, onClose }: FormPro
             />
 
             <input type="hidden" name="isImportant" value={isImportant ? "true" : "false"} />
-            <Checkbox defaultChecked={isComplete} onChange={() => setIsComplete(!isComplete)} size="md" />
+            <Checkbox defaultChecked={isComplete} onChange={() => setIsComplete(!isComplete)} />
             <input type="hidden" name="isComplete" value={isComplete ? "true" : "false"} />
           </div>
         </div>

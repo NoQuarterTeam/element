@@ -126,9 +126,9 @@ export function Select({ variant, size, ...props }: SelectProps) {
 export const checkboxSizeStyles = cva("", {
   variants: {
     size: {
-      sm: "sq-4",
-      md: "sq-5",
-      lg: "sq-7",
+      sm: "sq-5",
+      md: "sq-7",
+      lg: "sq-9",
     },
   },
   defaultVariants: {
