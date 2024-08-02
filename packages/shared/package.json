@@ -16,6 +16,6 @@
     "tailwind-merge": "2.3.0"
   },
   "devDependencies": {
-    "@types/node": "^18.15.3"
+    "@types/node": "^20.0.0"
   }
 }
