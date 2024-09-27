@@ -515,13 +515,13 @@ importers:
         version: link:../server/env
       '@neondatabase/serverless':
         specifier: ^0.9.0
-        version: 0.9.4
+        version: 0.9.5
       '@planetscale/database':
         specifier: ^1.13.0
         version: 1.18.0
       '@prisma/adapter-neon':
         specifier: ^5.12.1
-        version: 5.16.1(@neondatabase/serverless@0.9.4)
+        version: 5.16.1(@neondatabase/serverless@0.9.5)
       '@prisma/adapter-planetscale':
         specifier: 5.16.1
         version: 5.16.1(@planetscale/database@1.18.0)
@@ -5195,8 +5195,8 @@ packages:
       - supports-color
     dev: true
 
-  /@neondatabase/serverless@0.9.4:
-    resolution: {integrity: sha512-D0AXgJh6xkf+XTlsO7iwE2Q1w8981E1cLCPAALMU2YKtkF/1SF6BiAzYARZFYo175ON+b1RNIy9TdSFHm5nteg==}
+  /@neondatabase/serverless@0.9.5:
+    resolution: {integrity: sha512-siFas6gItqv6wD/pZnvdu34wEqgG3nSE6zWZdq5j2DEsa+VvX8i/5HXJOo06qrw5axPXn+lGCxeR+NLaSPIXug==}
     dependencies:
       '@types/pg': 8.11.6
     dev: false
@@ -5295,12 +5295,12 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
-  /@prisma/adapter-neon@5.16.1(@neondatabase/serverless@0.9.4):
+  /@prisma/adapter-neon@5.16.1(@neondatabase/serverless@0.9.5):
     resolution: {integrity: sha512-GT8a/JC4hvH8JNmbhT7SEN7r4Dy1rgsnAjfHyRRNXqvCsO2z+ssbLFTAjS2gmSYuY2dMHeP91AscOrbySFiryw==}
     peerDependencies:
       '@neondatabase/serverless': ^0.6.0 || ^0.7.0 || ^0.8.0 || ^0.9.0
     dependencies:
-      '@neondatabase/serverless': 0.9.4
+      '@neondatabase/serverless': 0.9.5
       '@prisma/driver-adapter-utils': 5.16.1
       postgres-array: 3.0.2
     dev: false
@@ -8677,7 +8677,7 @@ packages:
     resolution: {integrity: sha512-/2WmmBXHLsfRqzfHW7BNZ8SbYzE8OSk7i3WjFYvfgRHj7S1xj+16Je5fUKv3lVdVzk/zn9TXOqf+avFCFIE0yQ==}
     dependencies:
       '@types/node': 18.19.54
-      pg-protocol: 1.6.1
+      pg-protocol: 1.7.0
       pg-types: 4.0.2
     dev: false
 
@@ -14676,8 +14676,8 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
-  /pg-protocol@1.6.1:
-    resolution: {integrity: sha512-jPIlvgoD63hrEuihvIg+tJhoGjUsLPn6poJY9N5CnlPd91c2T18T/9zBtLxZSb1EhYxBRoZJtzScCaWlYLtktg==}
+  /pg-protocol@1.7.0:
+    resolution: {integrity: sha512-hTK/mE36i8fDDhgDFjy6xNOG+LCorxLG3WO17tku+ij6sVHXh1jQUJ8hYAnRhNla4QVD2H8er/FOjc/+EgC6yQ==}
     dev: false
 
   /pg-types@4.0.2:
