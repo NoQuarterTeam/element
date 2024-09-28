@@ -28,7 +28,7 @@
     "@trpc/client": "10.45.2",
     "@trpc/react-query": "10.45.2",
     "class-variance-authority": "0.7.0",
-    "dayjs": "1.11.11",
+    "dayjs": "1.11.13",
     "expo": "50.0.19",
     "expo-application": "~5.8.4",
     "expo-blur": "~12.9.2",

@@ -20,7 +20,7 @@
     "@upstash/qstash": "^2.3.0",
     "bcryptjs": "2.4.3",
     "blurhash": "2.0.5",
-    "dayjs": "1.11.11",
+    "dayjs": "1.11.13",
     "jsonwebtoken": "9.0.2",
     "loops": "^0.4.0",
     "nodemailer": "6.9.14",
