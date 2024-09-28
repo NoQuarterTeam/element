@@ -65,7 +65,7 @@
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
     "react-native-svg": "14.1.0",
-    "react-native-toast-message": "2.2.0",
+    "react-native-toast-message": "2.2.1",
     "reanimated-color-picker": "2.4.2",
     "superjson": "1.13.3",
     "uuid": "3.4.0",
