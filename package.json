@@ -5,7 +5,7 @@
     "turbo": "1.13.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
+    "@biomejs/biome": "1.9.2",
     "typescript": "5.5.3"
   },
   "scripts": {
