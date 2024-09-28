@@ -67,8 +67,8 @@ importers:
         specifier: 0.7.0
         version: 0.7.0
       dayjs:
-        specifier: 1.11.11
-        version: 1.11.11
+        specifier: 1.11.13
+        version: 1.11.13
       expo:
         specifier: 50.0.19
         version: 50.0.19(@babel/core@7.24.7)(@react-native/babel-preset@0.75.3)
@@ -320,8 +320,8 @@ importers:
         specifier: 2.0.4
         version: 2.0.4
       dayjs:
-        specifier: 1.11.11
-        version: 1.11.11
+        specifier: 1.11.13
+        version: 1.11.13
       deep-equal:
         specifier: 2.2.3
         version: 2.2.3
@@ -480,8 +480,8 @@ importers:
         specifier: 10.45.2
         version: 10.45.2
       dayjs:
-        specifier: 1.11.11
-        version: 1.11.11
+        specifier: 1.11.13
+        version: 1.11.13
       jsonwebtoken:
         specifier: 9.0.2
         version: 9.0.2
@@ -647,8 +647,8 @@ importers:
         specifier: 2.0.5
         version: 2.0.5
       dayjs:
-        specifier: 1.11.11
-        version: 1.11.11
+        specifier: 1.11.13
+        version: 1.11.13
       jsonwebtoken:
         specifier: 9.0.2
         version: 9.0.2
@@ -10281,8 +10281,8 @@ packages:
     resolution: {integrity: sha512-WboRycPNsVw3B3TL559F7kuBUM4d8CgMEvk6xEJlOp7OBPjt6G7z8WMWlD2rOFZLk6OYfFIUGsCOWzcQH9K2og==}
     engines: {node: '>= 6'}
 
-  /dayjs@1.11.11:
-    resolution: {integrity: sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==}
+  /dayjs@1.11.13:
+    resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
     dev: false
 
   /debug@2.6.9:
@@ -13079,7 +13079,7 @@ packages:
     hasBin: true
     dependencies:
       ansi-fragments: 0.2.1
-      dayjs: 1.11.11
+      dayjs: 1.11.13
       yargs: 15.4.1
     dev: false
 
