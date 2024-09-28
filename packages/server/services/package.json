@@ -23,7 +23,7 @@
     "dayjs": "1.11.13",
     "jsonwebtoken": "9.0.2",
     "loops": "^0.4.0",
-    "nodemailer": "6.9.14",
+    "nodemailer": "6.9.15",
     "resend": "3.4.0",
     "sharp": "0.32.6",
     "stripe": "15.12.0",
