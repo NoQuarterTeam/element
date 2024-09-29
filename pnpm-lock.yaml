@@ -389,8 +389,8 @@ importers:
         specifier: 2.12.7
         version: 2.12.7(react-dom@18.2.0)(react@18.2.0)
       remix-utils:
-        specifier: 7.6.0
-        version: 7.6.0(@remix-run/node@2.9.0)(@remix-run/react@2.9.0)(react@18.2.0)(zod@3.23.8)
+        specifier: 7.7.0
+        version: 7.7.0(@remix-run/node@2.9.0)(@remix-run/react@2.9.0)(react@18.2.0)(zod@3.23.8)
       sharp:
         specifier: 0.32.6
         version: 0.32.6
@@ -15707,12 +15707,11 @@ packages:
       minimatch: 5.1.6
     dev: true
 
-  /remix-utils@7.6.0(@remix-run/node@2.9.0)(@remix-run/react@2.9.0)(react@18.2.0)(zod@3.23.8):
-    resolution: {integrity: sha512-BPhCUEy+nwrhDDDg2v3+LFSszV6tluMbeSkbffj2o4tqZxt5Kn69Y9sNpGxYLAj8gjqeYDuxjv55of+gYnnykA==}
+  /remix-utils@7.7.0(@remix-run/node@2.9.0)(@remix-run/react@2.9.0)(react@18.2.0)(zod@3.23.8):
+    resolution: {integrity: sha512-J8NhP044nrNIam/xOT1L9a4RQ9FSaA2wyrUwmN8ZT+c/+CdAAf70yfaLnvMyKcV5U+8BcURQ/aVbth77sT6jGA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@remix-run/cloudflare': ^2.0.0
-      '@remix-run/deno': ^2.0.0
       '@remix-run/node': ^2.0.0
       '@remix-run/react': ^2.0.0
       '@remix-run/router': ^1.7.2
@@ -15723,8 +15722,6 @@ packages:
       zod: ^3.22.4
     peerDependenciesMeta:
       '@remix-run/cloudflare':
-        optional: true
-      '@remix-run/deno':
         optional: true
       '@remix-run/node':
         optional: true
@@ -15746,7 +15743,7 @@ packages:
       '@remix-run/node': 2.9.0(typescript@5.5.3)
       '@remix-run/react': 2.9.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.5.3)
       react: 18.2.0
-      type-fest: 4.8.3
+      type-fest: 4.26.1
       zod: 3.23.8
     dev: false
 
@@ -16913,8 +16910,8 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /type-fest@4.8.3:
-    resolution: {integrity: sha512-//BaTm14Q/gHBn09xlnKNqfI8t6bmdzx2DXYfPBNofN0WUybCEUDcbCWcTa0oF09lzLjZgPphXAsvRiMK0V6Bw==}
+  /type-fest@4.26.1:
+    resolution: {integrity: sha512-yOGpmOAL7CkKe/91I5O3gPICmJNLJ1G4zFYVAsRHg7M64biSnPtRj0WNQt++bRkjYOqjWXrhnUw1utzmVErAdg==}
     engines: {node: '>=16'}
     dev: false
 
