@@ -521,16 +521,16 @@ importers:
         version: 1.19.0
       '@prisma/adapter-neon':
         specifier: ^5.12.1
-        version: 5.16.1(@neondatabase/serverless@0.9.5)
+        version: 5.20.0(@neondatabase/serverless@0.9.5)
       '@prisma/adapter-planetscale':
-        specifier: 5.16.1
-        version: 5.16.1(@planetscale/database@1.19.0)
+        specifier: 5.20.0
+        version: 5.20.0(@planetscale/database@1.19.0)
       '@prisma/client':
-        specifier: 5.16.1
-        version: 5.16.1(prisma@5.16.1)
+        specifier: 5.20.0
+        version: 5.20.0(prisma@5.20.0)
       prisma:
-        specifier: 5.16.1
-        version: 5.16.1
+        specifier: 5.20.0
+        version: 5.20.0
       ws:
         specifier: ^8.16.0
         version: 8.18.0
@@ -660,7 +660,7 @@ importers:
         version: 6.9.15
       resend:
         specifier: 3.5.0
-        version: 3.5.0(react-dom@18.2.0)(react@18.2.0)
+        version: 3.5.0(react-dom@18.3.1)(react@18.3.1)
       sharp:
         specifier: 0.32.6
         version: 0.32.6
@@ -4809,27 +4809,27 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
-  /@prisma/adapter-neon@5.16.1(@neondatabase/serverless@0.9.5):
-    resolution: {integrity: sha512-GT8a/JC4hvH8JNmbhT7SEN7r4Dy1rgsnAjfHyRRNXqvCsO2z+ssbLFTAjS2gmSYuY2dMHeP91AscOrbySFiryw==}
+  /@prisma/adapter-neon@5.20.0(@neondatabase/serverless@0.9.5):
+    resolution: {integrity: sha512-SEAnEmhJH5EzODrGDoZMYptV+A0+I0rLLpyA+oE62dZU7PlkYoOhCOeVVb45S0IQ46e8FWGf8uGZJOkYYQC3vA==}
     peerDependencies:
       '@neondatabase/serverless': ^0.6.0 || ^0.7.0 || ^0.8.0 || ^0.9.0
     dependencies:
       '@neondatabase/serverless': 0.9.5
-      '@prisma/driver-adapter-utils': 5.16.1
+      '@prisma/driver-adapter-utils': 5.20.0
       postgres-array: 3.0.2
     dev: false
 
-  /@prisma/adapter-planetscale@5.16.1(@planetscale/database@1.19.0):
-    resolution: {integrity: sha512-OPFDaetVeZkME3IqfOanPca0e+0VAkIWlKyZxiIUrSiHR2OorvM+jXtQtUGcdaVXPRlQsxG3Yq8OdRuAKzVM6w==}
+  /@prisma/adapter-planetscale@5.20.0(@planetscale/database@1.19.0):
+    resolution: {integrity: sha512-+hU7lvimQVzMfxay0Z/Z9XrK3sk8gXV2P/tklF2WAY96fDx1vZj+VAeYfVkkbYhUPvaIL8pHJLSN11mks4oWpA==}
     peerDependencies:
       '@planetscale/database': ^1.15.0
     dependencies:
       '@planetscale/database': 1.19.0
-      '@prisma/driver-adapter-utils': 5.16.1
+      '@prisma/driver-adapter-utils': 5.20.0
     dev: false
 
-  /@prisma/client@5.16.1(prisma@5.16.1):
-    resolution: {integrity: sha512-wM9SKQjF0qLxdnOZIVAIMKiz6Hu7vDt4FFAih85K1dk/Rr2mdahy6d3QP41K62N9O0DJJA//gUDA3Mp49xsKIg==}
+  /@prisma/client@5.20.0(prisma@5.20.0):
+    resolution: {integrity: sha512-CLv55ZuMuUawMsxoqxGtLT3bEZoa2W8L3Qnp6rDIFWy+ZBrUcOFKdoeGPSnbBqxc3SkdxJrF+D1veN/WNynZYA==}
     engines: {node: '>=16.13'}
     requiresBuild: true
     peerDependencies:
@@ -4838,45 +4838,45 @@ packages:
       prisma:
         optional: true
     dependencies:
-      prisma: 5.16.1
+      prisma: 5.20.0
     dev: false
 
-  /@prisma/debug@5.16.1:
-    resolution: {integrity: sha512-JsNgZAg6BD9RInLSrg7ZYzo11N7cVvYArq3fHGSD89HSgtN0VDdjV6bib7YddbcO6snzjchTiLfjeTqBjtArVQ==}
+  /@prisma/debug@5.20.0:
+    resolution: {integrity: sha512-oCx79MJ4HSujokA8S1g0xgZUGybD4SyIOydoHMngFYiwEwYDQ5tBQkK5XoEHuwOYDKUOKRn/J0MEymckc4IgsQ==}
     dev: false
 
-  /@prisma/driver-adapter-utils@5.16.1:
-    resolution: {integrity: sha512-QGnxw6FMts2/YSeZY3+A/kxyGQV2Be8oLLLrczdy8uM0oc2RREHUtpD14MyOOIaCytnJK7kwCbORcBhgk41+tQ==}
+  /@prisma/driver-adapter-utils@5.20.0:
+    resolution: {integrity: sha512-xORRckszVdB8pgh8jcCsEdAniknu2RLzpHmjPQwFHoacMDF44JcbUbtNijFPiZMWRCeLxd1QZkhxgWn2xJB1tQ==}
     dependencies:
-      '@prisma/debug': 5.16.1
+      '@prisma/debug': 5.20.0
     dev: false
 
-  /@prisma/engines-version@5.16.0-24.34ace0eb2704183d2c05b60b52fba5c43c13f303:
-    resolution: {integrity: sha512-HkT2WbfmFZ9WUPyuJHhkiADxazHg8Y4gByrTSVeb3OikP6tjQ7txtSUGu9OBOBH0C13dPKN2qqH12xKtHu/Hiw==}
+  /@prisma/engines-version@5.20.0-12.06fc58a368dc7be9fbbbe894adf8d445d208c284:
+    resolution: {integrity: sha512-Lg8AS5lpi0auZe2Mn4gjuCg081UZf88k3cn0RCwHgR+6cyHHpttPZBElJTHf83ZGsRNAmVCZCfUGA57WB4u4JA==}
     dev: false
 
-  /@prisma/engines@5.16.1:
-    resolution: {integrity: sha512-KkyF3eIUtBIyp5A/rJHCtwQO18OjpGgx18PzjyGcJDY/+vNgaVyuVd+TgwBgeq6NLdd1XMwRCI+58vinHsAdfA==}
+  /@prisma/engines@5.20.0:
+    resolution: {integrity: sha512-DtqkP+hcZvPEbj8t8dK5df2b7d3B8GNauKqaddRRqQBBlgkbdhJkxhoJTrOowlS3vaRt2iMCkU0+CSNn0KhqAQ==}
     requiresBuild: true
     dependencies:
-      '@prisma/debug': 5.16.1
-      '@prisma/engines-version': 5.16.0-24.34ace0eb2704183d2c05b60b52fba5c43c13f303
-      '@prisma/fetch-engine': 5.16.1
-      '@prisma/get-platform': 5.16.1
+      '@prisma/debug': 5.20.0
+      '@prisma/engines-version': 5.20.0-12.06fc58a368dc7be9fbbbe894adf8d445d208c284
+      '@prisma/fetch-engine': 5.20.0
+      '@prisma/get-platform': 5.20.0
     dev: false
 
-  /@prisma/fetch-engine@5.16.1:
-    resolution: {integrity: sha512-oOkjaPU1lhcA/Rvr4GVfd1NLJBwExgNBE36Ueq7dr71kTMwy++a3U3oLd2ZwrV9dj9xoP6LjCcky799D9nEt4w==}
+  /@prisma/fetch-engine@5.20.0:
+    resolution: {integrity: sha512-JVcaPXC940wOGpCOwuqQRTz6I9SaBK0c1BAyC1pcz9xBi+dzFgUu3G/p9GV1FhFs9OKpfSpIhQfUJE9y00zhqw==}
     dependencies:
-      '@prisma/debug': 5.16.1
-      '@prisma/engines-version': 5.16.0-24.34ace0eb2704183d2c05b60b52fba5c43c13f303
-      '@prisma/get-platform': 5.16.1
+      '@prisma/debug': 5.20.0
+      '@prisma/engines-version': 5.20.0-12.06fc58a368dc7be9fbbbe894adf8d445d208c284
+      '@prisma/get-platform': 5.20.0
     dev: false
 
-  /@prisma/get-platform@5.16.1:
-    resolution: {integrity: sha512-R4IKnWnMkR2nUAbU5gjrPehdQYUUd7RENFD2/D+xXTNhcqczp0N+WEGQ3ViyI3+6mtVcjjNIMdnUTNyu3GxIgA==}
+  /@prisma/get-platform@5.20.0:
+    resolution: {integrity: sha512-8/+CehTZZNzJlvuryRgc77hZCWrUDYd/PmlZ7p2yNXtmf2Una4BWnTbak3us6WVdqoz5wmptk6IhsXdG2v5fmA==}
     dependencies:
-      '@prisma/debug': 5.16.1
+      '@prisma/debug': 5.20.0
     dev: false
 
   /@radix-ui/primitive@1.0.1:
@@ -6246,7 +6246,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@react-email/render@0.0.16(react-dom@18.2.0)(react@18.2.0):
+  /@react-email/render@0.0.16(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-wDaMy27xAq1cJHtSFptp0DTKPuV2GYhloqia95ub/DH9Dea1aWYsbdM918MOc/b/HvVS3w1z8DWzfAk13bGStQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -6255,8 +6255,8 @@ packages:
     dependencies:
       html-to-text: 9.0.5
       js-beautify: 1.14.11
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
       react-promise-suspense: 0.3.4
     dev: false
 
@@ -14819,13 +14819,15 @@ packages:
       js-beautify: 1.14.11
     dev: false
 
-  /prisma@5.16.1:
-    resolution: {integrity: sha512-Z1Uqodk44diztImxALgJJfNl2Uisl9xDRvqybMKEBYJLNKNhDfAHf+ZIJbZyYiBhLMbKU9cYGdDVG5IIXEnL2Q==}
+  /prisma@5.20.0:
+    resolution: {integrity: sha512-6obb3ucKgAnsGS9x9gLOe8qa51XxvJ3vLQtmyf52CTey1Qcez3A6W6ROH5HIz5Q5bW+0VpmZb8WBohieMFGpig==}
     engines: {node: '>=16.13'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@prisma/engines': 5.16.1
+      '@prisma/engines': 5.20.0
+    optionalDependencies:
+      fsevents: 2.3.3
     dev: false
 
   /proc-log@3.0.0:
@@ -15038,6 +15040,16 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.2
+
+  /react-dom@18.3.1(react@18.3.1):
+    resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
+    peerDependencies:
+      react: ^18.3.1
+    dependencies:
+      loose-envify: 1.4.0
+      react: 18.3.1
+      scheduler: 0.23.2
+    dev: false
 
   /react-dropzone@14.2.3(react@18.2.0):
     resolution: {integrity: sha512-O3om8I+PkFKbxCukfIR3QAGftYXDZfOE2N1mr/7qebQJHs7U+/RSL/9xomJNpRg9kM5h9soQSdf0Gc7OHF5Fug==}
@@ -15510,6 +15522,13 @@ packages:
     dependencies:
       loose-envify: 1.4.0
 
+  /react@18.3.1:
+    resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      loose-envify: 1.4.0
+    dev: false
+
   /read-cache@1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}
     dependencies:
@@ -15785,11 +15804,11 @@ packages:
       resolve: 1.7.1
     dev: false
 
-  /resend@3.5.0(react-dom@18.2.0)(react@18.2.0):
+  /resend@3.5.0(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-bKu4LhXSecP6krvhfDzyDESApYdNfjirD5kykkT1xO0Cj9TKSiGh5Void4pGTs3Am+inSnp4dg0B5XzdwHBJOQ==}
     engines: {node: '>=18'}
     dependencies:
-      '@react-email/render': 0.0.16(react-dom@18.2.0)(react@18.2.0)
+      '@react-email/render': 0.0.16(react-dom@18.3.1)(react@18.3.1)
     transitivePeerDependencies:
       - react
       - react-dom
