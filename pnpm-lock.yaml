@@ -659,8 +659,8 @@ importers:
         specifier: 6.9.15
         version: 6.9.15
       resend:
-        specifier: 3.4.0
-        version: 3.4.0
+        specifier: 3.5.0
+        version: 3.5.0(react-dom@18.2.0)(react@18.2.0)
       sharp:
         specifier: 0.32.6
         version: 0.32.6
@@ -6246,9 +6246,12 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@react-email/render@0.0.15:
-    resolution: {integrity: sha512-/pT5dBu0y1mogrfEpc002rgRcXpbShK6PFtxTVU6LZZ+bccvZPgk67HKc01lxpa1eYGQgZ6I+VQ02GRnMDclTg==}
+  /@react-email/render@0.0.16(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-wDaMy27xAq1cJHtSFptp0DTKPuV2GYhloqia95ub/DH9Dea1aWYsbdM918MOc/b/HvVS3w1z8DWzfAk13bGStQ==}
     engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^18.2.0
+      react-dom: ^18.2.0
     dependencies:
       html-to-text: 9.0.5
       js-beautify: 1.14.11
@@ -15782,11 +15785,14 @@ packages:
       resolve: 1.7.1
     dev: false
 
-  /resend@3.4.0:
-    resolution: {integrity: sha512-F3PVHdTHeLonSnrU5V6k8643LJ9QacLu3uI9M+BAFkmBmB1ELM2x7fdsziYZoSm6DmU6TKwiQCK0jf8dcNomcQ==}
+  /resend@3.5.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-bKu4LhXSecP6krvhfDzyDESApYdNfjirD5kykkT1xO0Cj9TKSiGh5Void4pGTs3Am+inSnp4dg0B5XzdwHBJOQ==}
     engines: {node: '>=18'}
     dependencies:
-      '@react-email/render': 0.0.15
+      '@react-email/render': 0.0.16(react-dom@18.2.0)(react@18.2.0)
+    transitivePeerDependencies:
+      - react
+      - react-dom
     dev: false
 
   /resolve-from@3.0.0:
