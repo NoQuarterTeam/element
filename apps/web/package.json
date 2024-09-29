@@ -84,7 +84,7 @@
     "@types/jsonwebtoken": "9.0.7",
     "@types/react": "18.3.10",
     "@types/react-dom": "18.3.0",
-    "cssnano": "6.1.2",
+    "cssnano": "7.0.6",
     "dotenv-cli": "7.4.2",
     "postcss": "8.4.47",
     "remix-flat-routes": "0.6.5",
