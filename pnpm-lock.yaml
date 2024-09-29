@@ -696,8 +696,8 @@ importers:
         specifier: 4.3.1
         version: 4.3.1
       tailwind-merge:
-        specifier: 2.3.0
-        version: 2.3.0
+        specifier: 2.5.2
+        version: 2.5.2
     devDependencies:
       '@types/node':
         specifier: ^18.15.3
@@ -16536,10 +16536,8 @@ packages:
       picocolors: 1.1.0
     dev: true
 
-  /tailwind-merge@2.3.0:
-    resolution: {integrity: sha512-vkYrLpIP+lgR0tQCG6AP7zZXCTLc1Lnv/CCRT3BqJ9CZ3ui2++GPaGb1x/ILsINIMSYqqvrpqjUFsMNLlW99EA==}
-    dependencies:
-      '@babel/runtime': 7.25.6
+  /tailwind-merge@2.5.2:
+    resolution: {integrity: sha512-kjEBm+pvD+6eAwzJL2Bi+02/9LFLal1Gs61+QB7HvTfQQ0aXwC5LGT8PEt1gS0CWKktKe6ysPTAy3cBC5MeiIg==}
     dev: false
 
   /tailwind-scrollbar-hide@1.1.7:
