@@ -639,7 +639,7 @@ importers:
         version: 7.5.0
       '@upstash/qstash':
         specifier: ^2.3.0
-        version: 2.6.0
+        version: 2.7.10
       bcryptjs:
         specifier: 2.4.3
         version: 2.4.3
@@ -8265,11 +8265,11 @@ packages:
       '@types/yargs-parser': 21.0.3
     dev: false
 
-  /@upstash/qstash@2.6.0:
-    resolution: {integrity: sha512-7fbGujO5vMHVI1szewpvmumR8NKmVLJpoKudCmg+YtQLw53DtJLmWTqgn79Py6lgeNEZzNqgzDmYH9LyNV7qGg==}
+  /@upstash/qstash@2.7.10:
+    resolution: {integrity: sha512-LKRQ+iMyzfTCq7Cw/GPv+ncI6c/gW9ZgSx9rFra7crAEix6iSqbwPDQY3zm0GafUCAiVtt1VvHFxcrPF2R3WGA==}
     dependencies:
       crypto-js: 4.2.0
-      jose: 5.6.3
+      jose: 5.9.3
     dev: false
 
   /@urql/core@2.3.6(graphql@15.8.0):
@@ -12074,6 +12074,10 @@ packages:
 
   /jose@5.6.3:
     resolution: {integrity: sha512-1Jh//hEEwMhNYPDDLwXHa2ePWgWiFNNUadVmguAAw2IJ6sj9mNxV5tGXJNqlMkJAybF6Lgw1mISDxTePP/187g==}
+    dev: false
+
+  /jose@5.9.3:
+    resolution: {integrity: sha512-egLIoYSpcd+QUF+UHgobt5YzI2Pkw/H39ou9suW687MY6PmCwPmkNV/4TNjn1p2tX5xO3j0d0sq5hiYE24bSlg==}
     dev: false
 
   /js-beautify@1.14.11:
