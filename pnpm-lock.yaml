@@ -330,7 +330,7 @@ importers:
         version: 16.4.5
       expo-server-sdk:
         specifier: ^3.7.0
-        version: 3.10.0
+        version: 3.11.0
       isbot:
         specifier: 3.8.0
         version: 3.8.0
@@ -10668,8 +10668,8 @@ packages:
       - supports-color
     dev: false
 
-  /expo-server-sdk@3.10.0:
-    resolution: {integrity: sha512-isymUVz18Syp9G+TPs2MVZ6WdMoyLw8hDLhpywOd8JqM6iGTka6Dr8Dzq7mjGQ8C8486rxLawZx/W+ps+vkjLQ==}
+  /expo-server-sdk@3.11.0:
+    resolution: {integrity: sha512-EGH82ZcdAFjKq+6daDE8Xj7BjaSeP1VDvZ3Hmtn/KzEQ3ffqHkauMsgXL2wLEPlvatLq3EsYNcejXRBV54WnFQ==}
     dependencies:
       node-fetch: 2.7.0
       promise-limit: 2.7.0
