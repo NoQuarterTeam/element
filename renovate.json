@@ -2,6 +2,7 @@
   "extends": ["config:base"],
   "baseBranches": ["develop"],
   "automerge": true,
+  "schedule": ["0 12 * * 0"],
   "major": { "automerge": false },
   "requiredStatusChecks": null,
   "packageRules": [
