@@ -217,7 +217,7 @@ export const taskRouter = createTRPCRouter({
       }
       if (
         (data.reminder && existingTask.reminder !== data.reminder) ||
-        (data.startTime && data.startTime !== existingTask.startTime)
+        (data.reminder && data.startTime && data.startTime !== existingTask.startTime)
       ) {
         if (task.upstashMessageId) await deleteTaskReminder(task.upstashMessageId)
         const upstashMessageId = await createTaskReminder(task)
