@@ -48,7 +48,7 @@
     "dotenv": "16.4.7",
     "expo-server-sdk": "^3.7.0",
     "isbot": "3.8.0",
-    "jose": "5.9.3",
+    "jose": "5.9.6",
     "js-confetti": "0.12.0",
     "js-cookie": "3.0.5",
     "jsonwebtoken": "9.0.2",
