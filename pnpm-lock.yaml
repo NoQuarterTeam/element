@@ -193,8 +193,8 @@ importers:
         specifier: ^1.10.0
         version: 1.10.0(@react-native-menu/menu@1.0.3)(@types/react@18.3.18)(react-dom@18.2.0)(react-native-ios-context-menu@2.5.1)(react-native@0.73.6)(react@18.2.0)
       zustand:
-        specifier: 4.5.5
-        version: 4.5.5(@types/react@18.3.18)(react@18.2.0)
+        specifier: 4.5.6
+        version: 4.5.6(@types/react@18.3.18)(react@18.2.0)
     devDependencies:
       '@babel/core':
         specifier: 7.25.2
@@ -407,8 +407,8 @@ importers:
         specifier: 3.23.8
         version: 3.23.8
       zustand:
-        specifier: 4.5.5
-        version: 4.5.5(@types/react@18.3.18)(react@18.2.0)
+        specifier: 4.5.6
+        version: 4.5.6(@types/react@18.3.18)(react@18.2.0)
     devDependencies:
       '@element/tailwind-config':
         specifier: workspace:*
@@ -16177,7 +16177,7 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
       react-is: 18.2.0
       redux: 4.2.1
-      use-sync-external-store: 1.2.0(react@18.2.0)
+      use-sync-external-store: 1.2.2(react@18.2.0)
     dev: false
 
   /react-refresh@0.14.0:
@@ -18706,8 +18706,8 @@ packages:
       zod: 3.23.8
     dev: false
 
-  /zustand@4.5.5(@types/react@18.3.18)(react@18.2.0):
-    resolution: {integrity: sha512-+0PALYNJNgK6hldkgDq2vLrw5f6g/jCInz52n9RTpropGgeAf/ioFUCdtsjCqu4gNhW9D01rUQBROoRjdzyn2Q==}
+  /zustand@4.5.6(@types/react@18.3.18)(react@18.2.0):
+    resolution: {integrity: sha512-ibr/n1hBzLLj5Y+yUcU7dYw8p6WnIVzdJbnX+1YpaScvZVF2ziugqHs+LAmHw4lWO9c/zRj+K1ncgWDQuthEdQ==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       '@types/react': '>=16.8'
