@@ -514,14 +514,14 @@ importers:
         specifier: workspace:*
         version: link:../server/env
       '@neondatabase/serverless':
-        specifier: ^0.9.0
-        version: 0.9.5
+        specifier: ^0.10.0
+        version: 0.10.4
       '@planetscale/database':
         specifier: ^1.13.0
         version: 1.19.0
       '@prisma/adapter-neon':
         specifier: ^5.12.1
-        version: 5.20.0(@neondatabase/serverless@0.9.5)
+        version: 5.20.0(@neondatabase/serverless@0.10.4)
       '@prisma/adapter-planetscale':
         specifier: 5.20.0
         version: 5.20.0(@planetscale/database@1.19.0)
@@ -5008,7 +5008,7 @@ packages:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.13.1
+      '@types/node': 18.19.75
       jest-mock: 29.7.0
     dev: false
 
@@ -5018,7 +5018,7 @@ packages:
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 22.13.1
+      '@types/node': 18.19.75
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -5037,7 +5037,7 @@ packages:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 22.13.1
+      '@types/node': 18.19.75
       '@types/yargs': 15.0.19
       chalk: 4.1.2
     dev: false
@@ -5049,7 +5049,7 @@ packages:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 22.13.1
+      '@types/node': 18.19.75
       '@types/yargs': 17.0.32
       chalk: 4.1.2
     dev: false
@@ -5132,8 +5132,8 @@ packages:
       - supports-color
     dev: true
 
-  /@neondatabase/serverless@0.9.5:
-    resolution: {integrity: sha512-siFas6gItqv6wD/pZnvdu34wEqgG3nSE6zWZdq5j2DEsa+VvX8i/5HXJOo06qrw5axPXn+lGCxeR+NLaSPIXug==}
+  /@neondatabase/serverless@0.10.4:
+    resolution: {integrity: sha512-2nZuh3VUO9voBauuh+IGYRhGU/MskWHt1IuZvHcJw6GLjDgtqj/KViKo7SIrLdGLdot7vFbiRRw+BgEy3wT9HA==}
     dependencies:
       '@types/pg': 8.11.6
     dev: false
@@ -5232,12 +5232,12 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
-  /@prisma/adapter-neon@5.20.0(@neondatabase/serverless@0.9.5):
+  /@prisma/adapter-neon@5.20.0(@neondatabase/serverless@0.10.4):
     resolution: {integrity: sha512-SEAnEmhJH5EzODrGDoZMYptV+A0+I0rLLpyA+oE62dZU7PlkYoOhCOeVVb45S0IQ46e8FWGf8uGZJOkYYQC3vA==}
     peerDependencies:
       '@neondatabase/serverless': ^0.6.0 || ^0.7.0 || ^0.8.0 || ^0.9.0
     dependencies:
-      '@neondatabase/serverless': 0.9.5
+      '@neondatabase/serverless': 0.10.4
       '@prisma/driver-adapter-utils': 5.20.0
       postgres-array: 3.0.2
     dev: false
@@ -8627,11 +8627,6 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
-  /@types/node@22.13.1:
-    resolution: {integrity: sha512-jK8uzQlrvXqEU91UxiK5J7pKHyzgnI1Qnl0QDHIgVGuolJhRb9EEl28Cj9b3rGR8B2lhFCtvIm5os8lFnO/1Ew==}
-    dependencies:
-      undici-types: 6.20.0
-
   /@types/nodemailer@6.4.17:
     resolution: {integrity: sha512-I9CCaIp6DTldEg7vyUTZi8+9Vo0hi1/T8gv3C89yk1rSAAzoKQ8H8ki/jBYJSFoH/BisgLP8tkZMlQ91CIquww==}
     dependencies:
@@ -9676,7 +9671,7 @@ packages:
     engines: {node: '>=12.13.0'}
     hasBin: true
     dependencies:
-      '@types/node': 22.13.1
+      '@types/node': 18.19.75
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -9687,7 +9682,7 @@ packages:
   /chromium-edge-launcher@1.0.0:
     resolution: {integrity: sha512-pgtgjNKZ7i5U++1g1PWv75umkHvhVTDOQIZ+sjeUX9483S7Y6MUvO0lrd7ShGlQlFHMN4SwKTCq/X8hWrbv2KA==}
     dependencies:
-      '@types/node': 22.13.1
+      '@types/node': 18.19.75
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -10859,7 +10854,7 @@ packages:
     resolution: {integrity: sha512-EzV94NYKoO09GLXGjXj9JIlXijVck4ONSr5wiCWDvhsvj5jxSrzTmRU/9C1DyB6uToszLs8aifA6NQ7lEQdvFw==}
     engines: {node: '>= 0.8'}
     dependencies:
-      '@types/node': 22.13.1
+      '@types/node': 18.19.75
       require-like: 0.1.2
     dev: true
 
@@ -12557,7 +12552,7 @@ packages:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.13.1
+      '@types/node': 18.19.75
       jest-mock: 29.7.0
       jest-util: 29.7.0
     dev: false
@@ -12587,7 +12582,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.13.1
+      '@types/node': 18.19.75
       jest-util: 29.7.0
     dev: false
 
@@ -12596,7 +12591,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.13.1
+      '@types/node': 18.19.75
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -12619,7 +12614,7 @@ packages:
     resolution: {integrity: sha512-eIz2msL/EzL9UFTFFx7jBTkeZfku0yUAyZZZmJ93H2TYEiroIx2PQjEXcwYtYl8zXCxb+PAmA2hLIt/6ZEkPHw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@types/node': 22.13.1
+      '@types/node': 18.19.75
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
@@ -17709,9 +17704,6 @@ packages:
 
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
-
-  /undici-types@6.20.0:
-    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
   /undici@6.15.0:
     resolution: {integrity: sha512-VviMt2tlMg1BvQ0FKXxrz1eJuyrcISrL2sPfBf7ZskX/FCEc/7LeThQaoygsMJpNqrATWQIsRVx+1Dpe4jaYuQ==}
