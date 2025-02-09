@@ -37,7 +37,7 @@ export function HabitForm(props: Props) {
   const [reminders, setReminders] = React.useState<Array<Reminder>>(props.habit?.reminders || [])
 
   return (
-    <View className="space-y-2">
+    <View className="gap-2">
       <FormInput
         autoFocus={!props.habit}
         label="Name"
@@ -46,7 +46,7 @@ export function HabitForm(props: Props) {
         onChangeText={setName}
       />
 
-      <View className="space-y-1">
+      <View className="gap-1">
         <FormInputLabel label="Reminders" />
         {reminders.map((reminder) => (
           <View key={reminder.id}>
@@ -61,14 +61,14 @@ export function HabitForm(props: Props) {
           onPress={() => {
             setReminders((r) => [...r, { id: v4(), time: new Date() }])
           }}
-          className={merge(buttonStyles({ variant: "outline" }), "space-x-2")}
+          className={merge(buttonStyles({ variant: "outline" }), "gap-2")}
         >
           <Text>Add reminder</Text>
           <Icon icon={Plus} size={18} />
         </TouchableOpacity>
       </View>
 
-      <View className="space-y-1 pt-2">
+      <View className="gap-1 pt-2">
         <View>
           <Button
             isLoading={props.isLoading}
@@ -101,7 +101,7 @@ function ReminderInput({
   const timeProps = useDisclosure()
 
   return (
-    <View className="flex flex-row items-center space-x-2">
+    <View className="flex flex-row items-center gap-2">
       <TouchableOpacity onPress={timeProps.onOpen} className={merge(inputClassName, "relative flex-1")}>
         <View className="absolute bottom-0 left-4 top-0 flex items-center justify-center">
           <Icon icon={Clock} size={16} className="opacity-80" />

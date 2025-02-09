@@ -73,7 +73,7 @@ export const Button = React.forwardRef(function _Button(
         buttonStyles({ variant, size }),
         isLoading && "opacity-70",
         props.disabled && "opacity-60",
-        size === "sm" || size === "xs" ? "space-x-1" : "space-x-2",
+        size === "sm" || size === "xs" ? "gap-1" : "gap-2",
         props.className,
       )}
     >

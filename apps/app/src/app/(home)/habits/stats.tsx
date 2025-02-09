@@ -22,7 +22,7 @@ export default function HabitStat() {
 
   return (
     <ScreenView title="Stats">
-      <View className="flex flex-row items-center space-x-4 py-1">
+      <View className="flex flex-row items-center gap-4 py-1">
         <Text className="text-sm">Start date</Text>
         <View className="flex-1">
           <TouchableOpacity onPress={dateProps.onOpen} className={merge(inputClassName, "py-2")}>
@@ -55,7 +55,7 @@ export default function HabitStat() {
             <Text>Error loading stats</Text>
           </View>
         ) : (
-          <View className="space-y-2">
+          <View className="gap-2">
             {data?.habits?.map((habit) => {
               const totalDays = dayjs().diff(startDate, "days")
               return (
@@ -84,12 +84,12 @@ export default function HabitStat() {
               )
             })}
 
-            <View className="space-y-2 py-4">
+            <View className="gap-2 py-4">
               <View>
                 <Text className="text-lg">Breakdown by day</Text>
                 <Text className="text-xs opacity-70">What are your most effective days?</Text>
               </View>
-              <View className="flex space-y-2">
+              <View className="flex gap-2">
                 {dayWithMostEntriesAndCount &&
                   Array.from({ length: 7 }).map((_, i) => {
                     const progress = (data.daysOfWeekStats[`${i}`] || 0) / (dayWithMostEntriesAndCount[1] || 1)
@@ -97,7 +97,7 @@ export default function HabitStat() {
                       <View
                         // biome-ignore lint/suspicious/noArrayIndexKey: static
                         key={i}
-                        className="flex flex-row items-center space-x-3"
+                        className="flex flex-row items-center gap-3"
                       >
                         <View className="w-[40px]">
                           <Text className="flex-shrink-0">{dayjs().day(i).format("ddd")}</Text>

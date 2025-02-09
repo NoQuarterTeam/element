@@ -30,7 +30,7 @@ export default function DeleteTask() {
   return (
     <ModalView title="Delete task">
       <ScrollView
-        className="flex-1 space-y-2"
+        className="flex-1 gap-2"
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="interactive"

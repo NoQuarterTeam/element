@@ -89,7 +89,7 @@ export default function Habits() {
       </View>
 
       <HabitsListContainer />
-      <View className="absolute bottom-4 right-4 space-y-1">
+      <View className="absolute bottom-4 right-4 gap-1">
         <TouchableOpacity
           onPress={() => {
             scrollViewRef.current?.scrollToEnd()
@@ -376,9 +376,9 @@ function HabitItem({ habit, isComplete, positions }: { positions: SharedValue<Po
           <View className="flex h-full w-full flex-row items-center justify-between rounded border border-gray-100 bg-white p-3 px-4 dark:border-gray-700 dark:bg-black">
             <Text className="text-lg">{habit.name}</Text>
 
-            <View className="flex flex-row items-center space-x-2">
+            <View className="flex flex-row items-center gap-2">
               {habit.reminders.length > 0 && (
-                <View className="flex flex-row items-center space-x-1 opacity-70">
+                <View className="flex flex-row items-center gap-1 opacity-70">
                   <Text className="text-xs">{habit.reminders.length}x</Text>
                   <Icon icon={Clock} size={14} />
                 </View>

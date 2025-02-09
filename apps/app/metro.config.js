@@ -1,7 +1,7 @@
 // Learn more: https://docs.expo.dev/guides/monorepos/
 const { getSentryExpoConfig } = require("@sentry/react-native/metro")
-
-const path = require("path")
+const { withNativeWind } = require("nativewind/metro")
+const path = require("node:path")
 
 const projectRoot = __dirname
 const workspaceRoot = path.resolve(projectRoot, "../..")
@@ -19,4 +19,4 @@ config.resolver.nodeModulesPaths = [path.resolve(projectRoot, "node_modules"), p
 // 3. Force Metro to resolve (sub)dependencies only from the `nodeModulesPaths`
 config.resolver.disableHierarchicalLookup = true
 
-module.exports = config
+module.exports = withNativeWind(config, { input: "./src/global.css" })

@@ -45,7 +45,7 @@ export default function Register() {
         contentContainerStyle={{ paddingBottom: 400 }}
         showsHorizontalScrollIndicator={false}
       >
-        <View className="space-y-1">
+        <View className="gap-1">
           <View>
             <FormInput
               autoCapitalize="none"
@@ -98,7 +98,7 @@ export default function Register() {
           <Text className="opacity-60">or</Text>
           <View className="ml-3 h-px flex-1 bg-gray-100 dark:bg-gray-600" />
         </View>
-        <View className="space-y-2">
+        <View className="gap-2">
           <Link href="/login" asChild replace>
             <Button variant="outline">Login</Button>
           </Link>

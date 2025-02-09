@@ -1,7 +1,7 @@
 import type { ConfigContext, ExpoConfig } from "expo/config"
 
-const VERSION = "1.1.2"
-const BUILD = 35
+const VERSION = "1.5.0"
+const BUILD = 36
 
 const IS_DEV = process.env.APP_VARIANT === "development"
 

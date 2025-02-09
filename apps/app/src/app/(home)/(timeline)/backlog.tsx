@@ -98,7 +98,7 @@ function TaskItem({ task }: { task: RouterOutputs["task"]["backlog"][number] }) 
   const isDark = useColorScheme() === "dark"
   return (
     <View className="rounded border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
-      <View className="flex flex-1 flex-row space-x-2 p-3">
+      <View className="flex flex-1 flex-row gap-2 p-3">
         <TouchableOpacity
           onLongPress={handleOpenMenu}
           onPress={() => router.navigate({ pathname: "/[id]", params: { id: task.id } })}
@@ -111,7 +111,7 @@ function TaskItem({ task }: { task: RouterOutputs["task"]["backlog"][number] }) 
             {task.name}
           </Text>
           {!task.isComplete && (
-            <View className="flex flex-shrink-0 flex-row items-center space-x-2">
+            <View className="flex flex-shrink-0 flex-row items-center gap-2">
               {task.startTime ? <Text className="text-xs">{task.startTime}</Text> : null}
               {task.durationHours || task.durationMinutes ? (
                 <Text className="text-xs">{formatDuration(task.durationHours, task.durationMinutes)}</Text>

@@ -20,6 +20,7 @@ import { useMe } from "../lib/hooks/useMe"
 import { useNotificationObserver } from "../lib/hooks/useNotificationObserver"
 import { useBackgroundColor } from "../lib/tailwind"
 import { TRPCProvider, api } from "../lib/utils/api"
+import "../global.css"
 
 Sentry.init({
   dsn: "https://2e39a63a183c7a7fab0f691b638da957@o204549.ingest.sentry.io/4506592060309504",
@@ -63,7 +64,7 @@ export default function RootLayout() {
       <PostHogProvider
         autocapture
         apiKey="phc_2W9bqjQCsJjOLxyO5wcxb4m5aQrNRjUWmKA9mvu9lcF"
-        options={{ host: "https://eu.posthog.com", enable: IS_PRODUCTION }}
+        options={{ host: "https://eu.posthog.com", disabled: !IS_PRODUCTION }}
       >
         <ActionSheetProvider>
           <PrefetchTabs>

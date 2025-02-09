@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-import { type AllRoutes, useGlobalSearchParams, useRouter } from "expo-router"
+import { useGlobalSearchParams, useRouter } from "expo-router"
 import { matchSorter } from "match-sorter"
 import * as React from "react"
 import { ActivityIndicator, Pressable, ScrollView, View } from "react-native"
@@ -28,8 +28,8 @@ export default function SelectElement() {
 
   const router = useRouter()
   const onSelect = (element: { id: string; color: string; name: string }) => {
-    if (!redirect) return router.back()
-    router.navigate({ pathname: redirect as AllRoutes, params: { ...params, elementId: element.id } })
+    router.back()
+    router.setParams({ ...params, elementId: element.id })
   }
   return (
     <ModalView title="Select element">
@@ -50,7 +50,7 @@ export default function SelectElement() {
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="interactive"
       >
-        <View className="space-y-1 pt-2">
+        <View className="gap-1 pt-2">
           {me && isLoading ? (
             <View className="flex items-center justify-center pt-2">
               <ActivityIndicator />
@@ -61,7 +61,7 @@ export default function SelectElement() {
                 {({ pressed }) => (
                   <View
                     className={join(
-                      "flex flex-row items-center space-x-2 rounded p-1 px-2",
+                      "flex flex-row items-center gap-2 rounded p-1 px-2",
                       i === 0 && "bg-gray-75 dark:bg-gray-800",
                       pressed && "bg-gray-100 dark:bg-gray-700",
                     )}

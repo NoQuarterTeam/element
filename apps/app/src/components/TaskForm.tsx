@@ -159,7 +159,7 @@ export function TaskForm(props: Props) {
               if (!form.element) {
                 router.push({
                   pathname: "/elements/select",
-                  params: { date: form.date || "", repeat: repeat || "", redirect: "/new" },
+                  params: { date: form.date || "", repeat: repeat || "" },
                 })
               }
             }}
@@ -172,7 +172,7 @@ export function TaskForm(props: Props) {
             <FormInputError key={error} error={error} />
           ))}
         </View>
-        <View className="flex flex-row items-center space-x-1">
+        <View className="flex flex-row items-center gap-1">
           <TouchableOpacity
             onPress={() => setForm((f) => ({ ...f, isImportant: !f.isImportant }))}
             className={join(
@@ -196,7 +196,7 @@ export function TaskForm(props: Props) {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <View className="flex-1 space-y-2">
+        <View className="flex-1 gap-2">
           <View>
             <FormInput
               label="Element"
@@ -207,15 +207,11 @@ export function TaskForm(props: Props) {
                   onPress={() => {
                     router.push({
                       pathname: "/elements/select",
-                      params: {
-                        date: form.date || "",
-                        repeat: repeat || "",
-                        redirect: props.task ? `/${props.task.id}` : "/new",
-                      },
+                      params: { date: form.date || "", repeat: repeat || "" },
                     })
                   }}
                 >
-                  <View className="flex flex-row items-center space-x-2">
+                  <View className="flex flex-row items-center gap-2">
                     {form.element && (
                       <View
                         className="sq-4 rounded-full border border-gray-300 dark:border-gray-700"
@@ -232,12 +228,9 @@ export function TaskForm(props: Props) {
                 me && (
                   <TouchableOpacity
                     onPress={() => {
-                      router.push({
-                        pathname: "/elements/create",
-                        params: { date: form.date || "", redirect: props.task ? `/${props.task.id}` : "/new" },
-                      })
+                      router.push({ pathname: "/elements/create", params: { date: form.date || "" } })
                     }}
-                    className="rounded-sm border border-gray-100 p-2.5 dark:border-gray-600"
+                    className="sq-10 flex items-center justify-center rounded-sm border border-gray-100 p-2 dark:border-gray-600"
                   >
                     <Icon icon={Plus} size={20} />
                   </TouchableOpacity>
@@ -264,10 +257,10 @@ export function TaskForm(props: Props) {
               />
             </View>
           )}
-          <View className="space-y-1">
+          <View className="gap-1">
             <FormInputLabel label="Duration" />
-            <View className="flex flex-row items-center space-x-3">
-              <View className="flex flex-row items-center space-x-2">
+            <View className="flex flex-row items-center gap-3">
+              <View className="flex flex-row items-center gap-2">
                 <Input
                   className="w-11 px-1 text-center text-sm"
                   value={form.durationHours || ""}
@@ -276,7 +269,7 @@ export function TaskForm(props: Props) {
                 />
                 <Text className="text-sm opacity-70">Hours</Text>
               </View>
-              <View className="flex flex-row items-center space-x-2">
+              <View className="flex flex-row items-center gap-2">
                 <Input
                   className="w-11 px-1 text-center text-sm"
                   value={form.durationMinutes || ""}
@@ -324,7 +317,7 @@ export function TaskForm(props: Props) {
                     input={
                       <DropdownMenu.Root>
                         <DropdownMenu.Trigger asChild>
-                          <TouchableOpacity className={merge(inputClassName, "flex flex-row items-center space-x-2")}>
+                          <TouchableOpacity className={merge(inputClassName, "flex flex-row items-center gap-2")}>
                             <Icon icon={AlarmClock} size={16} />
                             <Text className="text-sm">
                               {TASK_REMINDER_OPTIONS.find((r) => r.value === form.reminder)?.name || "None"}
@@ -370,7 +363,7 @@ export function TaskForm(props: Props) {
             />
           </View>
           {!props.task && me?.stripeSubscriptionId && (
-            <View className="space-y-2">
+            <View className="gap-2">
               <FormInput
                 label="Repeat"
                 error={props.error?.zodError?.fieldErrors?.repeat}
@@ -381,7 +374,7 @@ export function TaskForm(props: Props) {
                       nameInputRef.current?.blur()
                       router.push({
                         pathname: "/repeat-select",
-                        params: { date: form.date || "", repeat: repeat || "", redirect: "/new" },
+                        params: { date: form.date || "", repeat: repeat || "" },
                       })
                     }}
                   >
@@ -393,7 +386,7 @@ export function TaskForm(props: Props) {
               />
               {repeat && (
                 <View>
-                  <View className="flex flex-row space-x-2">
+                  <View className="flex flex-row gap-2">
                     <View className="w-[70px] pt-1">
                       <FormInputLabel label="End date" />
                       <Text className="text-xxs opacity-70">
@@ -438,10 +431,10 @@ export function TaskForm(props: Props) {
               onChangeText={(description) => setForm((f) => ({ ...f, description }))}
             />
           </View>
-          <View className="space-y-1">
+          <View className="gap-1">
             <FormInputLabel label="Todos" />
             {form.todos.map((todo, index) => (
-              <View key={todo.id} className="flex flex-row items-center space-x-2">
+              <View key={todo.id} className="flex flex-row items-center gap-2">
                 <TouchableOpacity
                   className="relative"
                   onPress={() => {
@@ -516,10 +509,10 @@ export function TaskForm(props: Props) {
         style={buttonContainerAnimatedStyle}
         className="border-t border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
       >
-        <View className="space-y-2 px-4 py-2">
+        <View className="gap-2 px-4 py-2">
           <FormError error={props.error?.formError} />
 
-          <View className="flex flex-row items-center space-x-2">
+          <View className="flex flex-row items-center gap-2">
             {props.task && <TaskActions task={props.task} />}
             <Button
               className="flex-1"
@@ -626,7 +619,7 @@ function TaskActions({ task }: { task: Task }) {
     }
   }
   return (
-    <View className="flex flex-row items-center justify-between space-x-2">
+    <View className="flex flex-row items-center justify-between gap-2">
       <TouchableOpacity
         onPress={handleDelete}
         className="sq-12 flex items-center justify-center rounded-full border border-gray-100 dark:border-gray-600"

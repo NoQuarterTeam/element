@@ -1,4 +1,4 @@
-import { type AllRoutes, useGlobalSearchParams, useRouter } from "expo-router"
+import { useGlobalSearchParams, useRouter } from "expo-router"
 import { ScrollView } from "react-native"
 
 import { ElementForm } from "~/components/ElementForm"
@@ -15,8 +15,8 @@ export default function CreateElement() {
     onSuccess: async (data) => {
       void utils.element.grouped.refetch()
       await utils.element.all.refetch()
-      if (!redirect) return router.back()
-      router.navigate({ pathname: redirect as AllRoutes, params: { ...params, elementId: data.id } })
+      router.back()
+      router.setParams({ ...params, elementId: data.id })
     },
   })
 

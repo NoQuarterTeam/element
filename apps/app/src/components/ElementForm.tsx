@@ -28,7 +28,7 @@ export function ElementForm(props: Props) {
     color: props.element?.color || randomHexColor(),
   })
   return (
-    <View className="space-y-2">
+    <View className="gap-2">
       <FormInput
         autoFocus={!form.name}
         label="Name"

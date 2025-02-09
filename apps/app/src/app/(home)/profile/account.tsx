@@ -76,7 +76,7 @@ export default function Account() {
     <ScreenView title="Account">
       <KeyboardAvoidingView>
         <ScrollView
-          className="space-y-2 pt-4"
+          className="gap-2 pt-4"
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="interactive"
@@ -89,13 +89,15 @@ export default function Account() {
                   <ActivityIndicator />
                 </View>
               ) : me?.avatar ? (
-                <OptimizedImage
-                  width={80}
-                  height={80}
-                  // placeholder={me.avatarBlurHash}
-                  source={{ uri: createImageUrl(me.avatar) }}
-                  className="sq-20 rounded-full bg-gray-100 object-cover dark:bg-gray-700"
-                />
+                <View className="rounded-full border border-gray-100 object-cover dark:border-gray-700">
+                  <OptimizedImage
+                    width={80}
+                    height={80}
+                    contentFit="cover"
+                    style={{ width: 80, height: 80, borderRadius: 40 }}
+                    source={{ uri: createImageUrl(me.avatar) }}
+                  />
+                </View>
               ) : (
                 <View className="sq-20 flex items-center justify-center rounded-full bg-gray-100 object-cover dark:bg-gray-700">
                   <Icon icon={User2} />
@@ -130,7 +132,7 @@ export default function Account() {
               onChangeText={(lastName) => setForm((f) => ({ ...f, lastName }))}
             />
           </View>
-          <View className="space-y-1">
+          <View className="gap-1">
             <View>
               <Button onPress={handleUpdate}>Update</Button>
             </View>
@@ -152,7 +154,7 @@ export default function Account() {
               onDismiss={modalProps.onClose}
             >
               <ModalView title="Are you sure?" onBack={modalProps.onClose}>
-                <View className="space-y-2 pt-4">
+                <View className="gap-2 pt-4">
                   <Text>This can't be undone!</Text>
                   <Button isLoading={isLoading} onPress={() => deleteAccount()} variant="destructive">
                     Confirm
