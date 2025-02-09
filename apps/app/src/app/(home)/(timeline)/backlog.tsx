@@ -1,13 +1,11 @@
+import { formatDuration, safeReadableColor } from "@element/shared"
+import colors from "@element/tailwind-config/src/colors"
 import { useActionSheet } from "@expo/react-native-action-sheet"
 import dayjs from "dayjs"
 import * as Haptics from "expo-haptics"
 import { useFocusEffect, useRouter } from "expo-router"
 import { Circle } from "lucide-react-native"
 import { ActivityIndicator, RefreshControl, ScrollView, TouchableOpacity, View, useColorScheme } from "react-native"
-
-import { formatDuration, safeReadableColor } from "@element/shared"
-import colors from "@element/tailwind-config/src/colors"
-
 import { ModalView } from "~/components/ModalView"
 import { Text } from "~/components/Text"
 import { useTimelineDays } from "~/lib/hooks/useTimeline"
@@ -97,17 +95,14 @@ function TaskItem({ task }: { task: RouterOutputs["task"]["backlog"][number] }) 
 
   const isDark = useColorScheme() === "dark"
   return (
-    <View className="rounded border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
-      <View className="flex flex-1 flex-row gap-2 p-3">
+    <View className="rounded-xs border border-gray-100 bg-white dark:border-gray-600 dark:bg-black ">
+      <View className="flex flex-1 flex-row p-3">
         <TouchableOpacity
           onLongPress={handleOpenMenu}
           onPress={() => router.navigate({ pathname: "/[id]", params: { id: task.id } })}
           className="flex-1 flex-row justify-between"
         >
-          <Text
-            className="text-md flex flex-1 pt-0.5"
-            style={{ textDecorationLine: task.isComplete ? "line-through" : undefined }}
-          >
+          <Text className="text-sm pt-0.5" style={{ textDecorationLine: task.isComplete ? "line-through" : undefined }}>
             {task.name}
           </Text>
           {!task.isComplete && (

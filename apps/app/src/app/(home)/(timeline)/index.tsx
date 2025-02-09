@@ -490,8 +490,6 @@ const TaskItem = React.memo(function _TaskItem({
         offsetX.value += SCROLL_SPEED
       }
 
-      console.log(event.absoluteY)
-
       if (event.absoluteY < TOP_BAR_HEIGHT + SCROLL_THRESHOLD) {
         // Scroll up
         timelineScrollY.value = Math.max(timelineScrollY.value - SCROLL_SPEED, 0)
