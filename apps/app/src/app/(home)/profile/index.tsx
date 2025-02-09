@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useQueryClient } from "@tanstack/react-query"
-import { type AllRoutes, type Href, Link } from "expo-router"
+import { type Href, Link } from "expo-router"
 import { ChevronRight } from "lucide-react-native"
 import { ScrollView, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
@@ -29,10 +29,10 @@ export default function Profile() {
   }
   if (!me)
     return (
-      <SafeAreaView className="flex-1 space-y-6 px-4 pt-2">
+      <SafeAreaView className="flex-1 gap-6 px-4 pt-2">
         <Heading className="text-3xl">Profile</Heading>
         <LoginPlaceholder text="You are currently using a guest account, tasks will be only saved on this device.">
-          <View className="space-y-4">
+          <View className="gap-4">
             <Link asChild href="/register">
               <TouchableOpacity>
                 <Text className="text-lg">
@@ -53,12 +53,12 @@ export default function Profile() {
   return (
     <SafeAreaView className="flex-1 px-4 pt-2">
       <ScrollView
-        className="flex-1 space-y-6"
+        className="flex-1 gap-6"
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="interactive"
       >
-        <View className="flex flex-row items-center space-x-4 p-2">
+        <View className="flex flex-row items-center gap-4 p-2">
           {me?.avatar ? (
             <OptimizedImage
               width={70}
@@ -86,9 +86,7 @@ export default function Profile() {
           <ProfileLink isFirst href="/profile/account">
             Account
           </ProfileLink>
-          <ProfileLink isLast={!me.stripeSubscriptionId} href="/profile/plan">
-            Plan
-          </ProfileLink>
+          <ProfileLink href="/profile/plan">Plan</ProfileLink>
           <ProfileLink isLast href="/profile/features">
             Features
           </ProfileLink>
@@ -107,14 +105,14 @@ export default function Profile() {
   )
 }
 
-function ProfileLink(props: { isFirst?: boolean; isLast?: boolean; href: Href<AllRoutes>; children: React.ReactNode }) {
+function ProfileLink(props: { isFirst?: boolean; isLast?: boolean; href: Href; children: React.ReactNode }) {
   return (
     <Link href={props.href} asChild>
       <TouchableOpacity
         activeOpacity={0.7}
         className={join(
           "flex flex-row items-center justify-between border-x border-t border-gray-100 px-4 py-2 dark:border-gray-600",
-          props.isFirst && "rounded-t-sm",
+          props.isFirst && "rounded-t-xs",
           props.isLast && "rounded-b-sm border-b",
         )}
       >

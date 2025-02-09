@@ -14,9 +14,9 @@ interface Props extends InputProps {
 
 export function FormInput({ label, error, rightElement, input, ...props }: Props) {
   return (
-    <View className="space-y-0.5">
+    <View className="gap-0.5">
       {label && <FormInputLabel label={label} />}
-      <View className="flex flex-row items-center space-x-2">
+      <View className="flex flex-row items-center gap-2">
         {input || <Input {...props} className={merge(rightElement && "flex-1")} />}
         <View>{rightElement}</View>
       </View>

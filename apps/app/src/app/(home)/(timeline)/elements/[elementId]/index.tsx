@@ -42,7 +42,7 @@ export default function ElementDetail() {
         </View>
       ) : (
         <ScrollView
-          className="space-y-4"
+          className="gap-4"
           contentContainerStyle={{ minHeight: "100%", paddingBottom: 400 }}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"

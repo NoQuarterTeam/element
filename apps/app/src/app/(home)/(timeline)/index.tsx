@@ -1,3 +1,5 @@
+import { formatDuration, join, safeReadableColor } from "@element/shared"
+import colors from "@element/tailwind-config/src/colors"
 import dayjs from "dayjs"
 import advancedFormat from "dayjs/plugin/advancedFormat"
 import { BlurView } from "expo-blur"
@@ -17,13 +19,13 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
+  scrollTo,
+  ReanimatedLogLevel,
+  configureReanimatedLogger,
   withTiming,
+  useScrollViewOffset,
 } from "react-native-reanimated"
 import { SafeAreaView } from "react-native-safe-area-context"
-
-import { formatDuration, join, safeReadableColor } from "@element/shared"
-import colors from "@element/tailwind-config/src/colors"
-
 import { Heading } from "~/components/Heading"
 import { Icon } from "~/components/Icon"
 import { Text } from "~/components/Text"
@@ -32,7 +34,9 @@ import { useOnboarding } from "~/lib/hooks/useOnboarding"
 import { useTemporaryData } from "~/lib/hooks/useTemporaryTasks"
 import { DAY_WIDTH, days, daysBack, daysForward, months } from "~/lib/hooks/useTimeline"
 import { type RouterOutputs, api } from "~/lib/utils/api"
-import { height } from "~/lib/utils/device"
+import { height, width } from "~/lib/utils/device"
+
+configureReanimatedLogger({ level: ReanimatedLogLevel.error })
 
 dayjs.extend(advancedFormat)
 
@@ -58,19 +62,14 @@ export default function Timeline() {
   const outerTimelineRef = useAnimatedRef<Animated.ScrollView>()
   const headerTranslateX = useSharedValue(0)
 
-  // used for manually scrolling the timeline
-  // const timelineScrollX = useSharedValue(7 * DAY_WIDTH)
-  // useAnimatedReaction(
-  //   () => timelineScrollX.value,
-  //   (x) => {
-  //     scrollTo(timelineRef, x, 0, true)
-  //   },
-  // )
+  const timelineScrollX = useScrollViewOffset(timelineRef)
+
+  const timelineScrollY = useScrollViewOffset(outerTimelineRef)
 
   const onScroll = useAnimatedScrollHandler((e) => {
     headerTranslateX.value = -e.contentOffset.x
+    // timelineScrollX.value = -e.contentOffset.x
     // TODO: scroll when reached start or end of scroll view
-
     // // if reached end of scroll view, fetch next month
     // console.log(e.contentOffset.x, e.contentSize.width)
     // if (e.contentOffset.x > e.contentSize.width - width - DAY_WIDTH * 2) {
@@ -86,8 +85,24 @@ export default function Timeline() {
   // }, [data, days])
 
   const utils = api.useUtils()
+
+  useAnimatedReaction(
+    () => timelineScrollX.value,
+    (x) => {
+      headerTranslateX.value = -x
+      scrollTo(timelineRef, x, 0, false)
+    },
+  )
+
+  useAnimatedReaction(
+    () => timelineScrollY.value,
+    (y) => {
+      scrollTo(outerTimelineRef, 0, y, false)
+    },
+  )
+
   return (
-    <SafeAreaView edges={["top"]} className="flex-1 pt-2">
+    <SafeAreaView edges={["top"]} className="flex-1 pt-2 relative">
       <Animated.View className="flex flex-row" style={{ transform: [{ translateX: headerTranslateX }] }}>
         <TimelineMonths headerTranslateX={headerTranslateX} />
       </Animated.View>
@@ -115,7 +130,7 @@ export default function Timeline() {
           horizontal
         >
           <TimelineDayColumns />
-          <TasksGridWrapper />
+          <TasksGridWrapper timelineScrollX={timelineScrollX} timelineScrollY={timelineScrollY} />
         </Animated.ScrollView>
       </Animated.ScrollView>
 
@@ -173,7 +188,7 @@ const TimelineDayColumns = React.memo(function _TimelineDayColumns() {
           key={day}
           activeOpacity={0.9}
           onPress={() => router.push({ pathname: "/new", params: { date: day } })}
-          style={{ height, width: DAY_WIDTH }}
+          style={{ height: 1200, width: DAY_WIDTH, zIndex: 1 }}
           className={join(
             "border-r border-gray-100 dark:border-gray-700",
             dayjs(day).isSame(dayjs(), "date")
@@ -222,9 +237,9 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
   })
 
   return (
-    <View pointerEvents="box-none" className="absolute bottom-4 right-4 space-y-1">
+    <View pointerEvents="box-none" className="absolute flex bottom-4 right-4 gap-1">
       {me && (
-        <View pointerEvents="box-none" className="space-y-1">
+        <View pointerEvents="box-none" className="gap-1">
           <Animated.View style={{ opacity: backlogOpacity, transform: [{ translateY: backlogTranslateY }] }}>
             <Link href={"/backlog"} asChild>
               <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
@@ -234,7 +249,7 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
           </Animated.View>
 
           <Animated.View style={{ opacity: elementsOpacity, transform: [{ translateY: elementsTranslateY }] }}>
-            <Link href={"/elements/"} asChild>
+            <Link href="/elements" asChild>
               <TouchableOpacity className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black">
                 <Icon icon={Book} size={24} />
               </TouchableOpacity>
@@ -250,12 +265,14 @@ function TimelineActions({ onScrollToToday }: { onScrollToToday: () => void }) {
           </Animated.View>
         </View>
       )}
+
       <TouchableOpacity
         onPress={onScrollToToday}
         className="sq-14 flex items-center justify-center rounded-full border border-gray-100 bg-white dark:border-gray-600 dark:bg-black"
       >
         <Icon icon={Calendar} size={24} />
       </TouchableOpacity>
+
       <Link href={{ pathname: "/new", params: { date: dayjs().format("YYYY-MM-DD") } }} asChild>
         <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
           <Icon icon={Plus} size={24} color="black" />
@@ -297,7 +314,10 @@ const Month = React.memo(function _Month({
   )
 })
 
-const TasksGridWrapper = React.memo(function _TasksGridWrapper() {
+const TasksGridWrapper = React.memo(function _TasksGridWrapper({
+  timelineScrollX,
+  timelineScrollY,
+}: { timelineScrollX: SharedValue<number>; timelineScrollY: SharedValue<number> }) {
   const { me, isLoading: userLoading } = useMe()
 
   const { data, isLoading } = api.task.timeline.useQuery({ daysBack, daysForward }, { enabled: !!me })
@@ -307,7 +327,7 @@ const TasksGridWrapper = React.memo(function _TasksGridWrapper() {
   if (userLoading) return null
   if (me && (isLoading || !data)) return null
   const tasks = me ? data! : tempTasks
-  return <TasksGrid tasks={tasks} />
+  return <TasksGrid tasks={tasks} timelineScrollX={timelineScrollX} timelineScrollY={timelineScrollY} />
 })
 
 type Tasks = NonNullable<RouterOutputs["task"]["timeline"]>
@@ -316,7 +336,11 @@ type Task = Tasks[number]
 
 type DropTask = Pick<Task, "id" | "isComplete" | "order" | "date">
 
-const TasksGrid = React.memo(function _TasksGrid({ tasks }: { tasks: Task[] }) {
+const TasksGrid = React.memo(function _TasksGrid({
+  tasks,
+  timelineScrollX,
+  timelineScrollY,
+}: { tasks: Task[]; timelineScrollX: SharedValue<number>; timelineScrollY: SharedValue<number> }) {
   const taskPositions = useSharedValue(
     tasks.reduce<{ [key: string]: DropTask }>((acc, task) => {
       acc[task.id] = {
@@ -353,7 +377,6 @@ const TasksGrid = React.memo(function _TasksGrid({ tasks }: { tasks: Task[] }) {
     const oldDate = oldTask.date
     const newDate = newTask.date
     const tasksToUpdate = tasks.filter((t) => t.date === oldDate || t.date === newDate)
-
     if (me) {
       utils.task.timeline.setData({ daysBack, daysForward }, (old) => {
         if (!old) return old
@@ -384,24 +407,39 @@ const TasksGrid = React.memo(function _TasksGrid({ tasks }: { tasks: Task[] }) {
   return (
     <>
       {tasks.map((task) => (
-        <TaskItem key={task.id} task={task} taskPositions={taskPositions} onDrop={() => handleDrop(task.id)} />
+        <TaskItem
+          key={task.id}
+          task={task}
+          taskPositions={taskPositions}
+          onDrop={() => handleDrop(task.id)}
+          timelineScrollX={timelineScrollX}
+          timelineScrollY={timelineScrollY}
+        />
       ))}
     </>
   )
 })
 
 const TASK_HEIGHT = 80
+const SCROLL_THRESHOLD = DAY_WIDTH * 0.4 // How close to edge before scrolling
+const SCROLL_SPEED = DAY_WIDTH * 0.1 // How fast to scroll
+const TOP_BAR_HEIGHT = 130
+const BOTTOM_BAR_HEIGHT = 100
 
 const TaskItem = React.memo(function _TaskItem({
   taskPositions,
   task,
   onDrop,
+  timelineScrollX,
+  timelineScrollY,
 }: {
   task: Task
   taskPositions: SharedValue<{ [key: string]: DropTask }>
   onDrop: () => void
+  timelineScrollX: SharedValue<number>
+  timelineScrollY: SharedValue<number>
 }) {
-  const isComplete = useSharedValue(task.isComplete)
+  const [isComplete, setIsComplete] = React.useState(task.isComplete)
   const position = useDerivedValue(() => {
     const taskPosition = taskPositions.value[task.id]
     const column = days.findIndex((day) => day === task.date)
@@ -438,21 +476,35 @@ const TaskItem = React.memo(function _TaskItem({
       runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium)
     })
     .onUpdate((event) => {
-      // TODO: figure out scrolling
-      // const positionX = event.absoluteX + timelineScrollX.value
-      // if (positionX < timelineScrollX.value + DAY_WIDTH / 2) {
-      //   // scroll left
-      //   timelineScrollX.value = Math.max(timelineScrollX.value - DAY_WIDTH / 2, 0)
-      //   translateX.value = Math.max(offsetX.value + event.translationX - DAY_WIDTH / 2, 0)
-      // } else if (positionX >= timelineScrollX.value + width - DAY_WIDTH / 2) {
-      //   // scroll right
-      //   timelineScrollX.value = withTiming(timelineScrollX.value + DAY_WIDTH / 2)
-      //   translateX.value = withTiming(offsetX.value + event.translationX + DAY_WIDTH / 2)
-      // } else {
-      //   // regular move
-      //   // cancelAnimation(timelineScrollX)
-      // }
-      translateX.value = offsetX.value + event.translationX
+      // Check if near left edge
+      if (event.absoluteX < SCROLL_THRESHOLD) {
+        // Scroll left
+        timelineScrollX.value = Math.max(timelineScrollX.value - SCROLL_SPEED, 0)
+        // Update task position relative to scroll
+        offsetX.value -= SCROLL_SPEED
+      } else if (event.absoluteX > width - SCROLL_THRESHOLD) {
+        // Check if near right edge
+        // Scroll right
+        timelineScrollX.value = Math.min(timelineScrollX.value + SCROLL_SPEED, days.length * DAY_WIDTH - width)
+        // Update task position relative to scroll
+        offsetX.value += SCROLL_SPEED
+      }
+
+      if (event.absoluteY < TOP_BAR_HEIGHT + SCROLL_THRESHOLD) {
+        // Scroll up
+        timelineScrollY.value = Math.max(timelineScrollY.value - SCROLL_SPEED, 0)
+        // Update task position relative to scroll
+        offsetY.value -= SCROLL_SPEED
+      } else if (event.absoluteY > height - BOTTOM_BAR_HEIGHT - SCROLL_THRESHOLD) {
+        // Scroll down
+        timelineScrollY.value = Math.min(
+          timelineScrollY.value + SCROLL_SPEED,
+          days.length * TASK_HEIGHT - height - BOTTOM_BAR_HEIGHT,
+        )
+        // Update task position relative to scroll
+        offsetY.value += SCROLL_SPEED
+      }
+      translateX.value = Math.max(offsetX.value + event.translationX, 0)
       translateY.value = Math.max(offsetY.value + event.translationY, 0)
 
       const newDate = days[Math.floor((translateX.value + DAY_WIDTH * 0.5) / DAY_WIDTH)]!
@@ -460,6 +512,7 @@ const TaskItem = React.memo(function _TaskItem({
 
       const currentTask = taskPositions.value[task.id]!
       const newPositions = { ...taskPositions.value }
+
       if (newDate === currentTask.date) {
         // reorder current date tasks
         const taskToSwap = Object.values(newPositions).find((t) => t.date === newDate && t.order === newOrder)
@@ -514,12 +567,12 @@ const TaskItem = React.memo(function _TaskItem({
       })
     })
 
-  const handleNavigate = () => router.push({ pathname: "/(home)/(timeline)/[id]/", params: { id: task.id } })
+  const handleNavigate = () => router.push({ pathname: "/(home)/(timeline)/[id]", params: { id: task.id } })
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
       position: "absolute",
-      zIndex: isActive.value ? 1000 : 0,
+      zIndex: isActive.value ? 1000 : 10,
       transform: [{ translateX: translateX.value }, { translateY: translateY.value }, { scale: scale.value }],
     }
   })
@@ -534,13 +587,13 @@ const TaskItem = React.memo(function _TaskItem({
     .runOnJS(true)
     .onStart(() => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-      const newIsComplete = !isComplete.value
+      const newIsComplete = !isComplete
       if (me) {
         mutate({ id: task.id, isComplete: newIsComplete })
       } else {
         updateTask({ isComplete: newIsComplete })
       }
-      isComplete.value = newIsComplete
+      setIsComplete(newIsComplete)
     })
 
   const utils = api.useUtils()
@@ -554,12 +607,12 @@ const TaskItem = React.memo(function _TaskItem({
   const gesture = Gesture.Race(Gesture.Simultaneous(pan, longPress), tap)
 
   return (
-    <Animated.View style={[{ width: DAY_WIDTH, height: TASK_HEIGHT, padding: 4 }, animatedStyles]}>
+    <Animated.View style={[{ width: DAY_WIDTH, height: TASK_HEIGHT, padding: 4, zIndex: 1000 }, animatedStyles]}>
       <GestureDetector gesture={gesture}>
         <Animated.View
           className={join(
             "flex h-full flex-col justify-between overflow-hidden rounded border border-gray-100 bg-white dark:border-gray-900 dark:bg-gray-700",
-            task.isImportant && !isComplete.value && "border-primary-400 dark:border-primary-400 border-2",
+            task.isImportant && !isComplete && "border-primary-400 dark:border-primary-400 border-2",
           )}
         >
           <View className="relative flex-1">
@@ -567,19 +620,19 @@ const TaskItem = React.memo(function _TaskItem({
               <Text
                 numberOfLines={2}
                 className="px-1 text-xs"
-                style={{ textDecorationLine: isComplete.value ? "line-through" : undefined }}
+                style={{ textDecorationLine: isComplete ? "line-through" : undefined }}
               >
                 {task.name}
               </Text>
-              {isComplete.value && <BlurView intensity={isComplete.value ? 6 : 0} className="absolute h-full w-full" />}
+              {isComplete && <BlurView intensity={6} className="absolute h-full w-full" />}
             </View>
-            {!isComplete.value && task.description && (
+            {!isComplete && task.description && (
               <View
                 style={{ backgroundColor: task.element.color }}
                 className="sq-1.5 absolute right-1 top-1 rounded-full opacity-70"
               />
             )}
-            {!isComplete.value && task.todos.length > 0 && (
+            {!isComplete && task.todos.length > 0 && (
               <View className={join("absolute right-[3px] top-1 opacity-70", task.description && "top-3.5")}>
                 <Progress.Circle
                   thickness={2}
@@ -593,7 +646,7 @@ const TaskItem = React.memo(function _TaskItem({
               </View>
             )}
 
-            {!isComplete.value && (
+            {!isComplete && (
               <View className="flex flex-row items-end justify-between px-1 pb-0.5">
                 {task.durationHours || task.durationMinutes ? (
                   <Text className="text-xxs">{formatDuration(task.durationHours, task.durationMinutes)}</Text>
@@ -601,7 +654,7 @@ const TaskItem = React.memo(function _TaskItem({
                   <View />
                 )}
                 {task.startTime ? (
-                  <View className="flex flex-row items-center space-x-0.5">
+                  <View className="flex flex-row items-center gap-0.5">
                     {task.reminder && <Icon icon={AlarmClock} size={10} />}
 
                     <Text className="text-xxs">{task.startTime}</Text>
@@ -617,11 +670,11 @@ const TaskItem = React.memo(function _TaskItem({
             className="flex justify-center"
             style={{
               backgroundColor: task.element.color,
-              opacity: isComplete.value ? 0.4 : 1,
-              height: isComplete.value ? 6 : 14,
+              opacity: isComplete ? 0.4 : 1,
+              height: isComplete ? 6 : 14,
             }}
           >
-            {!isComplete.value && (
+            {!isComplete && (
               <Text
                 style={{ fontSize: 10, opacity: 1, color: safeReadableColor(task.element.color) }}
                 numberOfLines={1}

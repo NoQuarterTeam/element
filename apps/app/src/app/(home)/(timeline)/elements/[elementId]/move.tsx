@@ -44,7 +44,7 @@ export default function ElementsDetailMove() {
                     onPress={() => mutate({ id: id as string, parentId: null })}
                     activeOpacity={0.7}
                     className={join(
-                      "border-gray-75 flex w-full flex-row items-center space-x-2 border-b pb-2 dark:border-gray-700",
+                      "border-gray-75 flex w-full flex-row items-center gap-2 border-b pb-2 dark:border-gray-700",
                       id === null && "opacity-40",
                     )}
                   >
@@ -74,10 +74,7 @@ function ElementItem({
         disabled={element.id === (id as string) || element.id === parentId}
         onPress={() => onPress(element.id)}
         activeOpacity={0.7}
-        className={join(
-          "flex flex-row items-center space-x-2 py-1",
-          (element.id === id || element.id === parentId) && "opacity-40",
-        )}
+        className={join("flex flex-row items-center gap-2 py-1", (element.id === id || element.id === parentId) && "opacity-40")}
       >
         <View
           className="sq-5 rounded-full border border-gray-300 dark:border-gray-700"

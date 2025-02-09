@@ -1,4 +1,4 @@
-import { type AllRoutes, useGlobalSearchParams, useRouter } from "expo-router"
+import { useGlobalSearchParams, useRouter } from "expo-router"
 import { ScrollView, TouchableOpacity } from "react-native"
 
 import type { TaskRepeat } from "@element/database/types"
@@ -13,8 +13,8 @@ export default function RepeatSelect() {
   const router = useRouter()
 
   const handleTo = (repeat: TaskRepeat) => {
-    if (!redirect) return router.back()
-    router.navigate({ params: { ...params, repeat }, pathname: redirect as AllRoutes })
+    router.back()
+    router.setParams({ ...params, repeat })
   }
 
   return (

@@ -28,7 +28,7 @@ export default function HomeLayout() {
 
   return (
     <Tabs
-      initialRouteName="(timeline)/index"
+      initialRouteName="(timeline)"
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
@@ -73,16 +73,19 @@ export default function HomeLayout() {
         options={{
           tabBarIcon: (props) =>
             me?.avatar ? (
-              <OptimizedImage
-                width={40}
-                height={40}
-                style={{ width: 26, height: 26 }}
-                source={{ uri: createImageUrl(me.avatar) }}
+              <View
                 className={join(
-                  "rounded-full border-2 border-transparent bg-gray-100 object-cover",
-                  props.focused && "border-primary-500",
+                  "rounded-full border-2 object-cover",
+                  props.focused ? "border-primary-500" : "border-transparent",
                 )}
-              />
+              >
+                <OptimizedImage
+                  width={40}
+                  height={40}
+                  style={{ width: 26, height: 26, borderRadius: 100 }}
+                  source={{ uri: createImageUrl(me.avatar) }}
+                />
+              </View>
             ) : (
               <Icon icon={UserCircle} size={22} color={props.focused ? "primary" : isDark ? "white" : "black"} />
             ),

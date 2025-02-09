@@ -23,7 +23,7 @@ export default function Plan() {
             <ActivityIndicator />
           </View>
         ) : !data ? null : data.subscription ? (
-          <View className="space-y-3">
+          <View className="gap-3">
             <Text className="text-lg">
               You are currently on the <Text className="font-heading">Pro</Text> plan
             </Text>
@@ -48,7 +48,7 @@ export default function Plan() {
             ) : null}
           </View>
         ) : (
-          <View className="mt-2 space-y-5">
+          <View className="mt-2 gap-5">
             <Text className="text-xl">
               You are currently on the <Text className="font-heading">Personal</Text> plan
             </Text>

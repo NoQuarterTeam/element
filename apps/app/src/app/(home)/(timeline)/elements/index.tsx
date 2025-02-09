@@ -91,7 +91,7 @@ function ElementItem({ element }: { element: RouterOutputs["element"]["grouped"]
         onPress={() => router.push(`/elements/${element.id}/`)}
         onLongPress={handleOpenMenu}
         activeOpacity={0.7}
-        className="flex flex-row items-center space-x-2 py-1"
+        className="flex flex-row items-center gap-2 py-1"
       >
         <View
           className="sq-5 rounded-full border border-gray-300 dark:border-gray-700"

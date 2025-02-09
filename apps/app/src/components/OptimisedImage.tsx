@@ -2,6 +2,7 @@ import { Image, type ImageProps } from "expo-image"
 
 import { defaultBlurHash, srcWhitelist } from "@element/shared"
 
+import { forwardRef } from "react"
 import { FULL_WEB_URL } from "../lib/config"
 
 type Fit = "cover" | "contain" | "fill" | "inside" | "outside"
@@ -19,10 +20,13 @@ interface Props extends ImageProps, Options {
   }
 }
 
-export function OptimizedImage({ source, height, width, quality, fit, ...props }: Props) {
+export const OptimizedImage = forwardRef<Image, Props>(function _OptimizedImage(
+  { source, height, width, quality, fit, ...props },
+  ref,
+) {
   const newSrc = transformImageSrc(source.uri, { height, width, quality, fit })
-  return <Image {...props} placeholder={props.placeholder || defaultBlurHash} source={{ uri: newSrc }} />
-}
+  return <Image ref={ref} {...props} placeholder={props.placeholder || defaultBlurHash} source={{ uri: newSrc }} />
+})
 
 export function transformImageSrc(
   src: string | undefined | null,

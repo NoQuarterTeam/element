@@ -14,19 +14,19 @@ export default function Onboarding() {
   })
   return (
     <ModalView title="Welcome!">
-      <View className="space-y-4">
+      <View className="gap-4">
         <Text className="text-lg">You are currently on a guest account.</Text>
 
         <Text className="text-lg">Log in to:</Text>
-        <View className="flex flex-row items-start space-x-2">
+        <View className="flex flex-row items-start gap-2">
           <Text className="text-xl">•</Text>
           <Text className="text-lg">Save tasks to your account and access them from any device</Text>
         </View>
-        <View className="flex flex-row items-start space-x-2">
+        <View className="flex flex-row items-start gap-2">
           <Text className="text-xl">•</Text>
           <Text className="text-lg">Manage tasks with custom elements</Text>
         </View>
-        <View className="flex flex-row items-start space-x-2">
+        <View className="flex flex-row items-start gap-2">
           <Text className="text-xl">•</Text>
           <Text className="text-lg">Build daily habits using our tracker.</Text>
         </View>

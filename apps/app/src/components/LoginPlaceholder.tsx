@@ -19,8 +19,8 @@ export function LoginPlaceholder(props: Props) {
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="interactive"
     >
-      <View className="space-y-4">
-        <View className="space-y-6">
+      <View className="gap-4">
+        <View className="gap-6">
           <Text className="text-lg">{props.text}</Text>
           <View>
             <Button onPress={() => router.push("/login")}>Login</Button>
