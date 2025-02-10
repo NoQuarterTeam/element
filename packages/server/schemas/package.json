@@ -10,12 +10,12 @@
   "dependencies": {
     "@element/database": "workspace:*",
     "@element/shared": "workspace:*",
-    "zod": "3.23.8",
+    "zod": "3.24.1",
     "zodix": "0.4.4"
   },
   "devDependencies": {
     "@element/tailwind-config": "workspace:*",
-    "@types/node": "18.19.54",
-    "typescript": "5.6.2"
+    "@types/node": "18.19.75",
+    "typescript": "5.7.3"
   }
 }

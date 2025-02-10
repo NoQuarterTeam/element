@@ -9,31 +9,31 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "3.658.1",
-    "@aws-sdk/lib-storage": "3.658.1",
-    "@aws-sdk/s3-request-presigner": "3.658.1",
+    "@aws-sdk/client-s3": "3.743.0",
+    "@aws-sdk/lib-storage": "3.743.0",
+    "@aws-sdk/s3-request-presigner": "3.743.0",
     "@element/database": "workspace:*",
     "@element/emails": "workspace:*",
     "@element/server-env": "workspace:*",
     "@element/shared": "workspace:*",
-    "@slack/web-api": "7.5.0",
+    "@slack/web-api": "7.8.0",
     "@upstash/qstash": "^2.3.0",
     "bcryptjs": "2.4.3",
     "blurhash": "2.0.5",
     "dayjs": "1.11.13",
     "jsonwebtoken": "9.0.2",
     "loops": "^0.4.0",
-    "nodemailer": "6.9.15",
+    "nodemailer": "6.10.0",
     "resend": "3.5.0",
     "sharp": "0.32.6",
     "stripe": "15.12.0",
-    "zod": "3.23.8"
+    "zod": "3.24.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "2.4.6",
-    "@types/jsonwebtoken": "9.0.7",
-    "@types/node": "18.19.54",
-    "@types/nodemailer": "6.4.16",
-    "typescript": "5.6.2"
+    "@types/jsonwebtoken": "9.0.8",
+    "@types/node": "18.19.75",
+    "@types/nodemailer": "6.4.17",
+    "typescript": "5.7.3"
   }
 }
