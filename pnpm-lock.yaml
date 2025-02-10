@@ -148,8 +148,8 @@ importers:
         specifier: 0.76.7
         version: 0.76.7(@babel/core@7.26.8)(@babel/preset-env@7.26.8)(@types/react@18.3.18)(react@18.3.1)
       react-native-avoid-softinput:
-        specifier: 7.0.0
-        version: 7.0.0(react-native@0.76.7)(react@18.3.1)
+        specifier: 7.0.1
+        version: 7.0.1(react-native@0.76.7)(react@18.3.1)
       react-native-gesture-handler:
         specifier: 2.20.2
         version: 2.20.2(react-native@0.76.7)(react@18.3.1)
@@ -15437,8 +15437,8 @@ packages:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
     dev: false
 
-  /react-native-avoid-softinput@7.0.0(react-native@0.76.7)(react@18.3.1):
-    resolution: {integrity: sha512-ZnwW7LEyHe0k/Xm3bH4iF369gWWu0bADqsuca4rMJZkuuCXhxP5VsOzPmVlfUuyn3Fsgbz+jl9KOY/71FKwUyg==}
+  /react-native-avoid-softinput@7.0.1(react-native@0.76.7)(react@18.3.1):
+    resolution: {integrity: sha512-MWCh4LGz1cWOvxQXhUit9NcjRGC9CXRQcdWzQ0WR7SU1lzTmUqGwsibyde9M5+7f7RgDjLb5fwGTqjO+HJNrFw==}
     peerDependencies:
       react: '>=18.2.0'
       react-native: '>=0.73.0'
