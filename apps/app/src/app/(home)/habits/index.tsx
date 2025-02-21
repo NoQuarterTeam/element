@@ -64,7 +64,7 @@ export default function Habits() {
   }, [])
 
   return (
-    <SafeAreaView className="flex-1 pt-2">
+    <SafeAreaView edges={["top"]} className="flex-1 pt-2 relative">
       <View className="flex flex-row items-center justify-between px-4 pb-2">
         <Heading className="text-3xl">Habits</Heading>
         <Link href="/habits/stats" asChild>
@@ -89,7 +89,7 @@ export default function Habits() {
       </View>
 
       <HabitsListContainer />
-      <View className="absolute bottom-4 right-4 gap-1">
+      <View pointerEvents="box-none" className="absolute bottom-4 right-4 gap-1">
         <TouchableOpacity
           onPress={() => {
             scrollViewRef.current?.scrollToEnd()
