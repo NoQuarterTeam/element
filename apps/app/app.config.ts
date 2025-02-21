@@ -71,9 +71,10 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   plugins: [
     "expo-router",
     ["@sentry/react-native/expo", { project: "element-app", organization: "noquarter" }],
+    ["expo-image-picker", { photosPermission: "The app accesses your photos to let you upload a profile picture." }],
     "expo-font",
-    "./expo-plugins/with-modify-gradle.js",
-    ["expo-build-properties", { android: { kotlinVersion: "1.7.22" } }],
+    // "./expo-plugins/with-modify-gradle.js",
+    ["expo-build-properties", { android: { kotlinVersion: "1.9.24" } }],
   ],
 })
 
