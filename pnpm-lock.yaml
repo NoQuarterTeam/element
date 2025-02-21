@@ -181,8 +181,8 @@ importers:
         specifier: 2.2.1
         version: 2.2.1(react-native@0.76.7)(react@18.3.1)
       reanimated-color-picker:
-        specifier: 2.4.2
-        version: 2.4.2(expo@52.0.37)(react-native-gesture-handler@2.20.2)(react-native-reanimated@3.16.7)(react-native@0.76.7)(react@18.3.1)
+        specifier: 3.0.6
+        version: 3.0.6(expo@52.0.37)(react-native-gesture-handler@2.20.2)(react-native-reanimated@3.16.7)(react-native@0.76.7)(react@18.3.1)
       superjson:
         specifier: 1.13.3
         version: 1.13.3
@@ -15338,8 +15338,8 @@ packages:
     resolution: {integrity: sha512-k2d6ACCkiNYz222Fs/iNze30rRJ1iIicW7JuX/7/cozvih6YCkFZH+J6mAFDVgv0dRBaAyr4jDqC95R2y4IADg==}
     dev: false
 
-  /reanimated-color-picker@2.4.2(expo@52.0.37)(react-native-gesture-handler@2.20.2)(react-native-reanimated@3.16.7)(react-native@0.76.7)(react@18.3.1):
-    resolution: {integrity: sha512-UNw1jEEOjY2m6F/sI7/nZQwT+yl7kSxao9wJtdkHUsrmm66QRqWKku76/hZGXyl+wzdKk4yLmXMPaEaLq69GBg==}
+  /reanimated-color-picker@3.0.6(expo@52.0.37)(react-native-gesture-handler@2.20.2)(react-native-reanimated@3.16.7)(react-native@0.76.7)(react@18.3.1):
+    resolution: {integrity: sha512-ILmeR57d/DbWDy1vPdgz9vkRJyWHMIeTWEtxUgXPEH/BsiSXXhLju+hFDZY3M+bZUwpoCJWcvaAZl7p9kVwiEQ==}
     peerDependencies:
       expo: '>=44.0.0'
       react: '*'
