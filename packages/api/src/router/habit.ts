@@ -34,7 +34,7 @@ export const habitRouter = createTRPCRouter({
         select: { id: true, name: true, order: true, reminders: true, startDate: true, archivedAt: true },
         where: {
           OR: [{ archivedAt: { equals: null } }, { archivedAt: { gte: dayjs(date).endOf("day").toDate() } }],
-          createdAt: { lte: dayjs(date).startOf("day").toDate() },
+          createdAt: { lte: dayjs(date).endOf("day").toDate() },
           creatorId: { equals: ctx.user.id },
         },
       }),
