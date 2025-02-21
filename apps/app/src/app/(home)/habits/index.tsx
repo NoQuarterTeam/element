@@ -78,7 +78,7 @@ export default function Habits() {
           ref={scrollViewRef}
           pagingEnabled
           style={{ flexGrow: 0 }}
-          // onLayout={() => scrollViewRef.current?.scrollToEnd()}
+          onLayout={() => scrollViewRef.current?.scrollToEnd()}
           horizontal
           showsHorizontalScrollIndicator={false}
         >
@@ -99,8 +99,9 @@ export default function Habits() {
         >
           <Icon icon={Calendar} size={24} />
         </TouchableOpacity>
+
         <Link href={"/habits/new"} asChild>
-          <TouchableOpacity className="bg-primary-500/90 rounded-full p-4">
+          <TouchableOpacity className="bg-primary-500/90 sq-14 flex items-center justify-center rounded-full">
             <Icon icon={Plus} size={24} color="black" />
           </TouchableOpacity>
         </Link>

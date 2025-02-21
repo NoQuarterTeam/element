@@ -6,8 +6,7 @@ on:
       - "packages/shared/**"
       - "packages/database/**"
       - "packages/config/**"
-    tags:
-      - "*"
+    branches: [ "release/**" ]
 permissions:
   actions: write
   contents: read
@@ -34,7 +33,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 20.x
           cache: pnpm
 
       - name: Setup EAS
