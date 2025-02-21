@@ -78,7 +78,7 @@ export default function Habits() {
           ref={scrollViewRef}
           pagingEnabled
           style={{ flexGrow: 0 }}
-          // onLayout={() => scrollViewRef.current?.scrollToEnd()}
+          onLayout={() => scrollViewRef.current?.scrollToEnd()}
           horizontal
           showsHorizontalScrollIndicator={false}
         >
