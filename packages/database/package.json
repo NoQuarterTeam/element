@@ -9,7 +9,6 @@
     "@neondatabase/serverless": "^0.10.0",
     "@planetscale/database": "^1.13.0",
     "@prisma/adapter-neon": "^5.12.1",
-    "@prisma/adapter-planetscale": "5.22.0",
     "@prisma/client": "5.22.0",
     "prisma": "5.22.0",
     "ws": "^8.16.0"

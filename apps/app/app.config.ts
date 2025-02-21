@@ -1,7 +1,7 @@
 import type { ConfigContext, ExpoConfig } from "expo/config"
 
-const VERSION = "1.5.0"
-const BUILD = 36
+const VERSION = "1.5.2"
+const BUILD = 39
 
 const IS_DEV = process.env.APP_VARIANT === "development"
 
@@ -71,9 +71,10 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   plugins: [
     "expo-router",
     ["@sentry/react-native/expo", { project: "element-app", organization: "noquarter" }],
+    ["expo-image-picker", { photosPermission: "The app accesses your photos to let you upload a profile picture." }],
     "expo-font",
-    "./expo-plugins/with-modify-gradle.js",
-    ["expo-build-properties", { android: { kotlinVersion: "1.7.22" } }],
+    // "./expo-plugins/with-modify-gradle.js",
+    ["expo-build-properties", { android: { kotlinVersion: "1.9.24" } }],
   ],
 })
 
