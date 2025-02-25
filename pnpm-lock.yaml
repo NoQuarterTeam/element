@@ -37,8 +37,8 @@ importers:
         specifier: 0.2.3
         version: 0.2.3
       '@expo/react-native-action-sheet':
-        specifier: 4.0.1
-        version: 4.0.1(react@18.3.1)
+        specifier: 4.1.1
+        version: 4.1.1(react@18.3.1)
       '@react-native-async-storage/async-storage':
         specifier: 1.23.1
         version: 1.23.1(react-native@0.76.7)
@@ -4215,10 +4215,10 @@ packages:
       - supports-color
     dev: false
 
-  /@expo/react-native-action-sheet@4.0.1(react@18.3.1):
-    resolution: {integrity: sha512-FwCFpjpB6yzrK8CIWssLlh/i6zQFytFBiJfNdz0mJ2ckU4hWk8SrjB37P0Q4kF7w0bnIdYzPgRbdPR9hnfFqPw==}
+  /@expo/react-native-action-sheet@4.1.1(react@18.3.1):
+    resolution: {integrity: sha512-4KRaba2vhqDRR7ObBj6nrD5uJw8ePoNHdIOMETTpgGTX7StUbrF4j/sfrP1YUyaPEa1P8FXdwG6pB+2WtrJd1A==}
     peerDependencies:
-      react: '>=16.3.0'
+      react: '>=18.0.0'
     dependencies:
       '@types/hoist-non-react-statics': 3.3.5
       hoist-non-react-statics: 3.3.2
@@ -14493,7 +14493,7 @@ packages:
     dependencies:
       '@jest/schemas': 29.6.3
       ansi-styles: 5.2.0
-      react-is: 18.2.0
+      react-is: 18.3.1
     dev: false
 
   /pretty-ms@7.0.1:
