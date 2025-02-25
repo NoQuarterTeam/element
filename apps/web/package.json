@@ -81,7 +81,7 @@
     "@types/cookie": "0.6.0",
     "@types/deep-equal": "1.0.4",
     "@types/js-cookie": "3.0.6",
-    "@types/jsonwebtoken": "9.0.8",
+    "@types/jsonwebtoken": "9.0.9",
     "@types/react": "18.3.18",
     "@types/react-dom": "18.3.5",
     "cssnano": "6.1.2",
