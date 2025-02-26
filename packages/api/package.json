@@ -19,7 +19,7 @@
     "dayjs": "1.11.13",
     "jsonwebtoken": "9.0.2",
     "superjson": "1.13.3",
-    "zod": "3.24.1"
+    "zod": "3.24.2"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "9.0.9",
