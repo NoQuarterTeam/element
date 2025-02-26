@@ -184,8 +184,8 @@ importers:
         specifier: 2.4.2
         version: 2.4.2(expo@52.0.37)(react-native-gesture-handler@2.20.2)(react-native-reanimated@3.16.7)(react-native@0.76.7)(react@18.3.1)
       superjson:
-        specifier: 1.13.3
-        version: 1.13.3
+        specifier: 2.2.2
+        version: 2.2.2
       uuid:
         specifier: 3.4.0
         version: 3.4.0
@@ -486,8 +486,8 @@ importers:
         specifier: 9.0.2
         version: 9.0.2
       superjson:
-        specifier: 1.13.3
-        version: 1.13.3
+        specifier: 2.2.2
+        version: 2.2.2
       zod:
         specifier: 3.24.2
         version: 3.24.2
@@ -16118,9 +16118,9 @@ packages:
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dev: false
 
-  /superjson@1.13.3:
-    resolution: {integrity: sha512-mJiVjfd2vokfDxsQPOwJ/PtanO87LhpYY88ubI5dUB1Ab58Txbyje3+jpm+/83R/fevaq/107NNhtYBLuoTrFg==}
-    engines: {node: '>=10'}
+  /superjson@2.2.2:
+    resolution: {integrity: sha512-5JRxVqC8I8NuOUjzBbvVJAKNM8qoVuH0O77h4WInc/qC2q5IreqKxYwgkga3PfA22OayK2ikceb/B26dztPl+Q==}
+    engines: {node: '>=16'}
     dependencies:
       copy-anything: 3.0.5
     dev: false
