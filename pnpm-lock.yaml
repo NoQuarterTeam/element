@@ -533,8 +533,8 @@ importers:
         version: 8.17.0
     devDependencies:
       '@faker-js/faker':
-        specifier: 8.4.1
-        version: 8.4.1
+        specifier: 9.5.1
+        version: 9.5.1
       '@types/node':
         specifier: ^18.15.3
         version: 18.19.76
@@ -4042,9 +4042,9 @@ packages:
       js-yaml: 4.1.0
     dev: false
 
-  /@faker-js/faker@8.4.1:
-    resolution: {integrity: sha512-XQ3cU+Q8Uqmrbf2e0cIC/QN43sTBSC8KF12u29Mb47tWrt2hAgBXSgpZMj4Ao8Uk0iJcU99QsOCaIL8934obCg==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
+  /@faker-js/faker@9.5.1:
+    resolution: {integrity: sha512-0fzMEDxkExR2cn731kpDaCCnBGBUOIXEi2S1N5l8Hltp6aPf4soTMJ+g4k8r2sI5oB+rpwIW8Uy/6jkwGpnWPg==}
+    engines: {node: '>=18.0.0', npm: '>=9.0.0'}
     dev: true
 
   /@floating-ui/core@1.5.2:
