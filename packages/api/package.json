@@ -23,6 +23,6 @@
   },
   "devDependencies": {
     "@types/jsonwebtoken": "9.0.9",
-    "@types/node": "^18.15.3"
+    "@types/node": "^22.0.0"
   }
 }
