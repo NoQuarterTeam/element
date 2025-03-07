@@ -252,7 +252,7 @@ importers:
         version: link:../../packages/shared
       '@fontsource/poppins':
         specifier: ^5.0.8
-        version: 5.2.0
+        version: 5.2.5
       '@hello-pangea/dnd':
         specifier: 16.6.0
         version: 16.6.0(@types/react-dom@18.3.5)(@types/react@18.3.18)(react-dom@18.3.1)(react@18.3.1)
@@ -4075,8 +4075,8 @@ packages:
     resolution: {integrity: sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==}
     dev: false
 
-  /@fontsource/poppins@5.2.0:
-    resolution: {integrity: sha512-YtyQDsGCb+YTOe1cAv4OtdMDmlywaHEHqJKPd2wYM9M4BSjm6AXc0/IpASuKBOBSMycJhEsjs89H46j7NZFC5Q==}
+  /@fontsource/poppins@5.2.5:
+    resolution: {integrity: sha512-1S3k45pZOz2jqGPPqKw0in3uxFwnB+d5jSU8Tp9YwH/dIJptE3jdkQbYN0QD861GtuOpn6QhPW/yKt1w7hVRBQ==}
     dev: false
 
   /@hello-pangea/dnd@16.6.0(@types/react-dom@18.3.5)(@types/react@18.3.18)(react-dom@18.3.1)(react@18.3.1):
