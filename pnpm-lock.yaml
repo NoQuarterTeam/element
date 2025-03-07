@@ -383,8 +383,8 @@ importers:
         specifier: 9.15.1
         version: 9.15.1(react-dom@18.3.1)(react@18.3.1)
       react-select:
-        specifier: 5.10.0
-        version: 5.10.0(@types/react@18.3.18)(react-dom@18.3.1)(react@18.3.1)
+        specifier: 5.10.1
+        version: 5.10.1(@types/react@18.3.18)(react-dom@18.3.1)(react@18.3.1)
       recharts:
         specifier: 2.15.1
         version: 2.15.1(react-dom@18.3.1)(react@18.3.1)
@@ -543,7 +543,7 @@ importers:
         version: 8.18.0
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.19.79)(typescript@5.8.2)
+        version: 10.9.2(@types/node@18.19.79)(typescript@5.7.3)
 
   packages/emails:
     dependencies:
@@ -14985,8 +14985,8 @@ packages:
       '@remix-run/router': 1.22.0
       react: 18.3.1
 
-  /react-select@5.10.0(@types/react@18.3.18)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-k96gw+i6N3ExgDwPIg0lUPmexl1ygPe6u5BdQFNBhkpbwroIgCNXdubtIzHfThYXYYTubwOBafoMnn7ruEP1xA==}
+  /react-select@5.10.1(@types/react@18.3.18)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-roPEZUL4aRZDx6DcsD+ZNreVl+fM8VsKn0Wtex1v4IazH60ILp5xhdlp464IsEAlJdXeD+BhDAFsBVMfvLQueA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -16422,7 +16422,7 @@ packages:
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
-  /ts-node@10.9.2(@types/node@18.19.79)(typescript@5.8.2):
+  /ts-node@10.9.2(@types/node@18.19.79)(typescript@5.7.3):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -16448,7 +16448,7 @@ packages:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.8.2
+      typescript: 5.7.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: true
@@ -16571,12 +16571,6 @@ packages:
     resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
     engines: {node: '>=14.17'}
     hasBin: true
-
-  /typescript@5.8.2:
-    resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    dev: true
 
   /ua-parser-js@0.7.37:
     resolution: {integrity: sha512-xV8kqRKM+jhMvcHWUKthV9fNebIzrNy//2O9ZwWcfiBFR5f25XVZPLlEajk/sf3Ra15V92isyQqnIEXRDaZWEA==}
