@@ -636,7 +636,7 @@ importers:
         version: 7.8.0
       '@upstash/qstash':
         specifier: ^2.3.0
-        version: 2.7.22
+        version: 2.7.23
       bcryptjs:
         specifier: 2.4.3
         version: 2.4.3
@@ -7746,8 +7746,8 @@ packages:
       '@types/yargs-parser': 21.0.3
     dev: false
 
-  /@upstash/qstash@2.7.22:
-    resolution: {integrity: sha512-JFmISZd9U3hTI03ZNLBKrel3r61ojp+ZejBio9ECUAPAdDK8sU5nwXq/drkM1M789a8KFsZ2nKSOKY4gxI8DoQ==}
+  /@upstash/qstash@2.7.23:
+    resolution: {integrity: sha512-Xnq33GEjofV+To1MTN0bVesS/Q/oe5keLYcyPU6drnqmNjZZY/qvNR5jl7JwKGiXsbTxJwVC/ldAX51wadUvSA==}
     dependencies:
       crypto-js: 4.2.0
       jose: 5.10.0
