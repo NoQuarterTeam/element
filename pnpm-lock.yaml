@@ -335,8 +335,8 @@ importers:
         specifier: 3.8.0
         version: 3.8.0
       jose:
-        specifier: 5.9.6
-        version: 5.9.6
+        specifier: 5.10.0
+        version: 5.10.0
       js-confetti:
         specifier: 0.12.0
         version: 0.12.0
@@ -11834,10 +11834,6 @@ packages:
 
   /jose@5.10.0:
     resolution: {integrity: sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg==}
-    dev: false
-
-  /jose@5.9.6:
-    resolution: {integrity: sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==}
     dev: false
 
   /js-beautify@1.14.11:
