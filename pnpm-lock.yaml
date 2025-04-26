@@ -178,8 +178,8 @@ importers:
         specifier: 15.8.0
         version: 15.8.0(react-native@0.76.7)(react@18.3.1)
       react-native-toast-message:
-        specifier: 2.2.1
-        version: 2.2.1(react-native@0.76.7)(react@18.3.1)
+        specifier: 2.3.0
+        version: 2.3.0(react-native@0.76.7)(react@18.3.1)
       reanimated-color-picker:
         specifier: 2.4.2
         version: 2.4.2(expo@52.0.46)(react-native-gesture-handler@2.20.2)(react-native-reanimated@3.16.7)(react-native@0.76.7)(react@18.3.1)
@@ -14988,8 +14988,8 @@ packages:
       warn-once: 0.1.1
     dev: false
 
-  /react-native-toast-message@2.2.1(react-native@0.76.7)(react@18.3.1):
-    resolution: {integrity: sha512-iXFMnlxPcgKKs4bZOIl06W16m6KXMh/bAYpWLyVXlISSCdcL2+FX5WPpRP3TGQeM/u9q+j5ex48DDY+72en+Sw==}
+  /react-native-toast-message@2.3.0(react-native@0.76.7)(react@18.3.1):
+    resolution: {integrity: sha512-d7LldTK1ei1Bl7RFhoOYw8hVQ4oKPQHORYI//xR9Pyz3HxSlFlvQbueE5X3KLoemRRgBrOUg3zY6DxXnxrVLRg==}
     peerDependencies:
       react: '*'
       react-native: '*'
