@@ -22,7 +22,7 @@
     "zod": "3.24.3"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "9.0.9",
+    "@types/jsonwebtoken": "9.0.10",
     "@types/node": "^18.15.3"
   }
 }
