@@ -386,8 +386,8 @@ importers:
         specifier: 5.10.2
         version: 5.10.2(@types/react@18.3.24)(react-dom@18.3.1)(react@18.3.1)
       recharts:
-        specifier: 2.15.3
-        version: 2.15.3(react-dom@18.3.1)(react@18.3.1)
+        specifier: 2.15.4
+        version: 2.15.4(react-dom@18.3.1)(react@18.3.1)
       remix-utils:
         specifier: 7.7.0
         version: 7.7.0(@remix-run/node@2.15.3)(@remix-run/react@2.15.3)(react@18.3.1)(zod@3.24.3)
@@ -16103,8 +16103,8 @@ packages:
       decimal.js-light: 2.5.1
     dev: false
 
-  /recharts@2.15.3(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-EdOPzTwcFSuqtvkDoaM5ws/Km1+WTAO2eizL7rqiG0V2UVhTnz0m7J2i0CjVPUCdEkZImaWvXLbZDS2H5t6GFQ==}
+  /recharts@2.15.4(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-UT/q6fwS3c1dHbXv2uFgYJ9BMFHu3fwnd7AYZaEQhXuYQ4hgsxLvsUXzGdKeZrW5xopzDCvuA2N41WJ88I7zIw==}
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
