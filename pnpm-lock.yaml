@@ -34,8 +34,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/config/tailwind
       '@expo-google-fonts/poppins':
-        specifier: 0.3.1
-        version: 0.3.1
+        specifier: 0.4.0
+        version: 0.4.0
       '@expo/react-native-action-sheet':
         specifier: 4.1.1
         version: 4.1.1(react@18.3.1)
@@ -4175,8 +4175,8 @@ packages:
     dev: true
     optional: true
 
-  /@expo-google-fonts/poppins@0.3.1:
-    resolution: {integrity: sha512-EELl5sG+X1pQEvutwESL+H3fM5JZ7iF99KxqABqGWuF/r/WUeYiSdl6sMs9yP9ZJIgtiyqkpp2ZOqIH5oypgdQ==}
+  /@expo-google-fonts/poppins@0.4.0:
+    resolution: {integrity: sha512-mY+z56ai1p01EltWCPEDc2EZR+yq7qAMpgDa+SP16j3vwETOLG3pl+W74oUhZayHw0uYdQjTXkm4ZO4QvX1I7w==}
     dev: false
 
   /@expo/bunyan@4.0.0:
