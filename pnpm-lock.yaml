@@ -360,7 +360,7 @@ importers:
         version: 4.3.1
       posthog-js:
         specifier: ^1.100.0
-        version: 1.236.7
+        version: 1.260.2
       pretty-cache-header:
         specifier: 1.0.0
         version: 1.0.0
@@ -543,7 +543,7 @@ importers:
         version: 8.18.1
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.19.123)(typescript@5.7.3)
+        version: 10.9.2(@types/node@18.19.123)(typescript@5.9.2)
 
   packages/emails:
     dependencies:
@@ -9681,8 +9681,8 @@ packages:
     dependencies:
       browserslist: 4.25.3
 
-  /core-js@3.41.0:
-    resolution: {integrity: sha512-SJ4/EHwS36QMJd6h/Rg+GyR4A5xE0FSI3eZ+iBVpfqf1x0eTSg1smWLHrA+2jQThZSh97fmSgFSU8B61nxosxA==}
+  /core-js@3.45.1:
+    resolution: {integrity: sha512-L4NPsJlCfZsPeXukyzHFlg/i7IIVwHSItR0wg0FLNqYClJ4MQYTYLbC7EkjKYRLZF2iof2MUgN0EGy7MdQFChg==}
     requiresBuild: true
     dev: false
 
@@ -14939,8 +14939,8 @@ packages:
     resolution: {integrity: sha512-i/hbxIE9803Alj/6ytL7UHQxRvZkI9O4Sy+J3HGc4F4oo/2eQAjTSNJ0bfxyse3bH0nuVesCk+3IRLaMtG3H6w==}
     dev: false
 
-  /posthog-js@1.236.7:
-    resolution: {integrity: sha512-HatTinqAt/6aAraCgbnP+2MTeVTChdf6TDsQkef4/yUnXeA4tsHmXnGGJ3vnzQk7N//R6lIHN189BZDO9kuKAg==}
+  /posthog-js@1.260.2:
+    resolution: {integrity: sha512-2Q+QUz9j9+uG16wp0WcOEbezVsLZCobZyTX8NvWPMGKyPaf2lOsjbPjznsq5JiIt324B6NAqzpWYZTzvhn9k9Q==}
     peerDependencies:
       '@rrweb/types': 2.0.0-alpha.17
       rrweb-snapshot: 2.0.0-alpha.17
@@ -14950,9 +14950,9 @@ packages:
       rrweb-snapshot:
         optional: true
     dependencies:
-      core-js: 3.41.0
+      core-js: 3.45.1
       fflate: 0.4.8
-      preact: 10.26.5
+      preact: 10.27.1
       web-vitals: 4.2.4
     dev: false
 
@@ -15003,8 +15003,8 @@ packages:
       react-native-svg: 15.8.0(react-native@0.76.7)(react@18.3.1)
     dev: false
 
-  /preact@10.26.5:
-    resolution: {integrity: sha512-fmpDkgfGU6JYux9teDWLhj9mKN55tyepwYbxHgQuIxbWQzgFg5vk7Mrrtfx7xRxq798ynkY4DDDxZr235Kk+4w==}
+  /preact@10.27.1:
+    resolution: {integrity: sha512-V79raXEWch/rbqoNc7nT9E4ep7lu+mI3+sBmfRD4i1M73R3WLYcCtdI0ibxGVf4eQL8ZIz2nFacqEC+rmnOORQ==}
     dev: false
 
   /prebuild-install@7.1.1:
@@ -17139,7 +17139,7 @@ packages:
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
-  /ts-node@10.9.2(@types/node@18.19.123)(typescript@5.7.3):
+  /ts-node@10.9.2(@types/node@18.19.123)(typescript@5.9.2):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -17165,7 +17165,7 @@ packages:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.7.3
+      typescript: 5.9.2
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: true
@@ -17291,6 +17291,12 @@ packages:
     resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  /typescript@5.9.2:
+    resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: true
 
   /ua-parser-js@0.7.37:
     resolution: {integrity: sha512-xV8kqRKM+jhMvcHWUKthV9fNebIzrNy//2O9ZwWcfiBFR5f25XVZPLlEajk/sf3Ra15V92isyQqnIEXRDaZWEA==}
