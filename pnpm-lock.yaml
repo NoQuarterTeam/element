@@ -136,8 +136,8 @@ importers:
         specifier: 4.3.1
         version: 4.3.1
       posthog-react-native:
-        specifier: 3.15.0
-        version: 3.15.0(@react-native-async-storage/async-storage@1.23.1)(@react-navigation/native@7.0.14)(expo-application@6.0.2)(expo-device@7.0.2)(react-native-safe-area-context@4.12.0)(react-native-svg@15.8.0)
+        specifier: 3.16.1
+        version: 3.16.1(@react-native-async-storage/async-storage@1.23.1)(@react-navigation/native@7.0.14)(expo-application@6.0.2)(expo-device@7.0.2)(react-native-safe-area-context@4.12.0)(react-native-svg@15.8.0)
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -543,7 +543,7 @@ importers:
         version: 8.18.1
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.19.123)(typescript@5.9.2)
+        version: 10.9.2(@types/node@18.19.123)(typescript@5.7.3)
 
   packages/emails:
     dependencies:
@@ -14956,8 +14956,8 @@ packages:
       web-vitals: 4.2.4
     dev: false
 
-  /posthog-react-native@3.15.0(@react-native-async-storage/async-storage@1.23.1)(@react-navigation/native@7.0.14)(expo-application@6.0.2)(expo-device@7.0.2)(react-native-safe-area-context@4.12.0)(react-native-svg@15.8.0):
-    resolution: {integrity: sha512-H/FjTvAxaV6kx07TXk8KwHBgJ+2mU1yPhAGsT6oIIa16cq7XpSlXDgyZ+DqAwWjtp/GFHD7VlqdAz7jdK2TYxw==}
+  /posthog-react-native@3.16.1(@react-native-async-storage/async-storage@1.23.1)(@react-navigation/native@7.0.14)(expo-application@6.0.2)(expo-device@7.0.2)(react-native-safe-area-context@4.12.0)(react-native-svg@15.8.0):
+    resolution: {integrity: sha512-qrsQC552nY9emZbv2HmnPfckS1waFf5kG1LLGF1noUhgXWzNfLfwK20FIypjRR50O+j/vCFIzQBmoy4Sv/U2RA==}
     peerDependencies:
       '@react-native-async-storage/async-storage': '>=1.0.0'
       '@react-navigation/native': '>= 5.0.0'
@@ -14965,7 +14965,7 @@ packages:
       expo-device: '>= 4.0.0'
       expo-file-system: '>= 13.0.0'
       expo-localization: '>= 11.0.0'
-      posthog-react-native-session-replay: '>= 1.0.6'
+      posthog-react-native-session-replay: '>= 1.0.0'
       react-native-device-info: '>= 10.0.0'
       react-native-localize: '>= 3.0.0'
       react-native-navigation: '>= 6.0.0'
@@ -17139,7 +17139,7 @@ packages:
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
-  /ts-node@10.9.2(@types/node@18.19.123)(typescript@5.9.2):
+  /ts-node@10.9.2(@types/node@18.19.123)(typescript@5.7.3):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -17165,7 +17165,7 @@ packages:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.9.2
+      typescript: 5.7.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: true
@@ -17291,12 +17291,6 @@ packages:
     resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
     engines: {node: '>=14.17'}
     hasBin: true
-
-  /typescript@5.9.2:
-    resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    dev: true
 
   /ua-parser-js@0.7.37:
     resolution: {integrity: sha512-xV8kqRKM+jhMvcHWUKthV9fNebIzrNy//2O9ZwWcfiBFR5f25XVZPLlEajk/sf3Ra15V92isyQqnIEXRDaZWEA==}
