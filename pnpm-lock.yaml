@@ -308,8 +308,8 @@ importers:
         specifier: 10.45.2
         version: 10.45.2
       axios:
-        specifier: 1.11.0
-        version: 1.11.0
+        specifier: 1.12.0
+        version: 1.12.0
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
@@ -7813,7 +7813,7 @@ packages:
       '@slack/types': 2.11.0
       '@types/node': 18.19.123
       '@types/retry': 0.12.0
-      axios: 1.11.0
+      axios: 1.12.0
       eventemitter3: 5.0.1
       form-data: 4.0.4
       is-electron: 2.2.2
@@ -8995,8 +8995,8 @@ packages:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  /axios@1.11.0:
-    resolution: {integrity: sha512-1Lx3WLFQWm3ooKDYZD1eXmoGO9fxYQjrycfHFC8P0sCfQVXyROp0p9PFWBehewBOdCwHc+f/b8I0fMto5eSfwA==}
+  /axios@1.12.0:
+    resolution: {integrity: sha512-oXTDccv8PcfjZmPGlWsPSwtOJCZ/b6W5jAMCNcfwJbCzDckwG0jrYJFaWH1yvivfCXjVzV/SPDEhMB3Q+DSurg==}
     dependencies:
       follow-redirects: 1.15.6
       form-data: 4.0.4
@@ -11863,12 +11863,6 @@ packages:
       ignore: 5.3.2
       merge2: 1.4.1
       slash: 3.0.0
-    dev: false
-
-  /gopd@1.0.1:
-    resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==}
-    dependencies:
-      get-intrinsic: 1.2.7
     dev: false
 
   /gopd@1.2.0:
@@ -18092,7 +18086,7 @@ packages:
       available-typed-arrays: 1.0.7
       call-bind: 1.0.7
       for-each: 0.3.3
-      gopd: 1.0.1
+      gopd: 1.2.0
       has-tostringtag: 1.0.2
     dev: false
 
