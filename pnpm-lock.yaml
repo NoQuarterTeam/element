@@ -308,8 +308,8 @@ importers:
         specifier: 10.45.3
         version: 10.45.3
       axios:
-        specifier: 1.12.0
-        version: 1.12.0
+        specifier: 1.13.5
+        version: 1.13.5
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
@@ -596,7 +596,7 @@ importers:
         version: 3.25.76
       zodix:
         specifier: 0.4.4
-        version: 0.4.4(@remix-run/server-runtime@2.17.2)(zod@3.25.76)
+        version: 0.4.4(@remix-run/server-runtime@2.17.3)(zod@3.25.76)
     devDependencies:
       '@element/tailwind-config':
         specifier: workspace:*
@@ -7869,7 +7869,7 @@ packages:
       '@slack/types': 2.11.0
       '@types/node': 18.19.123
       '@types/retry': 0.12.0
-      axios: 1.12.0
+      axios: 1.13.5
       eventemitter3: 5.0.1
       form-data: 4.0.4
       is-electron: 2.2.2
@@ -9055,11 +9055,11 @@ packages:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  /axios@1.12.0:
-    resolution: {integrity: sha512-oXTDccv8PcfjZmPGlWsPSwtOJCZ/b6W5jAMCNcfwJbCzDckwG0jrYJFaWH1yvivfCXjVzV/SPDEhMB3Q+DSurg==}
+  /axios@1.13.5:
+    resolution: {integrity: sha512-cz4ur7Vb0xS4/KUN0tPWe44eqxrIu31me+fbang3ijiNscE129POzipJJA6zniq2C/Z6sJCjMimjS8Lc/GAs8Q==}
     dependencies:
-      follow-redirects: 1.15.6
-      form-data: 4.0.4
+      follow-redirects: 1.15.11
+      form-data: 4.0.5
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
@@ -11633,8 +11633,8 @@ packages:
     engines: {node: '>=0.4.0'}
     dev: false
 
-  /follow-redirects@1.15.6:
-    resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==}
+  /follow-redirects@1.15.11:
+    resolution: {integrity: sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -11670,6 +11670,17 @@ packages:
 
   /form-data@4.0.4:
     resolution: {integrity: sha512-KrGhL9Q4zjj0kiUt5OO4Mr/A/jlI2jDYs5eHBpYHPcBEVSiipAvn2Ko2HnPe20rmcuuvMHNdZFp+4IlGTMF0Ow==}
+    engines: {node: '>= 6'}
+    dependencies:
+      asynckit: 0.4.0
+      combined-stream: 1.0.8
+      es-set-tostringtag: 2.1.0
+      hasown: 2.0.2
+      mime-types: 2.1.35
+    dev: false
+
+  /form-data@4.0.5:
+    resolution: {integrity: sha512-8RipRLol37bNs2bhoV67fiTEvdTrbMUYcFTiy3+wuuOnUog2QBHCZWXDRijWQfAkhBj2Uf5UnVaiWwA5vdd82w==}
     engines: {node: '>= 6'}
     dependencies:
       asynckit: 0.4.0
@@ -18357,13 +18368,13 @@ packages:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
     dev: false
 
-  /zodix@0.4.4(@remix-run/server-runtime@2.17.2)(zod@3.25.76):
+  /zodix@0.4.4(@remix-run/server-runtime@2.17.3)(zod@3.25.76):
     resolution: {integrity: sha512-msoW2RM8t0ktSKmQYT7/AjsGTqzWHeEwY+U/6w7Jzd29yoeh/QceseQG8PBb5lpY4KUUowMsYRWm926vGrwrdQ==}
     peerDependencies:
       '@remix-run/server-runtime': 1.x || 2.x
       zod: 3.x
     dependencies:
-      '@remix-run/server-runtime': 2.17.2(typescript@5.9.2)
+      '@remix-run/server-runtime': 2.17.3(typescript@5.9.2)
       zod: 3.25.76
     dev: false
 
