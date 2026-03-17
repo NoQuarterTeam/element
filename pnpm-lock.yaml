@@ -34,8 +34,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/config/tailwind
       '@expo-google-fonts/poppins':
-        specifier: 0.4.0
-        version: 0.4.0
+        specifier: 0.4.1
+        version: 0.4.1
       '@expo/react-native-action-sheet':
         specifier: 4.1.1
         version: 4.1.1(react@18.3.1)
@@ -543,7 +543,7 @@ importers:
         version: 8.18.1
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.19.130)(typescript@5.9.3)
+        version: 10.9.2(@types/node@18.19.130)(typescript@5.9.2)
 
   packages/emails:
     dependencies:
@@ -4176,8 +4176,8 @@ packages:
     dev: true
     optional: true
 
-  /@expo-google-fonts/poppins@0.4.0:
-    resolution: {integrity: sha512-mY+z56ai1p01EltWCPEDc2EZR+yq7qAMpgDa+SP16j3vwETOLG3pl+W74oUhZayHw0uYdQjTXkm4ZO4QvX1I7w==}
+  /@expo-google-fonts/poppins@0.4.1:
+    resolution: {integrity: sha512-LiX5oEryJqDt3UmWwr4oqf11hGMz/JEffkkNcZ3UtGwyoMFzXmBmTwcrAWrEttxypxmLNmPykDg+CY2VjKve9A==}
     dev: false
 
   /@expo/bunyan@4.0.0:
@@ -17297,7 +17297,7 @@ packages:
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
-  /ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.3):
+  /ts-node@10.9.2(@types/node@18.19.130)(typescript@5.9.2):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -17323,7 +17323,7 @@ packages:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.9.3
+      typescript: 5.9.2
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: true
@@ -17446,12 +17446,6 @@ packages:
     resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
     engines: {node: '>=14.17'}
     hasBin: true
-
-  /typescript@5.9.3:
-    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    dev: true
 
   /ua-parser-js@0.7.37:
     resolution: {integrity: sha512-xV8kqRKM+jhMvcHWUKthV9fNebIzrNy//2O9ZwWcfiBFR5f25XVZPLlEajk/sf3Ra15V92isyQqnIEXRDaZWEA==}
