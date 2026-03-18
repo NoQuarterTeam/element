@@ -83,7 +83,7 @@
     "metro-react-native-babel-preset": "0.77.0",
     "postcss": "8.5.8",
     "tailwindcss": "3.4.1",
-    "typescript": "5.9.2"
+    "typescript": "5.9.3"
   },
   "private": true
 }
