@@ -17,7 +17,7 @@
     "@element/shared": "workspace:*",
     "@trpc/server": "10.45.3",
     "dayjs": "1.11.20",
-    "jsonwebtoken": "9.0.2",
+    "jsonwebtoken": "9.0.3",
     "superjson": "1.13.3",
     "zod": "3.25.76"
   },

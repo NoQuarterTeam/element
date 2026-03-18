@@ -21,7 +21,7 @@
     "bcryptjs": "2.4.3",
     "blurhash": "2.0.5",
     "dayjs": "1.11.20",
-    "jsonwebtoken": "9.0.2",
+    "jsonwebtoken": "9.0.3",
     "loops": "^0.4.0",
     "nodemailer": "6.10.1",
     "resend": "3.5.0",
