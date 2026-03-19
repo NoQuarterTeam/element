@@ -347,8 +347,8 @@ importers:
         specifier: 9.0.3
         version: 9.0.3
       limax:
-        specifier: 4.1.0
-        version: 4.1.0
+        specifier: 4.2.2
+        version: 4.2.2
       lucide-react:
         specifier: 0.542.0
         version: 0.542.0(react@18.3.1)
@@ -9388,10 +9388,6 @@ packages:
     dependencies:
       semver: 7.6.3
 
-  /bulk-replace@0.0.1:
-    resolution: {integrity: sha512-IxLEnfsCYLjlpf6mG7SWpWgA4A8IAT5dAX3FxXHFn+6FTLf3ums771elQ74sj1BCOVanBf6esu0rEC6zgwfmIg==}
-    dev: false
-
   /bytes@3.0.0:
     resolution: {integrity: sha512-pMhOfFDPiv9t5jjIXkHosWmkSyQbvsgEVNkz0ERHbuLh2T/7j4Mqqpz523Fe8MVY89KC6Sh/QfS2sM+SjgFDcw==}
     engines: {node: '>= 0.8'}
@@ -11946,11 +11942,9 @@ packages:
     resolution: {integrity: sha512-nAxA0v8+vXSBDt3AnRUNjyRIQ0rD+ntpbAp4LnPkumc5M9yUbSMa4XDU9Q6etY4f1Wp4bNgvc1yjiZtsTTrSng==}
     dev: true
 
-  /hepburn@1.2.1:
-    resolution: {integrity: sha512-v/VUHmiHhNbjDBGxYkwDXzYvfOTIKFquAn0KrPtH1D3Zv539VBPEOGYoWpLnb/FBT9vAx9anQef3noJZ2fPIBw==}
+  /hepburn@1.2.2:
+    resolution: {integrity: sha512-DeykBc4XmfAWsnN+Y1Svi9uaQnnz21Q/ARuGWvIBxP1iUFeMIWL41DfVkgTh7tU23LFIbmIBO2Bk17BTPu0kVA==}
     engines: {node: '>=4'}
-    dependencies:
-      bulk-replace: 0.0.1
     dev: false
 
   /hermes-estree@0.23.1:
@@ -12915,13 +12909,12 @@ packages:
     resolution: {integrity: sha512-O18pf7nyvHTckunPWCV1XUNXU1piu01y2b7ATJ0ppkUkk8ocqVWBrYjJBCwHDjD/ZWcfyrA0P4gKhzWGi5EINQ==}
     engines: {node: '>=14'}
 
-  /limax@4.1.0:
-    resolution: {integrity: sha512-vciK5Mx+y+GrJjcVjbEjItzZ6Pbt+LXCb9d3qo3B+HcnTLZYRFyuszD6Hbwk0PDVEmZzS+FA0nT5aBy1HlZgGg==}
+  /limax@4.2.2:
+    resolution: {integrity: sha512-HhCTNSqrNHj2hZzFn2gNbdOukxSbsw7nSZ9cmn1TpvjvHvE1TuT523fgMpLTwzRdoNMujdyTeSNcs6TwiFa5aQ==}
     engines: {node: '>=14'}
     dependencies:
-      hepburn: 1.2.1
-      lodash.deburr: 4.1.0
-      pinyin-pro: 3.18.4
+      hepburn: 1.2.2
+      pinyin-pro: 3.28.0
       speakingurl: 14.0.1
     dev: false
 
@@ -12965,10 +12958,6 @@ packages:
 
   /lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
-
-  /lodash.deburr@4.1.0:
-    resolution: {integrity: sha512-m/M1U1f3ddMCs6Hq2tAsYThTBDaAKFDX3dwDo97GEYzamXi9SqUpjWi/Rrj/gf3X2n8ktwgZrlP1z6E3v/IExQ==}
-    dev: false
 
   /lodash.includes@4.3.0:
     resolution: {integrity: sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==}
@@ -14670,8 +14659,8 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /pinyin-pro@3.18.4:
-    resolution: {integrity: sha512-P2PYCyzcK/R3MWSQQSRg9G1JFh3/ooEuA8lkQ2BkQOM665X0wHKW19bJ6+zqwUXLSaXtKC5NI58fCw4HrP7L1Q==}
+  /pinyin-pro@3.28.0:
+    resolution: {integrity: sha512-mMRty6RisoyYNphJrTo3pnvp3w8OMZBrXm9YSWkxhAfxKj1KZk2y8T2PDIZlDDRsvZ0No+Hz6FI4sZpA6Ey25g==}
     dev: false
 
   /pirates@4.0.6:
