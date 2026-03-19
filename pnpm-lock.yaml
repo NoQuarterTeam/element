@@ -347,8 +347,8 @@ importers:
         specifier: 9.0.3
         version: 9.0.3
       limax:
-        specifier: 4.2.2
-        version: 4.2.2
+        specifier: 4.2.3
+        version: 4.2.3
       lucide-react:
         specifier: 0.577.0
         version: 0.577.0(react@18.3.1)
@@ -13063,8 +13063,8 @@ packages:
     resolution: {integrity: sha512-O18pf7nyvHTckunPWCV1XUNXU1piu01y2b7ATJ0ppkUkk8ocqVWBrYjJBCwHDjD/ZWcfyrA0P4gKhzWGi5EINQ==}
     engines: {node: '>=14'}
 
-  /limax@4.2.2:
-    resolution: {integrity: sha512-HhCTNSqrNHj2hZzFn2gNbdOukxSbsw7nSZ9cmn1TpvjvHvE1TuT523fgMpLTwzRdoNMujdyTeSNcs6TwiFa5aQ==}
+  /limax@4.2.3:
+    resolution: {integrity: sha512-KJ41cc23/i9rGgFjpLpz4LVFuVHIVUoQX3zJs8qCY+Eo1KReIPD8QTahSErdWuO1Zt7CyjuLdo4vtsH60qau8Q==}
     engines: {node: '>=14'}
     dependencies:
       hepburn: 1.2.2
