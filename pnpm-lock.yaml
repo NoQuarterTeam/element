@@ -360,7 +360,7 @@ importers:
         version: 4.3.1
       posthog-js:
         specifier: ^1.100.0
-        version: 1.363.6
+        version: 1.364.0
       pretty-cache-header:
         specifier: 1.0.0
         version: 1.0.0
@@ -5155,14 +5155,14 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
-  /@posthog/core@1.24.1:
-    resolution: {integrity: sha512-e8AciAnc6MRFws89ux8lJKFAaI03yEon0ASDoUO7yS91FVqbUGXYekObUUR3LHplcg+pmyiJBI0jolY0SFbGRA==}
+  /@posthog/core@1.24.2:
+    resolution: {integrity: sha512-Dpmodetbj4sASDKjmWfxJ2zC/rStd+hhW0E7Bru4IN5s2bTgpcPNwBoUwcCjdxPZ/02vbWwbJ88K3gmNJO5oxg==}
     dependencies:
       cross-spawn: 7.0.6
     dev: false
 
-  /@posthog/types@1.363.6:
-    resolution: {integrity: sha512-SPU8psjrpK8prfFyYwvb25F1AgqSM32zdU1XPVIhUa107Cyw+VGw38Gv+AeqkEoAYQE2TFlWJT8DWUrw/mNDoQ==}
+  /@posthog/types@1.364.0:
+    resolution: {integrity: sha512-RMScs7CL6DYSVDEcePUpa/eDpunWvvjiN6+Cc8O0Wk8NvATVhtYC7EqdhrZGH+VpEmdxW2UNQf7eUhaSOnNUAQ==}
     dev: false
 
   /@prisma/adapter-neon@5.22.0(@neondatabase/serverless@0.10.4):
@@ -15316,16 +15316,16 @@ packages:
     resolution: {integrity: sha512-i/hbxIE9803Alj/6ytL7UHQxRvZkI9O4Sy+J3HGc4F4oo/2eQAjTSNJ0bfxyse3bH0nuVesCk+3IRLaMtG3H6w==}
     dev: false
 
-  /posthog-js@1.363.6:
-    resolution: {integrity: sha512-eQ+Ypml3JOEMQWt21XEea6J8vD77TNyoz4Yv/xxjlTRja+ilmJtQw/SuVAB3BobjgHKYUomXX7Fc4gH/zTVpbg==}
+  /posthog-js@1.364.0:
+    resolution: {integrity: sha512-eNq+Jh+OZh67iKMCTmKdxCPt6j3YJFNbBu/+9/PZDqG2po2Osutm/KJ9qJttHJ6JHzM3q7jUCf75PLc18A0Aow==}
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/api-logs': 0.208.0
       '@opentelemetry/exporter-logs-otlp-http': 0.208.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/resources': 2.6.1(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-logs': 0.208.0(@opentelemetry/api@1.9.1)
-      '@posthog/core': 1.24.1
-      '@posthog/types': 1.363.6
+      '@posthog/core': 1.24.2
+      '@posthog/types': 1.364.0
       core-js: 3.49.0
       dompurify: 3.3.3
       fflate: 0.4.8
