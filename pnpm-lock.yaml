@@ -55,14 +55,14 @@ importers:
         specifier: 6.3.0
         version: 6.3.0(expo@52.0.49)(react-native@0.76.7)(react@18.3.1)
       '@tanstack/react-query':
-        specifier: 4.43.0
-        version: 4.43.0(react-dom@18.3.1)(react-native@0.76.7)(react@18.3.1)
+        specifier: 4.44.0
+        version: 4.44.0(react-dom@18.3.1)(react-native@0.76.7)(react@18.3.1)
       '@trpc/client':
         specifier: 10.45.4
         version: 10.45.4(@trpc/server@10.45.4)
       '@trpc/react-query':
         specifier: 10.45.4
-        version: 10.45.4(@tanstack/react-query@4.43.0)(@trpc/client@10.45.4)(@trpc/server@10.45.4)(react-dom@18.3.1)(react@18.3.1)
+        version: 10.45.4(@tanstack/react-query@4.44.0)(@trpc/client@10.45.4)(@trpc/server@10.45.4)(react-dom@18.3.1)(react@18.3.1)
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
@@ -299,8 +299,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1(tailwindcss@3.4.1)
       '@tanstack/react-query':
-        specifier: 4.43.0
-        version: 4.43.0(react-dom@18.3.1)(react-native@0.76.7)(react@18.3.1)
+        specifier: 4.44.0
+        version: 4.44.0(react-dom@18.3.1)(react-native@0.76.7)(react@18.3.1)
       '@tanstack/react-table':
         specifier: ^8.11.6
         version: 8.21.3(react-dom@18.3.1)(react@18.3.1)
@@ -6050,7 +6050,7 @@ packages:
     dependencies:
       '@types/react': 18.3.28
       react: 18.3.1
-      use-sync-external-store: 1.5.0(react@18.3.1)
+      use-sync-external-store: 1.6.0(react@18.3.1)
     dev: false
 
   /@radix-ui/react-use-layout-effect@1.0.1(@types/react@18.3.28)(react@18.3.1):
@@ -6766,7 +6766,7 @@ packages:
       react: 18.3.1
       react-is: 18.3.1
       use-latest-callback: 0.2.3(react@18.3.1)
-      use-sync-external-store: 1.5.0(react@18.3.1)
+      use-sync-external-store: 1.6.0(react@18.3.1)
     dev: false
 
   /@react-navigation/elements@2.2.5(@react-navigation/native@7.0.14)(react-native-safe-area-context@4.12.0)(react-native@0.76.7)(react@18.3.1):
@@ -7982,12 +7982,12 @@ packages:
       tailwindcss: 3.4.1
     dev: false
 
-  /@tanstack/query-core@4.43.0:
-    resolution: {integrity: sha512-m1QeUUIpNXDYxmfuuWNFZLky0EwVmbE0hj8ulZ2nIGA1183raJgDCn0IKlxug80NotRqzodxAaoYTKHbE1/P/Q==}
+  /@tanstack/query-core@4.44.0:
+    resolution: {integrity: sha512-swSgb7OiPRR3UuIL7NuDrZNSMGmQD+wdtHxPD7j60SvBEnxbXurl5XOirtGEX2gm2hbK6mC8kMV1I+uO3l0UOw==}
     dev: false
 
-  /@tanstack/react-query@4.43.0(react-dom@18.3.1)(react-native@0.76.7)(react@18.3.1):
-    resolution: {integrity: sha512-Lj8luFKHQL27oZbw5T8xdTbsfAPp2+bCtSCa2bAVvIwnvNfRP0hpB1GxfKFgCktat8lPcYBHAu8eMTXzz2sQtQ==}
+  /@tanstack/react-query@4.44.0(react-dom@18.3.1)(react-native@0.76.7)(react@18.3.1):
+    resolution: {integrity: sha512-RuIqHYrS98LrK/8kJJOJMMSQ/BCpojwsXDh7p0fBmp38ZOz6dlk+uyFRRusH+V+t3POoCsDOQ2zhomEYOeReXw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -7998,7 +7998,7 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@tanstack/query-core': 4.43.0
+      '@tanstack/query-core': 4.44.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-native: 0.76.7(@babel/core@7.29.0)(@babel/preset-env@7.29.5)(@types/react@18.3.28)(react@18.3.1)
@@ -8030,7 +8030,7 @@ packages:
       '@trpc/server': 10.45.4
     dev: false
 
-  /@trpc/react-query@10.45.4(@tanstack/react-query@4.43.0)(@trpc/client@10.45.4)(@trpc/server@10.45.4)(react-dom@18.3.1)(react@18.3.1):
+  /@trpc/react-query@10.45.4(@tanstack/react-query@4.44.0)(@trpc/client@10.45.4)(@trpc/server@10.45.4)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-/JfbkFMztsYbpl94P9TWritMjbHqWxeHz4uwjHM3W2zUcIKT88FiFXVmD/jLitPLrKhi4yAONoaRks5SUm12fQ==}
     peerDependencies:
       '@tanstack/react-query': ^4.18.0
@@ -8039,7 +8039,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@tanstack/react-query': 4.43.0(react-dom@18.3.1)(react-native@0.76.7)(react@18.3.1)
+      '@tanstack/react-query': 4.44.0(react-dom@18.3.1)(react-native@0.76.7)(react@18.3.1)
       '@trpc/client': 10.45.4(@trpc/server@10.45.4)
       '@trpc/server': 10.45.4
       react: 18.3.1
@@ -15592,7 +15592,7 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
       react-is: 18.3.1
       redux: 4.2.1
-      use-sync-external-store: 1.5.0(react@18.3.1)
+      use-sync-external-store: 1.6.0(react@18.3.1)
     dev: false
 
   /react-refresh@0.14.2:
