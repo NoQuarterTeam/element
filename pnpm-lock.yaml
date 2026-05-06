@@ -632,8 +632,8 @@ importers:
         specifier: workspace:*
         version: link:../../shared
       '@slack/web-api':
-        specifier: 7.15.1
-        version: 7.15.1
+        specifier: 7.15.2
+        version: 7.15.2
       '@upstash/qstash':
         specifier: ^2.3.0
         version: 2.10.1
@@ -7432,17 +7432,17 @@ packages:
       '@types/node': 18.19.130
     dev: false
 
-  /@slack/types@2.20.1:
-    resolution: {integrity: sha512-eWX2mdt1ktpn8+40iiMc404uGrih+2fxiky3zBcPjtXKj6HLRdYlmhrPkJi7JTJm8dpXR6BWVWEDBXtaWMKD6A==}
+  /@slack/types@2.21.0:
+    resolution: {integrity: sha512-ZLMsKnD5KLRPmhFEoGoBQUD5Pc2bH3xFc5ygHlioEc0WmLGyZGoGCtMff4rpejrFnptrhfxcKpWxW4r3g39R0A==}
     engines: {node: '>= 12.13.0', npm: '>= 6.12.0'}
     dev: false
 
-  /@slack/web-api@7.15.1:
-    resolution: {integrity: sha512-y+TAF7TszcmFzbVtBkFqAdBwKSoD+8shkNxhp4WIfFwXmCKdFje9WD6evROApPa2FTy1v1uc9yBaJs3609PPgg==}
+  /@slack/web-api@7.15.2:
+    resolution: {integrity: sha512-/m9qVFkiq85Oa/FSQwYIRDa/AO4qNYkDh4sRBK1WqEc2+RyG7w4tbU6rBIwUOcc/TmWOIr24Nraquxg7um5mYw==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
     dependencies:
       '@slack/logger': 4.0.1
-      '@slack/types': 2.20.1
+      '@slack/types': 2.21.0
       '@types/node': 18.19.130
       '@types/retry': 0.12.0
       axios: 1.15.2
