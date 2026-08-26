@@ -184,8 +184,8 @@ importers:
         specifier: 2.4.2
         version: 2.4.2(expo@52.0.49)(react-native-gesture-handler@2.20.2)(react-native-reanimated@3.16.7)(react-native@0.76.7)(react@18.3.1)
       superjson:
-        specifier: 1.13.3
-        version: 1.13.3
+        specifier: 2.2.6
+        version: 2.2.6
       uuid:
         specifier: 3.4.0
         version: 3.4.0
@@ -486,8 +486,8 @@ importers:
         specifier: 9.0.3
         version: 9.0.3
       superjson:
-        specifier: 1.13.3
-        version: 1.13.3
+        specifier: 2.2.6
+        version: 2.2.6
       zod:
         specifier: 3.25.76
         version: 3.25.76
@@ -9047,11 +9047,9 @@ packages:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
 
-  /copy-anything@3.0.5:
-    resolution: {integrity: sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==}
-    engines: {node: '>=12.13'}
-    dependencies:
-      is-what: 4.1.16
+  /copy-anything@4.1.0:
+    resolution: {integrity: sha512-ufbM3smX/Jbnpk5wcQjzd1MgBpzmqfNETUAyZNrGwU9foRlyHoGzMMBBCRzEhQLBjZfFDE1W2ufPXX2vdWkV8Q==}
+    engines: {node: '>=18'}
     dev: false
 
   /core-js-compat@3.49.0:
@@ -11567,11 +11565,6 @@ packages:
     dependencies:
       call-bind: 1.0.7
       get-intrinsic: 1.2.7
-    dev: false
-
-  /is-what@4.1.16:
-    resolution: {integrity: sha512-ZhMwEosbFJkA0YhFnNDgTM4ZxDRsS6HqTo7qsZM08fehyRYIYa0yHu5R6mgo1n/8MgaPBXiPimPD77baVFYg+A==}
-    engines: {node: '>=12.13'}
     dev: false
 
   /is-whitespace@0.3.0:
@@ -16237,11 +16230,11 @@ packages:
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dev: false
 
-  /superjson@1.13.3:
-    resolution: {integrity: sha512-mJiVjfd2vokfDxsQPOwJ/PtanO87LhpYY88ubI5dUB1Ab58Txbyje3+jpm+/83R/fevaq/107NNhtYBLuoTrFg==}
-    engines: {node: '>=10'}
+  /superjson@2.2.6:
+    resolution: {integrity: sha512-H+ue8Zo4vJmV2nRjpx86P35lzwDT3nItnIsocgumgr0hHMQ+ZGq5vrERg9kJBo5AWGmxZDhzDo+WVIJqkB0cGA==}
+    engines: {node: '>=16'}
     dependencies:
-      copy-anything: 3.0.5
+      copy-anything: 4.1.0
     dev: false
 
   /supports-color@5.5.0:
