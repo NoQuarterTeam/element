@@ -68,7 +68,7 @@
     "react-native-toast-message": "2.4.0",
     "reanimated-color-picker": "2.4.2",
     "superjson": "1.13.3",
-    "uuid": "3.4.0",
+    "uuid": "11.1.1",
     "zeego": "2.0.4",
     "zustand": "5.0.3"
   },
