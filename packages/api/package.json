@@ -16,7 +16,7 @@
     "@element/server-schemas": "workspace:*",
     "@element/shared": "workspace:*",
     "@trpc/server": "10.45.4",
-    "dayjs": "1.11.21",
+    "dayjs": "1.11.23",
     "jsonwebtoken": "9.0.3",
     "superjson": "1.13.3",
     "zod": "3.25.76"
