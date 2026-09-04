@@ -30,10 +30,10 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
-    "@types/bcryptjs": "2.4.6",
+    "@types/bcryptjs": "3.0.0",
     "@types/jsonwebtoken": "9.0.10",
-    "@types/node": "18.19.130",
-    "@types/nodemailer": "6.4.24",
+    "@types/node": "24.13.3",
+    "@types/nodemailer": "8.0.1",
     "typescript": "5.9.3"
   }
 }

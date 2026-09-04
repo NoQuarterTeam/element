@@ -13,7 +13,7 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
-    "@types/node": "18.19.130",
+    "@types/node": "24.13.3",
     "dotenv-cli": "7.4.4",
     "typescript": "5.9.3"
   }
