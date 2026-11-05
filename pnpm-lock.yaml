@@ -390,7 +390,7 @@ importers:
         version: 2.15.4(react-dom@18.3.1)(react@18.3.1)
       remix-utils:
         specifier: 7.7.0
-        version: 7.7.0(@remix-run/node@2.17.5)(@remix-run/react@2.17.5)(react@18.3.1)(zod@3.25.76)
+        version: 7.7.0(@remix-run/node@2.17.5)(@remix-run/react@2.17.5)(react@18.3.1)(zod@4.6.6)
       sharp:
         specifier: 0.32.6
         version: 0.32.6
@@ -404,8 +404,8 @@ importers:
         specifier: 3.0.5
         version: 3.0.5(tailwindcss@3.4.1)
       zod:
-        specifier: 3.25.76
-        version: 3.25.76
+        specifier: 4.6.6
+        version: 4.6.6
       zustand:
         specifier: 4.5.7
         version: 4.5.7(@types/react@18.3.31)(react@18.3.1)
@@ -489,8 +489,8 @@ importers:
         specifier: 1.13.3
         version: 1.13.3
       zod:
-        specifier: 3.25.76
-        version: 3.25.76
+        specifier: 4.6.6
+        version: 4.6.6
     devDependencies:
       '@types/jsonwebtoken':
         specifier: 9.0.10
@@ -570,8 +570,8 @@ importers:
   packages/server/env:
     dependencies:
       zod:
-        specifier: 3.25.76
-        version: 3.25.76
+        specifier: 4.6.6
+        version: 4.6.6
     devDependencies:
       '@types/node':
         specifier: 18.19.130
@@ -592,11 +592,11 @@ importers:
         specifier: workspace:*
         version: link:../../shared
       zod:
-        specifier: 3.25.76
-        version: 3.25.76
+        specifier: 4.6.6
+        version: 4.6.6
       zodix:
         specifier: 0.4.4
-        version: 0.4.4(@remix-run/server-runtime@2.17.5)(zod@3.25.76)
+        version: 0.4.4(@remix-run/server-runtime@2.17.5)(zod@4.6.6)
     devDependencies:
       '@element/tailwind-config':
         specifier: workspace:*
@@ -665,8 +665,8 @@ importers:
         specifier: 15.12.0
         version: 15.12.0
       zod:
-        specifier: 3.25.76
-        version: 3.25.76
+        specifier: 4.6.6
+        version: 4.6.6
     devDependencies:
       '@types/bcryptjs':
         specifier: 2.4.6
@@ -1026,6 +1026,7 @@ packages:
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
       jsesc: 3.1.0
+    dev: false
 
   /@babel/generator@7.29.7:
     resolution: {integrity: sha512-DkXD5OJQaAQIdZ1bt3UZdEnHAn9Imd3IVBdX03UFe+ony9Ojw5pzr9YVKGDY1jt+Gcn/FnGkNf8r+Vj5NOJWtQ==}
@@ -1046,7 +1047,6 @@ packages:
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
       jsesc: 3.1.0
-    dev: false
 
   /@babel/helper-annotate-as-pure@7.27.3:
     resolution: {integrity: sha512-fXSwMQqitTGeHLBC08Eq5yXz2m37E4pJX1qAU1+2cNedz/ifv/bVXft90VeSav5nFO61EcNgwr0aJxbyPaWBPg==}
@@ -1155,10 +1155,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dev: true
 
-  /@babel/helper-globals@7.28.0:
-    resolution: {integrity: sha512-+W6cISkXFa1jXsDEdYA8HeevQT/FULhxzR99pxphltZcVaugps53THCeiWA8SguxxpSp3gKPiuYfSWopkLQ4hw==}
-    engines: {node: '>=6.9.0'}
-
   /@babel/helper-globals@7.29.7:
     resolution: {integrity: sha512-3nQVUAtvkKH9zahfWgw96Jc/uFOmjACE1kQz82E2lqWmHBgjzbNlsC22nuQTfahmWeQtTq5nQ/4Nnd2A1wj4zA==}
     engines: {node: '>=6.9.0'}
@@ -1168,7 +1164,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/traverse': 7.29.7
-      '@babel/types': 7.29.7
+      '@babel/types': 7.29.8
     transitivePeerDependencies:
       - supports-color
 
@@ -1220,7 +1216,7 @@ packages:
     resolution: {integrity: sha512-URMGH08NzYFhubNSGJrpUEphGKQwMQYBySzat5cAByY1/YgIRkULnIy3tAMeszlL/so2HbeilYloUmSpd7GdVw==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.29.7
+      '@babel/types': 7.29.8
 
   /@babel/helper-optimise-call-expression@7.29.7:
     resolution: {integrity: sha512-+kmGVjcT9RGYzoDwdwEqEvGgKe3BYq+O1iGzjFubaNgZHwYHP6lsF2Yghf4kEuv9BV7tYDZ913aBW9am6YKong==}
@@ -1357,7 +1353,7 @@ packages:
     resolution: {integrity: sha512-Yac1ao4flkTxTteCDZLEvdxg2fZfz1v8M4QpaGypq/WPDqg3ijHYbDfs+LG5hvzSoqaSZ9/Z9lKSP3CjZjv+pA==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/helper-validator-identifier': 7.28.5
+      '@babel/helper-validator-identifier': 7.29.7
       chalk: 2.4.2
       js-tokens: 4.0.0
       picocolors: 1.1.1
@@ -1382,7 +1378,6 @@ packages:
     hasBin: true
     dependencies:
       '@babel/types': 7.29.8
-    dev: false
 
   /@babel/plugin-bugfix-firefox-class-in-computed-class-key@7.29.7(@babel/core@7.29.7):
     resolution: {integrity: sha512-j8SrR0zLZrRsC09DlszEx8FpMiwukKffYXMK0d5LmOglO7vGG6sz/BR/20yHqWH+Lnn31JTt2PE3hIWNgM2J6w==}
@@ -3171,12 +3166,12 @@ packages:
     resolution: {integrity: sha512-4HPiQr0X7+waHfyXPZpWPfWL/J7dcN1mx9gL6WdQVMbPnF3+ZhSMs8tCxN7oHddJE9fhNE7+lxdnlyemKfJRuA==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/code-frame': 7.29.0
-      '@babel/generator': 7.29.1
-      '@babel/helper-globals': 7.28.0
-      '@babel/parser': 7.29.2
-      '@babel/template': 7.28.6
-      '@babel/types': 7.29.7
+      '@babel/code-frame': 7.29.7
+      '@babel/generator': 7.29.8
+      '@babel/helper-globals': 7.29.7
+      '@babel/parser': 7.29.8
+      '@babel/template': 7.29.7
+      '@babel/types': 7.29.8
       debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
@@ -15455,7 +15450,7 @@ packages:
       minimatch: 10.0.1
     dev: true
 
-  /remix-utils@7.7.0(@remix-run/node@2.17.5)(@remix-run/react@2.17.5)(react@18.3.1)(zod@3.25.76):
+  /remix-utils@7.7.0(@remix-run/node@2.17.5)(@remix-run/react@2.17.5)(react@18.3.1)(zod@4.6.6):
     resolution: {integrity: sha512-J8NhP044nrNIam/xOT1L9a4RQ9FSaA2wyrUwmN8ZT+c/+CdAAf70yfaLnvMyKcV5U+8BcURQ/aVbth77sT6jGA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -15492,7 +15487,7 @@ packages:
       '@remix-run/react': 2.17.5(react-dom@18.3.1)(react@18.3.1)(typescript@5.9.3)
       react: 18.3.1
       type-fest: 4.35.0
-      zod: 3.25.76
+      zod: 4.6.6
     dev: false
 
   /remove-accents@0.5.0:
@@ -17513,18 +17508,18 @@ packages:
       - react-dom
     dev: false
 
-  /zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+  /zod@4.6.6:
+    resolution: {integrity: sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==}
     dev: false
 
-  /zodix@0.4.4(@remix-run/server-runtime@2.17.5)(zod@3.25.76):
+  /zodix@0.4.4(@remix-run/server-runtime@2.17.5)(zod@4.6.6):
     resolution: {integrity: sha512-msoW2RM8t0ktSKmQYT7/AjsGTqzWHeEwY+U/6w7Jzd29yoeh/QceseQG8PBb5lpY4KUUowMsYRWm926vGrwrdQ==}
     peerDependencies:
       '@remix-run/server-runtime': 1.x || 2.x
       zod: 3.x
     dependencies:
       '@remix-run/server-runtime': 2.17.5(typescript@5.9.3)
-      zod: 3.25.76
+      zod: 4.6.6
     dev: false
 
   /zustand@4.5.7(@types/react@18.3.31)(react@18.3.1):
