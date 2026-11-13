@@ -6,7 +6,7 @@
   "sideEffects": false,
   "dependencies": {
     "@element/server-env": "workspace:*",
-    "@neondatabase/serverless": "^0.10.0",
+    "@neondatabase/serverless": "^1.0.0",
     "@planetscale/database": "^1.13.0",
     "@prisma/adapter-neon": "^5.12.1",
     "@prisma/client": "5.22.0",
