@@ -184,8 +184,8 @@ importers:
         specifier: 2.4.2
         version: 2.4.2(expo@52.0.49)(react-native-gesture-handler@2.20.2)(react-native-reanimated@3.16.7)(react-native@0.76.7)(react@18.3.1)
       superjson:
-        specifier: 1.13.3
-        version: 1.13.3
+        specifier: 2.2.7
+        version: 2.2.7
       uuid:
         specifier: 3.4.0
         version: 3.4.0
@@ -486,8 +486,8 @@ importers:
         specifier: 9.0.3
         version: 9.0.3
       superjson:
-        specifier: 1.13.3
-        version: 1.13.3
+        specifier: 2.2.7
+        version: 2.2.7
       zod:
         specifier: 3.25.76
         version: 3.25.76
@@ -1021,8 +1021,8 @@ packages:
     resolution: {integrity: sha512-qsaF+9Qcm2Qv8SRIMMscAvG4O3lJ0F1GuMo5HR/Bp02LopNgnZBC/EkbevHFeGs4ls/oPz9v+Bsmzbkbe+0dUw==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/parser': 7.29.2
-      '@babel/types': 7.29.7
+      '@babel/parser': 7.29.8
+      '@babel/types': 7.29.8
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
       jsesc: 3.1.0
@@ -1367,7 +1367,7 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
-      '@babel/types': 7.29.7
+      '@babel/types': 7.29.8
 
   /@babel/parser@7.29.7:
     resolution: {integrity: sha512-hnORnjP/1P/zFEndoeX+n+t1RwWRJiJpM/jO7FW32Kn9r5+sJB2JWOdYo4L6k78j15eCwY3Gm/7364B1EMwtNg==}
@@ -1382,7 +1382,6 @@ packages:
     hasBin: true
     dependencies:
       '@babel/types': 7.29.8
-    dev: false
 
   /@babel/plugin-bugfix-firefox-class-in-computed-class-key@7.29.7(@babel/core@7.29.7):
     resolution: {integrity: sha512-j8SrR0zLZrRsC09DlszEx8FpMiwukKffYXMK0d5LmOglO7vGG6sz/BR/20yHqWH+Lnn31JTt2PE3hIWNgM2J6w==}
@@ -3155,9 +3154,9 @@ packages:
     resolution: {integrity: sha512-YA6Ma2KsCdGb+WC6UpBVFJGXL58MDA6oyONbjyF/+5sBgxY/dwkhLogbMT2GXXyU84/IhRw/2D1Os1B/giz+BQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/code-frame': 7.29.0
-      '@babel/parser': 7.29.2
-      '@babel/types': 7.29.7
+      '@babel/code-frame': 7.29.7
+      '@babel/parser': 7.29.8
+      '@babel/types': 7.29.8
 
   /@babel/template@7.29.7:
     resolution: {integrity: sha512-puq+Gf35oI24FeN11LkoUQFqv9uwNeWpxXZi/Ji3rRIoKAzKnxRaZ+Gkj0vKS9ZCiTESfng1N9LyOyXvo+m+Gg==}
@@ -9080,11 +9079,9 @@ packages:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
 
-  /copy-anything@3.0.5:
-    resolution: {integrity: sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==}
-    engines: {node: '>=12.13'}
-    dependencies:
-      is-what: 4.1.16
+  /copy-anything@4.1.5:
+    resolution: {integrity: sha512-vePst2VLTSqPglW7Q98VwFpGiGpOHTyXIo81MO5VyLecA5zMbZw/P/V1vmwD1jksa2iJpn/YkDrJ3XhTfzUyhQ==}
+    engines: {node: '>=18'}
     dev: false
 
   /core-js-compat@3.49.0:
@@ -11619,11 +11616,6 @@ packages:
     dependencies:
       call-bind: 1.0.7
       get-intrinsic: 1.2.7
-    dev: false
-
-  /is-what@4.1.16:
-    resolution: {integrity: sha512-ZhMwEosbFJkA0YhFnNDgTM4ZxDRsS6HqTo7qsZM08fehyRYIYa0yHu5R6mgo1n/8MgaPBXiPimPD77baVFYg+A==}
-    engines: {node: '>=12.13'}
     dev: false
 
   /is-whitespace@0.3.0:
@@ -16295,11 +16287,11 @@ packages:
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dev: false
 
-  /superjson@1.13.3:
-    resolution: {integrity: sha512-mJiVjfd2vokfDxsQPOwJ/PtanO87LhpYY88ubI5dUB1Ab58Txbyje3+jpm+/83R/fevaq/107NNhtYBLuoTrFg==}
-    engines: {node: '>=10'}
+  /superjson@2.2.7:
+    resolution: {integrity: sha512-QK/H+tosbovdRvIuGqcWn8g3IxPZY7B8ZPowCAmWsV8bPvCk+bGMlZt90C4AxZjnzMO2WBRDacr1+0i1AOy/5g==}
+    engines: {node: '>=16'}
     dependencies:
-      copy-anything: 3.0.5
+      copy-anything: 4.1.5
     dev: false
 
   /supports-color@5.5.0:
